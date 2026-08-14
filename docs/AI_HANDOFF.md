@@ -207,9 +207,9 @@ FUNCIONANDO:
 
 NÃO IMPLEMENTADO:
 
-- [ ] Corpse
-- [ ] Bones
-- [ ] Processamento de cadáver
+- [x] Corpse
+- [x] Bones
+- [x] Processamento de cadáver
 - [ ] Criação de Skeleton
 - [ ] Spawn de inimigos
 - [ ] Ondas
@@ -226,19 +226,14 @@ NÃO IMPLEMENTADO:
 
 ## Próxima tarefa
 
-Implementar Corpse.
+Implementar criação de Skeleton usando Bones.
 
 Comportamento esperado:
 
-Enemy HP chega a 0
-→ Enemy desaparece
-→ Corpse aparece exatamente na posição onde Enemy morreu.
-
-Depois:
-
-jogador clica no Corpse
-→ Corpse é processado
-→ recebe Bones.
+Bones >= 5
+→ jogador clica em Create Skeleton
+→ 5 Bones são consumidos
+→ novo Skeleton aparece no campo.
 
 ---
 

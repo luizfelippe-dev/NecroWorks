@@ -2,6 +2,9 @@ extends Node2D
 
 @onready var skeleton = $Skeleton
 @onready var enemy = $Enemy
+@onready var bones_label = $BonesLabel
+
+var corpse_scene = preload("res://corpse.tscn")
 
 var skeleton_speed := 150.0
 var enemy_speed := 100.0
@@ -15,6 +18,9 @@ var enemy_damage := 8
 var attack_distance := 80.0
 var attack_cooldown := 0.7
 var attack_timer := 0.0
+
+var bones := 0
+var bones_per_corpse := 5
 
 
 func _process(delta):
@@ -39,10 +45,47 @@ func attack():
 
 	if enemy_hp <= 0:
 		print("INIMIGO MORREU!")
+
+		var death_position = enemy.position
+
+		spawn_corpse(death_position)
+
 		enemy.queue_free()
+
 		set_process(false)
 
 	elif skeleton_hp <= 0:
 		print("ESQUELETO MORREU!")
+
 		skeleton.queue_free()
+
 		set_process(false)
+
+
+func spawn_corpse(spawn_position: Vector2):
+	var corpse = corpse_scene.instantiate()
+
+	corpse.position = spawn_position
+
+	add_child(corpse)
+
+	corpse.pressed.connect(func():
+		process_corpse(corpse)
+	)
+
+	print("CADÁVER CRIADO!")
+
+
+func process_corpse(corpse):
+	bones += bones_per_corpse
+
+	update_bones_ui()
+
+	print("CADÁVER PROCESSADO!")
+	print("+", bones_per_corpse, " BONES")
+	print("TOTAL DE BONES: ", bones)
+
+	corpse.queue_free()
+	
+func update_bones_ui():
+	bones_label.text = "🦴 Bones: " + str(bones)

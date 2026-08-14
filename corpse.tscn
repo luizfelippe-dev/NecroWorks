@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cuj13y8m6ap6s"]
+
+[node name="Corpse" type="Button" unique_id=1353908399]
+offset_right = 90.0
+offset_bottom = 45.0
+text = "CORPSE"

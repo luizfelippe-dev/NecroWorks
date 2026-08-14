@@ -18,12 +18,12 @@
 
 ## Prototype v0.0.2 — Corpse Loop
 
-- [ ] Criar Corpse
-- [ ] Gerar Corpse na morte
-- [ ] Permitir selecionar Corpse
-- [ ] Processar Corpse
-- [ ] Adicionar recurso Bones
-- [ ] Mostrar Bones na interface
+- [x] Criar Corpse
+- [x] Gerar Corpse na morte
+- [x] Permitir selecionar Corpse
+- [x] Processar Corpse
+- [x] Adicionar recurso Bones
+- [x] Mostrar Bones na interface
 - [ ] Criar Skeleton usando Bones
 
 Objetivo:
