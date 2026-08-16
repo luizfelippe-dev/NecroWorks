@@ -210,7 +210,7 @@ NÃO IMPLEMENTADO:
 - [x] Corpse
 - [x] Bones
 - [x] Processamento de cadáver
-- [ ] Criação de Skeleton
+- [x] Criação de Skeleton
 - [ ] Spawn de inimigos
 - [ ] Ondas
 - [ ] Upgrades

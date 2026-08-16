@@ -37,13 +37,14 @@ Criar Corpse quando Enemy morrer.
 - Processar Corpse concede 5 Bones.
 - Corpse desaparece após processamento.
 - Contador de Bones adicionado à interface.
+- 5 Bones → novo Skeleton está funcionando
 
 ### Resultado
 
 Loop atual:
 
-Enemy → Corpse → Bones
+Enemy → Corpse → Bones → Create New Skeleton
 
 ### Próxima tarefa
 
-Permitir gastar 5 Bones para criar um novo Skeleton.
+Suporte a múltiplos Skeletons em combate.

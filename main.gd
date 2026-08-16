@@ -3,6 +3,7 @@ extends Node2D
 @onready var skeleton = $Skeleton
 @onready var enemy = $Enemy
 @onready var bones_label = $BonesLabel
+@onready var create_skeleton_button = $CreateSkeletonButton
 
 var corpse_scene = preload("res://corpse.tscn")
 
@@ -21,6 +22,8 @@ var attack_timer := 0.0
 
 var bones := 0
 var bones_per_corpse := 5
+
+var skeleton_cost := 5
 
 
 func _process(delta):
@@ -89,3 +92,34 @@ func process_corpse(corpse):
 	
 func update_bones_ui():
 	bones_label.text = "🦴 Bones: " + str(bones)
+	create_skeleton_button.disabled = bones < skeleton_cost
+
+
+func _ready():
+	create_skeleton_button.pressed.connect(create_skeleton)
+	update_bones_ui()
+	
+func create_skeleton():
+	if bones < skeleton_cost:
+		print("BONES INSUFICIENTES!")
+		return
+
+
+	bones -= skeleton_cost
+	update_bones_ui()
+
+
+	var new_skeleton = skeleton.duplicate()
+
+
+	new_skeleton.position = Vector2(
+		skeleton.position.x,
+		skeleton.position.y + 90
+	)
+
+
+	add_child(new_skeleton)
+
+
+	print("NOVO SKELETON CRIADO!")
+	print("TOTAL DE BONES: ", bones)
