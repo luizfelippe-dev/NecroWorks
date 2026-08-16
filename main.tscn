@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b45u88lvbum5y" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://x2jlhh16abtt" path="res://skeleton.tscn" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://cm4q4sl2bv5xq" path="res://enemy.tscn" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://btvjlbbxr4i1" path="res://placeholder_unit.gd" id="3_lquwl"]
 
 [node name="Main" type="Node2D" unique_id=2065548651]
 script = ExtResource("1_ig7tw")
@@ -17,8 +18,12 @@ color = Color(0.002285504, 0.0029771994, 0.0040128124, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Skeleton" parent="." unique_id=494001788 instance=ExtResource("2_h2yge")]
+script = ExtResource("3_lquwl")
 
 [node name="Enemy" parent="." unique_id=1904484668 instance=ExtResource("3_1bvp3")]
+position = Vector2(70, 70)
+script = ExtResource("3_lquwl")
+unit_color = Color(1, 0, 0, 1)
 
 [node name="BonesLabel" type="Label" parent="." unique_id=444388681]
 offset_left = 40.0
