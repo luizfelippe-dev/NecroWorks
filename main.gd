@@ -115,7 +115,6 @@ var enemies_defeated_this_wave: int = 0
 var wave_in_progress: bool = false
 var wave_transition_in_progress: bool = false
 
-var wave_delay: float = 3.0
 
 const BASE_ENEMIES_PER_WAVE: int = 5
 const ENEMIES_PER_WAVE_GROWTH: int = 1
@@ -123,13 +122,28 @@ const ENEMIES_PER_WAVE_GROWTH: int = 1
 const BASE_ENEMY_HP: int = 100
 const ENEMY_HP_GROWTH: int = 20
 
-const BASE_ENEMY_DAMAGE: int = 8
+const BASE_ENEMY_DAMAGE: int = 7
 const ENEMY_DAMAGE_GROWTH: int = 1
 
 const ELITE_WAVE_INTERVAL: int = 5
 const ELITE_ENEMIES_PER_WAVE: int = 5
 const ELITE_HP_MULTIPLIER: float = 1.4
 const ELITE_DAMAGE_BONUS: int = 3
+
+
+# =========================================================
+# UPGRADES
+# =========================================================
+
+const UPGRADE_SHARPENED_BONES: String = "sharpened_bones"
+const UPGRADE_BONE_PLATING: String = "bone_plating"
+const UPGRADE_EFFICIENT_RECYCLING: String = "efficient_recycling"
+
+var upgrade_counts: Dictionary = {}
+var total_upgrades_selected: int = 0
+var upgrade_panel: ColorRect = null
+var upgrade_title_label: Label = null
+var upgrade_buttons: Array[Button] = []
 
 
 # =========================================================
@@ -210,6 +224,7 @@ func _ready() -> void:
 
 	create_debug_hud()
 	create_wave_hud()
+	create_upgrade_ui()
 
 
 	# -----------------------------------------------------
@@ -1023,27 +1038,13 @@ func kill_enemy() -> void:
 			" COMPLETE!"
 		)
 		print(
-			"PRÓXIMA WAVE EM ",
-			wave_delay,
-			" SEGUNDOS..."
+			"AGUARDANDO ESCOLHA DE UPGRADE..."
 		)
 		print("==============================")
 
 
 		update_wave_ui()
-
-
-		await get_tree().create_timer(
-			wave_delay
-		).timeout
-
-
-		current_wave += 1
-
-
-		start_wave(
-			current_wave
-		)
+		show_upgrade_selection()
 
 
 		return
@@ -1407,6 +1408,207 @@ func ensure_unit_visual(
 	)
 
 
+
+# =========================================================
+# UPGRADE SYSTEM
+# =========================================================
+
+func create_upgrade_ui() -> void:
+	upgrade_panel = ColorRect.new()
+	upgrade_panel.name = "UpgradePanel"
+	upgrade_panel.position = Vector2(300.0, 220.0)
+	upgrade_panel.size = Vector2(1320.0, 500.0)
+	upgrade_panel.color = Color(0.04, 0.04, 0.04, 0.96)
+	upgrade_panel.z_index = 500
+	add_child(upgrade_panel)
+
+	upgrade_title_label = Label.new()
+	upgrade_title_label.name = "UpgradeTitle"
+	upgrade_title_label.position = Vector2(40.0, 25.0)
+	upgrade_title_label.size = Vector2(1240.0, 50.0)
+	upgrade_title_label.text = "SELECT AN UPGRADE"
+	upgrade_panel.add_child(upgrade_title_label)
+
+	create_upgrade_button(UPGRADE_SHARPENED_BONES, 0)
+	create_upgrade_button(UPGRADE_BONE_PLATING, 1)
+	create_upgrade_button(UPGRADE_EFFICIENT_RECYCLING, 2)
+
+	upgrade_panel.visible = false
+
+
+func create_upgrade_button(upgrade_id: String, index: int) -> void:
+	var button: Button = Button.new()
+	button.name = "UpgradeButton" + str(index + 1)
+	button.position = Vector2(40.0 + float(index) * 420.0, 100.0)
+	button.size = Vector2(390.0, 340.0)
+
+	button.pressed.connect(
+		select_upgrade.bind(upgrade_id)
+	)
+
+	upgrade_panel.add_child(button)
+	upgrade_buttons.append(button)
+
+
+func show_upgrade_selection() -> void:
+	if upgrade_panel == null:
+		return
+
+	if not wave_transition_in_progress:
+		return
+
+	update_upgrade_ui()
+	upgrade_panel.visible = true
+
+	print("")
+	print("------------------------------")
+	print("SELECT AN UPGRADE")
+	print("1. Sharpened Bones")
+	print("2. Bone Plating")
+	print("3. Efficient Recycling")
+	print("------------------------------")
+
+
+func hide_upgrade_selection() -> void:
+	if upgrade_panel == null:
+		return
+
+	upgrade_panel.visible = false
+
+
+func update_upgrade_ui() -> void:
+	if upgrade_panel == null:
+		return
+
+	if upgrade_title_label != null:
+		upgrade_title_label.text = (
+			"WAVE "
+			+ str(current_wave)
+			+ " COMPLETE — SELECT AN UPGRADE"
+		)
+
+	if upgrade_buttons.size() < 3:
+		return
+
+	upgrade_buttons[0].text = (
+		"SHARPENED BONES"
+		+ "\n\nSkeleton Damage +25%"
+		+ "\n\nCurrent DMG: "
+		+ str(skeleton_damage)
+		+ "\nTaken: "
+		+ str(get_upgrade_count(UPGRADE_SHARPENED_BONES))
+	)
+
+	upgrade_buttons[1].text = (
+		"BONE PLATING"
+		+ "\n\nSkeleton Max HP +25"
+		+ "\nExisting Skeletons also gain +25 HP"
+		+ "\n\nCurrent Max HP: "
+		+ str(skeleton_max_hp)
+		+ "\nTaken: "
+		+ str(get_upgrade_count(UPGRADE_BONE_PLATING))
+	)
+
+	upgrade_buttons[2].text = (
+		"EFFICIENT RECYCLING"
+		+ "\n\nCorpses generate +2 Bones"
+		+ "\n\nCurrent Bones/Corpse: "
+		+ str(bones_per_corpse)
+		+ "\nTaken: "
+		+ str(get_upgrade_count(UPGRADE_EFFICIENT_RECYCLING))
+	)
+
+
+func get_upgrade_count(upgrade_id: String) -> int:
+	return int(
+		upgrade_counts.get(upgrade_id, 0)
+	)
+
+
+func select_upgrade(upgrade_id: String) -> void:
+	if not wave_transition_in_progress:
+		return
+
+	apply_upgrade(upgrade_id)
+
+	var previous_count: int = get_upgrade_count(upgrade_id)
+	upgrade_counts[upgrade_id] = previous_count + 1
+	total_upgrades_selected += 1
+
+	print("")
+	print("==============================")
+	print("UPGRADE SELECTED: ", get_upgrade_name(upgrade_id))
+	print(
+		"Skeleton DMG: ",
+		skeleton_damage,
+		" | Max HP: ",
+		skeleton_max_hp,
+		" | Bones/Corpse: ",
+		bones_per_corpse
+	)
+	print("==============================")
+
+	hide_upgrade_selection()
+	wave_transition_in_progress = false
+	current_wave += 1
+	start_wave(current_wave)
+
+
+func apply_upgrade(upgrade_id: String) -> void:
+	match upgrade_id:
+		UPGRADE_SHARPENED_BONES:
+			var new_damage: int = int(
+				ceil(float(skeleton_damage) * 1.25)
+			)
+
+			if new_damage <= skeleton_damage:
+				new_damage = skeleton_damage + 1
+
+			skeleton_damage = new_damage
+
+		UPGRADE_BONE_PLATING:
+			skeleton_max_hp += 25
+
+			for current_skeleton: Node2D in skeletons:
+				if not is_instance_valid(current_skeleton):
+					continue
+
+				if not skeleton_hps.has(current_skeleton):
+					continue
+
+				var current_hp: int = int(
+					skeleton_hps[current_skeleton]
+				)
+
+				skeleton_hps[current_skeleton] = current_hp + 25
+
+		UPGRADE_EFFICIENT_RECYCLING:
+			bones_per_corpse += 2
+
+		_:
+			push_error(
+				"Upgrade desconhecido: " + upgrade_id
+			)
+
+	update_bones_ui()
+	update_debug_ui()
+
+
+func get_upgrade_name(upgrade_id: String) -> String:
+	match upgrade_id:
+		UPGRADE_SHARPENED_BONES:
+			return "Sharpened Bones"
+
+		UPGRADE_BONE_PLATING:
+			return "Bone Plating"
+
+		UPGRADE_EFFICIENT_RECYCLING:
+			return "Efficient Recycling"
+
+		_:
+			return "Unknown Upgrade"
+
+
 # =========================================================
 # WAVE HUD
 # =========================================================
@@ -1457,9 +1659,7 @@ func update_wave_ui() -> void:
 		wave_label.text = (
 			wave_title
 			+ " COMPLETE"
-			+ "\nNext Wave in "
-			+ str(int(wave_delay))
-			+ "s..."
+			+ "\nSELECT AN UPGRADE"
 		)
 
 		return
@@ -1564,6 +1764,8 @@ func update_debug_ui() -> void:
 		+ str(get_enemies_remaining())
 		+ "\nSkeletons: "
 		+ str(skeletons.size())
+		+ "\nUpgrades: "
+		+ str(total_upgrades_selected)
 		+ "\nEnemy: "
 		+ enemy_text
 		+ "\nClosest distance: "
