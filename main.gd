@@ -6,6 +6,12 @@ extends Node2D
 @onready var create_skeleton_button = $CreateSkeletonButton
 
 var corpse_scene = preload("res://corpse.tscn")
+var skeleton_scene = preload("res://skeleton.tscn")
+var enemy_scene = preload("res://enemy.tscn")
+
+#spawn
+var enemy_spawn_position := Vector2.ZERO
+var enemy_spawn_delay := 1.5
 
 # Movimento
 var skeleton_speed := 150.0
@@ -13,6 +19,7 @@ var enemy_speed := 100.0
 
 # Vida
 var skeleton_max_hp := 100
+var enemy_max_hp := 100
 var enemy_hp := 100
 
 # Dano
@@ -39,6 +46,7 @@ var skeleton_spawn_position := Vector2.ZERO
 
 func _ready():
 	skeleton_spawn_position = skeleton.position
+	enemy_spawn_position = enemy.position
 
 	register_skeleton(skeleton)
 
@@ -156,7 +164,7 @@ func kill_skeleton(target):
 
 	if skeletons.is_empty():
 		print("TODOS OS SKELETONS MORRERAM!")
-		set_process(false)
+		print("AGUARDANDO NOVO SKELETON...")
 
 
 func get_closest_skeleton_to_enemy():
@@ -182,14 +190,34 @@ func get_closest_skeleton_to_enemy():
 func kill_enemy():
 	print("INIMIGO MORREU!")
 
-	var death_position = enemy.position
+	var dead_enemy = enemy
+	var death_position = dead_enemy.position
+
+	enemy = null
 
 	spawn_corpse(death_position)
 
-	enemy.queue_free()
+	dead_enemy.queue_free()
 
-	set_process(false)
+	print("NOVO INIMIGO EM ", enemy_spawn_delay, " SEGUNDOS...")
 
+	await get_tree().create_timer(enemy_spawn_delay).timeout
+
+	spawn_enemy()
+	
+func spawn_enemy():
+	var new_enemy = enemy_scene.instantiate()
+
+	new_enemy.position = enemy_spawn_position
+
+	add_child(new_enemy)
+
+	enemy = new_enemy
+	enemy_hp = enemy_max_hp
+	enemy_attack_timer = 0.0
+
+	print("NOVO INIMIGO CRIADO!")
+	print("Enemy HP: ", enemy_hp)	
 
 func spawn_corpse(spawn_position: Vector2):
 	var corpse = corpse_scene.instantiate()
@@ -225,7 +253,7 @@ func create_skeleton():
 
 	bones -= skeleton_cost
 
-	var new_skeleton = skeleton.duplicate()
+	var new_skeleton = skeleton_scene.instantiate()
 
 	var vertical_offset = 90.0 * skeletons.size()
 

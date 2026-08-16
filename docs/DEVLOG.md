@@ -63,3 +63,22 @@ Suporte a múltiplos Skeletons em combate.
 ### Próxima tarefa
 
 Adicionar spawn contínuo de inimigos.
+
+## 15/08/2026 — Continuous Enemy Spawning
+
+### Implementado
+
+- Enemy reaparece automaticamente após morrer.
+- Novo Enemy recebe HP máximo.
+- Combate continua entre spawns.
+- Corpses permanecem disponíveis para processamento.
+- Corrigido bug onde o jogo parava de processar após a morte do último Skeleton.
+- Agora é possível reconstruir o exército após todos os Skeletons morrerem.
+
+### Problema identificado
+
+Skeletons novos podem ocupar posições sobrepostas e eventualmente nascer fora da tela.
+
+### Próxima tarefa
+
+Implementar sistema de formação com posições de spawn limitadas à arena.

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://x2jlhh16abtt"]
+
+[node name="Skeleton" type="ColorRect" unique_id=494001788]
+offset_left = 300.0
+offset_top = 600.0
+offset_right = 370.0
+offset_bottom = 670.0

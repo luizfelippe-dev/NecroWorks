@@ -90,3 +90,4 @@ Enemy → Corpse → Bones → Skeleton
 - [ ] Achievements
 - [ ] Steam integration
 - [ ] Demo pública
+- [ ] Testar sistema Last Stand / segunda chance após perda total do exército
