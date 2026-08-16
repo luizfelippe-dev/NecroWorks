@@ -27,6 +27,7 @@ var enemy_scene: PackedScene = preload("res://enemy.tscn")
 
 const SKELETON_COLOR: Color = Color.WHITE
 const ENEMY_COLOR: Color = Color.RED
+const ELITE_ENEMY_COLOR: Color = Color(0.55, 0.05, 0.15, 1.0)
 
 const UNIT_SIZE: float = 70.0
 
@@ -69,7 +70,7 @@ var enemy_attack_timer: float = 0.0
 # Distância em que o Enemy consegue bater.
 var enemy_attack_range: float = 135.0
 
-# Quanto o Skeleton pode estar afastado de sua posição
+# Quanto o Skeleton pode estar afastado da posição
 # de combate para considerarmos que ele chegou.
 var combat_position_tolerance: float = 15.0
 
@@ -78,11 +79,12 @@ var combat_position_tolerance: float = 15.0
 # ECONOMIA
 # =========================================================
 
-# CHEAT TEMPORÁRIO PARA TESTE.
-# DEPOIS VOLTE PARA 0.
-var bones: int = 100
+# BUILD ESTÁVEL: 0
+# Se quiser acelerar um teste manual, pode colocar 100
+# temporariamente e voltar para 0 antes do commit.
+var bones: int = 0
 
-var bones_per_corpse: int = 5
+var bones_per_corpse: int = 8
 var skeleton_cost: int = 5
 
 
@@ -97,7 +99,37 @@ const ENEMY_SPAWN_POSITION: Vector2 = Vector2(
 	555.0
 )
 
-var enemy_spawn_delay: float = 1.5
+# Dentro da mesma Wave o próximo Enemy aparece rápido.
+var enemy_spawn_delay: float = 0.5
+
+
+# =========================================================
+# WAVES
+# =========================================================
+
+var current_wave: int = 1
+
+var enemies_total_this_wave: int = 0
+var enemies_defeated_this_wave: int = 0
+
+var wave_in_progress: bool = false
+var wave_transition_in_progress: bool = false
+
+var wave_delay: float = 3.0
+
+const BASE_ENEMIES_PER_WAVE: int = 5
+const ENEMIES_PER_WAVE_GROWTH: int = 1
+
+const BASE_ENEMY_HP: int = 100
+const ENEMY_HP_GROWTH: int = 20
+
+const BASE_ENEMY_DAMAGE: int = 8
+const ENEMY_DAMAGE_GROWTH: int = 1
+
+const ELITE_WAVE_INTERVAL: int = 5
+const ELITE_ENEMIES_PER_WAVE: int = 5
+const ELITE_HP_MULTIPLIER: float = 1.4
+const ELITE_DAMAGE_BONUS: int = 3
 
 
 # =========================================================
@@ -143,16 +175,6 @@ const SPAWN_ORIGIN: Vector2 = Vector2(
 # FORMAÇÃO DE COMBATE
 # =========================================================
 
-# Skeletons não tentam entrar dentro do Enemy.
-#
-# Eles ocupam uma formação que acompanha o Enemy:
-#
-#       S  S
-#    S  S  S     ENEMY
-#       S  S
-#
-# Quanto maior o exército, mais colunas são formadas.
-
 const COMBAT_ROWS: int = 6
 
 const COMBAT_SPACING_X: float = 85.0
@@ -161,17 +183,7 @@ const COMBAT_SPACING_Y: float = 85.0
 # Primeira coluna fica 110 pixels à esquerda do Enemy.
 const COMBAT_FRONT_DISTANCE: float = 110.0
 
-# Ordem das linhas:
-#
-# centro superior
-# centro inferior
-# segunda superior
-# segunda inferior
-# topo
-# baixo
-#
-# Isso faz os primeiros Skeletons ficarem próximos
-# do centro em vez de começar pelo topo.
+# Primeiros Skeletons ocupam as linhas centrais primeiro.
 const COMBAT_ROW_ORDER: Array[int] = [
 	2,
 	3,
@@ -183,10 +195,11 @@ const COMBAT_ROW_ORDER: Array[int] = [
 
 
 # =========================================================
-# DEBUG
+# HUD
 # =========================================================
 
 var debug_label: Label = null
+var wave_label: Label = null
 
 
 # =========================================================
@@ -196,22 +209,7 @@ var debug_label: Label = null
 func _ready() -> void:
 
 	create_debug_hud()
-
-
-	# -----------------------------------------------------
-	# ENEMY INICIAL
-	# -----------------------------------------------------
-
-	enemy = initial_enemy
-
-	enemy.position = ENEMY_SPAWN_POSITION
-
-	enemy_hp = enemy_max_hp
-
-	ensure_unit_visual(
-		enemy,
-		ENEMY_COLOR
-	)
+	create_wave_hud()
 
 
 	# -----------------------------------------------------
@@ -237,7 +235,19 @@ func _ready() -> void:
 		create_skeleton
 	)
 
+
+	# -----------------------------------------------------
+	# WAVE 1
+	# -----------------------------------------------------
+
+	start_wave(
+		current_wave,
+		initial_enemy
+	)
+
+
 	update_bones_ui()
+	update_wave_ui()
 	update_debug_ui()
 
 
@@ -250,13 +260,12 @@ func _process(delta: float) -> void:
 	update_debug_ui()
 
 
-	# Estamos entre um Enemy e outro.
+	# Estamos entre um Enemy e outro ou entre Waves.
 	if not is_instance_valid(enemy):
 		return
 
 
-	# Não existe exército.
-	# O Enemy fica esperando.
+	# Sem exército, o Enemy fica esperando.
 	if skeletons.is_empty():
 		return
 
@@ -338,14 +347,13 @@ func _process(delta: float) -> void:
 			)
 
 
-	# O Enemy pode ter acabado de matar
-	# o último Skeleton.
+	# Enemy pode ter matado o último Skeleton.
 	if skeletons.is_empty():
 		return
 
 
 	# =====================================================
-	# CADA SKELETON PROCURA SUA POSIÇÃO DE COMBATE
+	# SKELETONS BUSCAM POSIÇÃO DE COMBATE
 	# =====================================================
 
 	for current_skeleton: Node2D in skeletons:
@@ -381,10 +389,6 @@ func _process(delta: float) -> void:
 		)
 
 
-		# -------------------------------------------------
-		# AINDA NÃO CHEGOU NO INIMIGO
-		# -------------------------------------------------
-
 		if distance_to_target > combat_position_tolerance:
 
 			current_skeleton.position = (
@@ -393,11 +397,6 @@ func _process(delta: float) -> void:
 					skeleton_speed * delta
 				)
 			)
-
-
-		# -------------------------------------------------
-		# CHEGOU NA POSIÇÃO DE COMBATE
-		# -------------------------------------------------
 
 		else:
 
@@ -424,6 +423,185 @@ func _process(delta: float) -> void:
 
 
 # =========================================================
+# WAVES
+# =========================================================
+
+func start_wave(
+	wave_number: int,
+	existing_enemy: Node2D = null
+) -> void:
+
+	current_wave = wave_number
+
+	enemies_total_this_wave = (
+		get_enemies_for_wave(
+			current_wave
+		)
+	)
+
+	enemies_defeated_this_wave = 0
+
+	enemy_max_hp = (
+		get_enemy_hp_for_wave(
+			current_wave
+		)
+	)
+
+	enemy_damage = (
+		get_enemy_damage_for_wave(
+			current_wave
+		)
+	)
+
+	wave_in_progress = true
+	wave_transition_in_progress = false
+
+
+	print("")
+	print("==============================")
+	print("WAVE ", current_wave, " INICIADA!")
+
+	if is_elite_wave(current_wave):
+		print("ELITE WAVE!")
+
+	print(
+		"Enemies: ",
+		enemies_total_this_wave
+	)
+
+	print(
+		"Enemy HP: ",
+		enemy_max_hp,
+		" | Damage: ",
+		enemy_damage
+	)
+
+	print("==============================")
+
+
+	if is_instance_valid(existing_enemy):
+
+		enemy = existing_enemy
+
+		enemy.position = (
+			ENEMY_SPAWN_POSITION
+		)
+
+		enemy_hp = enemy_max_hp
+
+		enemy_attack_timer = 0.0
+
+		ensure_unit_visual(
+			enemy,
+			get_current_enemy_color()
+		)
+
+	else:
+
+		spawn_enemy()
+
+
+	update_wave_ui()
+	update_debug_ui()
+
+
+func get_enemies_for_wave(
+	wave_number: int
+) -> int:
+
+	if is_elite_wave(wave_number):
+		return ELITE_ENEMIES_PER_WAVE
+
+
+	return (
+		BASE_ENEMIES_PER_WAVE
+		+ (
+			(wave_number - 1)
+			* ENEMIES_PER_WAVE_GROWTH
+		)
+	)
+
+
+func get_enemy_hp_for_wave(
+	wave_number: int
+) -> int:
+
+	var result: int = (
+		BASE_ENEMY_HP
+		+ (
+			(wave_number - 1)
+			* ENEMY_HP_GROWTH
+		)
+	)
+
+
+	if is_elite_wave(wave_number):
+
+		result = int(
+			float(result)
+			* ELITE_HP_MULTIPLIER
+		)
+
+
+	return result
+
+
+func get_enemy_damage_for_wave(
+	wave_number: int
+) -> int:
+
+	var result: int = (
+		BASE_ENEMY_DAMAGE
+		+ (
+			(wave_number - 1)
+			* ENEMY_DAMAGE_GROWTH
+		)
+	)
+
+
+	if is_elite_wave(wave_number):
+
+		result += ELITE_DAMAGE_BONUS
+
+
+	return result
+
+
+func is_elite_wave(
+	wave_number: int
+) -> bool:
+
+	return (
+		wave_number > 0
+		and wave_number % ELITE_WAVE_INTERVAL == 0
+	)
+
+
+func get_current_enemy_color() -> Color:
+
+	if is_elite_wave(current_wave):
+		return ELITE_ENEMY_COLOR
+
+
+	return ENEMY_COLOR
+
+
+func get_enemies_remaining() -> int:
+
+	var remaining: int = (
+		enemies_total_this_wave
+		- enemies_defeated_this_wave
+	)
+
+
+	if remaining < 0:
+		remaining = 0
+
+
+	return remaining
+
+
+# =========================================================
 # POSIÇÃO DE COMBATE DO SKELETON
 # =========================================================
 
@@ -438,7 +616,6 @@ func get_combat_target_position(
 		)
 
 
-	# Temos 6 Skeletons por coluna.
 	var combat_column: int = int(
 		slot / COMBAT_ROWS
 	)
@@ -456,7 +633,6 @@ func get_combat_target_position(
 	)
 
 
-	# Centraliza verticalmente as 6 linhas.
 	var vertical_offset: float = (
 		(
 			float(row_index)
@@ -466,8 +642,6 @@ func get_combat_target_position(
 	)
 
 
-	# Primeira coluna fica perto do Enemy.
-	# As outras ficam progressivamente mais atrás.
 	var horizontal_offset: float = (
 		COMBAT_FRONT_DISTANCE
 		+ (
@@ -552,11 +726,6 @@ func register_skeleton(
 	] = true
 
 
-	# IMPORTANTE:
-	# Todo Skeleton novo nasce NA BASE.
-	#
-	# Não nasce mais na posição do exército
-	# ou perto do Enemy.
 	new_skeleton.position = (
 		get_spawn_position(
 			slot
@@ -720,10 +889,6 @@ func kill_skeleton(
 	)
 
 
-	# -----------------------------------------------------
-	# LIBERA SLOT
-	# -----------------------------------------------------
-
 	if skeleton_slots.has(target):
 
 		var freed_slot: int = int(
@@ -748,10 +913,6 @@ func kill_skeleton(
 			freed_slot
 		)
 
-
-	# -----------------------------------------------------
-	# REMOVE DOS SISTEMAS
-	# -----------------------------------------------------
 
 	skeleton_hps.erase(
 		target
@@ -793,7 +954,7 @@ func kill_skeleton(
 
 
 # =========================================================
-# MATAR ENEMY
+# MATAR ENEMY / PROGREDIR WAVE
 # =========================================================
 
 func kill_enemy() -> void:
@@ -826,11 +987,74 @@ func kill_enemy() -> void:
 	dead_enemy.queue_free()
 
 
-	update_debug_ui()
+	enemies_defeated_this_wave += 1
 
 
 	print(
-		"NOVO INIMIGO EM ",
+		"ENEMIES DERROTADOS NA WAVE: ",
+		enemies_defeated_this_wave,
+		" / ",
+		enemies_total_this_wave
+	)
+
+
+	update_wave_ui()
+	update_debug_ui()
+
+
+	# =====================================================
+	# WAVE COMPLETA
+	# =====================================================
+
+	if (
+		enemies_defeated_this_wave
+		>= enemies_total_this_wave
+	):
+
+		wave_in_progress = false
+		wave_transition_in_progress = true
+
+
+		print("")
+		print("==============================")
+		print(
+			"WAVE ",
+			current_wave,
+			" COMPLETE!"
+		)
+		print(
+			"PRÓXIMA WAVE EM ",
+			wave_delay,
+			" SEGUNDOS..."
+		)
+		print("==============================")
+
+
+		update_wave_ui()
+
+
+		await get_tree().create_timer(
+			wave_delay
+		).timeout
+
+
+		current_wave += 1
+
+
+		start_wave(
+			current_wave
+		)
+
+
+		return
+
+
+	# =====================================================
+	# PRÓXIMO ENEMY DA MESMA WAVE
+	# =====================================================
+
+	print(
+		"PRÓXIMO INIMIGO EM ",
 		enemy_spawn_delay,
 		" SEGUNDOS..."
 	)
@@ -841,7 +1065,12 @@ func kill_enemy() -> void:
 	).timeout
 
 
-	spawn_enemy()
+	if (
+		wave_in_progress
+		and not is_instance_valid(enemy)
+	):
+
+		spawn_enemy()
 
 
 # =========================================================
@@ -849,6 +1078,14 @@ func kill_enemy() -> void:
 # =========================================================
 
 func spawn_enemy() -> void:
+
+	if not wave_in_progress:
+		return
+
+
+	if is_instance_valid(enemy):
+		return
+
 
 	var enemy_node: Node = (
 		enemy_scene.instantiate()
@@ -883,7 +1120,7 @@ func spawn_enemy() -> void:
 
 	ensure_unit_visual(
 		new_enemy,
-		ENEMY_COLOR
+		get_current_enemy_color()
 	)
 
 
@@ -899,11 +1136,16 @@ func spawn_enemy() -> void:
 	)
 
 	print(
-		"Enemy HP: ",
-		enemy_hp
+		"Wave: ",
+		current_wave,
+		" | Enemy HP: ",
+		enemy_hp,
+		" | Damage: ",
+		enemy_damage
 	)
 
 
+	update_wave_ui()
 	update_debug_ui()
 
 
@@ -1166,6 +1408,77 @@ func ensure_unit_visual(
 
 
 # =========================================================
+# WAVE HUD
+# =========================================================
+
+func create_wave_hud() -> void:
+
+	wave_label = Label.new()
+
+	wave_label.name = "WaveLabel"
+
+	wave_label.position = Vector2(
+		800.0,
+		40.0
+	)
+
+	wave_label.size = Vector2(
+		500.0,
+		120.0
+	)
+
+	wave_label.z_index = 100
+
+
+	add_child(
+		wave_label
+	)
+
+
+func update_wave_ui() -> void:
+
+	if wave_label == null:
+		return
+
+
+	var wave_title: String = (
+		"WAVE "
+		+ str(current_wave)
+	)
+
+
+	if is_elite_wave(current_wave):
+
+		wave_title += " - ELITE"
+
+
+	if wave_transition_in_progress:
+
+		wave_label.text = (
+			wave_title
+			+ " COMPLETE"
+			+ "\nNext Wave in "
+			+ str(int(wave_delay))
+			+ "s..."
+		)
+
+		return
+
+
+	wave_label.text = (
+		wave_title
+		+ "\nEnemies Remaining: "
+		+ str(get_enemies_remaining())
+		+ " / "
+		+ str(enemies_total_this_wave)
+		+ "\nEnemy HP: "
+		+ str(enemy_max_hp)
+		+ " | DMG: "
+		+ str(enemy_damage)
+	)
+
+
+# =========================================================
 # DEBUG HUD
 # =========================================================
 
@@ -1182,7 +1495,7 @@ func create_debug_hud() -> void:
 
 	debug_label.size = Vector2(
 		500.0,
-		160.0
+		200.0
 	)
 
 
@@ -1197,7 +1510,7 @@ func update_debug_ui() -> void:
 		return
 
 
-	var enemy_text: String = "SPAWNING"
+	var enemy_text: String = "NONE"
 
 
 	if is_instance_valid(enemy):
@@ -1206,6 +1519,14 @@ func update_debug_ui() -> void:
 			str(enemy_hp)
 			+ " HP"
 		)
+
+	elif wave_transition_in_progress:
+
+		enemy_text = "WAVE COMPLETE"
+
+	elif wave_in_progress:
+
+		enemy_text = "SPAWNING"
 
 
 	var closest_distance_text: String = "-"
@@ -1237,6 +1558,10 @@ func update_debug_ui() -> void:
 
 	debug_label.text = (
 		"DEBUG"
+		+ "\nWave: "
+		+ str(current_wave)
+		+ "\nEnemies Remaining: "
+		+ str(get_enemies_remaining())
 		+ "\nSkeletons: "
 		+ str(skeletons.size())
 		+ "\nEnemy: "
