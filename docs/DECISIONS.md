@@ -1,4 +1,4 @@
-# Corpse Factory — Design & Technical Decisions
+# NecroWorks — Design & Technical Decisions
 
 ## 14/08/2026 — Engine
 
@@ -77,3 +77,20 @@ Automação necromântica será um dos principais diferenciais de Corpse Factory
 Não será apenas um autobattler.
 
 A transformação industrial dos cadáveres deverá ter papel importante no gameplay.
+
+## 16/08/2026 — Project Rename
+
+Decision:
+
+Rename the project from Corpse Factory to NecroWorks.
+
+Identity:
+
+NecroWorks
+Industrial Reanimation Solutions
+Waste Nothing. Raise Everything.
+
+Reason:
+
+The previous name already belonged to another commercially released game.
+NecroWorks better supports the industrial/corporate necromancy identity of the project.

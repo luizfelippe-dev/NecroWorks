@@ -1,4 +1,4 @@
-# Corpse Factory — AI Handoff
+# NecroWorks — AI Handoff
 
 Última atualização: 14/08/2026
 

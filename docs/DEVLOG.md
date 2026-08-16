@@ -1,4 +1,4 @@
-# Corpse Factory — Devlog
+# NecroWorks — Devlog
 
 ## 14/08/2026 — Projeto iniciado
 
