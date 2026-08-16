@@ -24,7 +24,7 @@
 - [x] Processar Corpse
 - [x] Adicionar recurso Bones
 - [x] Mostrar Bones na interface
-- [ ] Criar Skeleton usando Bones
+- [x] Criar Skeleton usando Bones
 
 Objetivo:
 

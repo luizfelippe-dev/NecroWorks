@@ -226,14 +226,14 @@ NÃO IMPLEMENTADO:
 
 ## Próxima tarefa
 
-Implementar criação de Skeleton usando Bones.
+Implementar Enemy Spawner.
 
-Comportamento esperado:
+Objetivo:
 
-Bones >= 5
-→ jogador clica em Create Skeleton
-→ 5 Bones são consumidos
-→ novo Skeleton aparece no campo.
+Enemy morre
+→ Corpse permanece
+→ após pequeno intervalo surge outro Enemy
+→ combate continua automaticamente.
 
 ---
 

@@ -48,3 +48,18 @@ Enemy → Corpse → Bones → Create New Skeleton
 ### Próxima tarefa
 
 Suporte a múltiplos Skeletons em combate.
+
+## 15/08/2026 — Multiple Skeleton Combat
+
+### Implementado
+
+- Skeletons agora são registrados individualmente.
+- Cada Skeleton possui HP próprio.
+- Cada Skeleton possui cooldown de ataque próprio.
+- Vários Skeletons podem atacar o mesmo Enemy.
+- Enemy seleciona o Skeleton mais próximo como alvo.
+- Skeletons podem morrer individualmente.
+
+### Próxima tarefa
+
+Adicionar spawn contínuo de inimigos.
