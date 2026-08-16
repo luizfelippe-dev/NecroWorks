@@ -82,3 +82,26 @@ Skeletons novos podem ocupar posições sobrepostas e eventualmente nascer fora 
 ### Próxima tarefa
 
 Implementar sistema de formação com posições de spawn limitadas à arena.
+
+## 16/08/2026 — Target-Based Combat Movement
+
+### Implementado
+
+- Skeletons agora perseguem o Enemy atual em 2D.
+- Enemy procura e persegue o Skeleton mais próximo.
+- Removido sistema antigo de deslocamento global do exército.
+- Novos Skeletons sempre nascem na base.
+- Skeletons recebem posições de combate próximas ao Enemy.
+- Novo Enemy é exibido corretamente após respawn.
+- Novos Skeletons são exibidos corretamente.
+- Visual provisório das unidades é garantido via código.
+- HUD de debug adicionado.
+- Retarget após morte de Enemy está funcionando.
+
+### Resultado
+
+Movimentação v1 considerada estável para continuidade do protótipo.
+
+### Próxima tarefa
+
+Implementar sistema de Waves e progressão de dificuldade.

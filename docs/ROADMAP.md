@@ -34,12 +34,16 @@ Enemy → Corpse → Bones → Skeleton
 
 ## Prototype v0.0.3 — Waves
 
-- [ ] Enemy Spawner
-- [ ] Spawn automático
-- [ ] Sistema de ondas
-- [ ] Intervalo entre ondas
-- [ ] Dificuldade crescente
-- [ ] Contador de inimigos
+- [x] Spawn contínuo de Enemy
+- [x] Múltiplos Skeletons
+- [x] Target-based movement
+- [x] Enemy retarget
+- [ ] Wave counter
+- [ ] Enemies por Wave
+- [ ] Intervalo entre Waves
+- [ ] Aumento de HP
+- [ ] Aumento de dano
+- [ ] Elite Wave
 
 ---
 

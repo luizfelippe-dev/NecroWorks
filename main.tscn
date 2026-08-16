@@ -21,7 +21,6 @@ metadata/_edit_use_anchors_ = true
 script = ExtResource("3_lquwl")
 
 [node name="Enemy" parent="." unique_id=1904484668 instance=ExtResource("3_1bvp3")]
-position = Vector2(70, 70)
 script = ExtResource("3_lquwl")
 unit_color = Color(1, 0, 0, 1)
 

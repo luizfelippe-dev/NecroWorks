@@ -13,7 +13,7 @@ extends Node2D
 
 
 # =========================================================
-# CENAS REUTILIZÁVEIS
+# CENAS
 # =========================================================
 
 var corpse_scene: PackedScene = preload("res://corpse.tscn")
@@ -22,10 +22,20 @@ var enemy_scene: PackedScene = preload("res://enemy.tscn")
 
 
 # =========================================================
+# VISUAL TEMPORÁRIO
+# =========================================================
+
+const SKELETON_COLOR: Color = Color.WHITE
+const ENEMY_COLOR: Color = Color.RED
+
+const UNIT_SIZE: float = 70.0
+
+
+# =========================================================
 # MOVIMENTO
 # =========================================================
 
-var skeleton_speed: float = 150.0
+var skeleton_speed: float = 180.0
 var enemy_speed: float = 100.0
 
 
@@ -51,19 +61,24 @@ var enemy_damage: int = 8
 # COMBATE
 # =========================================================
 
-var attack_distance: float = 90.0
-var attack_cooldown: float = 0.7
+var skeleton_attack_cooldown: float = 0.7
+var enemy_attack_cooldown: float = 0.7
 
 var enemy_attack_timer: float = 0.0
+
+# Distância em que o Enemy consegue bater.
+var enemy_attack_range: float = 135.0
+
+# Quanto o Skeleton pode estar afastado de sua posição
+# de combate para considerarmos que ele chegou.
+var combat_position_tolerance: float = 15.0
 
 
 # =========================================================
 # ECONOMIA
 # =========================================================
 
-# PARA TESTE:
-# pode colocar 100 aqui.
-#
+# CHEAT TEMPORÁRIO PARA TESTE.
 # DEPOIS VOLTE PARA 0.
 var bones: int = 100
 
@@ -94,52 +109,84 @@ var skeletons: Array[Node2D] = []
 var skeleton_hps: Dictionary = {}
 var skeleton_attack_timers: Dictionary = {}
 
+# Skeleton -> slot
+var skeleton_slots: Dictionary = {}
+
+# Slot -> ocupado
+var occupied_skeleton_slots: Dictionary = {}
+
 
 # =========================================================
-# FORMAÇÃO DOS SKELETONS
+# FORMAÇÃO DE SPAWN
 # =========================================================
 
-const SKELETON_FORMATION_COLUMNS: int = 6
-const SKELETON_FORMATION_ROWS: int = 6
+const FORMATION_COLUMNS: int = 6
+const FORMATION_ROWS: int = 6
 
 const MAX_SKELETONS: int = (
-	SKELETON_FORMATION_COLUMNS
-	* SKELETON_FORMATION_ROWS
+	FORMATION_COLUMNS
+	* FORMATION_ROWS
 )
 
-
-# Skeleton provisório possui 70x70.
-# Deixamos espaço entre eles.
-const SKELETON_SPACING: Vector2 = Vector2(
+const SPAWN_SPACING: Vector2 = Vector2(
 	85.0,
 	85.0
 )
 
-
-# Formação começa aqui.
-#
-# 6 linhas cabem tranquilamente em 1080p.
-const SKELETON_FORMATION_ORIGIN: Vector2 = Vector2(
+const SPAWN_ORIGIN: Vector2 = Vector2(
 	250.0,
 	350.0
 )
 
 
-# Quanto a formação inteira avançou.
-var army_offset_x: float = 0.0
+# =========================================================
+# FORMAÇÃO DE COMBATE
+# =========================================================
+
+# Skeletons não tentam entrar dentro do Enemy.
+#
+# Eles ocupam uma formação que acompanha o Enemy:
+#
+#       S  S
+#    S  S  S     ENEMY
+#       S  S
+#
+# Quanto maior o exército, mais colunas são formadas.
+
+const COMBAT_ROWS: int = 6
+
+const COMBAT_SPACING_X: float = 85.0
+const COMBAT_SPACING_Y: float = 85.0
+
+# Primeira coluna fica 110 pixels à esquerda do Enemy.
+const COMBAT_FRONT_DISTANCE: float = 110.0
+
+# Ordem das linhas:
+#
+# centro superior
+# centro inferior
+# segunda superior
+# segunda inferior
+# topo
+# baixo
+#
+# Isso faz os primeiros Skeletons ficarem próximos
+# do centro em vez de começar pelo topo.
+const COMBAT_ROW_ORDER: Array[int] = [
+	2,
+	3,
+	1,
+	4,
+	0,
+	5
+]
 
 
-# Evita que algum bug faça o exército
-# viajar infinitamente para fora da tela.
-const MAX_ARMY_OFFSET_X: float = 900.0
+# =========================================================
+# DEBUG
+# =========================================================
 
-
-# Skeleton -> número do slot
-var skeleton_slots: Dictionary = {}
-
-
-# número do slot -> ocupado
-var occupied_skeleton_slots: Dictionary = {}
+var debug_label: Label = null
 
 
 # =========================================================
@@ -148,21 +195,33 @@ var occupied_skeleton_slots: Dictionary = {}
 
 func _ready() -> void:
 
+	create_debug_hud()
+
+
 	# -----------------------------------------------------
 	# ENEMY INICIAL
 	# -----------------------------------------------------
 
 	enemy = initial_enemy
 
-	# Não dependemos da posição salva no editor.
 	enemy.position = ENEMY_SPAWN_POSITION
 
 	enemy_hp = enemy_max_hp
+
+	ensure_unit_visual(
+		enemy,
+		ENEMY_COLOR
+	)
 
 
 	# -----------------------------------------------------
 	# SKELETON INICIAL
 	# -----------------------------------------------------
+
+	ensure_unit_visual(
+		initial_skeleton,
+		SKELETON_COLOR
+	)
 
 	register_skeleton(
 		initial_skeleton,
@@ -178,8 +237,8 @@ func _ready() -> void:
 		create_skeleton
 	)
 
-
 	update_bones_ui()
+	update_debug_ui()
 
 
 # =========================================================
@@ -188,19 +247,23 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 
-	# Estamos esperando aparecer outro Enemy.
+	update_debug_ui()
+
+
+	# Estamos entre um Enemy e outro.
 	if not is_instance_valid(enemy):
 		return
 
 
-	# Não existe exército no momento.
+	# Não existe exército.
+	# O Enemy fica esperando.
 	if skeletons.is_empty():
 		return
 
 
-	# -----------------------------------------------------
-	# COOLDOWN DO ENEMY
-	# -----------------------------------------------------
+	# =====================================================
+	# COOLDOWNS
+	# =====================================================
 
 	enemy_attack_timer = maxf(
 		enemy_attack_timer - delta,
@@ -208,107 +271,7 @@ func _process(delta: float) -> void:
 	)
 
 
-	# -----------------------------------------------------
-	# COOLDOWN DOS SKELETONS
-	# -----------------------------------------------------
-
 	for current_skeleton: Node2D in skeletons:
-
-		if not is_instance_valid(current_skeleton):
-			continue
-
-
-		var current_timer: float = float(
-			skeleton_attack_timers.get(
-				current_skeleton,
-				0.0
-			)
-		)
-
-
-		current_timer = maxf(
-			current_timer - delta,
-			0.0
-		)
-
-
-		skeleton_attack_timers[
-			current_skeleton
-		] = current_timer
-
-
-	# -----------------------------------------------------
-	# SKELETON MAIS À FRENTE
-	# -----------------------------------------------------
-
-	var front_skeleton: Node2D = (
-		get_front_skeleton()
-	)
-
-
-	if front_skeleton == null:
-		return
-
-
-	var front_distance: float = absf(
-		enemy.position.x
-		- front_skeleton.position.x
-	)
-
-
-	# =====================================================
-	# MOVIMENTO
-	# =====================================================
-
-	if front_distance > attack_distance:
-
-		# Toda a formação avança junta.
-		army_offset_x += (
-			skeleton_speed
-			* delta
-		)
-
-
-		army_offset_x = minf(
-			army_offset_x,
-			MAX_ARMY_OFFSET_X
-		)
-
-
-		update_skeleton_formation_positions()
-
-
-		# Enemy anda para esquerda.
-		enemy.position.x -= (
-			enemy_speed
-			* delta
-		)
-
-
-		return
-
-
-	# =====================================================
-	# COMBATE
-	# =====================================================
-
-	# Enemy ataca o Skeleton mais avançado.
-	if enemy_attack_timer <= 0.0:
-
-		damage_skeleton(
-			front_skeleton
-		)
-
-		enemy_attack_timer = attack_cooldown
-
-
-	# O ataque acima pode ter matado o último Skeleton.
-	if skeletons.is_empty():
-		return
-
-
-	# Todos os Skeletons vivos atacam.
-	for current_skeleton: Node2D in skeletons.duplicate():
 
 		if not is_instance_valid(current_skeleton):
 			continue
@@ -322,18 +285,237 @@ func _process(delta: float) -> void:
 		)
 
 
-		if timer <= 0.0:
+		timer = maxf(
+			timer - delta,
+			0.0
+		)
 
-			attack_enemy(
-				current_skeleton
+
+		skeleton_attack_timers[
+			current_skeleton
+		] = timer
+
+
+	# =====================================================
+	# ENEMY PERSEGUE O SKELETON MAIS PRÓXIMO
+	# =====================================================
+
+	var closest_skeleton: Node2D = (
+		get_closest_skeleton_to_enemy()
+	)
+
+
+	if closest_skeleton == null:
+		return
+
+
+	var distance_to_skeleton: float = (
+		enemy.position.distance_to(
+			closest_skeleton.position
+		)
+	)
+
+
+	if distance_to_skeleton > enemy_attack_range:
+
+		enemy.position = (
+			enemy.position.move_toward(
+				closest_skeleton.position,
+				enemy_speed * delta
+			)
+		)
+
+	else:
+
+		if enemy_attack_timer <= 0.0:
+
+			damage_skeleton(
+				closest_skeleton
+			)
+
+			enemy_attack_timer = (
+				enemy_attack_cooldown
 			)
 
 
-			if enemy_hp <= 0:
+	# O Enemy pode ter acabado de matar
+	# o último Skeleton.
+	if skeletons.is_empty():
+		return
 
-				kill_enemy()
 
-				return
+	# =====================================================
+	# CADA SKELETON PROCURA SUA POSIÇÃO DE COMBATE
+	# =====================================================
+
+	for current_skeleton: Node2D in skeletons:
+
+		if not is_instance_valid(current_skeleton):
+			continue
+
+
+		if not skeleton_slots.has(
+			current_skeleton
+		):
+			continue
+
+
+		var slot: int = int(
+			skeleton_slots[
+				current_skeleton
+			]
+		)
+
+
+		var combat_target: Vector2 = (
+			get_combat_target_position(
+				slot
+			)
+		)
+
+
+		var distance_to_target: float = (
+			current_skeleton.position.distance_to(
+				combat_target
+			)
+		)
+
+
+		# -------------------------------------------------
+		# AINDA NÃO CHEGOU NO INIMIGO
+		# -------------------------------------------------
+
+		if distance_to_target > combat_position_tolerance:
+
+			current_skeleton.position = (
+				current_skeleton.position.move_toward(
+					combat_target,
+					skeleton_speed * delta
+				)
+			)
+
+
+		# -------------------------------------------------
+		# CHEGOU NA POSIÇÃO DE COMBATE
+		# -------------------------------------------------
+
+		else:
+
+			var attack_timer: float = float(
+				skeleton_attack_timers.get(
+					current_skeleton,
+					0.0
+				)
+			)
+
+
+			if attack_timer <= 0.0:
+
+				attack_enemy(
+					current_skeleton
+				)
+
+
+				if enemy_hp <= 0:
+
+					kill_enemy()
+
+					return
+
+
+# =========================================================
+# POSIÇÃO DE COMBATE DO SKELETON
+# =========================================================
+
+func get_combat_target_position(
+	slot: int
+) -> Vector2:
+
+	if not is_instance_valid(enemy):
+
+		return get_spawn_position(
+			slot
+		)
+
+
+	# Temos 6 Skeletons por coluna.
+	var combat_column: int = int(
+		slot / COMBAT_ROWS
+	)
+
+
+	var slot_inside_column: int = (
+		slot % COMBAT_ROWS
+	)
+
+
+	var row_index: int = int(
+		COMBAT_ROW_ORDER[
+			slot_inside_column
+		]
+	)
+
+
+	# Centraliza verticalmente as 6 linhas.
+	var vertical_offset: float = (
+		(
+			float(row_index)
+			- 2.5
+		)
+		* COMBAT_SPACING_Y
+	)
+
+
+	# Primeira coluna fica perto do Enemy.
+	# As outras ficam progressivamente mais atrás.
+	var horizontal_offset: float = (
+		COMBAT_FRONT_DISTANCE
+		+ (
+			float(combat_column)
+			* COMBAT_SPACING_X
+		)
+	)
+
+
+	return Vector2(
+		enemy.position.x
+		- horizontal_offset,
+
+		enemy.position.y
+		+ vertical_offset
+	)
+
+
+# =========================================================
+# POSIÇÃO DE SPAWN
+# =========================================================
+
+func get_spawn_position(
+	slot: int
+) -> Vector2:
+
+	var column: int = (
+		slot
+		% FORMATION_COLUMNS
+	)
+
+
+	var row: int = int(
+		slot
+		/ FORMATION_COLUMNS
+	)
+
+
+	return (
+		SPAWN_ORIGIN
+		+ Vector2(
+			float(column)
+			* SPAWN_SPACING.x,
+
+			float(row)
+			* SPAWN_SPACING.y
+		)
+	)
 
 
 # =========================================================
@@ -370,10 +552,13 @@ func register_skeleton(
 	] = true
 
 
-	# Coloca ele imediatamente
-	# no slot correto da formação.
+	# IMPORTANTE:
+	# Todo Skeleton novo nasce NA BASE.
+	#
+	# Não nasce mais na posição do exército
+	# ou perto do Enemy.
 	new_skeleton.position = (
-		get_skeleton_formation_position(
+		get_spawn_position(
 			slot
 		)
 	)
@@ -415,109 +600,43 @@ func get_free_skeleton_slot() -> int:
 
 
 # =========================================================
-# POSIÇÃO DO SLOT
+# SKELETON MAIS PRÓXIMO DO ENEMY
 # =========================================================
 
-func get_skeleton_formation_position(
-	slot: int
-) -> Vector2:
+func get_closest_skeleton_to_enemy() -> Node2D:
 
-	var column: int = (
-		slot
-		% SKELETON_FORMATION_COLUMNS
-	)
+	if not is_instance_valid(enemy):
+		return null
 
 
-	var row: int = int(
-		slot
-		/ SKELETON_FORMATION_COLUMNS
-	)
+	var closest_skeleton: Node2D = null
 
-
-	var result: Vector2 = (
-		SKELETON_FORMATION_ORIGIN
-		+ Vector2(
-			float(column)
-			* SKELETON_SPACING.x,
-
-			float(row)
-			* SKELETON_SPACING.y
-		)
-	)
-
-
-	result.x += army_offset_x
-
-
-	return result
-
-
-# =========================================================
-# ATUALIZAR FORMAÇÃO
-# =========================================================
-
-func update_skeleton_formation_positions() -> void:
-
-	for current_skeleton: Node2D in skeletons:
-
-		if not is_instance_valid(
-			current_skeleton
-		):
-			continue
-
-
-		if not skeleton_slots.has(
-			current_skeleton
-		):
-			continue
-
-
-		var slot: int = int(
-			skeleton_slots[
-				current_skeleton
-			]
-		)
-
-
-		current_skeleton.position = (
-			get_skeleton_formation_position(
-				slot
-			)
-		)
-
-
-# =========================================================
-# PEGAR SKELETON DA FRENTE
-# =========================================================
-
-func get_front_skeleton() -> Node2D:
-
-	var front_skeleton: Node2D = null
-
-	var greatest_x: float = -1000000.0
+	var closest_distance: float = INF
 
 
 	for current_skeleton: Node2D in skeletons:
 
-		if not is_instance_valid(
-			current_skeleton
-		):
+		if not is_instance_valid(current_skeleton):
 			continue
 
 
-		if current_skeleton.position.x > greatest_x:
-
-			greatest_x = (
-				current_skeleton.position.x
+		var distance: float = (
+			enemy.position.distance_to(
+				current_skeleton.position
 			)
+		)
 
 
-			front_skeleton = (
+		if distance < closest_distance:
+
+			closest_distance = distance
+
+			closest_skeleton = (
 				current_skeleton
 			)
 
 
-	return front_skeleton
+	return closest_skeleton
 
 
 # =========================================================
@@ -537,7 +656,7 @@ func attack_enemy(
 
 	skeleton_attack_timers[
 		attacking_skeleton
-	] = attack_cooldown
+	] = skeleton_attack_cooldown
 
 
 	print(
@@ -631,7 +750,7 @@ func kill_skeleton(
 
 
 	# -----------------------------------------------------
-	# REMOVE DADOS
+	# REMOVE DOS SISTEMAS
 	# -----------------------------------------------------
 
 	skeleton_hps.erase(
@@ -649,10 +768,6 @@ func kill_skeleton(
 	)
 
 
-	# -----------------------------------------------------
-	# REMOVE NÓ
-	# -----------------------------------------------------
-
 	target.queue_free()
 
 
@@ -669,11 +784,12 @@ func kill_skeleton(
 		)
 
 		print(
-			"AGUARDANDO NOVO SKELETON..."
+			"AGUARDANDO REFORÇOS..."
 		)
 
 
 	update_bones_ui()
+	update_debug_ui()
 
 
 # =========================================================
@@ -699,18 +815,18 @@ func kill_enemy() -> void:
 	)
 
 
-	# Impede processar o mesmo Enemy novamente.
 	enemy = null
 
 
-	# Cria cadáver.
 	spawn_corpse(
 		death_position
 	)
 
 
-	# Remove inimigo.
 	dead_enemy.queue_free()
+
+
+	update_debug_ui()
 
 
 	print(
@@ -729,26 +845,28 @@ func kill_enemy() -> void:
 
 
 # =========================================================
-# SPAWN DO ENEMY
+# SPAWN ENEMY
 # =========================================================
 
 func spawn_enemy() -> void:
 
-	var new_enemy_node: Node = (
+	var enemy_node: Node = (
 		enemy_scene.instantiate()
 	)
 
 
 	var new_enemy: Node2D = (
-		new_enemy_node as Node2D
+		enemy_node as Node2D
 	)
 
 
 	if new_enemy == null:
 
 		push_error(
-			"enemy.tscn precisa possuir Node2D como raiz."
+			"enemy.tscn precisa ter Node2D como raiz."
 		)
+
+		enemy_node.queue_free()
 
 		return
 
@@ -763,11 +881,15 @@ func spawn_enemy() -> void:
 	)
 
 
+	ensure_unit_visual(
+		new_enemy,
+		ENEMY_COLOR
+	)
+
+
 	enemy = new_enemy
 
-
 	enemy_hp = enemy_max_hp
-
 
 	enemy_attack_timer = 0.0
 
@@ -776,15 +898,17 @@ func spawn_enemy() -> void:
 		"NOVO INIMIGO CRIADO!"
 	)
 
-
 	print(
 		"Enemy HP: ",
 		enemy_hp
 	)
 
 
+	update_debug_ui()
+
+
 # =========================================================
-# SPAWN DO CORPSE
+# SPAWN CORPSE
 # =========================================================
 
 func spawn_corpse(
@@ -804,7 +928,7 @@ func spawn_corpse(
 	if corpse == null:
 
 		push_error(
-			"corpse.tscn precisa possuir Button como raiz."
+			"corpse.tscn precisa ter Button como raiz."
 		)
 
 		corpse_node.queue_free()
@@ -845,9 +969,7 @@ func process_corpse(
 	corpse: Button
 ) -> void:
 
-	if not is_instance_valid(
-		corpse
-	):
+	if not is_instance_valid(corpse):
 		return
 
 
@@ -861,13 +983,11 @@ func process_corpse(
 		"CADÁVER PROCESSADO!"
 	)
 
-
 	print(
 		"+",
 		bones_per_corpse,
 		" BONES"
 	)
-
 
 	print(
 		"TOTAL DE BONES: ",
@@ -884,10 +1004,6 @@ func process_corpse(
 
 func create_skeleton() -> void:
 
-	# -----------------------------------------------------
-	# SEM BONES
-	# -----------------------------------------------------
-
 	if bones < skeleton_cost:
 
 		print(
@@ -897,10 +1013,6 @@ func create_skeleton() -> void:
 		return
 
 
-	# -----------------------------------------------------
-	# PROCURA SLOT
-	# -----------------------------------------------------
-
 	var free_slot: int = (
 		get_free_skeleton_slot()
 	)
@@ -909,15 +1021,11 @@ func create_skeleton() -> void:
 	if free_slot == -1:
 
 		print(
-			"FORMAÇÃO DE SKELETONS CHEIA!"
+			"LIMITE DE SKELETONS ATINGIDO!"
 		)
 
 		return
 
-
-	# -----------------------------------------------------
-	# INSTANCIA
-	# -----------------------------------------------------
 
 	var skeleton_node: Node = (
 		skeleton_scene.instantiate()
@@ -932,7 +1040,7 @@ func create_skeleton() -> void:
 	if new_skeleton == null:
 
 		push_error(
-			"skeleton.tscn precisa possuir Node2D como raiz."
+			"skeleton.tscn precisa ter Node2D como raiz."
 		)
 
 		skeleton_node.queue_free()
@@ -940,19 +1048,17 @@ func create_skeleton() -> void:
 		return
 
 
-	# -----------------------------------------------------
-	# PAGA O CUSTO
-	# -----------------------------------------------------
-
 	bones -= skeleton_cost
 
 
-	# -----------------------------------------------------
-	# ADICIONA AO JOGO
-	# -----------------------------------------------------
-
 	add_child(
 		new_skeleton
+	)
+
+
+	ensure_unit_visual(
+		new_skeleton,
+		SKELETON_COLOR
 	)
 
 
@@ -963,18 +1069,17 @@ func create_skeleton() -> void:
 
 
 	update_bones_ui()
+	update_debug_ui()
 
 
 	print(
 		"NOVO SKELETON CRIADO!"
 	)
 
-
 	print(
 		"SLOT: ",
 		free_slot
 	)
-
 
 	print(
 		"TOTAL DE BONES: ",
@@ -983,7 +1088,166 @@ func create_skeleton() -> void:
 
 
 # =========================================================
-# INTERFACE
+# VISUAL TEMPORÁRIO
+# =========================================================
+
+func ensure_unit_visual(
+	unit: Node2D,
+	color: Color
+) -> void:
+
+	var existing_node: Node = (
+		unit.get_node_or_null(
+			"DebugVisual"
+		)
+	)
+
+
+	if existing_node != null:
+
+		var existing_visual: Polygon2D = (
+			existing_node as Polygon2D
+		)
+
+
+		if existing_visual != null:
+
+			existing_visual.color = color
+
+
+		return
+
+
+	var visual: Polygon2D = Polygon2D.new()
+
+	visual.name = "DebugVisual"
+
+	visual.color = color
+
+	visual.z_index = 10
+
+
+	var half_size: float = (
+		UNIT_SIZE / 2.0
+	)
+
+
+	var points: PackedVector2Array = PackedVector2Array(
+		[
+			Vector2(
+				-half_size,
+				-half_size
+			),
+
+			Vector2(
+				half_size,
+				-half_size
+			),
+
+			Vector2(
+				half_size,
+				half_size
+			),
+
+			Vector2(
+				-half_size,
+				half_size
+			)
+		]
+	)
+
+
+	visual.polygon = points
+
+
+	unit.add_child(
+		visual
+	)
+
+
+# =========================================================
+# DEBUG HUD
+# =========================================================
+
+func create_debug_hud() -> void:
+
+	debug_label = Label.new()
+
+	debug_label.name = "DebugLabel"
+
+	debug_label.position = Vector2(
+		40.0,
+		165.0
+	)
+
+	debug_label.size = Vector2(
+		500.0,
+		160.0
+	)
+
+
+	add_child(
+		debug_label
+	)
+
+
+func update_debug_ui() -> void:
+
+	if debug_label == null:
+		return
+
+
+	var enemy_text: String = "SPAWNING"
+
+
+	if is_instance_valid(enemy):
+
+		enemy_text = (
+			str(enemy_hp)
+			+ " HP"
+		)
+
+
+	var closest_distance_text: String = "-"
+
+
+	if (
+		is_instance_valid(enemy)
+		and not skeletons.is_empty()
+	):
+
+		var closest: Node2D = (
+			get_closest_skeleton_to_enemy()
+		)
+
+
+		if closest != null:
+
+			var distance: float = (
+				enemy.position.distance_to(
+					closest.position
+				)
+			)
+
+
+			closest_distance_text = str(
+				round(distance)
+			)
+
+
+	debug_label.text = (
+		"DEBUG"
+		+ "\nSkeletons: "
+		+ str(skeletons.size())
+		+ "\nEnemy: "
+		+ enemy_text
+		+ "\nClosest distance: "
+		+ closest_distance_text
+	)
+
+
+# =========================================================
+# BONES UI
 # =========================================================
 
 func update_bones_ui() -> void:
@@ -994,7 +1258,7 @@ func update_bones_ui() -> void:
 	)
 
 
-	var formation_full: bool = (
+	var full: bool = (
 		skeletons.size()
 		>= MAX_SKELETONS
 	)
@@ -1002,5 +1266,5 @@ func update_bones_ui() -> void:
 
 	create_skeleton_button.disabled = (
 		bones < skeleton_cost
-		or formation_full
+		or full
 	)

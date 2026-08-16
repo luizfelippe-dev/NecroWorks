@@ -268,3 +268,22 @@ Enemy
 → criar novo Skeleton.
 
 Quando esse ciclo estiver funcionando, o primeiro loop econômico do Corpse Factory estará completo.
+
+## Problemas conhecidos
+
+### Node2D migration
+
+A migração de Skeleton e Enemy de ColorRect para Node2D ainda está em andamento.
+
+Comportamento atual:
+
+- Skeleton inicial é exibido corretamente.
+- Enemy inicial é exibido corretamente.
+- Novo Enemy é instanciado e participa do combate, confirmado pelos logs, porém não é renderizado.
+- Novos Skeletons podem ser registrados logicamente mas não aparecer visualmente.
+- Sistema de combate permanece funcional nos bastidores.
+- Skeleton mantém HP entre inimigos e pode morrer no segundo combate; isso é comportamento esperado atualmente.
+
+Próxima correção:
+
+Garantir visual placeholder via código para todas as unidades instanciadas dinamicamente.
