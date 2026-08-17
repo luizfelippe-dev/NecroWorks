@@ -99,6 +99,18 @@ const ENEMY_SPAWN_POSITION: Vector2 = Vector2(
 	555.0
 )
 
+# O combate acontece em uma faixa controlada da arena.
+# Isso impede Enemy/Boss e formação de "arrastarem" uns aos
+# outros infinitamente para fora da tela.
+const ENEMY_LANE_Y: float = 555.0
+const ENEMY_MIN_X: float = 650.0
+const ENEMY_MAX_X: float = 1650.0
+
+const SKELETON_COMBAT_MIN_X: float = 80.0
+const SKELETON_COMBAT_MAX_X: float = 1500.0
+const SKELETON_COMBAT_MIN_Y: float = 300.0
+const SKELETON_COMBAT_MAX_Y: float = 810.0
+
 # Dentro da mesma Wave o próximo Enemy aparece rápido.
 var enemy_spawn_delay: float = 0.5
 
@@ -129,6 +141,45 @@ const ELITE_WAVE_INTERVAL: int = 5
 const ELITE_ENEMIES_PER_WAVE: int = 5
 const ELITE_HP_MULTIPLIER: float = 1.4
 const ELITE_DAMAGE_BONUS: int = 3
+
+
+# =========================================================
+# BOSS
+# =========================================================
+
+const BOSS_WAVE: int = 20
+const BOSS_NAME: String = "THE FOREMAN"
+
+const BOSS_HP: int = 2200
+const BOSS_DAMAGE: int = 28
+const BOSS_SIZE: float = 140.0
+
+const BOSS_SPECIAL_ATTACK_INTERVAL: float = 4.0
+const BOSS_SPECIAL_ATTACK_TARGETS: int = 6
+const BOSS_SPECIAL_ATTACK_DAMAGE: int = 35
+
+const BOSS_COLOR: Color = Color(
+	0.32,
+	0.02,
+	0.38,
+	1.0
+)
+
+var boss_active: bool = false
+var boss_special_attack_timer: float = 0.0
+
+
+# =========================================================
+# RUN END
+# =========================================================
+
+var run_finished: bool = false
+var run_won: bool = false
+
+var run_end_panel: ColorRect = null
+var run_end_title_label: Label = null
+var run_end_summary_label: Label = null
+var restart_run_button: Button = null
 
 
 # =========================================================
@@ -280,6 +331,7 @@ func _ready() -> void:
 	create_wave_hud()
 	create_upgrade_ui()
 	create_synergy_hud()
+	create_run_end_ui()
 
 
 	# -----------------------------------------------------
@@ -330,6 +382,10 @@ func _process(delta: float) -> void:
 	update_debug_ui()
 
 
+	if run_finished:
+		return
+
+
 	# Estamos entre um Enemy e outro ou entre Waves.
 	if not is_instance_valid(enemy):
 		return
@@ -348,6 +404,26 @@ func _process(delta: float) -> void:
 		enemy_attack_timer - delta,
 		0.0
 	)
+
+
+	if boss_active:
+
+		boss_special_attack_timer = maxf(
+			boss_special_attack_timer - delta,
+			0.0
+		)
+
+
+		if (
+			boss_special_attack_timer <= 0.0
+			and not skeletons.is_empty()
+		):
+
+			boss_special_attack()
+
+			boss_special_attack_timer = (
+				BOSS_SPECIAL_ATTACK_INTERVAL
+			)
 
 
 	for current_skeleton: Node2D in skeletons:
@@ -388,21 +464,36 @@ func _process(delta: float) -> void:
 		return
 
 
-	var distance_to_skeleton: float = (
-		enemy.position.distance_to(
-			closest_skeleton.position
-		)
+	var distance_to_skeleton: float = absf(
+		enemy.position.x
+		- closest_skeleton.position.x
 	)
+
+
+	# Enemy/Boss luta em uma lane horizontal.
+	# Não perseguimos o Y do Skeleton porque a formação também
+	# depende da posição do Enemy. Perseguir nos dois eixos criava
+	# um feedback em que os dois lados podiam sair da tela.
+	enemy.position.y = ENEMY_LANE_Y
 
 
 	if distance_to_skeleton > enemy_attack_range:
 
-		enemy.position = (
-			enemy.position.move_toward(
-				closest_skeleton.position,
-				enemy_speed * delta
-			)
+		var next_enemy_x: float = move_toward(
+			enemy.position.x,
+			closest_skeleton.position.x,
+			enemy_speed * delta
 		)
+
+
+		next_enemy_x = clampf(
+			next_enemy_x,
+			ENEMY_MIN_X,
+			ENEMY_MAX_X
+		)
+
+
+		enemy.position.x = next_enemy_x
 
 	else:
 
@@ -511,17 +602,32 @@ func start_wave(
 
 	enemies_defeated_this_wave = 0
 
-	enemy_max_hp = (
-		get_enemy_hp_for_wave(
-			current_wave
-		)
+	boss_active = is_boss_wave(
+		current_wave
 	)
 
-	enemy_damage = (
-		get_enemy_damage_for_wave(
-			current_wave
+	if boss_active:
+
+		enemy_max_hp = BOSS_HP
+		enemy_damage = BOSS_DAMAGE
+
+		boss_special_attack_timer = (
+			BOSS_SPECIAL_ATTACK_INTERVAL
 		)
-	)
+
+	else:
+
+		enemy_max_hp = (
+			get_enemy_hp_for_wave(
+				current_wave
+			)
+		)
+
+		enemy_damage = (
+			get_enemy_damage_for_wave(
+				current_wave
+			)
+		)
 
 	wave_in_progress = true
 	wave_transition_in_progress = false
@@ -531,7 +637,11 @@ func start_wave(
 	print("==============================")
 	print("WAVE ", current_wave, " INICIADA!")
 
-	if is_elite_wave(current_wave):
+	if boss_active:
+		print("BOSS WAVE!")
+		print(BOSS_NAME)
+
+	elif is_elite_wave(current_wave):
 		print("ELITE WAVE!")
 
 	print(
@@ -566,6 +676,8 @@ func start_wave(
 			get_current_enemy_color()
 		)
 
+		update_current_enemy_visual_size()
+
 	else:
 
 		spawn_enemy()
@@ -578,6 +690,10 @@ func start_wave(
 func get_enemies_for_wave(
 	wave_number: int
 ) -> int:
+
+	if is_boss_wave(wave_number):
+		return 1
+
 
 	if is_elite_wave(wave_number):
 		return ELITE_ENEMIES_PER_WAVE
@@ -643,11 +759,25 @@ func is_elite_wave(
 
 	return (
 		wave_number > 0
+		and wave_number != BOSS_WAVE
 		and wave_number % ELITE_WAVE_INTERVAL == 0
 	)
 
 
+func is_boss_wave(
+	wave_number: int
+) -> bool:
+
+	return (
+		wave_number == BOSS_WAVE
+	)
+
+
 func get_current_enemy_color() -> Color:
+
+	if is_boss_wave(current_wave):
+		return BOSS_COLOR
+
 
 	if is_elite_wave(current_wave):
 		return ELITE_ENEMY_COLOR
@@ -686,13 +816,24 @@ func get_combat_target_position(
 		)
 
 
+	# Os slots de spawn continuam persistentes, mas a formação
+	# de combate fecha as lacunas quando Skeletons morrem.
+	# Assim um Skeleton que originalmente estava numa coluna
+	# traseira pode avançar e ocupar a frente da formação.
+	var compacted_slot: int = (
+		get_compacted_combat_slot(
+			slot
+		)
+	)
+
+
 	var combat_column: int = int(
-		slot / COMBAT_ROWS
+		compacted_slot / COMBAT_ROWS
 	)
 
 
 	var slot_inside_column: int = (
-		slot % COMBAT_ROWS
+		compacted_slot % COMBAT_ROWS
 	)
 
 
@@ -721,13 +862,56 @@ func get_combat_target_position(
 	)
 
 
-	return Vector2(
+	var target_x: float = clampf(
 		enemy.position.x
 		- horizontal_offset,
-
-		enemy.position.y
-		+ vertical_offset
+		SKELETON_COMBAT_MIN_X,
+		SKELETON_COMBAT_MAX_X
 	)
+
+
+	var target_y: float = clampf(
+		ENEMY_LANE_Y
+		+ vertical_offset,
+		SKELETON_COMBAT_MIN_Y,
+		SKELETON_COMBAT_MAX_Y
+	)
+
+
+	return Vector2(
+		target_x,
+		target_y
+	)
+
+
+func get_compacted_combat_slot(
+	original_slot: int
+) -> int:
+
+	var compacted_slot: int = 0
+
+
+	for slot_index: int in range(
+		MAX_SKELETONS
+	):
+
+		if not occupied_skeleton_slots.has(
+			slot_index
+		):
+
+			continue
+
+
+		if slot_index == original_slot:
+
+			return compacted_slot
+
+
+		compacted_slot += 1
+
+
+	# Fallback defensivo. Normalmente não deve acontecer.
+	return original_slot
 
 
 # =========================================================
@@ -850,7 +1034,9 @@ func get_closest_skeleton_to_enemy() -> Node2D:
 
 	var closest_skeleton: Node2D = null
 
-	var closest_distance: float = INF
+	var closest_horizontal_distance: float = INF
+
+	var closest_vertical_distance: float = INF
 
 
 	for current_skeleton: Node2D in skeletons:
@@ -859,16 +1045,45 @@ func get_closest_skeleton_to_enemy() -> Node2D:
 			continue
 
 
-		var distance: float = (
-			enemy.position.distance_to(
-				current_skeleton.position
-			)
+		var horizontal_distance: float = absf(
+			enemy.position.x
+			- current_skeleton.position.x
 		)
 
 
-		if distance < closest_distance:
+		var vertical_distance: float = absf(
+			ENEMY_LANE_Y
+			- current_skeleton.position.y
+		)
 
-			closest_distance = distance
+
+		if horizontal_distance < closest_horizontal_distance:
+
+			closest_horizontal_distance = (
+				horizontal_distance
+			)
+
+			closest_vertical_distance = (
+				vertical_distance
+			)
+
+			closest_skeleton = (
+				current_skeleton
+			)
+
+
+		elif (
+			is_equal_approx(
+				horizontal_distance,
+				closest_horizontal_distance
+			)
+			and vertical_distance
+			< closest_vertical_distance
+		):
+
+			closest_vertical_distance = (
+				vertical_distance
+			)
 
 			closest_skeleton = (
 				current_skeleton
@@ -1201,6 +1416,18 @@ func kill_enemy() -> void:
 	total_enemies_killed += 1
 
 
+	var defeated_boss: bool = boss_active
+
+
+	if defeated_boss:
+
+		print("")
+		print("##############################")
+		print(BOSS_NAME, " DEFEATED!")
+		print("##############################")
+		print("")
+
+
 	var dead_enemy: Node2D = enemy
 
 
@@ -1210,6 +1437,10 @@ func kill_enemy() -> void:
 
 
 	enemy = null
+
+
+	if defeated_boss:
+		boss_active = false
 
 
 	spawn_corpse(
@@ -1233,6 +1464,22 @@ func kill_enemy() -> void:
 
 	update_wave_ui()
 	update_debug_ui()
+
+
+	# =====================================================
+	# BOSS DERROTADO = VICTORY
+	# =====================================================
+
+	if defeated_boss:
+
+		wave_in_progress = false
+		wave_transition_in_progress = false
+
+		finish_run(
+			true
+		)
+
+		return
 
 
 	# =====================================================
@@ -1345,6 +1592,8 @@ func spawn_enemy() -> void:
 
 	enemy = new_enemy
 
+	update_current_enemy_visual_size()
+
 	enemy_hp = enemy_max_hp
 
 	enemy_attack_timer = 0.0
@@ -1365,6 +1614,167 @@ func spawn_enemy() -> void:
 
 
 	update_wave_ui()
+	update_debug_ui()
+
+
+# =========================================================
+# BOSS
+# =========================================================
+
+func update_current_enemy_visual_size() -> void:
+
+	if not is_instance_valid(enemy):
+		return
+
+
+	var visual_node: Node = (
+		enemy.get_node_or_null(
+			"DebugVisual"
+		)
+	)
+
+
+	var visual: Polygon2D = (
+		visual_node as Polygon2D
+	)
+
+
+	if visual == null:
+		return
+
+
+	var target_size: float = UNIT_SIZE
+
+
+	if boss_active:
+		target_size = BOSS_SIZE
+
+
+	var half_size: float = (
+		target_size / 2.0
+	)
+
+
+	visual.polygon = PackedVector2Array(
+		[
+			Vector2(-half_size, -half_size),
+			Vector2(half_size, -half_size),
+			Vector2(half_size, half_size),
+			Vector2(-half_size, half_size)
+		]
+	)
+
+
+func boss_special_attack() -> void:
+
+	if not boss_active:
+		return
+
+
+	if not is_instance_valid(enemy):
+		return
+
+
+	if skeletons.is_empty():
+		return
+
+
+	var valid_targets: Array[Node2D] = []
+
+
+	for current_skeleton: Node2D in skeletons:
+
+		if is_instance_valid(
+			current_skeleton
+		):
+
+			valid_targets.append(
+				current_skeleton
+			)
+
+
+	valid_targets.shuffle()
+
+
+	var target_count: int = min(
+		BOSS_SPECIAL_ATTACK_TARGETS,
+		valid_targets.size()
+	)
+
+
+	if target_count <= 0:
+		return
+
+
+	print("")
+	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	print(
+		BOSS_NAME,
+		" USED INDUSTRIAL CRUSH!"
+	)
+	print(
+		"Targets: ",
+		target_count,
+		" | Damage: ",
+		BOSS_SPECIAL_ATTACK_DAMAGE
+	)
+	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+
+	var targets_to_damage: Array[Node2D] = []
+
+
+	for index: int in range(
+		target_count
+	):
+
+		targets_to_damage.append(
+			valid_targets[index]
+		)
+
+
+	for target: Node2D in targets_to_damage:
+
+		if not is_instance_valid(target):
+			continue
+
+
+		if not skeleton_hps.has(target):
+			continue
+
+
+		var current_hp: int = int(
+			skeleton_hps[target]
+		)
+
+
+		current_hp -= (
+			BOSS_SPECIAL_ATTACK_DAMAGE
+		)
+
+
+		skeleton_hps[
+			target
+		] = current_hp
+
+
+		print(
+			"BOSS AOE | Skeleton HP: ",
+			current_hp
+		)
+
+
+		if current_hp <= 0:
+
+			kill_skeleton(
+				target
+			)
+
+
+			if not is_instance_valid(enemy):
+				return
+
+
 	update_debug_ui()
 
 
@@ -1429,6 +1839,10 @@ func spawn_corpse(
 func process_corpse(
 	corpse: Button
 ) -> void:
+
+	if run_finished:
+		return
+
 
 	if not is_instance_valid(corpse):
 		return
@@ -1541,6 +1955,10 @@ func process_corpse(
 # =========================================================
 
 func create_skeleton() -> void:
+
+	if run_finished:
+		return
+
 
 	if bones < skeleton_cost:
 
@@ -2142,6 +2560,10 @@ func select_upgrade_by_index(
 func select_upgrade(
 	upgrade_id: String
 ) -> void:
+
+	if run_finished:
+		return
+
 
 	if not wave_transition_in_progress:
 		return
@@ -2824,6 +3246,288 @@ func update_synergy_ui() -> void:
 
 
 # =========================================================
+# RUN END / VICTORY
+# =========================================================
+
+func create_run_end_ui() -> void:
+
+	run_end_panel = ColorRect.new()
+
+	run_end_panel.name = "RunEndPanel"
+
+	run_end_panel.position = Vector2(
+		0.0,
+		0.0
+	)
+
+	run_end_panel.size = Vector2(
+		1920.0,
+		1080.0
+	)
+
+	run_end_panel.color = Color(
+		0.015,
+		0.015,
+		0.015,
+		0.96
+	)
+
+	run_end_panel.z_index = 1000
+
+	run_end_panel.mouse_filter = (
+		Control.MOUSE_FILTER_STOP
+	)
+
+
+	add_child(
+		run_end_panel
+	)
+
+
+	run_end_title_label = Label.new()
+
+	run_end_title_label.name = "RunEndTitle"
+
+	run_end_title_label.position = Vector2(
+		510.0,
+		135.0
+	)
+
+	run_end_title_label.size = Vector2(
+		900.0,
+		120.0
+	)
+
+	run_end_title_label.horizontal_alignment = (
+		HORIZONTAL_ALIGNMENT_CENTER
+	)
+
+	run_end_title_label.text = (
+		"RUN COMPLETE"
+	)
+
+
+	run_end_panel.add_child(
+		run_end_title_label
+	)
+
+
+	run_end_summary_label = Label.new()
+
+	run_end_summary_label.name = "RunEndSummary"
+
+	run_end_summary_label.position = Vector2(
+		560.0,
+		285.0
+	)
+
+	run_end_summary_label.size = Vector2(
+		800.0,
+		500.0
+	)
+
+	run_end_summary_label.horizontal_alignment = (
+		HORIZONTAL_ALIGNMENT_CENTER
+	)
+
+	run_end_summary_label.vertical_alignment = (
+		VERTICAL_ALIGNMENT_TOP
+	)
+
+
+	run_end_panel.add_child(
+		run_end_summary_label
+	)
+
+
+	restart_run_button = Button.new()
+
+	restart_run_button.name = "RestartRunButton"
+
+	restart_run_button.position = Vector2(
+		760.0,
+		825.0
+	)
+
+	restart_run_button.size = Vector2(
+		400.0,
+		90.0
+	)
+
+	restart_run_button.text = (
+		"RESTART RUN"
+	)
+
+	restart_run_button.pressed.connect(
+		restart_run
+	)
+
+
+	run_end_panel.add_child(
+		restart_run_button
+	)
+
+
+	run_end_panel.visible = false
+
+
+func finish_run(
+	victory: bool
+) -> void:
+
+	if run_finished:
+		return
+
+
+	run_finished = true
+	run_won = victory
+
+	boss_active = false
+	wave_in_progress = false
+	wave_transition_in_progress = false
+
+
+	hide_upgrade_selection()
+
+
+	create_skeleton_button.disabled = true
+
+
+	if victory:
+
+		print("")
+		print("================================")
+		print("PRODUCTION TARGET ACHIEVED")
+		print("NECROWORKS RUN COMPLETE")
+		print("================================")
+		print("")
+
+	else:
+
+		print("")
+		print("================================")
+		print("OPERATION TERMINATED")
+		print("NECROWORKS RUN FAILED")
+		print("================================")
+		print("")
+
+
+	show_run_end_screen()
+
+
+func show_run_end_screen() -> void:
+
+	if run_end_panel == null:
+		return
+
+
+	if run_end_title_label == null:
+		return
+
+
+	if run_end_summary_label == null:
+		return
+
+
+	if run_won:
+
+		run_end_title_label.text = (
+			"PRODUCTION TARGET ACHIEVED"
+			+ "\nTHE FOREMAN HAS BEEN TERMINATED"
+		)
+
+	else:
+
+		run_end_title_label.text = (
+			"OPERATION TERMINATED"
+			+ "\nRUN FAILED"
+		)
+
+
+	run_end_summary_label.text = (
+		"NECROWORKS — RUN SUMMARY"
+		+ "\n\nWave Reached: "
+		+ str(current_wave)
+		+ "\nEnemies Killed: "
+		+ str(total_enemies_killed)
+		+ "\nCorpses Processed: "
+		+ str(total_corpses_processed)
+		+ "\nSkeletons Built: "
+		+ str(total_skeletons_created)
+		+ "\nSkeletons Lost: "
+		+ str(total_skeletons_lost)
+		+ "\nSkeletons Revived: "
+		+ str(total_skeletons_revived)
+		+ "\nBones Earned: "
+		+ str(total_bones_earned)
+		+ "\nBones Remaining: "
+		+ str(bones)
+		+ "\nArmy Remaining: "
+		+ str(skeletons.size())
+		+ "\nUpgrades Selected: "
+		+ str(total_upgrades_selected)
+		+ "\nSynergies Unlocked: "
+		+ str(active_synergies.size())
+		+ "\n\n"
+		+ get_run_synergy_summary()
+	)
+
+
+	run_end_panel.visible = true
+
+
+func get_run_synergy_summary() -> String:
+
+	if active_synergies.is_empty():
+
+		return "Active Synergies: None"
+
+
+	var result: String = (
+		"Active Synergies:"
+	)
+
+
+	var synergy_order: Array[String] = [
+		SYNERGY_RECYCLING_PLANT,
+		SYNERGY_SECOND_SHIFT,
+		SYNERGY_BONE_ASSEMBLY_LINE,
+		SYNERGY_OVERCLOCKED_OSSUARY
+	]
+
+
+	for synergy_id: String in synergy_order:
+
+		if not has_synergy(
+			synergy_id
+		):
+
+			continue
+
+
+		result += (
+			"\n- "
+			+ get_synergy_name(
+				synergy_id
+			)
+		)
+
+
+	return result
+
+
+func restart_run() -> void:
+
+	print("")
+	print("==============================")
+	print("RESTARTING NECROWORKS RUN...")
+	print("==============================")
+
+
+	get_tree().reload_current_scene()
+
+
+# =========================================================
 # WAVE HUD
 # =========================================================
 
@@ -2857,13 +3561,37 @@ func update_wave_ui() -> void:
 		return
 
 
+	if run_finished:
+
+		if run_won:
+			wave_label.text = (
+				"RUN COMPLETE"
+				+ "\nVICTORY"
+			)
+
+		else:
+			wave_label.text = (
+				"RUN COMPLETE"
+				+ "\nDEFEAT"
+			)
+
+		return
+
+
 	var wave_title: String = (
 		"WAVE "
 		+ str(current_wave)
 	)
 
 
-	if is_elite_wave(current_wave):
+	if is_boss_wave(current_wave):
+
+		wave_title += (
+			" - BOSS: "
+			+ BOSS_NAME
+		)
+
+	elif is_elite_wave(current_wave):
 
 		wave_title += " - ELITE"
 
@@ -2958,10 +3686,9 @@ func update_debug_ui() -> void:
 
 		if closest != null:
 
-			var distance: float = (
-				enemy.position.distance_to(
-					closest.position
-				)
+			var distance: float = absf(
+				enemy.position.x
+				- closest.position.x
 			)
 
 
@@ -2982,9 +3709,13 @@ func update_debug_ui() -> void:
 		+ str(total_upgrades_selected)
 		+ "\nSynergies: "
 		+ str(active_synergies.size())
+		+ "\nBoss Active: "
+		+ str(boss_active)
+		+ "\nRun Finished: "
+		+ str(run_finished)
 		+ "\nEnemy: "
 		+ enemy_text
-		+ "\nClosest distance: "
+		+ "\nClosest X distance: "
 		+ closest_distance_text
 		+ "\n--- RUN METRICS ---"
 		+ "\nEnemies Killed: "
