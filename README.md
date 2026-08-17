@@ -1,6 +1,5 @@
-# Corpse Factory
-
-Corpse Factory é um roguelite 2D de autobattle e automação necromântica desenvolvido em Godot.
+# NecroWorks
+NecroWorks é um roguelite 2D de autobattle e automação necromântica desenvolvido em Godot.
 
 O jogador derrota hordas de inimigos, transforma seus cadáveres em recursos e utiliza esses recursos para construir um exército de mortos-vivos cada vez maior.
 
