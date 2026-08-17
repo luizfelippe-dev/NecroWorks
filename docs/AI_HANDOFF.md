@@ -1,152 +1,222 @@
 # NecroWorks — AI Handoff
 
-**Última atualização:** 16/08/2026
+**Última atualização:** 17/08/2026
 
-## Objetivo deste documento
-
-Este arquivo contém o estado atual do desenvolvimento de **NecroWorks**.
-
-Ele deve permitir que outra conversa do ChatGPT continue o projeto sem depender do histórico completo de conversas anteriores.
-
-Sempre consultar este arquivo antes de continuar o desenvolvimento.
+Este arquivo é a principal fonte de continuidade do projeto. Ele deve permitir que outra conversa continue o desenvolvimento sem depender do histórico completo.
 
 ---
 
-## Identidade do projeto
+# 1. Identidade
 
 **Nome:** NecroWorks  
-**Subtítulo de marca:** Industrial Reanimation Solutions  
+**Brand line:** Industrial Reanimation Solutions  
 **Slogan:** Waste Nothing. Raise Everything.
 
-Nome anterior durante o início do protótipo: `Corpse Factory`.
-
-O nome foi alterado porque já existia outro jogo comercial com o nome anterior.
+Nome anterior do protótipo: `Corpse Factory`.
 
 ---
 
-## Informações técnicas
+# 2. Visão do produto
 
-**Engine:** Godot 4.7.1  
-**Linguagem:** GDScript  
-**Tipo:** 2D  
-**Plataforma inicial:** Windows / Steam  
-**Desenvolvimento:** solo  
-**Repositório:** Git/GitHub  
-**Branch principal:** `main`
+NecroWorks é um roguelite 2D de autobattler, estratégia e automação necromântica.
 
-Gêneros / pilares:
+Fantasia central:
 
-- Roguelite
-- Autobattler
-- Automação
-- Estratégia
-- Incremental
+> matar inimigos, reciclar cadáveres, transformar matéria-prima em um exército e escalar a operação até uma horda industrial.
 
----
+Loop pretendido:
 
-## Conceito
+```text
+Enemy
+→ combate automático
+→ Corpse
+→ processamento
+→ recursos
+→ produção de Undead
+→ crescimento do exército
+→ Waves
+→ upgrades
+→ sinergias
+→ elites/bosses
+→ fim da run
+```
 
-O jogador controla uma operação de necromancia industrial.
+Pilares:
 
-Enemies atacam.
-
-Quando mortos, seus cadáveres permanecem no campo e podem ser processados.
-
-Cadáveres serão transformados em recursos como:
-
-- Bones
-- Flesh
-- Blood
-- Souls
-
-Esses recursos permitem produzir mortos-vivos, melhorar a operação e, futuramente, construir máquinas e automações.
-
-O objetivo de design é permitir builds fortes e combinações emergentes com relativamente poucas regras.
+- poucas regras, muitas interações;
+- exército parcialmente descartável;
+- cadáver como recurso econômico;
+- identidade de necromancia industrial/corporativa;
+- runs fáceis de entender e difíceis de otimizar;
+- forte potencial visual e de compartilhamento;
+- escopo viável para desenvolvimento solo.
 
 ---
 
-## Filosofia de design
+# 3. Stack
 
-O jogo deve ser:
+- Godot 4.7.1
+- GDScript
+- 2D
+- Single-player
+- Windows como primeira plataforma
+- Steam como distribuição comercial planejada
+- Git + GitHub
 
-- fácil de entender;
-- barato de produzir;
-- adequado para desenvolvimento solo;
-- altamente rejogável;
-- satisfatório visualmente;
-- divertido de assistir;
-- capaz de produzir builds absurdas;
-- baseado mais em sistemas do que em enorme quantidade de assets.
-
-Princípio:
-
-> Poucas regras simples devem gerar muitas interações complexas.
-
-Não copiar sistemas, arte ou identidade de outros jogos.
+O projeto trata warnings de GDScript com rigor. Preferir tipagem explícita e evitar inferência ambígua de `Variant`.
 
 ---
 
-## Loop principal planejado
+# 4. Estado de versão
 
-Enemy aparece  
-→ undead atacam automaticamente  
-→ Enemy morre  
-→ Corpse aparece  
-→ Corpse é processado  
-→ recursos são obtidos  
-→ novas criaturas são produzidas  
-→ exército cresce  
-→ Waves ficam mais fortes  
-→ upgrades são escolhidos  
-→ sinergias aparecem  
-→ boss  
-→ fim da run.
+**Última tag estável:** `v0.0.3`  
+**Em desenvolvimento:** `v0.1.0 — First Run`
+
+`v0.1.0` ainda não deve ser tagueada.
 
 ---
 
-## Estado de versão
+# 5. Estado atual — implementado
 
-**Última versão estável:** `v0.0.2`
+## Combate
 
-### v0.0.1
+- Skeleton e Enemy em Node2D.
+- Movimento baseado em target.
+- Enemy procura Skeleton mais próximo.
+- Skeletons procuram Enemy atual.
+- Retarget automático.
+- HP individual de Skeleton.
+- Cooldown individual de Skeleton.
+- Dano.
+- Enemy attack cooldown.
+- Skeleton death.
+- Enemy death.
 
-Combat prototype:
+## Economia
 
-- movimento;
-- HP;
-- dano;
-- cooldown;
-- ataque automático;
-- morte.
+- Corpse.
+- Clique/processamento de Corpse.
+- Bones.
+- `bones_per_corpse = 8` temporariamente.
+- Skeleton Cost base = 5.
+- Criação manual de Skeleton.
+- Limite atual de 36 Skeletons.
 
-### v0.0.2
+## Waves
 
-Corpse Loop + múltiplas unidades + movimentação estabilizada:
+- Wave counter.
+- Enemies por Wave.
+- Enemies Remaining.
+- Delay de 0.5 s entre Enemies.
+- HP scaling.
+- Damage scaling.
+- Elite Wave a cada 5 Waves.
+- Elite com 5 Enemies, HP multiplicado e dano extra.
+- Upgrade selection obrigatória ao finalizar Wave.
 
-- Corpse;
-- Bones;
-- criação de Skeleton;
-- múltiplos Skeletons;
-- HP individual;
-- cooldown individual;
-- Enemy respawn;
-- Node2D;
-- unidades dinâmicas visíveis;
-- target-based movement;
-- retarget;
-- HUD de debug.
+## Upgrades
 
-### Próxima versão
+Pool atual: 10.
 
-`v0.0.3 — Waves`
+1. Sharpened Bones — +25% Skeleton Damage.
+2. Bone Plating — +25 Max HP e +25 HP nos Skeletons vivos.
+3. Efficient Recycling — +2 Bones/Corpse.
+4. Rapid Assault — +15% Attack Speed.
+5. Death March — +20% Movement Speed.
+6. Mass Production — -1 Bone no custo de Skeleton, mínimo 1.
+7. Heavy Bones — +50% Damage e -20% Attack Speed.
+8. Bone Harvest — +20% chance por stack de +5 Bones extras.
+9. Reassembly — +15% chance por stack de reviver com 50% HP.
+10. Final Service — +20 de dano por stack quando Skeleton morre.
+
+Três upgrades são sorteados sem repetição dentro da seleção.
+
+Upgrades limitados deixam de aparecer ao atingir seus tetos.
+
+## Sinergias
+
+### Overclocked Ossuary
+
+Heavy Bones + Rapid Assault.
+
+Efeito:
+20% de chance de Skeleton atacar duas vezes.
+
+**Runtime validado.**
+
+### Recycling Plant
+
+Efficient Recycling + Bone Harvest.
+
+Efeito:
+dobra o bônus de Bone Harvest.
+
+**Runtime validado.**
+
+### Second Shift
+
+Reassembly + Final Service.
+
+Efeito:
+quando Reassembly salva um Skeleton, o revive também causa 50% do dano de Final Service.
+
+**Runtime validado.**
+
+### Bone Assembly Line
+
+Mass Production + Efficient Recycling.
+
+Efeito:
+25% de chance de produzir Skeleton grátis ao processar Corpse.
+
+**Desbloqueio validado.**
+O código do efeito está implementado, mas ainda falta registrar explicitamente um proc de Skeleton gratuito em playtest.
+
+## Run Metrics
+
+HUD de debug registra:
+
+- Enemies Killed;
+- Corpses Processed;
+- Skeletons Built;
+- Skeletons Lost;
+- Skeletons Revived;
+- Bones Earned;
+- quantidade de upgrades;
+- quantidade de sinergias.
 
 ---
 
-## Arquitetura atual das cenas
+# 6. Último playtest relevante
 
-### `main.tscn`
+Em 17/08/2026 foi executado um teste longo.
 
-Estrutura atual relevante:
+Resultados observados:
+
+- Waves continuaram progredindo.
+- Wave 5, 10, 15 e 20 funcionaram como Elite Waves.
+- O teste chegou à Wave 21.
+- Overclocked Ossuary disparou repetidamente.
+- Recycling Plant dobrou o bônus de Bone Harvest.
+- Second Shift disparou após Reassembly.
+- Bone Assembly Line foi desbloqueada.
+- Não houve erro de runtime aparente no log analisado.
+- O teste foi encerrado manualmente durante Wave 21.
+
+Problema de balanceamento conhecido:
+
+- a economia atual permite crescimento muito rápido;
+- o exército pode chegar próximo do limite cedo;
+- Bones acumulam em excesso;
+- Waves deixam de representar ameaça adequada quando a horda cresce.
+
+**Decisão:** não realizar balanceamento definitivo antes de fechar a primeira run e principais sistemas.
+
+---
+
+# 7. Arquitetura atual
+
+Cena principal relevante:
 
 ```text
 Main
@@ -157,287 +227,123 @@ Main
 └── CreateSkeletonButton
 ```
 
-`Corpse`, novos `Skeletons`, novos `Enemies` e o HUD de debug podem ser criados dinamicamente durante a execução.
+Criados dinamicamente:
 
-### `skeleton.tscn`
+- Skeletons;
+- Enemies;
+- Corpses;
+- Wave HUD;
+- Upgrade UI;
+- Synergy HUD;
+- Debug HUD.
 
-- raiz: `Node2D`;
-- cena reutilizável;
-- placeholder visual temporário.
+Scenes:
 
-### `enemy.tscn`
+- `main.tscn`
+- `skeleton.tscn`
+- `enemy.tscn`
+- `corpse.tscn`
 
-- raiz: `Node2D`;
-- cena reutilizável;
-- placeholder visual temporário.
+Script principal:
 
-### `corpse.tscn`
+- `main.gd`
 
-- raiz: `Button`;
-- clicável;
-- usado atualmente para representar e processar Corpse.
+A maior parte da lógica ainda está centralizada em `main.gd`.
 
----
+Isso foi intencional para prototipação, porém o arquivo já cresceu bastante. Após fechar `v0.1.0`, reavaliar separação em sistemas como Wave, Upgrade, Resource e Run State.
 
-## `main.gd` — responsabilidades atuais
-
-O protótipo ainda concentra a maior parte da lógica em `main.gd`.
-
-Responsabilidades atuais:
-
-- referência às cenas reutilizáveis;
-- registro de Skeletons;
-- HP individual de Skeleton;
-- cooldown individual de Skeleton;
-- HP do Enemy atual;
-- dano;
-- cooldown;
-- target acquisition;
-- movimentação de Skeletons;
-- movimentação de Enemy;
-- retarget;
-- morte de Skeleton;
-- morte de Enemy;
-- spawn de Enemy;
-- spawn de Corpse;
-- processamento de Corpse;
-- Bones;
-- criação de Skeleton;
-- slots de spawn;
-- posições de combate;
-- placeholders visuais;
-- HUD de debug;
-- atualização básica da UI.
-
-Esta centralização é intencional durante o protótipo.
-
-Não refatorar para vários managers antes de haver necessidade real.
+Não refatorar no meio da implementação do Boss sem necessidade.
 
 ---
 
-## Estado atual — funcionando
+# 8. Próxima tarefa imediata
 
-- [x] Projeto Godot 4.7.1
-- [x] Main
-- [x] Background
-- [x] Skeleton
-- [x] Enemy
-- [x] Node2D para Skeleton e Enemy
-- [x] Placeholder visual
-- [x] Movimento automático baseado em alvo
-- [x] Enemy procura Skeleton mais próximo
-- [x] Skeleton procura Enemy
-- [x] Retarget
-- [x] Sistema de HP
-- [x] HP individual dos Skeletons
-- [x] Dano
-- [x] Cooldown
-- [x] Cooldown individual dos Skeletons
-- [x] Morte
-- [x] Corpse
-- [x] Processamento de Corpse
-- [x] Bones
-- [x] BonesLabel
-- [x] Create Skeleton
-- [x] Múltiplos Skeletons
-- [x] Spawn contínuo de Enemy
-- [x] Enemy dinâmico visível
-- [x] Skeleton dinâmico visível
-- [x] Novos Skeletons nascem na base
-- [x] Reconstrução do exército após perda total
-- [x] HUD de debug
+## Boss Wave / First Run Ending
+
+Direção aprovada:
+
+- Wave 20 passa a ser o primeiro Boss da run.
+- Boss provisório: `The Foreman`.
+- Visual maior e facilmente identificável.
+- HP significativamente maior.
+- Ataque especial capaz de atingir vários Skeletons.
+- Matar Boss encerra a run com Victory.
+- Exibir Run Summary.
+- Adicionar Restart.
+
+Depois:
+
+- Game Over;
+- condição de derrota;
+- restart após derrota;
+- teste de run completa;
+- balance pass inicial;
+- fechar e taguear `v0.1.0`.
 
 ---
 
-## Não implementado
+# 9. Próximos grandes milestones
 
-- [ ] Waves
-- [ ] Wave counter
-- [ ] Enemies por Wave
-- [ ] Scaling de HP/dano
-- [ ] Elite Wave
-- [ ] Upgrades
-- [ ] Sinergias
-- [ ] Factory
-- [ ] Flesh
-- [ ] Blood
-- [ ] Souls
-- [ ] Zombie
-- [ ] Ghost
-- [ ] Abomination
-- [ ] Boss
-- [ ] Vitória
-- [ ] Derrota definitiva
-- [ ] Meta-progressão
+Resumo:
 
----
+```text
+v0.1.0  First Run
+v0.2.0  Necromantic Economy
+v0.3.0  Factory / Automation
+v0.4.0  Build Diversity & Content
+v0.5.0  Meta Progression & Run Variety
+v0.6.0  Vertical Slice / Presentation
+v0.7.0  Steam Demo & Market Validation
+v0.8.0  Alpha / Full Content
+v0.9.0  Beta / Release Candidate
+v1.0.0  Steam Launch
+Post-Launch Updates
+```
 
-## Movimentação v1 — comportamento esperado
-
-A movimentação atual foi estabilizada em 16/08/2026.
-
-### Skeleton
-
-- nasce em posição de spawn na base;
-- procura o Enemy atual;
-- move-se em 2D em direção à sua posição de combate;
-- não utiliza mais deslocamento global do exército;
-- reforços não devem nascer magicamente na linha de frente.
-
-### Enemy
-
-- procura o Skeleton mais próximo;
-- aproxima-se desse Skeleton;
-- para ao entrar em alcance;
-- ataca;
-- se o alvo morrer, procura outro.
-
-### Após morte do Enemy
-
-- Corpse é criado;
-- Enemy atual é removido;
-- após pequeno delay surge novo Enemy;
-- Skeletons passam a perseguir o novo alvo.
+Ver `ROADMAP.md` para detalhes.
 
 ---
 
-## Economia atual
+# 10. Regras de desenvolvimento
 
-### Bones
+Fluxo:
 
-- recurso atualmente implementado;
-- cada Corpse processado concede Bones;
-- Skeleton custa Bones;
-- valor de teste deve permanecer `0` em builds estáveis, evitando deixar cheats de teste ativos.
+```text
+implementar
+→ testar
+→ corrigir
+→ documentar
+→ commit
+→ push
+```
 
-### Recursos futuros
+Princípios:
 
-- Flesh
-- Blood
-- Souls
-
----
-
-## UI atual
-
-Elementos principais:
-
-- `BonesLabel`;
-- `CreateSkeletonButton`;
-- HUD de debug temporário.
-
-O HUD de debug atualmente ajuda a verificar:
-
-- quantidade de Skeletons;
-- HP do Enemy;
-- distância aproximada do alvo.
-
-Manter durante o desenvolvimento de Waves.
+1. Não implementar muitos sistemas não testados ao mesmo tempo.
+2. Não produzir arte final antes do core loop estar provado.
+3. Não balancear profundamente antes dos sistemas centrais existirem.
+4. Não prometer receita; usar playtests, wishlists e comportamento real para validar potencial comercial.
+5. Sempre atualizar este arquivo antes de trocar de conversa após milestones importantes.
+6. `CHANGELOG.md` registra apenas o que existe ou está claramente em Unreleased.
+7. Ideias futuras ficam em `GAME_DESIGN.md`/`ROADMAP.md`.
 
 ---
 
-## Próxima tarefa — v0.0.3 Waves
+# 11. Conceitos futuros que não devem ser esquecidos
 
-Implementar Waves sem alterar desnecessariamente a movimentação v1.
-
-Objetivo inicial:
-
-1. Wave counter.
-2. Quantidade definida de Enemies por Wave.
-3. Enemies remaining.
-4. Pequeno intervalo entre Enemies da mesma Wave.
-5. Estado `Wave Complete`.
-6. Intervalo entre Waves.
-7. Aumento gradual de HP.
-8. Aumento gradual de dano.
-9. HUD da Wave.
-10. Elite Wave a cada 5 Waves.
-11. Testar progressão de pelo menos 10 Waves.
-
-Direção inicial de balanceamento discutida:
-
-- Wave 1: base de 5 Enemies;
-- Waves seguintes aumentam gradualmente quantidade e resistência;
-- a cada 5 Waves haverá uma Wave especial/Elite.
-
-Os números não são definitivos e devem ser ajustados por playtest.
-
----
-
-## Future Concept — Last Stand
-
-Quando todos os Skeletons morrerem, a derrota não precisa necessariamente ser instantânea.
-
-Possível sistema futuro:
-
-- entrar em estado de alerta;
-- permitir alguns segundos para reconstrução;
-- manter Corpses e recursos disponíveis;
-- permitir reanimação de emergência;
-- Game Over apenas se o jogador não conseguir voltar ao combate a tempo.
-
-**Status:** não implementado. Registrar como conceito futuro, não como funcionalidade atual.
-
----
-
-## Regra de desenvolvimento
-
-Não implementar muitos sistemas de uma vez.
-
-Fluxo obrigatório:
-
-implementar  
-→ testar  
-→ corrigir  
-→ documentar  
-→ commit  
-→ push  
-→ próxima funcionalidade.
-
-Antes de considerar uma feature estável:
-
-- testar comportamento normal;
-- testar criação dinâmica;
-- testar morte/respawn;
-- remover cheats temporários;
-- atualizar documentação.
-
----
-
-## Política de documentação
-
-### `CHANGELOG.md`
-
-Registrar apenas comportamento implementado e estável.
-
-### `GAME_DESIGN.md`
-
-Registrar conceitos, sistemas planejados e ideias futuras.
-
-### `ROADMAP.md`
-
-Registrar milestones e tarefas.
-
-### `ARCHITECTURE.md`
-
-Registrar estrutura técnica atual e direção de refatoração.
-
-### `DECISIONS.md`
-
-Registrar decisões importantes e seus motivos.
-
-### `DEVLOG.md`
-
-Registrar evolução cronológica do desenvolvimento.
-
-### `AI_HANDOFF.md`
-
-Manter como resumo consolidado e fonte de continuidade para outra conversa.
-
----
-
-## Próximo milestone
-
-**Prototype v0.0.3 — Waves**
-
-Não iniciar arte definitiva, Factory complexa ou novos recursos antes de validar Waves e, depois, o sistema de upgrades.
+- Flesh.
+- Blood.
+- Souls.
+- Zombie.
+- Ghost.
+- Abomination.
+- Factory.
+- Boss Corpses.
+- Meta-progressão por desbloqueio de possibilidades.
+- Personagens/arquétipos.
+- Last Stand.
+- Eventos.
+- Receitas secretas.
+- Steam Achievements.
+- Demo pública.
+- Steam Next Fest.

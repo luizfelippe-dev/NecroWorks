@@ -1,10 +1,14 @@
 # NecroWorks — Design & Technical Decisions
 
+Este documento registra decisões importantes e os motivos por trás delas.
+
+---
+
 ## 14/08/2026 — Engine
 
 **Decisão:** Godot 4.
 
-**Motivo:** projeto predominantemente 2D, desenvolvimento solo e necessidade de prototipação rápida.
+**Motivo:** foco 2D, desenvolvimento solo e iteração rápida.
 
 ---
 
@@ -12,108 +16,212 @@
 
 **Decisão:** GDScript.
 
-**Motivo:** integração direta com Godot e menor complexidade inicial.
+**Motivo:** integração direta com Godot e baixa fricção durante prototipação.
 
 ---
 
 ## 14/08/2026 — 2D
 
-**Decisão:** o jogo será inicialmente 2D.
+**Decisão:** primeira versão em 2D.
 
-**Motivo:** reduzir custo de desenvolvimento, produção de assets e complexidade técnica.
+**Motivo:** controlar custo, prazo e produção de assets.
 
 ---
 
 ## 14/08/2026 — Single-player
 
-**Decisão:** o primeiro lançamento será single-player.
+**Decisão:** não incluir multiplayer na primeira versão.
 
-**Motivo:** networking aumentaria significativamente o escopo do projeto.
+**Motivo:** networking aumentaria muito o escopo e o risco técnico.
 
 ---
 
-## 14/08/2026 — Arte durante o protótipo
+## 14/08/2026 — Arte de protótipo
 
-**Decisão:** não produzir arte definitiva durante o primeiro protótipo.
+**Decisão:** usar placeholders até o core loop estar validado.
 
-**Motivo:** validar primeiro o loop, os sistemas e a arquitetura. Skeletons e Enemies permanecem como placeholders enquanto as mecânicas centrais não estiverem consolidadas.
+**Motivo:** evitar gastar tempo/dinheiro em apresentação antes de provar o jogo.
 
 ---
 
 ## 14/08/2026 — Core Design
 
-**Decisão:** a profundidade deve vir principalmente das interações entre sistemas e upgrades.
+**Decisão:** poucas regras devem gerar muitas combinações.
 
-**Princípio:** poucas regras devem gerar muitas combinações.
-
-O objetivo não é depender de uma quantidade enorme de conteúdo isolado, mas permitir que recursos, unidades, upgrades e automação criem builds emergentes.
+**Motivo:** replayability sistêmica é mais viável para solo dev do que depender de enorme volume de conteúdo artesanal.
 
 ---
 
 ## 14/08/2026 — Automação necromântica
 
-**Decisão:** automação necromântica será um dos principais diferenciais de NecroWorks.
+**Decisão:** automação será um diferencial central.
 
-O projeto não deverá ser apenas um autobattler.
+**Motivo:** NecroWorks não deve ser apenas um autobattler de Skeletons.
 
-A transformação industrial dos cadáveres deverá ter papel importante no gameplay:
+Core:
 
-Enemy → Corpse → processamento → recursos → produção → novos mortos-vivos.
+```text
+Enemy → Corpse → Processing → Resources → Production → Undead
+```
 
 ---
 
-## 16/08/2026 — Project Rename
+## 16/08/2026 — Rename
 
-**Decisão:** renomear o projeto de `Corpse Factory` para `NecroWorks`.
+**Decisão:** `Corpse Factory` → `NecroWorks`.
 
 **Identidade:**
 
-**NecroWorks**  
-*Industrial Reanimation Solutions*  
-**Waste Nothing. Raise Everything.**
+NecroWorks  
+Industrial Reanimation Solutions  
+Waste Nothing. Raise Everything.
 
-**Motivo:** o nome anterior já era utilizado por outro jogo comercial. NecroWorks também representa melhor a identidade de necromancia industrial/corporativa do projeto.
-
----
-
-## 16/08/2026 — Node2D para unidades de combate
-
-**Decisão:** Skeletons e Enemies utilizam `Node2D` como raiz das cenas reutilizáveis.
-
-**Motivo:** são entidades do mundo 2D que precisam de posicionamento e movimentação espacial. A abordagem inicial baseada em `ColorRect` era adequada apenas como placeholder visual e passou a limitar o sistema de movimentação.
+**Motivo:** o nome anterior já era usado comercialmente e NecroWorks comunica melhor a proposta industrial.
 
 ---
 
-## 16/08/2026 — Visual provisório garantido por código
+## 16/08/2026 — Node2D para unidades
 
-**Decisão:** durante o protótipo, o `main.gd` garante um visual simples para unidades instanciadas dinamicamente.
+**Decisão:** Skeleton e Enemy usam Node2D.
 
-**Motivo:** durante a migração para Node2D, unidades criadas em runtime existiam mecanicamente, mas podiam não ser renderizadas. O placeholder programático evita que configuração visual da cena impeça testes de gameplay.
-
-**Status:** solução temporária. Será substituída quando o pipeline visual definitivo das unidades for criado.
+**Motivo:** são entidades do mundo e precisam de movimentação/posicionamento real.
 
 ---
 
-## 16/08/2026 — Target-Based Combat Movement
+## 16/08/2026 — Placeholder visual via código
 
-**Decisão:** remover o deslocamento global do exército e utilizar movimentação baseada em alvo.
+**Decisão:** garantir visual temporário programaticamente.
 
-**Comportamento atual:**
-
-- Skeletons nascem na base.
-- Skeletons procuram o Enemy atual.
-- Skeletons caminham até posições de combate próximas ao Enemy.
-- Enemy procura o Skeleton mais próximo.
-- Quando um alvo deixa de existir, ocorre retarget.
-
-**Motivo:** o sistema anterior baseado em deslocamento horizontal global fazia reforços nascerem avançados e permitia situações em que unidades atravessavam umas às outras sem combater.
+**Motivo:** impedir regressões em que entidades dinâmicas existem mecanicamente, mas não aparecem.
 
 ---
 
-## 16/08/2026 — Manter `main.gd` centralizado durante o protótipo
+## 16/08/2026 — Target-Based Movement
 
-**Decisão:** não separar BattleManager, WaveManager, ResourceManager e outros managers antes de existir necessidade concreta.
+**Decisão:** remover deslocamento global do exército.
 
-**Motivo:** acelerar a validação do gameplay e evitar overengineering.
+**Motivo:** reforços estavam nascendo avançados e a movimentação produzia atravessamentos/comportamentos inconsistentes.
 
-A refatoração será feita quando a complexidade do protótipo justificar a separação de responsabilidades.
+---
+
+## 16/08/2026 — Centralização temporária em `main.gd`
+
+**Decisão:** não criar managers prematuramente.
+
+**Motivo:** velocidade de prototipação.
+
+**Revisão:** após `v0.1.0`, o crescimento do script justifica reavaliar refatoração.
+
+---
+
+## 17/08/2026 — Waves antes de balanceamento definitivo
+
+**Decisão:** validar estrutura de Waves antes de otimizar dificuldade.
+
+**Motivo:** upgrades e sinergias alteram drasticamente a curva de poder e tornariam um balanceamento antecipado descartável.
+
+---
+
+## 17/08/2026 — Economia temporariamente generosa
+
+**Decisão:** manter `bones_per_corpse = 8` e dano base de Enemy reduzido durante prototipação.
+
+**Motivo:** facilitar testes de Waves altas e novos sistemas.
+
+**Status:** valores de desenvolvimento, não valores comerciais finais.
+
+---
+
+## 17/08/2026 — 10 upgrades, 3 escolhas aleatórias
+
+**Decisão:** pool inicial com 10 upgrades e apresentação de 3 opções aleatórias por Wave.
+
+**Motivo:** gerar decisões diferentes entre runs sem exigir grande volume de conteúdo.
+
+---
+
+## 17/08/2026 — Upgrades acumuláveis
+
+**Decisão:** upgrades podem ser escolhidos múltiplas vezes quando não atingiram limite.
+
+**Motivo:** permitir especialização e power fantasy.
+
+---
+
+## 17/08/2026 — Sinergias automáticas
+
+**Decisão:** combinações específicas desbloqueiam efeitos extras automaticamente.
+
+**Motivo:** recompensar descoberta de builds e criar efeitos emergentes.
+
+Primeiras sinergias:
+
+- Overclocked Ossuary;
+- Recycling Plant;
+- Second Shift;
+- Bone Assembly Line.
+
+---
+
+## 17/08/2026 — Métricas antes do balance pass
+
+**Decisão:** coletar estatísticas básicas de run desde o protótipo.
+
+**Motivo:** substituir sensação subjetiva por dados durante balanceamento.
+
+Métricas:
+
+- kills;
+- corpses;
+- Skeletons construídos;
+- Skeletons perdidos;
+- revives;
+- Bones ganhos.
+
+---
+
+## 17/08/2026 — Boss como encerramento da primeira run
+
+**Decisão:** primeiro protótipo de run será encerrado por Boss na Wave 20.
+
+**Motivo:** criar objetivo claro e testar um ciclo completo antes de ampliar recursos/conteúdo.
+
+---
+
+## 17/08/2026 — Boss deve atacar a horda
+
+**Decisão:** primeiro Boss precisa possuir ameaça multi-target/AOE.
+
+**Motivo:** Enemies atuais atacam um Skeleton por vez e ficam incapazes de pressionar uma horda grande.
+
+---
+
+## 17/08/2026 — Comercialização é parte do produto
+
+**Decisão:** Steam page, demo, wishlists, trailer, capsule art e testes públicos entram no roadmap antes do jogo estar 100% concluído.
+
+**Motivo:** o potencial comercial precisa ser validado antes do lançamento, não apenas depois de terminar o jogo.
+
+---
+
+## 17/08/2026 — Receita não é premissa
+
+**Decisão:** tratar "vender muito" como objetivo, não garantia.
+
+**Motivo:** receita depende de produto, posicionamento, apresentação, mercado, timing e execução. Decisões futuras devem ser orientadas por playtests, wishlists, demo e resposta real do público.
+
+---
+
+## 17/08/2026 — Escopo comercial
+
+**Decisão:** cortar features que não aumentem claramente um destes fatores:
+
+- diversão;
+- diferenciação;
+- replayability;
+- valor percebido;
+- capacidade de marketing;
+- retenção;
+- qualidade técnica.
+
+**Motivo:** terminar um jogo forte é comercialmente melhor do que construir um projeto enorme que nunca fica pronto.

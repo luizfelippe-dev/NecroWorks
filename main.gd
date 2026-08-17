@@ -138,12 +138,66 @@ const ELITE_DAMAGE_BONUS: int = 3
 const UPGRADE_SHARPENED_BONES: String = "sharpened_bones"
 const UPGRADE_BONE_PLATING: String = "bone_plating"
 const UPGRADE_EFFICIENT_RECYCLING: String = "efficient_recycling"
+const UPGRADE_RAPID_ASSAULT: String = "rapid_assault"
+const UPGRADE_DEATH_MARCH: String = "death_march"
+const UPGRADE_MASS_PRODUCTION: String = "mass_production"
+const UPGRADE_HEAVY_BONES: String = "heavy_bones"
+const UPGRADE_BONE_HARVEST: String = "bone_harvest"
+const UPGRADE_REASSEMBLY: String = "reassembly"
+const UPGRADE_FINAL_SERVICE: String = "final_service"
+
+const MIN_SKELETON_ATTACK_COOLDOWN: float = 0.20
+
+const BONE_HARVEST_CHANCE_PER_STACK: float = 0.20
+const BONE_HARVEST_MAX_CHANCE: float = 1.0
+const BONE_HARVEST_BONUS: int = 5
+
+const REASSEMBLY_CHANCE_PER_STACK: float = 0.15
+const REASSEMBLY_MAX_CHANCE: float = 0.75
+const REASSEMBLY_HP_FRACTION: float = 0.50
+
+const FINAL_SERVICE_DAMAGE_PER_STACK: int = 20
+
+var bone_harvest_chance: float = 0.0
+var reassembly_chance: float = 0.0
+var final_service_damage: int = 0
 
 var upgrade_counts: Dictionary = {}
 var total_upgrades_selected: int = 0
+var current_upgrade_choices: Array[String] = []
+
 var upgrade_panel: ColorRect = null
 var upgrade_title_label: Label = null
 var upgrade_buttons: Array[Button] = []
+
+
+# =========================================================
+# SYNERGIES
+# =========================================================
+
+const SYNERGY_RECYCLING_PLANT: String = "recycling_plant"
+const SYNERGY_SECOND_SHIFT: String = "second_shift"
+const SYNERGY_BONE_ASSEMBLY_LINE: String = "bone_assembly_line"
+const SYNERGY_OVERCLOCKED_OSSUARY: String = "overclocked_ossuary"
+
+const ASSEMBLY_LINE_CHANCE: float = 0.25
+const OVERCLOCK_DOUBLE_STRIKE_CHANCE: float = 0.20
+const SECOND_SHIFT_DAMAGE_MULTIPLIER: float = 0.50
+
+var active_synergies: Dictionary = {}
+var synergy_label: Label = null
+
+
+# =========================================================
+# RUN METRICS
+# =========================================================
+
+var total_enemies_killed: int = 0
+var total_corpses_processed: int = 0
+var total_skeletons_created: int = 0
+var total_skeletons_lost: int = 0
+var total_skeletons_revived: int = 0
+var total_bones_earned: int = 0
 
 
 # =========================================================
@@ -225,6 +279,7 @@ func _ready() -> void:
 	create_debug_hud()
 	create_wave_hud()
 	create_upgrade_ui()
+	create_synergy_hud()
 
 
 	# -----------------------------------------------------
@@ -838,6 +893,23 @@ func attack_enemy(
 	enemy_hp -= skeleton_damage
 
 
+	var double_strike_triggered: bool = false
+
+
+	if (
+		has_synergy(
+			SYNERGY_OVERCLOCKED_OSSUARY
+		)
+		and enemy_hp > 0
+		and randf()
+		< OVERCLOCK_DOUBLE_STRIKE_CHANCE
+	):
+
+		enemy_hp -= skeleton_damage
+
+		double_strike_triggered = true
+
+
 	skeleton_attack_timers[
 		attacking_skeleton
 	] = skeleton_attack_cooldown
@@ -849,6 +921,15 @@ func attack_enemy(
 		" | Skeletons vivos: ",
 		skeletons.size()
 	)
+
+
+	if double_strike_triggered:
+
+		print(
+			"OVERCLOCKED OSSUARY! DOUBLE STRIKE! +",
+			skeleton_damage,
+			" damage."
+		)
 
 
 # =========================================================
@@ -899,10 +980,135 @@ func kill_skeleton(
 	target: Node2D
 ) -> void:
 
+	# -----------------------------------------------------
+	# REASSEMBLY
+	# -----------------------------------------------------
+
+	if (
+		reassembly_chance > 0.0
+		and randf() < reassembly_chance
+	):
+
+		var revived_hp: int = int(
+			ceil(
+				float(skeleton_max_hp)
+				* REASSEMBLY_HP_FRACTION
+			)
+		)
+
+		if revived_hp < 1:
+			revived_hp = 1
+
+
+		skeleton_hps[
+			target
+		] = revived_hp
+
+
+		skeleton_attack_timers[
+			target
+		] = skeleton_attack_cooldown
+
+
+		total_skeletons_revived += 1
+
+
+		print(
+			"REASSEMBLY! Skeleton reviveu com ",
+			revived_hp,
+			" HP."
+		)
+
+
+		# -------------------------------------------------
+		# SYNERGY: SECOND SHIFT
+		# -------------------------------------------------
+
+		if (
+			has_synergy(
+				SYNERGY_SECOND_SHIFT
+			)
+			and final_service_damage > 0
+			and is_instance_valid(enemy)
+		):
+
+			var second_shift_damage: int = int(
+				round(
+					float(final_service_damage)
+					* SECOND_SHIFT_DAMAGE_MULTIPLIER
+				)
+			)
+
+
+			if second_shift_damage < 1:
+
+				second_shift_damage = 1
+
+
+			enemy_hp -= second_shift_damage
+
+
+			print(
+				"SECOND SHIFT! O Skeleton reviveu e ainda causou ",
+				second_shift_damage,
+				" damage. | Enemy HP: ",
+				enemy_hp
+			)
+
+
+			if enemy_hp <= 0:
+
+				print(
+					"SECOND SHIFT MATOU O ENEMY!"
+				)
+
+				kill_enemy()
+
+
+		update_bones_ui()
+		update_debug_ui()
+
+		return
+
+
 	print(
 		"SKELETON MORREU!"
 	)
 
+
+	total_skeletons_lost += 1
+
+
+	# -----------------------------------------------------
+	# FINAL SERVICE
+	# -----------------------------------------------------
+
+	var final_service_killed_enemy: bool = false
+
+
+	if (
+		final_service_damage > 0
+		and is_instance_valid(enemy)
+	):
+
+		enemy_hp -= final_service_damage
+
+
+		print(
+			"FINAL SERVICE! ",
+			final_service_damage,
+			" de dano. | Enemy HP: ",
+			enemy_hp
+		)
+
+
+		if enemy_hp <= 0:
+			final_service_killed_enemy = true
+
+
+	# -----------------------------------------------------
+	# REMOVER SKELETON
+	# -----------------------------------------------------
 
 	if skeleton_slots.has(target):
 
@@ -968,6 +1174,15 @@ func kill_skeleton(
 	update_debug_ui()
 
 
+	if final_service_killed_enemy:
+
+		print(
+			"FINAL SERVICE MATOU O ENEMY!"
+		)
+
+		kill_enemy()
+
+
 # =========================================================
 # MATAR ENEMY / PROGREDIR WAVE
 # =========================================================
@@ -981,6 +1196,9 @@ func kill_enemy() -> void:
 	print(
 		"INIMIGO MORREU!"
 	)
+
+
+	total_enemies_killed += 1
 
 
 	var dead_enemy: Node2D = enemy
@@ -1216,7 +1434,37 @@ func process_corpse(
 		return
 
 
-	bones += bones_per_corpse
+	var bones_gained: int = bones_per_corpse
+
+	var harvest_triggered: bool = false
+
+	var harvest_bonus: int = (
+		BONE_HARVEST_BONUS
+	)
+
+
+	if has_synergy(
+		SYNERGY_RECYCLING_PLANT
+	):
+
+		harvest_bonus *= 2
+
+
+	if (
+		bone_harvest_chance > 0.0
+		and randf() < bone_harvest_chance
+	):
+
+		bones_gained += harvest_bonus
+
+		harvest_triggered = true
+
+
+	bones += bones_gained
+
+	total_bones_earned += bones_gained
+
+	total_corpses_processed += 1
 
 
 	update_bones_ui()
@@ -1228,9 +1476,28 @@ func process_corpse(
 
 	print(
 		"+",
-		bones_per_corpse,
+		bones_gained,
 		" BONES"
 	)
+
+
+	if harvest_triggered:
+
+		print(
+			"BONE HARVEST! Bônus de +",
+			harvest_bonus,
+			" Bones."
+		)
+
+
+		if has_synergy(
+			SYNERGY_RECYCLING_PLANT
+		):
+
+			print(
+				"RECYCLING PLANT! Bone Harvest bonus doubled."
+			)
+
 
 	print(
 		"TOTAL DE BONES: ",
@@ -1239,6 +1506,34 @@ func process_corpse(
 
 
 	corpse.queue_free()
+
+
+	# -----------------------------------------------------
+	# SYNERGY: BONE ASSEMBLY LINE
+	# -----------------------------------------------------
+
+	if (
+		has_synergy(
+			SYNERGY_BONE_ASSEMBLY_LINE
+		)
+		and randf() < ASSEMBLY_LINE_CHANCE
+	):
+
+		var built: bool = (
+			create_free_skeleton(
+				"BONE ASSEMBLY LINE"
+			)
+		)
+
+
+		if built:
+
+			print(
+				"BONE ASSEMBLY LINE! FREE SKELETON PRODUCED."
+			)
+
+
+	update_debug_ui()
 
 
 # =========================================================
@@ -1256,6 +1551,27 @@ func create_skeleton() -> void:
 		return
 
 
+	create_skeleton_internal(
+		false,
+		"MANUAL"
+	)
+
+
+func create_free_skeleton(
+	source: String
+) -> bool:
+
+	return create_skeleton_internal(
+		true,
+		source
+	)
+
+
+func create_skeleton_internal(
+	is_free: bool,
+	source: String
+) -> bool:
+
 	var free_slot: int = (
 		get_free_skeleton_slot()
 	)
@@ -1263,11 +1579,13 @@ func create_skeleton() -> void:
 
 	if free_slot == -1:
 
-		print(
-			"LIMITE DE SKELETONS ATINGIDO!"
-		)
+		if not is_free:
 
-		return
+			print(
+				"LIMITE DE SKELETONS ATINGIDO!"
+			)
+
+		return false
 
 
 	var skeleton_node: Node = (
@@ -1288,10 +1606,19 @@ func create_skeleton() -> void:
 
 		skeleton_node.queue_free()
 
-		return
+		return false
 
 
-	bones -= skeleton_cost
+	if not is_free:
+
+		if bones < skeleton_cost:
+
+			skeleton_node.queue_free()
+
+			return false
+
+
+		bones -= skeleton_cost
 
 
 	add_child(
@@ -1311,23 +1638,44 @@ func create_skeleton() -> void:
 	)
 
 
+	total_skeletons_created += 1
+
+
 	update_bones_ui()
 	update_debug_ui()
 
 
-	print(
-		"NOVO SKELETON CRIADO!"
-	)
+	if is_free:
+
+		print(
+			"NOVO SKELETON GRATUITO CRIADO!"
+		)
+
+		print(
+			"ORIGEM: ",
+			source
+		)
+
+	else:
+
+		print(
+			"NOVO SKELETON CRIADO!"
+		)
+
 
 	print(
 		"SLOT: ",
 		free_slot
 	)
 
+
 	print(
 		"TOTAL DE BONES: ",
 		bones
 	)
+
+
+	return true
 
 
 # =========================================================
@@ -1414,188 +1762,631 @@ func ensure_unit_visual(
 # =========================================================
 
 func create_upgrade_ui() -> void:
+
 	upgrade_panel = ColorRect.new()
+
 	upgrade_panel.name = "UpgradePanel"
-	upgrade_panel.position = Vector2(300.0, 220.0)
-	upgrade_panel.size = Vector2(1320.0, 500.0)
-	upgrade_panel.color = Color(0.04, 0.04, 0.04, 0.96)
+
+	upgrade_panel.position = Vector2(
+		300.0,
+		220.0
+	)
+
+	upgrade_panel.size = Vector2(
+		1320.0,
+		500.0
+	)
+
+	upgrade_panel.color = Color(
+		0.04,
+		0.04,
+		0.04,
+		0.96
+	)
+
 	upgrade_panel.z_index = 500
-	add_child(upgrade_panel)
+
+	# O painel em si não precisa bloquear clique.
+	# Os Buttons filhos continuam clicáveis.
+	upgrade_panel.mouse_filter = (
+		Control.MOUSE_FILTER_IGNORE
+	)
+
+
+	add_child(
+		upgrade_panel
+	)
+
 
 	upgrade_title_label = Label.new()
-	upgrade_title_label.name = "UpgradeTitle"
-	upgrade_title_label.position = Vector2(40.0, 25.0)
-	upgrade_title_label.size = Vector2(1240.0, 50.0)
-	upgrade_title_label.text = "SELECT AN UPGRADE"
-	upgrade_panel.add_child(upgrade_title_label)
 
-	create_upgrade_button(UPGRADE_SHARPENED_BONES, 0)
-	create_upgrade_button(UPGRADE_BONE_PLATING, 1)
-	create_upgrade_button(UPGRADE_EFFICIENT_RECYCLING, 2)
+	upgrade_title_label.name = "UpgradeTitle"
+
+	upgrade_title_label.position = Vector2(
+		40.0,
+		25.0
+	)
+
+	upgrade_title_label.size = Vector2(
+		1240.0,
+		50.0
+	)
+
+	upgrade_title_label.text = (
+		"SELECT AN UPGRADE"
+	)
+
+
+	upgrade_panel.add_child(
+		upgrade_title_label
+	)
+
+
+	for index: int in range(3):
+
+		create_upgrade_button(
+			index
+		)
+
 
 	upgrade_panel.visible = false
 
 
-func create_upgrade_button(upgrade_id: String, index: int) -> void:
-	var button: Button = Button.new()
-	button.name = "UpgradeButton" + str(index + 1)
-	button.position = Vector2(40.0 + float(index) * 420.0, 100.0)
-	button.size = Vector2(390.0, 340.0)
+func create_upgrade_button(
+	index: int
+) -> void:
 
-	button.pressed.connect(
-		select_upgrade.bind(upgrade_id)
+	var button: Button = Button.new()
+
+	button.name = (
+		"UpgradeButton"
+		+ str(index + 1)
 	)
 
-	upgrade_panel.add_child(button)
-	upgrade_buttons.append(button)
+	button.position = Vector2(
+		40.0
+		+ (
+			float(index)
+			* 420.0
+		),
+		100.0
+	)
+
+	button.size = Vector2(
+		390.0,
+		340.0
+	)
+
+
+	button.pressed.connect(
+		select_upgrade_by_index.bind(
+			index
+		)
+	)
+
+
+	upgrade_panel.add_child(
+		button
+	)
+
+
+	upgrade_buttons.append(
+		button
+	)
+
+
+func get_upgrade_pool() -> Array[String]:
+
+	var pool: Array[String] = [
+		UPGRADE_SHARPENED_BONES,
+		UPGRADE_BONE_PLATING,
+		UPGRADE_EFFICIENT_RECYCLING,
+		UPGRADE_RAPID_ASSAULT,
+		UPGRADE_DEATH_MARCH,
+		UPGRADE_MASS_PRODUCTION,
+		UPGRADE_HEAVY_BONES,
+		UPGRADE_BONE_HARVEST,
+		UPGRADE_REASSEMBLY,
+		UPGRADE_FINAL_SERVICE
+	]
+
+
+	# Upgrades com limite deixam de aparecer
+	# quando já atingiram seu teto.
+
+	if skeleton_cost <= 1:
+
+		pool.erase(
+			UPGRADE_MASS_PRODUCTION
+		)
+
+
+	if (
+		skeleton_attack_cooldown
+		<= MIN_SKELETON_ATTACK_COOLDOWN
+	):
+
+		pool.erase(
+			UPGRADE_RAPID_ASSAULT
+		)
+
+
+	if (
+		bone_harvest_chance
+		>= BONE_HARVEST_MAX_CHANCE
+	):
+
+		pool.erase(
+			UPGRADE_BONE_HARVEST
+		)
+
+
+	if (
+		reassembly_chance
+		>= REASSEMBLY_MAX_CHANCE
+	):
+
+		pool.erase(
+			UPGRADE_REASSEMBLY
+		)
+
+
+	return pool
+
+
+func roll_upgrade_choices() -> void:
+
+	current_upgrade_choices.clear()
+
+
+	var pool: Array[String] = (
+		get_upgrade_pool()
+	)
+
+
+	pool.shuffle()
+
+
+	var choices_to_take: int = 3
+
+
+	if pool.size() < choices_to_take:
+
+		choices_to_take = pool.size()
+
+
+	for index: int in range(
+		choices_to_take
+	):
+
+		current_upgrade_choices.append(
+			pool[index]
+		)
 
 
 func show_upgrade_selection() -> void:
+
 	if upgrade_panel == null:
 		return
+
 
 	if not wave_transition_in_progress:
 		return
 
+
+	roll_upgrade_choices()
 	update_upgrade_ui()
+
+
 	upgrade_panel.visible = true
+
 
 	print("")
 	print("------------------------------")
 	print("SELECT AN UPGRADE")
-	print("1. Sharpened Bones")
-	print("2. Bone Plating")
-	print("3. Efficient Recycling")
+
+
+	for index: int in range(
+		current_upgrade_choices.size()
+	):
+
+		var upgrade_id: String = (
+			current_upgrade_choices[
+				index
+			]
+		)
+
+
+		print(
+			index + 1,
+			". ",
+			get_upgrade_name(
+				upgrade_id
+			)
+		)
+
+
 	print("------------------------------")
 
 
 func hide_upgrade_selection() -> void:
+
 	if upgrade_panel == null:
 		return
+
 
 	upgrade_panel.visible = false
 
 
 func update_upgrade_ui() -> void:
+
 	if upgrade_panel == null:
 		return
 
+
 	if upgrade_title_label != null:
+
 		upgrade_title_label.text = (
 			"WAVE "
 			+ str(current_wave)
 			+ " COMPLETE — SELECT AN UPGRADE"
 		)
 
-	if upgrade_buttons.size() < 3:
-		return
 
-	upgrade_buttons[0].text = (
-		"SHARPENED BONES"
-		+ "\n\nSkeleton Damage +25%"
-		+ "\n\nCurrent DMG: "
-		+ str(skeleton_damage)
+	for index: int in range(
+		upgrade_buttons.size()
+	):
+
+		var button: Button = (
+			upgrade_buttons[index]
+		)
+
+
+		if (
+			index
+			>= current_upgrade_choices.size()
+		):
+
+			button.visible = false
+
+			continue
+
+
+		button.visible = true
+
+
+		var upgrade_id: String = (
+			current_upgrade_choices[
+				index
+			]
+		)
+
+
+		button.text = (
+			get_upgrade_card_text(
+				upgrade_id
+			)
+		)
+
+
+func get_upgrade_card_text(
+	upgrade_id: String
+) -> String:
+
+	return (
+		get_upgrade_name(
+			upgrade_id
+		)
+		.to_upper()
+		+ "\n\n"
+		+ get_upgrade_description(
+			upgrade_id
+		)
+		+ "\n\n"
+		+ get_upgrade_status(
+			upgrade_id
+		)
 		+ "\nTaken: "
-		+ str(get_upgrade_count(UPGRADE_SHARPENED_BONES))
+		+ str(
+			get_upgrade_count(
+				upgrade_id
+			)
+		)
 	)
 
-	upgrade_buttons[1].text = (
-		"BONE PLATING"
-		+ "\n\nSkeleton Max HP +25"
-		+ "\nExisting Skeletons also gain +25 HP"
-		+ "\n\nCurrent Max HP: "
-		+ str(skeleton_max_hp)
-		+ "\nTaken: "
-		+ str(get_upgrade_count(UPGRADE_BONE_PLATING))
-	)
 
-	upgrade_buttons[2].text = (
-		"EFFICIENT RECYCLING"
-		+ "\n\nCorpses generate +2 Bones"
-		+ "\n\nCurrent Bones/Corpse: "
-		+ str(bones_per_corpse)
-		+ "\nTaken: "
-		+ str(get_upgrade_count(UPGRADE_EFFICIENT_RECYCLING))
-	)
+func get_upgrade_count(
+	upgrade_id: String
+) -> int:
 
-
-func get_upgrade_count(upgrade_id: String) -> int:
 	return int(
-		upgrade_counts.get(upgrade_id, 0)
+		upgrade_counts.get(
+			upgrade_id,
+			0
+		)
 	)
 
 
-func select_upgrade(upgrade_id: String) -> void:
+func select_upgrade_by_index(
+	index: int
+) -> void:
+
 	if not wave_transition_in_progress:
 		return
 
-	apply_upgrade(upgrade_id)
 
-	var previous_count: int = get_upgrade_count(upgrade_id)
-	upgrade_counts[upgrade_id] = previous_count + 1
+	if index < 0:
+		return
+
+
+	if (
+		index
+		>= current_upgrade_choices.size()
+	):
+
+		return
+
+
+	var upgrade_id: String = (
+		current_upgrade_choices[
+			index
+		]
+	)
+
+
+	select_upgrade(
+		upgrade_id
+	)
+
+
+func select_upgrade(
+	upgrade_id: String
+) -> void:
+
+	if not wave_transition_in_progress:
+		return
+
+
+	apply_upgrade(
+		upgrade_id
+	)
+
+
+	var previous_count: int = (
+		get_upgrade_count(
+			upgrade_id
+		)
+	)
+
+
+	upgrade_counts[
+		upgrade_id
+	] = previous_count + 1
+
+
 	total_upgrades_selected += 1
+
+
+	check_synergy_unlocks()
+
 
 	print("")
 	print("==============================")
-	print("UPGRADE SELECTED: ", get_upgrade_name(upgrade_id))
+	print(
+		"UPGRADE SELECTED: ",
+		get_upgrade_name(
+			upgrade_id
+		)
+	)
+
 	print(
 		"Skeleton DMG: ",
 		skeleton_damage,
 		" | Max HP: ",
 		skeleton_max_hp,
+		" | Cooldown: ",
+		skeleton_attack_cooldown,
+		" | Speed: ",
+		skeleton_speed
+	)
+
+	print(
+		"Skeleton Cost: ",
+		skeleton_cost,
 		" | Bones/Corpse: ",
 		bones_per_corpse
 	)
+
+	print(
+		"Bone Harvest: ",
+		int(
+			round(
+				bone_harvest_chance
+				* 100.0
+			)
+		),
+		"% | Reassembly: ",
+		int(
+			round(
+				reassembly_chance
+				* 100.0
+			)
+		),
+		"% | Final Service: ",
+		final_service_damage
+	)
+
 	print("==============================")
 
+
 	hide_upgrade_selection()
+
+
 	wave_transition_in_progress = false
+
 	current_wave += 1
-	start_wave(current_wave)
 
 
-func apply_upgrade(upgrade_id: String) -> void:
+	start_wave(
+		current_wave
+	)
+
+
+func apply_upgrade(
+	upgrade_id: String
+) -> void:
+
 	match upgrade_id:
+
 		UPGRADE_SHARPENED_BONES:
+
 			var new_damage: int = int(
-				ceil(float(skeleton_damage) * 1.25)
+				ceil(
+					float(skeleton_damage)
+					* 1.25
+				)
 			)
 
+
 			if new_damage <= skeleton_damage:
-				new_damage = skeleton_damage + 1
+
+				new_damage = (
+					skeleton_damage
+					+ 1
+				)
+
 
 			skeleton_damage = new_damage
 
+
 		UPGRADE_BONE_PLATING:
+
 			skeleton_max_hp += 25
 
+
 			for current_skeleton: Node2D in skeletons:
-				if not is_instance_valid(current_skeleton):
+
+				if not is_instance_valid(
+					current_skeleton
+				):
 					continue
 
-				if not skeleton_hps.has(current_skeleton):
+
+				if not skeleton_hps.has(
+					current_skeleton
+				):
 					continue
+
 
 				var current_hp: int = int(
-					skeleton_hps[current_skeleton]
+					skeleton_hps[
+						current_skeleton
+					]
 				)
 
-				skeleton_hps[current_skeleton] = current_hp + 25
+
+				skeleton_hps[
+					current_skeleton
+				] = current_hp + 25
+
 
 		UPGRADE_EFFICIENT_RECYCLING:
+
 			bones_per_corpse += 2
 
-		_:
-			push_error(
-				"Upgrade desconhecido: " + upgrade_id
+
+		UPGRADE_RAPID_ASSAULT:
+
+			skeleton_attack_cooldown = maxf(
+				skeleton_attack_cooldown
+				* 0.85,
+				MIN_SKELETON_ATTACK_COOLDOWN
 			)
+
+
+		UPGRADE_DEATH_MARCH:
+
+			skeleton_speed *= 1.20
+
+
+		UPGRADE_MASS_PRODUCTION:
+
+			skeleton_cost -= 1
+
+
+			if skeleton_cost < 1:
+
+				skeleton_cost = 1
+
+
+		UPGRADE_HEAVY_BONES:
+
+			var heavy_damage: int = int(
+				ceil(
+					float(skeleton_damage)
+					* 1.50
+				)
+			)
+
+
+			if heavy_damage <= skeleton_damage:
+
+				heavy_damage = (
+					skeleton_damage
+					+ 1
+				)
+
+
+			skeleton_damage = heavy_damage
+
+			# -20% attack speed equivale a
+			# aumentar o intervalo entre ataques em 25%.
+			skeleton_attack_cooldown *= 1.25
+
+
+		UPGRADE_BONE_HARVEST:
+
+			bone_harvest_chance = minf(
+				bone_harvest_chance
+				+ BONE_HARVEST_CHANCE_PER_STACK,
+				BONE_HARVEST_MAX_CHANCE
+			)
+
+
+		UPGRADE_REASSEMBLY:
+
+			reassembly_chance = minf(
+				reassembly_chance
+				+ REASSEMBLY_CHANCE_PER_STACK,
+				REASSEMBLY_MAX_CHANCE
+			)
+
+
+		UPGRADE_FINAL_SERVICE:
+
+			final_service_damage += (
+				FINAL_SERVICE_DAMAGE_PER_STACK
+			)
+
+
+		_:
+
+			push_error(
+				"Upgrade desconhecido: "
+				+ upgrade_id
+			)
+
 
 	update_bones_ui()
 	update_debug_ui()
 
 
-func get_upgrade_name(upgrade_id: String) -> String:
+func get_upgrade_name(
+	upgrade_id: String
+) -> String:
+
 	match upgrade_id:
+
 		UPGRADE_SHARPENED_BONES:
 			return "Sharpened Bones"
 
@@ -1605,8 +2396,431 @@ func get_upgrade_name(upgrade_id: String) -> String:
 		UPGRADE_EFFICIENT_RECYCLING:
 			return "Efficient Recycling"
 
+		UPGRADE_RAPID_ASSAULT:
+			return "Rapid Assault"
+
+		UPGRADE_DEATH_MARCH:
+			return "Death March"
+
+		UPGRADE_MASS_PRODUCTION:
+			return "Mass Production"
+
+		UPGRADE_HEAVY_BONES:
+			return "Heavy Bones"
+
+		UPGRADE_BONE_HARVEST:
+			return "Bone Harvest"
+
+		UPGRADE_REASSEMBLY:
+			return "Reassembly"
+
+		UPGRADE_FINAL_SERVICE:
+			return "Final Service"
+
 		_:
 			return "Unknown Upgrade"
+
+
+func get_upgrade_description(
+	upgrade_id: String
+) -> String:
+
+	match upgrade_id:
+
+		UPGRADE_SHARPENED_BONES:
+			return "Skeleton Damage +25%"
+
+		UPGRADE_BONE_PLATING:
+			return (
+				"Skeleton Max HP +25"
+				+ "\nExisting Skeletons gain +25 HP"
+			)
+
+		UPGRADE_EFFICIENT_RECYCLING:
+			return "Corpses generate +2 Bones"
+
+		UPGRADE_RAPID_ASSAULT:
+			return "Skeleton Attack Speed +15%"
+
+		UPGRADE_DEATH_MARCH:
+			return "Skeleton Movement Speed +20%"
+
+		UPGRADE_MASS_PRODUCTION:
+			return "Skeleton cost -1 Bone"
+
+		UPGRADE_HEAVY_BONES:
+			return (
+				"Skeleton Damage +50%"
+				+ "\nAttack Speed -20%"
+			)
+
+		UPGRADE_BONE_HARVEST:
+			return (
+				"+20% chance when processing a Corpse"
+				+ "\nto gain +5 bonus Bones"
+			)
+
+		UPGRADE_REASSEMBLY:
+			return (
+				"+15% chance for a dead Skeleton"
+				+ "\nto revive with 50% HP"
+			)
+
+		UPGRADE_FINAL_SERVICE:
+			return (
+				"When a Skeleton dies,"
+				+ "\ndeal +20 damage to the Enemy"
+			)
+
+		_:
+			return "Unknown effect"
+
+
+func get_upgrade_status(
+	upgrade_id: String
+) -> String:
+
+	match upgrade_id:
+
+		UPGRADE_SHARPENED_BONES:
+			return (
+				"Current DMG: "
+				+ str(skeleton_damage)
+			)
+
+		UPGRADE_BONE_PLATING:
+			return (
+				"Current Max HP: "
+				+ str(skeleton_max_hp)
+			)
+
+		UPGRADE_EFFICIENT_RECYCLING:
+			return (
+				"Current Bones/Corpse: "
+				+ str(bones_per_corpse)
+			)
+
+		UPGRADE_RAPID_ASSAULT:
+			return (
+				"Current Cooldown: "
+				+ str(
+					snappedf(
+						skeleton_attack_cooldown,
+						0.01
+					)
+				)
+				+ "s"
+			)
+
+		UPGRADE_DEATH_MARCH:
+			return (
+				"Current Move Speed: "
+				+ str(
+					int(
+						round(
+							skeleton_speed
+						)
+					)
+				)
+			)
+
+		UPGRADE_MASS_PRODUCTION:
+			return (
+				"Current Skeleton Cost: "
+				+ str(skeleton_cost)
+			)
+
+		UPGRADE_HEAVY_BONES:
+			return (
+				"DMG "
+				+ str(skeleton_damage)
+				+ " | Cooldown "
+				+ str(
+					snappedf(
+						skeleton_attack_cooldown,
+						0.01
+					)
+				)
+				+ "s"
+			)
+
+		UPGRADE_BONE_HARVEST:
+			return (
+				"Current Chance: "
+				+ str(
+					int(
+						round(
+							bone_harvest_chance
+								* 100.0
+						)
+					)
+				)
+				+ "%"
+			)
+
+		UPGRADE_REASSEMBLY:
+			return (
+				"Current Chance: "
+				+ str(
+					int(
+						round(
+							reassembly_chance
+								* 100.0
+						)
+					)
+				)
+				+ "%"
+			)
+
+		UPGRADE_FINAL_SERVICE:
+			return (
+				"Current Death Damage: "
+				+ str(
+					final_service_damage
+				)
+			)
+
+		_:
+			return ""
+
+
+# =========================================================
+# SYNERGY SYSTEM
+# =========================================================
+
+func check_synergy_unlocks() -> void:
+
+	if (
+		get_upgrade_count(
+			UPGRADE_EFFICIENT_RECYCLING
+		) > 0
+		and get_upgrade_count(
+			UPGRADE_BONE_HARVEST
+		) > 0
+	):
+
+		unlock_synergy(
+			SYNERGY_RECYCLING_PLANT
+		)
+
+
+	if (
+		get_upgrade_count(
+			UPGRADE_REASSEMBLY
+		) > 0
+		and get_upgrade_count(
+			UPGRADE_FINAL_SERVICE
+		) > 0
+	):
+
+		unlock_synergy(
+			SYNERGY_SECOND_SHIFT
+		)
+
+
+	if (
+		get_upgrade_count(
+			UPGRADE_MASS_PRODUCTION
+		) > 0
+		and get_upgrade_count(
+			UPGRADE_EFFICIENT_RECYCLING
+		) > 0
+	):
+
+		unlock_synergy(
+			SYNERGY_BONE_ASSEMBLY_LINE
+		)
+
+
+	if (
+		get_upgrade_count(
+			UPGRADE_HEAVY_BONES
+		) > 0
+		and get_upgrade_count(
+			UPGRADE_RAPID_ASSAULT
+		) > 0
+	):
+
+		unlock_synergy(
+			SYNERGY_OVERCLOCKED_OSSUARY
+		)
+
+
+func unlock_synergy(
+	synergy_id: String
+) -> void:
+
+	if has_synergy(
+		synergy_id
+	):
+
+		return
+
+
+	active_synergies[
+		synergy_id
+	] = true
+
+
+	print("")
+	print("################################")
+	print(
+		"SYNERGY UNLOCKED: ",
+		get_synergy_name(
+			synergy_id
+		)
+	)
+	print(
+		get_synergy_description(
+			synergy_id
+		)
+	)
+	print("################################")
+	print("")
+
+
+	update_synergy_ui()
+	update_debug_ui()
+
+
+func has_synergy(
+	synergy_id: String
+) -> bool:
+
+	return bool(
+		active_synergies.get(
+			synergy_id,
+			false
+		)
+	)
+
+
+func get_synergy_name(
+	synergy_id: String
+) -> String:
+
+	match synergy_id:
+
+		SYNERGY_RECYCLING_PLANT:
+			return "Recycling Plant"
+
+		SYNERGY_SECOND_SHIFT:
+			return "Second Shift"
+
+		SYNERGY_BONE_ASSEMBLY_LINE:
+			return "Bone Assembly Line"
+
+		SYNERGY_OVERCLOCKED_OSSUARY:
+			return "Overclocked Ossuary"
+
+		_:
+			return "Unknown Synergy"
+
+
+func get_synergy_description(
+	synergy_id: String
+) -> String:
+
+	match synergy_id:
+
+		SYNERGY_RECYCLING_PLANT:
+			return (
+				"Efficient Recycling + Bone Harvest"
+				+ "\nBone Harvest bonus is doubled."
+			)
+
+		SYNERGY_SECOND_SHIFT:
+			return (
+				"Reassembly + Final Service"
+				+ "\nA successful revive also deals 50% Final Service damage."
+			)
+
+		SYNERGY_BONE_ASSEMBLY_LINE:
+			return (
+				"Mass Production + Efficient Recycling"
+				+ "\n25% chance to produce a free Skeleton when processing a Corpse."
+			)
+
+		SYNERGY_OVERCLOCKED_OSSUARY:
+			return (
+				"Heavy Bones + Rapid Assault"
+				+ "\nSkeleton attacks gain a 20% chance to strike twice."
+			)
+
+		_:
+			return ""
+
+
+func create_synergy_hud() -> void:
+
+	synergy_label = Label.new()
+
+	synergy_label.name = "SynergyLabel"
+
+	synergy_label.position = Vector2(
+		1430.0,
+		40.0
+	)
+
+	synergy_label.size = Vector2(
+		450.0,
+		300.0
+	)
+
+	synergy_label.z_index = 100
+
+
+	add_child(
+		synergy_label
+	)
+
+
+	update_synergy_ui()
+
+
+func update_synergy_ui() -> void:
+
+	if synergy_label == null:
+		return
+
+
+	var text_value: String = (
+		"ACTIVE SYNERGIES"
+	)
+
+
+	if active_synergies.is_empty():
+
+		text_value += "\nNone"
+
+	else:
+
+		var synergy_order: Array[String] = [
+			SYNERGY_RECYCLING_PLANT,
+			SYNERGY_SECOND_SHIFT,
+			SYNERGY_BONE_ASSEMBLY_LINE,
+			SYNERGY_OVERCLOCKED_OSSUARY
+		]
+
+
+		for synergy_id: String in synergy_order:
+
+			if not has_synergy(
+				synergy_id
+			):
+
+				continue
+
+
+			text_value += (
+				"\n- "
+				+ get_synergy_name(
+					synergy_id
+				)
+			)
+
+
+	synergy_label.text = text_value
 
 
 # =========================================================
@@ -1694,8 +2908,8 @@ func create_debug_hud() -> void:
 	)
 
 	debug_label.size = Vector2(
-		500.0,
-		200.0
+		650.0,
+		380.0
 	)
 
 
@@ -1766,10 +2980,25 @@ func update_debug_ui() -> void:
 		+ str(skeletons.size())
 		+ "\nUpgrades: "
 		+ str(total_upgrades_selected)
+		+ "\nSynergies: "
+		+ str(active_synergies.size())
 		+ "\nEnemy: "
 		+ enemy_text
 		+ "\nClosest distance: "
 		+ closest_distance_text
+		+ "\n--- RUN METRICS ---"
+		+ "\nEnemies Killed: "
+		+ str(total_enemies_killed)
+		+ "\nCorpses Processed: "
+		+ str(total_corpses_processed)
+		+ "\nSkeletons Built: "
+		+ str(total_skeletons_created)
+		+ "\nSkeletons Lost: "
+		+ str(total_skeletons_lost)
+		+ "\nSkeletons Revived: "
+		+ str(total_skeletons_revived)
+		+ "\nBones Earned: "
+		+ str(total_bones_earned)
 	)
 
 
@@ -1782,6 +3011,8 @@ func update_bones_ui() -> void:
 	bones_label.text = (
 		"Bones: "
 		+ str(bones)
+		+ " | Skeleton Cost: "
+		+ str(skeleton_cost)
 	)
 
 

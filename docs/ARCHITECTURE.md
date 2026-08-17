@@ -1,26 +1,32 @@
 # NecroWorks — Architecture
 
-## Engine
+**Atualizado:** 17/08/2026
 
-**Godot:** 4.7.1  
-**Linguagem:** GDScript  
-**Tipo:** 2D
+## Stack
+
+- Godot 4.7.1
+- GDScript
+- 2D
+- Single-player
+- Git/GitHub
 
 ---
 
 # Estado atual
 
-A arquitetura ainda é propositalmente simples.
+O projeto ainda usa arquitetura centralizada para acelerar o protótipo.
 
-O protótipo concentra grande parte das regras em `main.gd` para permitir iteração rápida.
+A maior parte da lógica está em `main.gd`.
 
-A prioridade atual é validar gameplay, não criar uma arquitetura final antecipadamente.
+Esse modelo funcionou bem para provar o core, mas o script já concentra combate, Waves, upgrades, sinergias, economia, spawning, UI e métricas.
+
+A decisão atual é:
+
+> fechar `v0.1.0` antes de iniciar uma refatoração grande.
 
 ---
 
-## Cena principal — `main.tscn`
-
-Estrutura relevante atual:
+# Scene Tree relevante
 
 ```text
 Main
@@ -31,283 +37,389 @@ Main
 └── CreateSkeletonButton
 ```
 
-Durante a execução também são criados dinamicamente:
+Criados em runtime:
 
-- novos Skeletons;
-- novos Enemies;
-- Corpses;
-- HUD de debug.
+```text
+Skeleton instances
+Enemy instances
+Corpse instances
+WaveLabel
+UpgradePanel
+UpgradeButtons
+SynergyLabel
+DebugLabel
+```
 
 ---
+
+# Scenes reutilizáveis
 
 ## `skeleton.tscn`
 
-**Root:** `Node2D`
+Root:
+`Node2D`
 
-Função:
+Uso:
 
-- cena reutilizável para Skeletons;
-- instanciada dinamicamente quando o jogador gasta Bones;
-- recebe estado de gameplay através do `main.gd`.
+- Skeleton inicial;
+- Skeleton criado manualmente;
+- Skeleton gratuito por automação.
 
-Visual:
-
-- placeholder;
-- visual temporário é garantido por código durante o protótipo.
-
----
+Estado individual ainda é mantido pelo `main.gd`.
 
 ## `enemy.tscn`
 
-**Root:** `Node2D`
+Root:
+`Node2D`
 
-Função:
+Uso:
 
-- cena reutilizável para Enemy;
-- instanciada dinamicamente após morte do Enemy anterior;
-- HP e comportamento principal são controlados atualmente pelo `main.gd`.
+- Enemy da Wave;
+- Elite placeholder.
 
-Visual:
-
-- placeholder;
-- visual temporário é garantido por código.
-
----
+Boss futuro poderá inicialmente reutilizar a scene ou ganhar scene própria após o protótipo.
 
 ## `corpse.tscn`
 
-**Root:** `Button`
+Root:
+`Button`
 
-Função:
+Uso:
 
-- criado na posição de morte de Enemy;
-- pode ser clicado;
-- processamento concede Bones;
-- é removido após processamento.
-
-Esta implementação é temporária e prioriza velocidade de prototipação.
+- representa Corpse;
+- processável por clique;
+- gera recursos;
+- pode ativar automações/sinergias.
 
 ---
 
-# `main.gd`
+# Responsabilidades atuais do `main.gd`
 
-## Responsabilidades atuais
+## Combat
 
-`main.gd` controla atualmente:
+- skeleton HP;
+- enemy HP;
+- damage;
+- cooldown;
+- closest target;
+- movement;
+- attack;
+- death;
+- revival;
+- death effects.
 
-### Combate
+## Skeleton Management
 
-- HP do Enemy atual;
-- HP individual dos Skeletons;
-- dano;
-- cooldown do Enemy;
-- cooldown individual dos Skeletons;
-- ataque automático;
-- morte de Skeleton;
-- morte de Enemy.
+- `skeletons`;
+- `skeleton_hps`;
+- `skeleton_attack_timers`;
+- `skeleton_slots`;
+- `occupied_skeleton_slots`;
+- spawn positions;
+- combat positions;
+- máximo de 36 Skeletons;
+- criação manual/gratuita.
 
-### Movimentação
+## Enemy Management
 
-- seleção do Skeleton mais próximo para o Enemy;
-- target acquisition;
-- movimentação do Enemy;
-- movimentação dos Skeletons;
-- posições de combate;
-- retarget após morte;
-- posições de spawn da base.
+- Enemy atual;
+- Enemy spawn;
+- Enemy stats;
+- Elite state;
+- respawn dentro da Wave.
 
-### Entidades
+## Corpse / Resources
 
-- referência ao Enemy atual;
-- lista de Skeletons vivos;
-- registro de Skeletons;
-- slots ocupados;
-- criação dinâmica de Skeleton;
-- criação dinâmica de Enemy;
-- criação dinâmica de Corpse.
+- Corpse spawn;
+- Corpse processing;
+- Bones;
+- Bones per Corpse;
+- Skeleton cost;
+- Bone Harvest;
+- Recycling Plant.
 
-### Economia
+## Waves
+
+- current wave;
+- enemies total;
+- enemies defeated;
+- enemy scaling;
+- Wave Complete;
+- Elite Wave.
+
+## Upgrades
+
+- pool de 10;
+- random choices;
+- upgrade counts;
+- apply upgrade;
+- caps;
+- UI.
+
+## Synergies
+
+- condições;
+- unlock;
+- active synergies;
+- runtime effects;
+- synergy HUD.
+
+## Metrics
+
+- enemies killed;
+- corpses processed;
+- Skeletons built;
+- Skeletons lost;
+- Skeletons revived;
+- Bones earned.
+
+## UI
 
 - Bones;
-- Bones por Corpse;
-- custo de Skeleton;
-- processamento de Corpse.
-
-### UI / Debug
-
-- atualização de `BonesLabel`;
-- habilitação/desabilitação de `CreateSkeletonButton`;
-- HUD de debug temporário.
-
-### Visual provisório
-
-- garante placeholder visível em Skeletons e Enemies instanciados em runtime.
+- Skeleton Cost;
+- Waves;
+- Upgrades;
+- Synergies;
+- Debug.
 
 ---
 
-# Estado de dados atual
-
-Estruturas importantes usadas pelo protótipo:
+# Estado de dados relevante
 
 ```text
+enemy
+enemy_hp
+enemy_max_hp
+enemy_damage
+
 skeletons
 skeleton_hps
 skeleton_attack_timers
 skeleton_slots
 occupied_skeleton_slots
-enemy
-enemy_hp
+
 bones
-```
+bones_per_corpse
+skeleton_cost
 
-Os Skeletons utilizam o próprio Node como chave para estado individual durante o protótipo.
-
-Essa solução é suficiente no estágio atual, mas poderá ser substituída por scripts próprios de unidade quando houver mais tipos de undead e atributos.
-
----
-
-# Fluxo atual de combate
-
-```text
-Skeleton nasce na base
-        ↓
-procura Enemy atual
-        ↓
-move até posição de combate
-        ↓
-ataca automaticamente
-
-Enemy
-        ↓
-procura Skeleton mais próximo
-        ↓
-move até o alvo
-        ↓
-entra em alcance
-        ↓
-ataca automaticamente
-```
-
-Após morte do Enemy:
-
-```text
-Enemy morre
-    ↓
-Corpse é criado
-    ↓
-Enemy é removido
-    ↓
-delay
-    ↓
-novo Enemy é instanciado
-    ↓
-Skeletons fazem retarget
-```
-
----
-
-# Fluxo econômico atual
-
-```text
-Enemy
-  ↓
-morte
-  ↓
-Corpse
-  ↓
-clique / processamento
-  ↓
-Bones
-  ↓
-Create Skeleton
-  ↓
-novo Skeleton
-```
-
-Este é o primeiro loop econômico funcional do projeto.
-
----
-
-# Próxima expansão arquitetural — Waves
-
-O próximo milestone adicionará estado de Wave ao protótipo.
-
-A implementação inicial poderá continuar em `main.gd`.
-
-Estado planejado:
-
-```text
 current_wave
-enemies_in_wave
-enemies_remaining
-enemy_spawn_delay
-wave_delay
-wave_in_progress
+enemies_total_this_wave
+enemies_defeated_this_wave
+
+upgrade_counts
+current_upgrade_choices
+active_synergies
+
+run metrics
 ```
-
-Responsabilidades planejadas:
-
-- iniciar Wave;
-- determinar quantidade de Enemies;
-- determinar HP/dano da Wave;
-- contar Enemies derrotados/restantes;
-- controlar delay entre Enemies;
-- finalizar Wave;
-- aguardar intervalo;
-- iniciar próxima Wave;
-- atualizar HUD.
-
-Não criar `WaveManager` apenas por antecipação.
-
-Se a lógica de Waves crescer a ponto de dificultar manutenção de `main.gd`, então separar.
 
 ---
 
-# Arquitetura planejada futura
+# Fluxo de combate
 
-Quando a complexidade justificar, possível estrutura:
+```text
+Skeleton
+→ procura Enemy
+→ move para posição de combate
+→ cooldown
+→ ataque
+
+Enemy
+→ procura Skeleton mais próximo
+→ aproxima
+→ cooldown
+→ ataque
+```
+
+---
+
+# Fluxo de Wave
+
+```text
+start_wave()
+→ spawn Enemy
+→ Enemy dies
+→ Corpse
+→ count defeated
+→ next Enemy
+→ Wave complete
+→ show upgrade
+→ apply upgrade
+→ check synergy
+→ next Wave
+```
+
+---
+
+# Fluxo econômico
+
+```text
+Corpse
+→ process_corpse()
+→ Bones
+→ optional Bone Harvest
+→ optional Recycling Plant
+→ optional Bone Assembly Line
+→ Skeleton production
+```
+
+---
+
+# Fluxo de morte do Skeleton
+
+```text
+HP <= 0
+→ Reassembly roll
+    → revive?
+        → optional Second Shift
+    → no revive
+        → Final Service
+        → remove Skeleton
+```
+
+---
+
+# Próxima extensão arquitetural — Boss
+
+Recomendação para o protótipo:
+
+- adicionar estado de Boss à lógica atual;
+- não refatorar tudo antes de validar;
+- implementar timer do ataque especial;
+- definir Boss Wave;
+- ao Boss morrer, finalizar run em vez de iniciar upgrade/next Wave.
+
+Estados novos prováveis:
+
+```text
+run_finished
+run_won
+boss_active
+boss_special_attack_timer
+```
+
+---
+
+# Refatoração após v0.1.0
+
+Após a primeira run completa, `main.gd` deve ser revisado.
+
+Possível divisão:
 
 ```text
 Main
+├── RunManager
 ├── BattleManager
 ├── WaveManager
 ├── ResourceManager
 ├── UpgradeManager
+├── SynergyManager
 ├── FactoryManager
-├── Units
-├── Enemies
-├── Corpses
+├── UnitContainer
+├── EnemyContainer
+├── CorpseContainer
 └── UI
 ```
 
-Possível direção para unidades:
+Não é obrigatório usar exatamente essa árvore.
+
+Objetivo da refatoração:
+
+- diminuir acoplamento;
+- facilitar novos tipos de unidade;
+- facilitar novos recursos;
+- permitir Bosses com comportamentos próprios;
+- melhorar testabilidade;
+- reduzir risco de regressão.
+
+---
+
+# Direção para entidades
+
+Mais adiante:
 
 ```text
-Unit
+UnitBase
 ├── Skeleton
 ├── Zombie
 ├── Ghost
 └── Abomination
-```
 
-Possível direção para inimigos:
-
-```text
 EnemyBase
-├── NormalEnemy
+├── BasicEnemy
+├── FastEnemy
+├── TankEnemy
+├── RangedEnemy
 ├── EliteEnemy
-└── Boss
+└── BossBase
 ```
 
-Essas estruturas são apenas direção futura.
+Cada entidade deve começar a carregar seu próprio estado quando a diversidade tornar o modelo de Dictionaries em `main.gd` difícil de manter.
 
 ---
 
-# Princípios arquiteturais
+# Direção para upgrades
 
-1. Não realizar refatorações grandes sem necessidade concreta.
-2. Priorizar sistemas testáveis.
-3. Evitar duplicar estado.
-4. Manter gameplay funcional durante refatorações.
-5. Separar responsabilidades quando o custo de manter tudo em `main.gd` superar a simplicidade atual.
-6. Não iniciar arquitetura para Factory, upgrades avançados ou múltiplos recursos antes do core loop justificar.
+O protótipo usa IDs/String + `match`.
+
+Quando a pool crescer significativamente, considerar:
+
+- Resource customizado de Upgrade;
+- data-driven upgrade definitions;
+- rarity;
+- tags;
+- prerequisites;
+- synergy tags;
+- icon;
+- localization key.
+
+Evitar migrar cedo demais.
+
+---
+
+# Direção para save
+
+Meta-progressão futura exigirá:
+
+- SaveData;
+- versionamento de save;
+- unlock IDs estáveis;
+- migração entre versões;
+- proteção contra save inválido.
+
+Isso deve entrar antes de public demo avançada.
+
+---
+
+# Performance
+
+Risco futuro importante:
+
+- dezenas/centenas de unidades;
+- múltiplos effects;
+- VFX;
+- corpses;
+- automação.
+
+Mais tarde medir:
+
+- frame time;
+- node count;
+- allocations;
+- efeitos simultâneos;
+- path/movement calculations;
+- rendering.
+
+Não otimizar antes de medir.
+
+---
+
+# Princípios
+
+1. Gameplay estável tem prioridade sobre arquitetura bonita.
+2. Refatorar quando a complexidade justificar.
+3. Não duplicar estado sem necessidade.
+4. Manter IDs estáveis para upgrades/sinergias.
+5. Não misturar conteúdo futuro com `CHANGELOG`.
+6. Criar sistemas data-driven quando o volume de conteúdo justificar.
+7. Performance deve ser medida em runs reais com hordas.

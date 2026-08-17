@@ -1,4 +1,4 @@
-# NecroWorks — Game Design
+# NecroWorks — Game Design Document
 
 ## Identidade
 
@@ -8,288 +8,502 @@
 
 ---
 
-## High Concept
+# High Concept
 
-NecroWorks é um roguelite 2D com elementos de autobattler, estratégia, automação e progressão incremental.
+NecroWorks é um roguelite 2D de autobattler, estratégia, automação e progressão incremental.
 
-O jogador administra uma operação de necromancia industrial.
+O jogador administra uma operação de necromancia industrial em que inimigos derrotados se tornam matéria-prima.
 
-Inimigos derrotados não são apenas obstáculos: seus cadáveres se tornam matéria-prima para a produção de um exército de mortos-vivos.
+A promessa do jogo é simples:
 
----
-
-## Fantasia central
-
-**Matar. Reciclar. Reanimar. Escalar.**
-
-O jogador deve sentir que está transformando um campo de batalha em uma linha de produção necromântica cada vez mais eficiente.
-
-A força da run deve vir tanto do tamanho do exército quanto das combinações entre recursos, unidades, upgrades e automação.
+> **o inimigo que tentou destruir sua fábrica pode terminar trabalhando para ela.**
 
 ---
 
-## Loop principal planejado
+# Fantasia central
 
-Enemy aparece  
-→ mortos-vivos atacam automaticamente  
-→ Enemy morre  
-→ Corpse permanece no campo  
-→ jogador processa Corpse  
-→ recursos são obtidos  
-→ novos mortos-vivos são produzidos  
-→ exército cresce  
-→ Waves ficam mais difíceis  
-→ upgrades são escolhidos  
-→ sinergias aparecem  
-→ elites e bosses  
-→ fim da run.
+**Matar. Reciclar. Reanimar. Automatizar. Escalar.**
 
----
+A run deve começar com uma operação pequena e terminar, quando a build funciona, em uma máquina necromântica absurda.
 
-## Pilares de design
+A sensação desejada é:
 
-### 1. Poucas regras, muitas interações
-
-A profundidade deve surgir principalmente das combinações entre sistemas.
-
-Upgrades isolados devem poder interagir e criar efeitos emergentes.
-
-### 2. Exército descartável
-
-Undead não precisam ser unidades preciosas individualmente.
-
-Perdas fazem parte do loop e devem criar pressão para reciclar, reconstruir e adaptar a produção.
-
-### 3. Cadáver é recurso
-
-Enemy morto não significa apenas progresso.
-
-O cadáver deve ter valor econômico e, futuramente, decisões diferentes de processamento.
-
-### 4. Necromancia industrial
-
-A identidade do projeto não é apenas "invocar mortos-vivos".
-
-O objetivo é construir uma operação de produção, processamento e automação com estética corporativa/industrial macabra.
-
-### 5. Runs fáceis de entender e difíceis de otimizar
-
-A ação básica deve ser clara rapidamente.
-
-A profundidade deve vir de builds, sinergias e decisões de produção.
+```text
+1 Skeleton
+→ pequena sobrevivência
+→ processamento de Corpses
+→ novos Skeletons
+→ upgrades
+→ automação
+→ sinergias
+→ horda
+→ fábrica necromântica fora de controle
+```
 
 ---
 
-## Recursos planejados
+# Pilares
 
-### Bones
+## 1. Poucas regras, muitas interações
 
-Usos principais:
+A profundidade deve vir principalmente de combinações.
 
-- Skeletons;
-- arqueiros esqueléticos;
-- criaturas ósseas;
-- máquinas relacionadas a ossos.
+Um upgrade deve ser interessante sozinho e mais interessante quando combinado com outros.
 
-**Status atual:** implementado como primeiro recurso do protótipo.
+## 2. Cadáver é economia
 
-### Flesh
+Corpse não é decoração.
 
-Usos planejados:
+Corpse deve representar:
 
-- Zombies;
-- Abominations;
-- unidades resistentes.
+- recurso;
+- escolha;
+- combustível;
+- produção;
+- potencial de automação.
 
-**Status:** futuro.
+## 3. Exército descartável
 
-### Blood
+Perder Undead faz parte do loop.
 
-Usos planejados:
+O jogador deve poder transformar perdas em novos efeitos e oportunidades.
 
-- buffs;
-- vampirismo;
+## 4. Necromancia industrial
+
+O jogo não deve parecer somente "um jogo de esqueletos".
+
+A identidade precisa misturar:
+
+- dark fantasy;
+- fábrica;
+- produtividade;
+- processamento;
+- eficiência;
+- humor corporativo macabro.
+
+## 5. Power fantasy crescente
+
+Runs boas devem permitir estados exagerados.
+
+A força não deve vir apenas de números maiores, mas de sistemas que passam a alimentar outros sistemas.
+
+## 6. Legibilidade
+
+Mesmo quando dezenas de unidades estiverem na tela, o jogador precisa entender:
+
+- o que está acontecendo;
+- o que ganhou;
+- qual sinergia ativou;
+- por que a build ficou forte;
+- por que perdeu.
+
+## 7. Comercialmente demonstrável
+
+O conceito precisa ser compreensível em segundos em:
+
+- GIF;
+- vídeo curto;
+- trailer;
+- screenshot;
+- stream.
+
+A transformação de cadáveres em produção de mortos-vivos deve ser visualmente central.
+
+---
+
+# Loop atual
+
+```text
+Wave inicia
+→ Enemy aparece
+→ Undead atacam automaticamente
+→ Enemy morre
+→ Corpse aparece
+→ Corpse é processado
+→ Bones são obtidos
+→ Skeleton é produzido
+→ Wave continua
+→ Wave termina
+→ 3 upgrades são apresentados
+→ jogador escolhe 1
+→ sinergias podem desbloquear
+→ próxima Wave
+```
+
+---
+
+# Recursos
+
+## Bones — implementado
+
+Atual:
+
+- Corpse gera Bones;
+- Skeleton custa Bones;
+- upgrades alteram geração/custo;
+- sinergias podem automatizar produção.
+
+Futuro:
+
+- Skeleton Archer;
+- Bone Golem;
+- estruturas de osso;
+- máquinas ósseas.
+
+## Flesh — planejado
+
+Direção:
+
+- Zombie;
+- Abomination;
+- HP alto;
+- regeneração;
+- produção de massa biológica.
+
+## Blood — planejado
+
+Direção:
+
+- buffs temporários;
 - sacrifícios;
-- magia sanguínea.
+- vampirismo;
+- multiplicadores de dano;
+- decisões de risco/recompensa.
 
-**Status:** futuro.
+## Souls — planejado
 
-### Souls
+Direção:
 
-Usos planejados:
-
-- Ghosts;
-- Liches;
+- Ghost;
+- Lich;
 - magia;
-- efeitos raros.
-
-**Status:** futuro.
+- efeitos raros;
+- upgrades de alta qualidade;
+- automações sobrenaturais.
 
 ---
 
-## Unidades planejadas
+# Unidades
 
-### Skeleton
+## Skeleton — implementado
 
-Primeira unidade do protótipo.
-
-Função inicial:
+Função atual:
 
 - unidade básica;
-- custo em Bones;
-- combate automático.
+- custa Bones;
+- combate automático;
+- recebe todos os upgrades atuais.
 
-**Status:** implementado como placeholder.
+## Zombie — planejado
 
-### Zombie
+Direção:
 
-Planejado como unidade baseada em Flesh.
+- lento;
+- resistente;
+- baseado em Flesh;
+- bom para segurar pressão.
 
-### Ghost
+## Ghost — planejado
 
-Planejado como unidade baseada em Souls.
+Direção:
 
-### Abomination
+- baseado em Souls;
+- ataque especial/range;
+- interações mágicas.
 
-Planejada como unidade avançada baseada principalmente em Flesh e combinações de recursos.
+## Abomination — planejado
 
----
+Direção:
 
-## Estrutura de Waves — direção atual
-
-O próximo milestone do protótipo deverá transformar o spawn infinito de Enemies em Waves limitadas.
-
-Estrutura inicial pretendida:
-
-- contador de Wave;
-- quantidade definida de Enemies;
-- intervalo curto entre Enemies;
-- intervalo maior entre Waves;
-- aumento gradual de HP;
-- aumento gradual de dano;
-- Wave especial/Elite a cada 5 Waves.
-
-Valores exatos ainda serão definidos por playtest.
+- unidade avançada;
+- combinação de recursos;
+- alta presença visual;
+- produto "premium" da fábrica.
 
 ---
 
-## Upgrades — direção futura
+# Waves — implementado
 
-Após Waves, o próximo grande sistema é a escolha de upgrades durante a run.
+Sistema atual:
 
-Direção inicial:
+- Wave counter;
+- quantidade crescente de Enemies;
+- HP scaling;
+- Damage scaling;
+- 0.5 s entre Enemies;
+- Elite a cada 5 Waves;
+- escolha de upgrade após conclusão.
 
-- apresentar 3 opções;
-- jogador escolhe 1;
-- upgrades modificam unidades, recursos ou regras;
-- combinações devem produzir sinergias.
+Estado de balanceamento:
 
-Exemplos conceituais, ainda não implementados:
+**provisório.**
 
-- mais Bones por Corpse;
-- aumento de dano de Skeleton;
-- chance de reanimação;
-- efeitos quando Skeleton morre;
-- efeitos quando Corpse é processado.
+A economia atualmente supera a ameaça cedo demais.
 
----
-
-## Factory — direção futura
-
-Automação necromântica deverá ser um dos diferenciais centrais do projeto.
-
-Possibilidades futuras:
-
-- processamento automático de Corpses;
-- máquinas;
-- rotas de recursos;
-- produção automática de unidades;
-- melhorias de eficiência;
-- transformação de diferentes matérias-primas.
-
-A Factory não deve ser implementada antes do core loop de combate, Waves e upgrades estar validado.
+Balanceamento profundo será feito após a primeira run completa e ampliação dos sistemas.
 
 ---
 
-## Boss Corpses — conceito futuro
+# Upgrades — implementados
 
-Bosses poderão gerar cadáveres especiais.
+| Upgrade | Categoria | Efeito atual |
+|---|---|---|
+| Sharpened Bones | Offense | +25% Damage |
+| Bone Plating | Defense | +25 Max HP |
+| Efficient Recycling | Economy | +2 Bones/Corpse |
+| Rapid Assault | Offense | +15% Attack Speed |
+| Death March | Mobility | +20% Movement Speed |
+| Mass Production | Economy | -1 Skeleton Cost |
+| Heavy Bones | Tradeoff | +50% Damage, -20% Attack Speed |
+| Bone Harvest | Economy | chance de Bones extras |
+| Reassembly | Survival | chance de revive |
+| Final Service | Death | dano ao morrer |
 
-Possíveis decisões mutuamente exclusivas:
+Direção futura:
 
-- ressuscitar o Boss;
-- processar o corpo por recursos raros;
-- consumir o corpo para um efeito permanente durante a run.
-
-**Status:** conceito futuro.
-
----
-
-## Meta-progressão — direção futura
-
-A meta-progressão deve priorizar desbloquear novas possibilidades em vez de apenas conceder aumentos permanentes de atributos.
-
-Possibilidades:
-
-- novas unidades;
-- novos upgrades;
-- novos personagens;
-- novas receitas;
-- novas máquinas;
-- novas combinações.
+- aumentar pool gradualmente;
+- criar raridades;
+- adicionar upgrades específicos por recurso/unidade;
+- evitar upgrades puramente numéricos demais;
+- criar efeitos que mudam regras.
 
 ---
 
-## Personagens — conceitos futuros
+# Sinergias — implementadas
 
-Possíveis arquétipos:
+## Overclocked Ossuary
 
-- Bone Lord;
-- Blood Queen;
-- Surgeon.
+**Heavy Bones + Rapid Assault**
 
-Cada personagem poderá favorecer uma estratégia sem impedir outras builds.
+Ataques ganham chance de Double Strike.
+
+Objetivo de design:
+compensar o peso de Heavy Bones com automação agressiva.
+
+## Recycling Plant
+
+**Efficient Recycling + Bone Harvest**
+
+Bone Harvest recebe bônus dobrado.
+
+Objetivo:
+build de economia explosiva.
+
+## Second Shift
+
+**Reassembly + Final Service**
+
+Skeleton que revive ainda causa parte do dano de Final Service.
+
+Objetivo:
+fazer morte/revive virar motor ofensivo.
+
+## Bone Assembly Line
+
+**Mass Production + Efficient Recycling**
+
+Processar Corpse pode produzir Skeleton automaticamente.
+
+Objetivo:
+primeiro exemplo real de linha de produção necromântica.
 
 ---
 
-## Future Concept — Last Stand
+# Bosses
+
+## Primeiro Boss planejado — The Foreman
+
+Wave alvo do primeiro protótipo: **20**.
+
+Objetivos do Boss:
+
+- ser visualmente diferente de Elite;
+- testar a horda, não apenas um único Skeleton;
+- possuir HP significativamente maior;
+- possuir ataque em área/multi-target;
+- encerrar a primeira run.
+
+Direção:
+
+```text
+WAVE 20 — BOSS
+THE FOREMAN
+
+→ ataques normais
+→ golpe industrial periódico
+→ dano em múltiplos Skeletons
+→ morte do Boss
+→ Victory
+→ Run Summary
+```
+
+O nome e números são provisórios.
+
+---
+
+# End of Run
+
+## Victory
+
+Primeiro objetivo:
+
+- derrotar Boss da Wave 20;
+- exibir resumo;
+- permitir Restart.
+
+## Defeat
+
+A derrota ainda precisa ser definida tecnicamente.
+
+Direção simples para `v0.1.0`:
+
+- se não houver Skeletons e não houver forma viável de reconstrução, entrar em Game Over.
+
+Mais tarde pode evoluir para Last Stand.
+
+---
+
+# Future Concept — Last Stand
 
 Quando todos os Skeletons morrerem, a derrota não precisa necessariamente ser instantânea.
 
 Possível sistema:
 
-- o jogo entra em estado de alerta;
-- o jogador recebe alguns segundos para reconstruir o exército;
-- Corpses e recursos existentes continuam disponíveis;
-- o jogador pode realizar uma reanimação de emergência;
-- se não conseguir produzir uma nova unidade antes do tempo acabar, ocorre Game Over.
+- alerta;
+- janela curta para reconstrução;
+- Corpses e recursos continuam utilizáveis;
+- Emergency Raise;
+- uma segunda chance por run;
+- sacrifício de recursos futuros;
+- upgrades específicos.
 
-Possibilidades adicionais:
-
-- botão `Emergency Raise`;
-- uma única segunda chance por run;
-- sacrificar recursos futuros para sobreviver;
-- Enemies continuam avançando durante o alerta;
-- upgrades podem modificar o Last Stand.
-
-**Status:** ideia futura. Não implementada e ainda sujeita a testes de balanceamento.
+Status:
+**conceito futuro, não implementado.**
 
 ---
 
-## Direção visual
+# Factory — diferencial central futuro
 
-Dark fantasy cartunesco com elementos grotescos e humor corporativo macabro.
+A Factory deve transformar a economia manual atual em sistema industrial.
+
+Possibilidades:
+
+- processamento automático;
+- máquinas;
+- esteiras/rotas;
+- filas de produção;
+- produção automática;
+- máquinas que convertem um recurso em outro;
+- eficiência;
+- overload;
+- mutações;
+- cadeias de produção.
+
+Princípio:
+
+> a Factory precisa criar decisões, não apenas remover cliques.
+
+---
+
+# Boss Corpses — conceito futuro
+
+Boss pode deixar Corpse especial.
+
+Possíveis decisões mutuamente exclusivas:
+
+1. Ressuscitar o Boss.
+2. Processar por recurso raro.
+3. Consumir para efeito permanente na run.
+
+---
+
+# Meta-progressão
+
+Prioridade:
+**desbloquear possibilidades, não apenas stats permanentes.**
+
+Exemplos:
+
+- novos Undead;
+- novos upgrades;
+- novos personagens;
+- novas máquinas;
+- novas receitas;
+- novos eventos;
+- novas linhas de produção.
+
+Evitar transformar o jogo em grind obrigatório para ficar forte.
+
+---
+
+# Personagens / operadores
+
+Conceitos:
+
+- Bone Lord;
+- Blood Queen;
+- Surgeon.
+
+Cada um deve orientar builds sem impedir experimentação.
+
+---
+
+# Estrutura alvo de uma run
+
+Versão comercial ainda será validada, mas direção inicial:
+
+```text
+Early Game
+→ sobrevivência + economia
+
+Mid Game
+→ definição de build + primeiras sinergias
+
+Late Game
+→ automação + horda + ameaças especiais
+
+Boss
+→ teste final da operação
+
+Run Summary
+```
+
+Tempo alvo futuro:
+aproximadamente 20–30 minutos, sujeito a playtest.
+
+---
+
+# Direção visual
+
+Dark fantasy cartunesco + horror corporativo/industrial.
+
+Necessidades futuras:
+
+- silhuetas muito legíveis;
+- Corpses visualmente satisfatórios;
+- máquinas com animações claras;
+- feedback forte de processamento;
+- números/popups sem poluir;
+- Elite e Boss imediatamente reconhecíveis;
+- momentos "clipáveis" quando uma sinergia explode a produção.
 
 Durante o protótipo:
-
-- usar placeholders;
-- priorizar leitura e funcionamento;
-- não investir ainda em arte definitiva.
+placeholders continuam corretos.
 
 ---
 
-## Princípio de produção
+# Princípio comercial de design
 
-O projeto deve permanecer viável para desenvolvimento solo.
+O objetivo comercial é aumentar a probabilidade de sucesso, não assumir sucesso.
 
-Evitar sistemas que aumentem muito o escopo antes que o core loop demonstre ser divertido e rejogável.
+NecroWorks deve buscar:
+
+- hook fácil de explicar;
+- diferença visual clara;
+- replayability;
+- builds compartilháveis;
+- demo forte;
+- bom trailer;
+- boa cápsula de Steam;
+- feedback público antes do lançamento;
+- escopo que um desenvolvedor solo consiga terminar.
