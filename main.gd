@@ -44,7 +44,7 @@ var enemy_speed: float = 100.0
 # VIDA
 # =========================================================
 
-var skeleton_max_hp: int = 100
+var skeleton_max_hp: int = 1
 
 var enemy_max_hp: int = 100
 var enemy_hp: int = 100
@@ -256,6 +256,7 @@ var total_bones_earned: int = 0
 # =========================================================
 
 var skeletons: Array[Node2D] = []
+var corpses: Array[Button] = []
 
 var skeleton_hps: Dictionary = {}
 var skeleton_attack_timers: Dictionary = {}
@@ -380,6 +381,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 
 	update_debug_ui()
+
+
+	if run_finished:
+		return
+
+
+	check_defeat_condition()
 
 
 	if run_finished:
@@ -1812,6 +1820,11 @@ func spawn_corpse(
 	)
 
 
+	corpses.append(
+		corpse
+	)
+
+
 	corpse.position = (
 		spawn_position
 	)
@@ -1916,6 +1929,11 @@ func process_corpse(
 	print(
 		"TOTAL DE BONES: ",
 		bones
+	)
+
+
+	corpses.erase(
+		corpse
 	)
 
 
@@ -3246,6 +3264,85 @@ func update_synergy_ui() -> void:
 
 
 # =========================================================
+# DEFEAT CONDITION
+# =========================================================
+
+func check_defeat_condition() -> void:
+
+	if run_finished:
+		return
+
+
+	# Não existe derrota durante a escolha de upgrade.
+	# Uma escolha ainda pode alterar custo/economia antes
+	# da próxima Wave começar.
+	if wave_transition_in_progress:
+		return
+
+
+	# Só avaliamos derrota dentro de uma Wave ativa.
+	if not wave_in_progress:
+		return
+
+
+	# Se ainda existe algum Skeleton vivo, a operação continua.
+	if not skeletons.is_empty():
+		return
+
+
+	cleanup_invalid_corpses()
+
+
+	# Ainda existe matéria-prima processável.
+	# O jogador pode recuperar Bones e reconstruir.
+	if not corpses.is_empty():
+		return
+
+
+	# Ainda existem Bones suficientes para produzir
+	# pelo menos um Skeleton.
+	if bones >= skeleton_cost:
+		return
+
+
+	print("")
+	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	print("NO VIABLE UNDEAD PRODUCTION REMAINS")
+	print(
+		"Skeletons: 0 | Corpses: 0 | Bones: ",
+		bones,
+		" / ",
+		skeleton_cost
+	)
+	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	print("")
+
+
+	finish_run(
+		false
+	)
+
+
+func cleanup_invalid_corpses() -> void:
+
+	var valid_corpses: Array[Button] = []
+
+
+	for corpse: Button in corpses:
+
+		if is_instance_valid(
+			corpse
+		):
+
+			valid_corpses.append(
+				corpse
+			)
+
+
+	corpses = valid_corpses
+
+
+# =========================================================
 # RUN END / VICTORY
 # =========================================================
 
@@ -3440,7 +3537,7 @@ func show_run_end_screen() -> void:
 
 		run_end_title_label.text = (
 			"OPERATION TERMINATED"
-			+ "\nRUN FAILED"
+			+ "\nPRODUCTION LINE COLLAPSED"
 		)
 
 
@@ -3452,6 +3549,8 @@ func show_run_end_screen() -> void:
 		+ str(total_enemies_killed)
 		+ "\nCorpses Processed: "
 		+ str(total_corpses_processed)
+		+ "\nCorpses Remaining: "
+		+ str(corpses.size())
 		+ "\nSkeletons Built: "
 		+ str(total_skeletons_created)
 		+ "\nSkeletons Lost: "
@@ -3469,11 +3568,28 @@ func show_run_end_screen() -> void:
 		+ "\nSynergies Unlocked: "
 		+ str(active_synergies.size())
 		+ "\n\n"
+		+ get_run_result_message()
+		+ "\n\n"
 		+ get_run_synergy_summary()
 	)
 
 
 	run_end_panel.visible = true
+
+
+func get_run_result_message() -> String:
+
+	if run_won:
+
+		return (
+			"Result: Production target achieved."
+		)
+
+
+	return (
+		"Result: No Skeletons, no Corpses, "
+		+ "and insufficient Bones to rebuild."
+	)
 
 
 func get_run_synergy_summary() -> String:
@@ -3705,6 +3821,13 @@ func update_debug_ui() -> void:
 		+ str(get_enemies_remaining())
 		+ "\nSkeletons: "
 		+ str(skeletons.size())
+		+ "\nCorpses: "
+		+ str(corpses.size())
+		+ "\nCan Rebuild: "
+		+ str(
+			bones >= skeleton_cost
+			or not corpses.is_empty()
+		)
 		+ "\nUpgrades: "
 		+ str(total_upgrades_selected)
 		+ "\nSynergies: "
