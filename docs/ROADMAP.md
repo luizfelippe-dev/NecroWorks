@@ -65,7 +65,14 @@
 - [x] runtime health bars
 - [x] initial professional folder organization
 - [x] first Flesh synergy — Meat Shield Protocol
+- [x] independent runtime state and health bars for simultaneous Enemies
+- [x] staged active-Enemy escalation beginning on Wave 6
+- [x] Wave 20 Boss preserved as a single target
+- [x] first living Enemy archetypes: Human Warrior, Mage and Elf
+- [x] per-Enemy HP, damage, speed, range and cooldown
+- [x] progressive archetype introduction on Waves 1, 8 and 11
 - [ ] test meaningful Skeleton vs Zombie composition choices
+- [ ] playtest active-Enemy caps against Skeleton-only, Zombie-heavy and mixed builds
 - [ ] decide Flesh resource pacing
 - [ ] begin generic Undead refactor only where needed
 
@@ -136,15 +143,19 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [ ] 10–15 synergies
 - [ ] rare upgrades
 - [ ] rule-changing upgrades
-- [ ] multiple enemy archetypes
-- [ ] ranged enemy
-- [ ] tank enemy
-- [ ] fast enemy
+- [x] multiple enemy archetype foundation
+- [x] Human Warrior prototype — durable frontline
+- [x] Mage prototype — fragile ranged damage
+- [x] Elf prototype — fast skirmisher
+- [ ] Mage advanced behavior — AOE/control
+- [ ] Elf advanced behavior — precision targeting
 - [ ] elite variants
 - [ ] 2–3 bosses
 - [ ] events
 - [ ] Boss Corpse choices
 - [ ] recipes/fusions
+- [ ] narrative delivery prototype: intro + in-run discoveries
+- [ ] first complete lore pass
 
 ---
 

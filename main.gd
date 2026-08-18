@@ -30,6 +30,12 @@ var enemy_scene: PackedScene = preload(
 const UNIT_HEALTH_BAR_SCRIPT: Script = preload(
 	"res://scripts/ui/unit_health_bar.gd"
 )
+const ENEMY_WAVE_POLICY: Script = preload(
+	"res://scripts/game/enemy_wave_policy.gd"
+)
+const ENEMY_ARCHETYPE_CATALOG: Script = preload(
+	"res://scripts/game/enemy_archetype_catalog.gd"
+)
 
 
 # =========================================================
@@ -184,15 +190,18 @@ func zombie_attack_enemy(
 	attacking_zombie: Node2D
 ) -> void:
 
-	if not is_instance_valid(enemy):
+	var target_enemy: Node2D = get_closest_enemy_to_unit(
+		attacking_zombie
+	)
+
+
+	if target_enemy == null:
 		return
 
 
-	enemy_hp -= zombie_damage
-	update_unit_health_bar(
-		enemy,
-		enemy_hp,
-		enemy_max_hp
+	var remaining_hp: int = apply_damage_to_enemy(
+		target_enemy,
+		zombie_damage
 	)
 
 
@@ -225,10 +234,14 @@ func zombie_attack_enemy(
 
 	print(
 		"ZOMBIE ATACOU! | Enemy HP: ",
-		enemy_hp,
+		remaining_hp,
 		" | Zombies vivos: ",
 		zombies.size()
 	)
+
+
+	if remaining_hp <= 0:
+		kill_enemy(target_enemy)
 
 
 func kill_zombie(
@@ -365,6 +378,16 @@ var zombie_cost: int = 6
 # =========================================================
 
 var enemy: Node2D = null
+var enemies: Array[Node2D] = []
+var enemy_hps: Dictionary = {}
+var enemy_max_hps: Dictionary = {}
+var enemy_damages: Dictionary = {}
+var enemy_speeds: Dictionary = {}
+var enemy_attack_cooldowns: Dictionary = {}
+var enemy_attack_ranges: Dictionary = {}
+var enemy_attack_timers: Dictionary = {}
+var enemy_lane_offsets: Dictionary = {}
+var enemy_types: Dictionary = {}
 
 const ENEMY_SPAWN_POSITION: Vector2 = Vector2(
 	1650.0,
@@ -423,6 +446,8 @@ var current_wave: int = 1
 
 var enemies_total_this_wave: int = 0
 var enemies_defeated_this_wave: int = 0
+var enemies_spawned_this_wave: int = 0
+var enemy_refill_scheduled: bool = false
 
 var wave_in_progress: bool = false
 var wave_transition_in_progress: bool = false
@@ -735,7 +760,11 @@ func _process(delta: float) -> void:
 		return
 
 
-	if not is_instance_valid(enemy):
+	cleanup_invalid_enemies()
+	refresh_primary_enemy()
+
+
+	if enemies.is_empty():
 		return
 
 
@@ -746,12 +775,6 @@ func _process(delta: float) -> void:
 	# =====================================================
 	# COOLDOWNS
 	# =====================================================
-
-	enemy_attack_timer = maxf(
-		enemy_attack_timer - delta,
-		0.0
-	)
-
 
 	if boss_active:
 
@@ -824,57 +847,79 @@ func _process(delta: float) -> void:
 
 
 	# =====================================================
-	# ENEMY PERSEGUE O UNDEAD MAIS PRÓXIMO
+	# GRUPO DE ENEMIES PERSEGUE A FORMAÇÃO
 	# =====================================================
 
-	var closest_undead: Node2D = (
-		get_closest_undead_to_enemy()
-	)
+	for current_enemy: Node2D in enemies.duplicate():
+
+		if not is_instance_valid(current_enemy):
+			continue
 
 
-	if closest_undead == null:
-		return
-
-
-	var distance_to_undead: float = absf(
-		enemy.position.x
-		- closest_undead.position.x
-	)
-
-
-	enemy.position.y = ENEMY_LANE_Y
-
-
-	if distance_to_undead > enemy_attack_range:
-
-		var next_enemy_x: float = move_toward(
-			enemy.position.x,
-			closest_undead.position.x,
-			enemy_speed * delta
+		var closest_undead: Node2D = (
+			get_closest_undead_to_enemy(current_enemy)
 		)
 
 
-		next_enemy_x = clampf(
-			next_enemy_x,
-			ENEMY_MIN_X,
-			ENEMY_MAX_X
+		if closest_undead == null:
+			continue
+
+
+		var current_attack_timer: float = float(
+			enemy_attack_timers.get(current_enemy, 0.0)
+		)
+		current_attack_timer = maxf(
+			current_attack_timer - delta,
+			0.0
+		)
+		enemy_attack_timers[current_enemy] = current_attack_timer
+
+
+		var lane_offset: float = float(
+			enemy_lane_offsets.get(current_enemy, 0.0)
+		)
+		current_enemy.position.y = ENEMY_LANE_Y + lane_offset
+		var current_attack_range: float = float(
+			enemy_attack_ranges.get(current_enemy, enemy_attack_range)
+		)
+		var current_speed: float = float(
+			enemy_speeds.get(current_enemy, enemy_speed)
 		)
 
 
-		enemy.position.x = next_enemy_x
+		var distance_to_undead: float = absf(
+			current_enemy.position.x
+			- closest_undead.position.x
+		)
 
-	else:
 
-		if enemy_attack_timer <= 0.0:
+		if distance_to_undead > current_attack_range:
+
+			var next_enemy_x: float = move_toward(
+				current_enemy.position.x,
+				closest_undead.position.x,
+				current_speed * delta
+			)
+			current_enemy.position.x = clampf(
+				next_enemy_x,
+				ENEMY_MIN_X,
+				ENEMY_MAX_X
+			)
+
+		elif current_attack_timer <= 0.0:
 
 			damage_undead(
 				closest_undead,
-				enemy_damage,
-				"ENEMY"
+				int(enemy_damages.get(current_enemy, enemy_damage)),
+				str(enemy_types.get(current_enemy, "ENEMY")).to_upper()
 			)
-
-			enemy_attack_timer = (
-				enemy_attack_cooldown
+			enemy_attack_timers[current_enemy] = (
+				float(
+					enemy_attack_cooldowns.get(
+						current_enemy,
+						enemy_attack_cooldown
+					)
+				)
 			)
 
 
@@ -945,13 +990,6 @@ func _process(delta: float) -> void:
 				)
 
 
-				if enemy_hp <= 0:
-
-					kill_enemy()
-
-					return
-
-
 	# =====================================================
 	# ZOMBIE COMBAT
 	# =====================================================
@@ -1015,13 +1053,6 @@ func _process(delta: float) -> void:
 				)
 
 
-				if enemy_hp <= 0:
-
-					kill_enemy()
-
-					return
-
-
 # =========================================================
 # WAVES
 # =========================================================
@@ -1040,6 +1071,18 @@ func start_wave(
 	)
 
 	enemies_defeated_this_wave = 0
+	enemies_spawned_this_wave = 0
+	enemy_refill_scheduled = false
+	enemies.clear()
+	enemy_hps.clear()
+	enemy_max_hps.clear()
+	enemy_damages.clear()
+	enemy_speeds.clear()
+	enemy_attack_cooldowns.clear()
+	enemy_attack_ranges.clear()
+	enemy_attack_timers.clear()
+	enemy_lane_offsets.clear()
+	enemy_types.clear()
 
 	boss_active = is_boss_wave(
 		current_wave
@@ -1089,9 +1132,9 @@ func start_wave(
 	)
 
 	print(
-		"Enemy HP: ",
+		"Base Enemy HP: ",
 		enemy_max_hp,
-		" | Damage: ",
+		" | Base Damage: ",
 		enemy_damage
 	)
 
@@ -1100,27 +1143,9 @@ func start_wave(
 
 	if is_instance_valid(existing_enemy):
 
-		enemy = existing_enemy
+		register_enemy(existing_enemy)
 
-		enemy.position = (
-			ENEMY_SPAWN_POSITION
-		)
-
-		enemy_hp = enemy_max_hp
-
-		enemy_attack_timer = 0.0
-
-		ensure_unit_visual(
-			enemy,
-			get_current_enemy_color()
-		)
-
-		update_current_enemy_visual_size()
-		ensure_enemy_health_bar()
-
-	else:
-
-		spawn_enemy()
+	fill_enemy_group()
 
 
 	update_wave_ui()
@@ -1239,6 +1264,292 @@ func get_enemies_remaining() -> int:
 
 
 	return remaining
+
+
+func get_max_simultaneous_enemies() -> int:
+
+	return int(
+		ENEMY_WAVE_POLICY.get_max_simultaneous_enemies(
+			current_wave,
+			BOSS_WAVE
+		)
+	)
+
+
+func cleanup_invalid_enemies() -> void:
+
+	var valid_enemies: Array[Node2D] = []
+
+
+	for current_enemy: Node2D in enemies:
+
+		if is_instance_valid(current_enemy):
+			valid_enemies.append(current_enemy)
+			continue
+
+
+		enemy_hps.erase(current_enemy)
+		enemy_max_hps.erase(current_enemy)
+		enemy_damages.erase(current_enemy)
+		enemy_speeds.erase(current_enemy)
+		enemy_attack_cooldowns.erase(current_enemy)
+		enemy_attack_ranges.erase(current_enemy)
+		enemy_attack_timers.erase(current_enemy)
+		enemy_lane_offsets.erase(current_enemy)
+		enemy_types.erase(current_enemy)
+
+
+	enemies = valid_enemies
+
+
+func refresh_primary_enemy() -> void:
+
+	if is_instance_valid(enemy) and enemies.has(enemy):
+		enemy_hp = int(enemy_hps.get(enemy, enemy_hp))
+		enemy_attack_timer = float(
+			enemy_attack_timers.get(enemy, 0.0)
+		)
+		return
+
+
+	enemy = null
+	var closest_x: float = INF
+
+
+	for current_enemy: Node2D in enemies:
+
+		if not is_instance_valid(current_enemy):
+			continue
+
+
+		if current_enemy.position.x < closest_x:
+			closest_x = current_enemy.position.x
+			enemy = current_enemy
+
+
+	if is_instance_valid(enemy):
+		enemy_hp = int(enemy_hps.get(enemy, enemy_max_hp))
+		enemy_attack_timer = float(
+			enemy_attack_timers.get(enemy, 0.0)
+		)
+
+
+func get_closest_enemy_to_unit(
+	unit: Node2D
+) -> Node2D:
+
+	if not is_instance_valid(unit):
+		return null
+
+
+	var closest_enemy: Node2D = null
+	var closest_distance: float = INF
+
+
+	for current_enemy: Node2D in enemies:
+
+		if not is_instance_valid(current_enemy):
+			continue
+
+
+		var distance: float = unit.position.distance_squared_to(
+			current_enemy.position
+		)
+
+
+		if distance < closest_distance:
+			closest_distance = distance
+			closest_enemy = current_enemy
+
+
+	return closest_enemy
+
+
+func apply_damage_to_enemy(
+	target_enemy: Node2D,
+	damage_amount: int
+) -> int:
+
+	if not is_instance_valid(target_enemy):
+		return 0
+
+
+	if not enemy_hps.has(target_enemy):
+		return 0
+
+
+	var remaining_hp: int = int(enemy_hps[target_enemy])
+	remaining_hp -= damage_amount
+	enemy_hps[target_enemy] = remaining_hp
+
+
+	if target_enemy == enemy:
+		enemy_hp = remaining_hp
+
+
+	update_unit_health_bar(
+		target_enemy,
+		remaining_hp,
+		int(enemy_max_hps.get(target_enemy, enemy_max_hp))
+	)
+
+
+	return remaining_hp
+
+
+func get_free_enemy_lane_offset() -> float:
+
+	var lane_options: Array[float] = [
+		0.0,
+		-100.0,
+		100.0,
+		-200.0,
+		200.0
+	]
+
+
+	for lane_offset: float in lane_options:
+
+		if not enemy_lane_offsets.values().has(lane_offset):
+			return lane_offset
+
+
+	return 0.0
+
+
+func register_enemy(new_enemy: Node2D) -> void:
+
+	if not is_instance_valid(new_enemy):
+		return
+
+
+	if enemies.has(new_enemy):
+		return
+
+
+	var lane_offset: float = get_free_enemy_lane_offset()
+	var archetype: Dictionary = ENEMY_ARCHETYPE_CATALOG.get_archetype(
+		current_wave,
+		enemies_spawned_this_wave,
+		BOSS_WAVE
+	)
+	var archetype_id: String = str(archetype.get("id", "human_warrior"))
+	var display_name: String = str(
+		archetype.get("display_name", "HUMAN WARRIOR")
+	)
+	var maximum_hp: int = maxi(
+		1,
+		int(
+			round(
+				float(enemy_max_hp)
+				* float(archetype.get("hp_multiplier", 1.0))
+			)
+		)
+	)
+	var attack_damage: int = maxi(
+		1,
+		int(
+			round(
+				float(enemy_damage)
+				* float(archetype.get("damage_multiplier", 1.0))
+			)
+		)
+	)
+	var movement_speed: float = (
+		enemy_speed
+		* float(archetype.get("speed_multiplier", 1.0))
+	)
+	var visual_color: Color = archetype.get(
+		"color",
+		get_current_enemy_color()
+	) as Color
+
+
+	if is_elite_wave(current_wave):
+		visual_color = visual_color.lerp(
+			ELITE_ENEMY_COLOR,
+			0.45
+		)
+
+
+	new_enemy.position = Vector2(
+		ENEMY_SPAWN_POSITION.x,
+		ENEMY_LANE_Y + lane_offset
+	)
+	ensure_unit_visual(
+		new_enemy,
+		visual_color
+	)
+
+
+	enemies.append(new_enemy)
+	enemy_hps[new_enemy] = maximum_hp
+	enemy_max_hps[new_enemy] = maximum_hp
+	enemy_damages[new_enemy] = attack_damage
+	enemy_speeds[new_enemy] = movement_speed
+	enemy_attack_cooldowns[new_enemy] = float(
+		archetype.get("cooldown", enemy_attack_cooldown)
+	)
+	enemy_attack_ranges[new_enemy] = float(
+		archetype.get("attack_range", enemy_attack_range)
+	)
+	enemy_attack_timers[new_enemy] = 0.0
+	enemy_lane_offsets[new_enemy] = lane_offset
+	enemy_types[new_enemy] = archetype_id
+	enemies_spawned_this_wave += 1
+
+
+	if not is_instance_valid(enemy):
+		enemy = new_enemy
+
+
+	update_current_enemy_visual_size(new_enemy)
+	ensure_enemy_health_bar(new_enemy)
+	ensure_enemy_identity_label(
+		new_enemy,
+		display_name,
+		visual_color
+	)
+	refresh_primary_enemy()
+
+
+func fill_enemy_group() -> void:
+
+	cleanup_invalid_enemies()
+
+
+	while (
+		wave_in_progress
+		and enemies.size() < get_max_simultaneous_enemies()
+		and enemies_spawned_this_wave < enemies_total_this_wave
+	):
+
+		spawn_enemy()
+
+
+	update_wave_ui()
+	update_debug_ui()
+
+
+func schedule_enemy_refill() -> void:
+
+	if enemy_refill_scheduled:
+		return
+
+
+	enemy_refill_scheduled = true
+
+
+	await get_tree().create_timer(
+		enemy_spawn_delay
+	).timeout
+
+
+	enemy_refill_scheduled = false
+
+
+	if wave_in_progress:
+		fill_enemy_group()
 
 
 # =========================================================
@@ -1530,9 +1841,11 @@ func get_all_undead_units() -> Array[Node2D]:
 	return units
 
 
-func get_closest_undead_to_enemy() -> Node2D:
+func get_closest_undead_to_enemy(
+	source_enemy: Node2D = enemy
+) -> Node2D:
 
-	if not is_instance_valid(enemy):
+	if not is_instance_valid(source_enemy):
 		return null
 
 
@@ -1544,7 +1857,7 @@ func get_closest_undead_to_enemy() -> Node2D:
 	for current_undead: Node2D in get_all_undead_units():
 
 		var horizontal_distance: float = absf(
-			enemy.position.x
+			source_enemy.position.x
 			- current_undead.position.x
 		)
 
@@ -1694,11 +2007,19 @@ func attack_enemy(
 	attacking_skeleton: Node2D
 ) -> void:
 
-	if not is_instance_valid(enemy):
+	var target_enemy: Node2D = get_closest_enemy_to_unit(
+		attacking_skeleton
+	)
+
+
+	if target_enemy == null:
 		return
 
 
-	enemy_hp -= skeleton_damage
+	var remaining_hp: int = apply_damage_to_enemy(
+		target_enemy,
+		skeleton_damage
+	)
 
 
 	var double_strike_triggered: bool = false
@@ -1708,21 +2029,17 @@ func attack_enemy(
 		has_synergy(
 			SYNERGY_OVERCLOCKED_OSSUARY
 		)
-		and enemy_hp > 0
+		and remaining_hp > 0
 		and randf()
 		< OVERCLOCK_DOUBLE_STRIKE_CHANCE
 	):
 
-		enemy_hp -= skeleton_damage
+		remaining_hp = apply_damage_to_enemy(
+			target_enemy,
+			skeleton_damage
+		)
 
 		double_strike_triggered = true
-
-
-	update_unit_health_bar(
-		enemy,
-		enemy_hp,
-		enemy_max_hp
-	)
 
 
 	skeleton_attack_timers[
@@ -1732,7 +2049,7 @@ func attack_enemy(
 
 	print(
 		"SKELETON ATACOU! | Enemy HP: ",
-		enemy_hp,
+		remaining_hp,
 		" | Skeletons vivos: ",
 		skeletons.size()
 	)
@@ -1745,6 +2062,10 @@ func attack_enemy(
 			skeleton_damage,
 			" damage."
 		)
+
+
+	if remaining_hp <= 0:
+		kill_enemy(target_enemy)
 
 
 # =========================================================
@@ -1856,6 +2177,7 @@ func kill_skeleton(
 			and final_service_damage > 0
 			and is_instance_valid(enemy)
 		):
+			var second_shift_target: Node2D = enemy
 
 			var second_shift_damage: int = int(
 				round(
@@ -1870,11 +2192,9 @@ func kill_skeleton(
 				second_shift_damage = 1
 
 
-			enemy_hp -= second_shift_damage
-			update_unit_health_bar(
-				enemy,
-				enemy_hp,
-				enemy_max_hp
+			var remaining_enemy_hp: int = apply_damage_to_enemy(
+				second_shift_target,
+				second_shift_damage
 			)
 
 
@@ -1882,17 +2202,17 @@ func kill_skeleton(
 				"SECOND SHIFT! O Skeleton reviveu e ainda causou ",
 				second_shift_damage,
 				" damage. | Enemy HP: ",
-				enemy_hp
+				remaining_enemy_hp
 			)
 
 
-			if enemy_hp <= 0:
+			if remaining_enemy_hp <= 0:
 
 				print(
 					"SECOND SHIFT MATOU O ENEMY!"
 				)
 
-				kill_enemy()
+				kill_enemy(second_shift_target)
 
 
 		update_bones_ui()
@@ -1914,18 +2234,18 @@ func kill_skeleton(
 	# -----------------------------------------------------
 
 	var final_service_killed_enemy: bool = false
+	var final_service_target: Node2D = null
 
 
 	if (
 		final_service_damage > 0
 		and is_instance_valid(enemy)
 	):
+		final_service_target = enemy
 
-		enemy_hp -= final_service_damage
-		update_unit_health_bar(
-			enemy,
-			enemy_hp,
-			enemy_max_hp
+		var remaining_enemy_hp: int = apply_damage_to_enemy(
+			final_service_target,
+			final_service_damage
 		)
 
 
@@ -1933,11 +2253,11 @@ func kill_skeleton(
 			"FINAL SERVICE! ",
 			final_service_damage,
 			" de dano. | Enemy HP: ",
-			enemy_hp
+			remaining_enemy_hp
 		)
 
 
-		if enemy_hp <= 0:
+		if remaining_enemy_hp <= 0:
 			final_service_killed_enemy = true
 
 
@@ -2015,16 +2335,20 @@ func kill_skeleton(
 			"FINAL SERVICE MATOU O ENEMY!"
 		)
 
-		kill_enemy()
+		kill_enemy(final_service_target)
 
 
 # =========================================================
 # MATAR ENEMY / PROGREDIR WAVE
 # =========================================================
 
-func kill_enemy() -> void:
+func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
-	if not is_instance_valid(enemy):
+	if not is_instance_valid(target_enemy):
+		return
+
+
+	if not enemies.has(target_enemy):
 		return
 
 
@@ -2048,7 +2372,7 @@ func kill_enemy() -> void:
 		print("")
 
 
-	var dead_enemy: Node2D = enemy
+	var dead_enemy: Node2D = target_enemy
 
 
 	var death_position: Vector2 = (
@@ -2056,7 +2380,20 @@ func kill_enemy() -> void:
 	)
 
 
-	enemy = null
+	enemies.erase(dead_enemy)
+	enemy_hps.erase(dead_enemy)
+	enemy_max_hps.erase(dead_enemy)
+	enemy_damages.erase(dead_enemy)
+	enemy_speeds.erase(dead_enemy)
+	enemy_attack_cooldowns.erase(dead_enemy)
+	enemy_attack_ranges.erase(dead_enemy)
+	enemy_attack_timers.erase(dead_enemy)
+	enemy_lane_offsets.erase(dead_enemy)
+	enemy_types.erase(dead_enemy)
+
+
+	if dead_enemy == enemy:
+		enemy = null
 
 
 	if defeated_boss:
@@ -2070,6 +2407,7 @@ func kill_enemy() -> void:
 
 
 	dead_enemy.queue_free()
+	refresh_primary_enemy()
 
 
 	enemies_defeated_this_wave += 1
@@ -2137,27 +2475,17 @@ func kill_enemy() -> void:
 
 
 	# =====================================================
-	# PRÓXIMO ENEMY DA MESMA WAVE
+	# REPÕE O GRUPO ATIVO DA MESMA WAVE
 	# =====================================================
 
 	print(
-		"PRÓXIMO INIMIGO EM ",
+		"REFORÇO INIMIGO EM ",
 		enemy_spawn_delay,
 		" SEGUNDOS..."
 	)
 
 
-	await get_tree().create_timer(
-		enemy_spawn_delay
-	).timeout
-
-
-	if (
-		wave_in_progress
-		and not is_instance_valid(enemy)
-	):
-
-		spawn_enemy()
+	schedule_enemy_refill()
 
 
 # =========================================================
@@ -2170,7 +2498,14 @@ func spawn_enemy() -> void:
 		return
 
 
-	if is_instance_valid(enemy):
+	cleanup_invalid_enemies()
+
+
+	if enemies.size() >= get_max_simultaneous_enemies():
+		return
+
+
+	if enemies_spawned_this_wave >= enemies_total_this_wave:
 		return
 
 
@@ -2200,25 +2535,7 @@ func spawn_enemy() -> void:
 	)
 
 
-	new_enemy.position = (
-		ENEMY_SPAWN_POSITION
-	)
-
-
-	ensure_unit_visual(
-		new_enemy,
-		get_current_enemy_color()
-	)
-
-
-	enemy = new_enemy
-
-	update_current_enemy_visual_size()
-
-	enemy_hp = enemy_max_hp
-	ensure_enemy_health_bar()
-
-	enemy_attack_timer = 0.0
+	register_enemy(new_enemy)
 
 
 	print(
@@ -2228,10 +2545,12 @@ func spawn_enemy() -> void:
 	print(
 		"Wave: ",
 		current_wave,
+		" | Type: ",
+		str(enemy_types.get(new_enemy, "enemy")),
 		" | Enemy HP: ",
-		enemy_hp,
+		int(enemy_max_hps.get(new_enemy, enemy_max_hp)),
 		" | Damage: ",
-		enemy_damage
+		int(enemy_damages.get(new_enemy, enemy_damage))
 	)
 
 
@@ -2243,14 +2562,16 @@ func spawn_enemy() -> void:
 # BOSS
 # =========================================================
 
-func update_current_enemy_visual_size() -> void:
+func update_current_enemy_visual_size(
+	target_enemy: Node2D = enemy
+) -> void:
 
-	if not is_instance_valid(enemy):
+	if not is_instance_valid(target_enemy):
 		return
 
 
 	var visual_node: Node = (
-		enemy.get_node_or_null(
+		target_enemy.get_node_or_null(
 			"DebugVisual"
 		)
 	)
@@ -2851,14 +3172,23 @@ func update_unit_health_bar(
 	)
 
 
-func ensure_enemy_health_bar() -> void:
+func ensure_enemy_health_bar(
+	target_enemy: Node2D = enemy
+) -> void:
 
-	if not is_instance_valid(enemy):
+	if not is_instance_valid(target_enemy):
 		return
 
 
 	var visual_size: float = UNIT_SIZE
 	var fill_color: Color = Color(0.88, 0.16, 0.10, 1.0)
+	var enemy_visual: Polygon2D = target_enemy.get_node_or_null(
+		"DebugVisual"
+	) as Polygon2D
+
+
+	if enemy_visual != null:
+		fill_color = enemy_visual.color.lightened(0.18)
 
 
 	if boss_active:
@@ -2867,12 +3197,51 @@ func ensure_enemy_health_bar() -> void:
 
 
 	ensure_unit_health_bar(
-		enemy,
-		enemy_max_hp,
-		enemy_hp,
+		target_enemy,
+		int(enemy_max_hps.get(target_enemy, enemy_max_hp)),
+		int(enemy_hps.get(target_enemy, enemy_max_hp)),
 		fill_color,
 		visual_size
 	)
+
+
+func ensure_enemy_identity_label(
+	target_enemy: Node2D,
+	display_name: String,
+	accent_color: Color
+) -> void:
+
+	if not is_instance_valid(target_enemy):
+		return
+
+
+	var identity_label: Label = target_enemy.get_node_or_null(
+		"IdentityLabel"
+	) as Label
+
+
+	if identity_label == null:
+		identity_label = Label.new()
+		identity_label.name = "IdentityLabel"
+		identity_label.size = Vector2(180.0, 24.0)
+		identity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		identity_label.z_index = 25
+		identity_label.add_theme_font_size_override("font_size", 12)
+		identity_label.add_theme_constant_override("outline_size", 4)
+		target_enemy.add_child(identity_label)
+
+
+	var label_y: float = -82.0
+
+
+	if boss_active:
+		label_y = -126.0
+
+
+	identity_label.position = Vector2(-90.0, label_y)
+	identity_label.text = display_name
+	identity_label.add_theme_color_override("font_color", accent_color.lightened(0.30))
+	identity_label.add_theme_color_override("font_outline_color", Color(0.03, 0.03, 0.04, 0.95))
 
 
 
@@ -4627,10 +4996,16 @@ func update_wave_ui() -> void:
 		+ str(get_enemies_remaining())
 		+ " / "
 		+ str(enemies_total_this_wave)
-		+ "\nEnemy HP: "
-		+ str(enemy_max_hp)
+		+ " | Active: "
+		+ str(enemies.size())
+		+ " / "
+		+ str(get_max_simultaneous_enemies())
+		+ "\nPrimary: "
+		+ str(enemy_types.get(enemy, "enemy")).replace("_", " ").to_upper()
+		+ " | HP: "
+		+ str(int(enemy_max_hps.get(enemy, enemy_max_hp)))
 		+ " | DMG: "
-		+ str(enemy_damage)
+		+ str(int(enemy_damages.get(enemy, enemy_damage)))
 	)
 
 
@@ -4999,7 +5374,11 @@ func update_debug_ui() -> void:
 	if is_instance_valid(enemy):
 
 		enemy_text = (
-			str(enemy_hp)
+			str(enemies.size())
+			+ " ACTIVE | "
+			+ str(enemy_types.get(enemy, "enemy")).to_upper()
+			+ ": "
+			+ str(enemy_hp)
 			+ " HP"
 		)
 

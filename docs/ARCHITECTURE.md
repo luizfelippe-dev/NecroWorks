@@ -46,6 +46,9 @@ assets/
 └── reference/
 
 scripts/
+├── game/
+│   ├── enemy_archetype_catalog.gd
+│   └── enemy_wave_policy.gd
 └── ui/
 ```
 
@@ -137,6 +140,29 @@ damage_undead()
 ```
 
 This is the beginning of the future generic unit system.
+
+# Enemy group state
+
+Regular Waves can now maintain more than one active Enemy:
+
+```text
+enemies
+enemy_hps
+enemy_max_hps
+enemy_damages
+enemy_speeds
+enemy_attack_cooldowns
+enemy_attack_ranges
+enemy_attack_timers
+enemy_lane_offsets
+enemy_types
+```
+
+`enemy` remains a compatibility alias for the current primary/leftmost target while legacy formation, HUD and Boss logic are incrementally migrated. It is not the authoritative collection.
+
+The active cap is isolated in `scripts/game/enemy_wave_policy.gd`. Spawned enemies fill the cap, keep independent health bars and are replenished after deaths until the Wave total is exhausted.
+
+Archetype definitions and their introduction rotation live in `scripts/game/enemy_archetype_catalog.gd`. This keeps tuning data out of spawn/combat flow while dedicated Enemy scenes are still premature.
 
 # Formation
 

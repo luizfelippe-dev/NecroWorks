@@ -350,6 +350,72 @@ Industrial Crush:
 
 ---
 
+# Living opposition
+
+The enemies are not generic monsters. NecroWorks is opposed by living peoples whose roles create different tactical pressures.
+
+Implemented prototype combat families:
+
+```text
+Human Warrior
+→ durable frontline / standard melee pressure
+
+Mage
+→ fragile ranged attacker / high damage
+
+Elf
+→ fast skirmisher / rapid attacks
+```
+
+These labels describe combat identity, not a final moral alignment. The story should make the conflict more interesting than “living people are good” or “the necromancer is evil.” Every fallen attacker becoming factory input is central to both gameplay and narrative tension.
+
+Current introduction curve:
+
+```text
+Wave 1  → Human Warrior
+Wave 8  → Mage enters the reinforcement rotation
+Wave 11 → Warrior / Mage / Elf rotation
+Wave 20 → The Foreman
+```
+
+Prototype identity is communicated through labels and distinct colors. Final characters require dedicated art, animation, silhouettes, audio and richer behavior. Mage AOE/control and Elf precision targeting remain future evolutions, not current features.
+
+## Enemy group escalation
+
+Active-enemy pressure grows only after the player understands the basic loop:
+
+```text
+Waves 1–5   → 1 active Enemy
+Waves 6–9   → up to 2
+Waves 10–13 → up to 3
+Waves 14–17 → up to 4
+Waves 18–19 → up to 5
+Wave 20     → 1 Boss
+```
+
+The first Elite on Wave 5 remains a single-target skill check. Wave 6 introduces group pressure. Defeated enemies are replenished until the Wave total is exhausted.
+
+This curve is provisional and must be adjusted from run data; the intent is to prevent late Waves from becoming harmless one-at-a-time queues.
+
+---
+
+# Narrative direction — planned
+
+NecroWorks needs an engaging story before the commercial vertical slice, presented both before a run and through discoveries during play.
+
+Reserved pillars:
+
+- the origin and real purpose of NecroWorks;
+- the living coalition attacking the facility;
+- the identity and agenda of The Foreman;
+- corporate records, production logs and environmental storytelling between Waves;
+- consequences of turning fallen enemies into the player’s workforce;
+- revelations that advance during a run without stopping the factory/combat rhythm.
+
+Full lore writing is intentionally deferred. Systems and content must leave space for this structure instead of committing to a shallow explanation now.
+
+---
+
 # Victory
 
 The Foreman dies:

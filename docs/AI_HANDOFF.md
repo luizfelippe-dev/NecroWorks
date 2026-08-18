@@ -339,6 +339,64 @@ Elite:
 - a cada 5 Waves;
 - Wave 20 não é Elite porque é Boss.
 
+### Grupos simultâneos — implementado e validado
+
+Inimigos possuem HP, attack timer, lane e barra de vida independentes.
+
+```text
+Waves 1–5   → 1 ativo
+Waves 6–9   → até 2
+Waves 10–13 → até 3
+Waves 14–17 → até 4
+Waves 18–19 → até 5
+Wave 20     → 1 Boss
+```
+
+Ao morrer um integrante do grupo, a vaga é reposta após o spawn delay enquanto ainda houver inimigos no total da Wave.
+
+Estado autoritativo:
+
+```text
+enemies
+enemy_hps
+enemy_attack_timers
+enemy_lane_offsets
+```
+
+`enemy` permanece temporariamente como alias do alvo principal para compatibilidade incremental.
+
+### Arquétipos vivos — primeira versão implementada
+
+```text
+Wave 1  → Human Warrior
+Wave 8  → Mage entra na rotação
+Wave 11 → Warrior / Mage / Elf
+Wave 20 → The Foreman
+```
+
+Papéis atuais:
+
+```text
+Human Warrior → mais HP, melee, mais lento
+Mage          → menos HP, ranged, dano alto
+Elf           → rápido, ataques frequentes
+```
+
+Cada instância possui stats próprios em:
+
+```text
+enemy_max_hps
+enemy_damages
+enemy_speeds
+enemy_attack_cooldowns
+enemy_attack_ranges
+enemy_types
+```
+
+Definições e rotação ficam em `scripts/game/enemy_archetype_catalog.gd`.
+
+Ainda não implementados: Mage AOE/control e Elf precision targeting. Não documentar esses comportamentos como prontos.
+
 ---
 
 # 10. The Foreman
@@ -599,7 +657,19 @@ Próximo objetivo:
 
 Testar se Skeleton-only, Zombie-heavy e exército misto produzem decisões e resultados realmente diferentes.
 
-Revisar Flesh pacing somente com evidência de runs comparáveis.
+Revisar Flesh pacing e os novos limites de inimigos simultâneos somente com evidência de runs comparáveis.
+
+### Direções registradas para conteúdo futuro
+
+Os inimigos são povos vivos com papéis distintos; a primeira versão mecânica já existe:
+
+```text
+Human Warrior → durable frontline
+Mage          → fragile ranged damage
+Elf           → fast skirmisher
+```
+
+O jogo também precisa de uma lore envolvente antes e durante as runs. A escrita completa foi deliberadamente adiada, mas deve cobrir a origem da NecroWorks, a coalizão dos vivos, The Foreman, registros corporativos e as consequências da reanimação industrial.
 
 ### Phase 3 — Blood
 

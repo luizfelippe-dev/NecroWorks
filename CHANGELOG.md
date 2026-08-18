@@ -42,6 +42,18 @@
 - First Flesh/Bone cross-synergy, Meat Shield Protocol:
   - requires Rotten Bulk + Rapid Assault;
   - every hit absorbed by a Zombie reduces all Skeleton attack timers by 0.12 s.
+- Simultaneous Enemy group foundation:
+  - independent HP, cooldown, lane and health bar per active Enemy;
+  - closest-target selection for Skeletons and Zombies;
+  - defeated slots refill while the Wave still has remaining Enemies;
+  - staged active caps from Wave 6 onward;
+  - The Foreman remains a single-target Boss encounter.
+- Living Enemy archetype foundation:
+  - Human Warrior as the durable melee baseline;
+  - Mage as a fragile, high-damage ranged attacker from Wave 8;
+  - Elf Skirmisher as a fast attacker from Wave 11;
+  - independent HP, damage, speed, attack range and cooldown per archetype;
+  - temporary identity labels and color coding above each Enemy.
 
 ### Current Zombie V1 values
 
@@ -80,6 +92,8 @@ Zombie Cost: 6 Flesh
 - Project and main scene start without parser/runtime errors after the visual pass.
 - Health values and rendered bars validated for damaged Skeleton, Zombie and Enemy instances.
 - Project starts correctly after all source/resource paths were reorganized.
+- Wave 6 group state, independent HP, refill behavior and Wave 20 single-Boss cap validated headlessly.
+- Wave 1 Warrior, Wave 8 Mage reinforcement, Wave 11 mixed group and Foreman archetype validated headlessly.
 
 ### Known limitations
 

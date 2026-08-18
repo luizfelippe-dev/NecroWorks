@@ -261,3 +261,44 @@ Priority:
 - marketability;
 - polish;
 - demo quality.
+
+---
+
+## Living Enemy factions
+
+Opposition is built from living combat families rather than generic monsters:
+
+```text
+Human Warrior → durable frontline
+Mage          → fragile ranged damage
+Elf           → fast skirmisher
+```
+
+Their cultures, motives and alliances remain narrative design work; avoid reducing them to interchangeable skins.
+
+Prototype availability is staged: Warrior on Wave 1, Mage on Wave 8 and Elf on Wave 11. Advanced AOE, control and precision behavior is deferred until the foundation is playtested.
+
+---
+
+## Narrative is required, full lore is deferred
+
+NecroWorks needs a strong opening premise and story progression during runs before the vertical slice.
+
+The full lore will be designed as its own pass. Current features must preserve room for an ambiguous living-versus-undead conflict, NecroWorks corporate history and in-run revelations.
+
+---
+
+## Simultaneous Enemy escalation
+
+Wave 1 must remain readable. Group pressure begins after the first Elite checkpoint:
+
+```text
+1–5: 1 active
+6–9: 2 active
+10–13: 3 active
+14–17: 4 active
+18–19: 5 active
+20: 1 Boss
+```
+
+This is a playtest baseline, not final balance. Each Enemy owns independent HP, attack cooldown, lane and health bar. Kills refill open group slots until the Wave total is exhausted.

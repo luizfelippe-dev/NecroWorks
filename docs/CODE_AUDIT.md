@@ -18,6 +18,9 @@ The repository now separates modular assets/components while keeping stable Godo
 - `MAX_UNDEAD` now communicates the real mixed-army limit;
 - main scene configured as the project entry point;
 - runtime and targeted mechanic validations added during development.
+- simultaneous Enemy runtime state introduced without duplicating scene controllers;
+- Wave concurrency rules extracted to `scripts/game/enemy_wave_policy.gd`.
+- Enemy archetype stats and Wave rotation extracted to `scripts/game/enemy_archetype_catalog.gd`.
 
 ## Priority risks
 
@@ -34,6 +37,8 @@ Recommended extraction order:
 3. wave/enemy director;
 4. resource/production service;
 5. generic Undead runtime state when Ghost begins.
+
+The first Wave Director boundary now exists as a stateless active-Enemy policy. Continue extracting only rules with a focused interface; spawning and lifecycle still belong to the orchestrator for now.
 
 ### P1 — Fixed 1920×1080 layout
 
