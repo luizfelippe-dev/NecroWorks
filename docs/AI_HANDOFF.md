@@ -197,6 +197,24 @@ Zombie:
 - The Foreman pode acertá-lo;
 - possui prioridade de frontline.
 
+## Zombie-specific upgrades — IMPLEMENTADOS E VALIDADOS
+
+```text
+Rotten Bulk
+→ +40 Zombie Max HP e +40 HP nos Zombies existentes
+
+Grave Hunger
+→ +20% Zombie Damage
+
+Dead Weight
+→ +70 Zombie Max HP e -10% Movement Speed
+
+Carrion Recovery
+→ Zombies recuperam 4 HP após cada ataque
+```
+
+Todos são stackable. Carrion Recovery respeita `zombie_max_hp`.
+
 ### Estado de formação mista
 
 Conceito atual:
@@ -237,10 +255,10 @@ zombie_slots
 ### Shared slots
 
 ```text
-occupied_skeleton_slots
+occupied_undead_slots
 ```
 
-O nome do dicionário ainda é legado de Skeleton-only.
+O dicionário foi renomeado para refletir que os slots são compartilhados por todo Undead.
 
 ### Corpses
 
@@ -451,6 +469,14 @@ Mass Production + Efficient Recycling
 
 - chance de Skeleton grátis ao processar Corpse.
 
+## Meat Shield Protocol
+
+Rotten Bulk + Rapid Assault
+
+- quando um Zombie recebe dano, todos os Skeleton attack timers são reduzidos em 0.12 s;
+- primeira sinergia cross-resource;
+- cria valor concreto para composição mista frontline + backline.
+
 Unlock validado.
 
 ---
@@ -521,42 +547,59 @@ Não parar o desenvolvimento inteiro para reproduzir a UI final agora.
 
 Novos sistemas devem apenas evitar decisões que contradigam essa estrutura.
 
+### Primeira passagem visual — implementada
+
+- fundo procedural com silhueta fabril, chaminés, tanques e luzes verdes;
+- battlefield separado da faixa inferior de fábrica;
+- header NecroWorks e slogan;
+- painéis de Wave, Run Metrics e Active Synergies;
+- módulos de Resources, Undead Production e Corpse Processing;
+- produção e cards com metal escuro e acentos por categoria;
+- continua usando placeholders para unidades e arte procedural temporária.
+
+### Barras de vida — implementadas e validadas
+
+- Skeleton, Zombie, Enemy, Elite e The Foreman;
+- acompanham dano e cura reais;
+- atualizam em Reassembly, Carrion Recovery e upgrades de Max HP;
+- Boss recebe barra maior e cor própria;
+- componente isolado em `scripts/ui/unit_health_bar.gd`.
+
+### Primeira Flesh/Bone synergy — implementada e validada
+
+```text
+Meat Shield Protocol
+Rotten Bulk + Rapid Assault
+→ cada hit recebido por um Zombie reduz em 0.12 s
+  o attack timer de todos os Skeletons vivos
+```
+
+Objetivo: transformar a frontline de Zombie em tempo ofensivo para a backline de Skeletons.
+
+### Organização do projeto — atualizada
+
+```text
+assets/reference
+scripts/ui
+```
+
+`main.tscn` e `main.gd` permanecem na raiz como entry points estáveis para F5/F6.
+
 ---
 
 # 17. Próxima tarefa recomendada
 
 ## v0.2.0 — Flesh Identity / Zombie Build
 
-Zombie V1 está funcionando.
+Zombie V1, Phase 1 (Zombie-specific upgrades) e Phase 2 (primeira Flesh synergy) estão funcionando.
 
 Próximo objetivo:
-fazer Flesh/Zombie deixar de ser apenas "outra moeda + unidade tank".
 
-Ordem recomendada:
+### Phase 2B — Composition validation
 
-### Phase 1 — Zombie-specific upgrades
+Testar se Skeleton-only, Zombie-heavy e exército misto produzem decisões e resultados realmente diferentes.
 
-Adicionar 3–5 opções iniciais, por exemplo:
-
-```text
-Rotten Bulk
-→ Zombie Max HP +
-
-Grave Hunger
-→ Zombie Damage +
-
-Dead Weight
-→ mais HP, menos Speed
-
-Carrion Recovery
-→ Zombie recupera HP em condição específica
-```
-
-Os nomes/valores ainda podem mudar.
-
-### Phase 2 — Flesh synergy
-
-Criar pelo menos uma sinergia Flesh/Zombie.
+Revisar Flesh pacing somente com evidência de runs comparáveis.
 
 ### Phase 3 — Blood
 
@@ -694,7 +737,7 @@ O arquivo funcional validado pelo usuário equivale à versão:
 main_necroworks_v0_2_zombie_v1.gd
 ```
 
-No projeto real, ele deve estar salvo como:
+O orquestrador está salvo como:
 
 ```text
 main.gd

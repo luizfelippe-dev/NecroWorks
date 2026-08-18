@@ -1,10 +1,21 @@
 # NecroWorks — Commercial Plan
 
+**Revisado:** 18/08/2026
+
 ## Goal
 
 Increase the probability that NecroWorks becomes a commercially strong Steam product.
 
 No revenue outcome is guaranteed.
+
+Commercial target for planning:
+
+```text
+Minimum ambition: 1,000 paid copies
+Primary market: Steam / Windows
+```
+
+This is a product target, not a forecast or guarantee.
 
 ---
 
@@ -154,9 +165,158 @@ LinkedIn is useful for portfolio/career, not primary game marketing.
 - Blood/Souls incomplete;
 - current balance provisional;
 - content depth still limited;
-- `main.gd` prototype architecture will eventually need modularization.
+- `main.gd` prototype orchestration still needs incremental modularization.
 
 These risks explain roadmap order.
+
+---
+
+# Commercial assessment
+
+## What is commercially promising
+
+- the hook can be understood in one sentence;
+- army growth creates strong before/after footage;
+- necromancy already has proven audience overlap with roguelites and autobattlers;
+- the industrial/corporate treatment is visually differentiating;
+- the factory layer can create both strategic depth and marketable spectacle.
+
+## What would make the game commercially weak
+
+- launching as a mostly passive square-placeholder autobattler;
+- treating Factory as background art rather than a system;
+- relying on 30–40 percentage upgrades without rule-changing builds;
+- only scaling enemy HP and damage;
+- building a long game before proving that a 20–30 minute run is replayable;
+- opening a Steam page with screenshots that do not represent sellable quality.
+
+## Competitive positioning
+
+Current reference points confirm that players recognize the undead-army fantasy:
+
+- [Boneraiser Minions](https://store.steampowered.com/app/1944570/Boneraiser_Minions/) emphasizes an undead auto-battler horde and many differentiated minions.
+- [Necrosmith](https://store.steampowered.com/app/1949190/Necrosmith/) emphasizes assembling undead and upgrading a necromancer operation.
+- [Rogue Factory](https://store.steampowered.com/app/3212630/Rogue_Factory/) demonstrates the marketable combination of automation and a short roguelite combat run.
+
+NecroWorks should not compete as a clone of any one of them. Its defensible sentence is:
+
+> A necromantic factory roguelite where every enemy corpse becomes material for the army production line.
+
+---
+
+# 1,000-copy planning model
+
+Steam does not publish a universal wishlist-to-sale conversion rate, and conversions vary by product, traffic quality, price, region and launch execution.
+
+For internal planning only:
+
+```text
+5% conversion from qualified prospects  → 20,000 prospects for 1,000 sales
+10% conversion                          → 10,000 prospects for 1,000 sales
+20% conversion                          →  5,000 prospects for 1,000 sales
+```
+
+These are arithmetic scenarios, not claimed industry benchmarks. Wishlists also do not equal guaranteed purchases.
+
+## Internal traction gates
+
+- 1,000 wishlists: hook/capsule has begun finding an audience.
+- 3,000 wishlists: continue scaling content and creator outreach.
+- 7,500 wishlists: launch-candidate threshold if demo behavior is also healthy.
+- 10,000 wishlists: preferred planning target before committing to a release date.
+
+Do not release solely because a calendar date arrived. If interest is weak, improve the capsule, trailer, demo or product before spending the one launch opportunity.
+
+---
+
+# Validation funnel
+
+These are internal quality gates, not Steam-wide benchmarks.
+
+## Closed prototype
+
+- 20–30 genre-relevant players;
+- at least 70% understand the core loop without developer explanation;
+- identify where players stop making meaningful decisions;
+- collect the three most memorable and three most confusing moments.
+
+## Steam Playtest
+
+- 100+ external players across multiple batches;
+- median session reaches the first major build transformation;
+- at least 30% of surveyed players voluntarily start a second run;
+- no recurring softlock, unreadable combat state or dominant automatic choice.
+
+Steam Playtest is designed as a free, lower-risk testing channel separated from reviews and wishlist ownership: [Steam Playtest documentation](https://partner.steamgames.com/doc/features/playtest).
+
+## Public demo
+
+- proves the complete kill → process → manufacture → swarm loop;
+- presents at least two meaningfully different builds;
+- ends with a strong boss or production climax;
+- contains an in-game wishlist call-to-action;
+- provides a feedback link and privacy-conscious telemetry if analytics are used.
+
+---
+
+# Steam execution requirements
+
+- Steam Direct currently charges USD 100 per app; Valve says the fee is recoupable after USD 1,000 in adjusted gross revenue: [Steam Direct Fee](https://partner.steamgames.com/doc/gettingstarted/appfee).
+- A new product must keep its Coming Soon page public for at least two weeks, but NecroWorks should publish only when its branding and real gameplay are representative: [Coming Soon](https://partner.steamgames.com/doc/store/coming_soon).
+- Store presence and build reviews typically take 3–5 business days; Valve recommends allowing at least seven business days: [Review Process](https://partner.steamgames.com/doc/store/review_process).
+- The store requires at least five real gameplay screenshots; concept art cannot substitute for gameplay screenshots: [Store Graphical Assets](https://partner.steamgames.com/doc/store/assets/standard).
+- A title can participate in only one Steam Next Fest. Use the edition closest to a polished, reliable demo—not the earliest available slot: [Steam Next Fest](https://partner.steamgames.com/doc/marketing/upcoming_events/nextfest).
+- Wishlisters can be notified at release, and qualifying discounts can generate later notifications: [Steam Wishlists](https://partner.steamgames.com/doc/marketing/wishlist).
+
+## Recommended timing
+
+```text
+Prototype proof
+→ closed external tests
+→ vertical slice visuals
+→ Steam Coming Soon page
+→ repeated Steam Playtest batches
+→ polished public demo
+→ one strategically chosen Next Fest
+→ release only after traction + quality gates
+```
+
+---
+
+# Pricing hypothesis
+
+Do not lock price during the prototype.
+
+Working range:
+
+```text
+USD 6.99–9.99
+→ compact, polished roguelite with limited content breadth
+
+USD 9.99–14.99
+→ strong factory depth, several builds/bosses, replayability and finished presentation
+```
+
+The preferred target is USD 9.99 if the vertical slice proves sufficient depth. Final pricing must be re-researched near launch using current regional pricing and comparable products.
+
+At USD 9.99, 1,000 gross copies represent USD 9,990 in consumer spend before regional pricing, discounts, refunds, taxes and platform share. This is not developer net revenue.
+
+---
+
+# Non-negotiable commercial quality bar
+
+Before release, NecroWorks needs:
+
+- a recognizable logo and capsule at thumbnail size;
+- real unit/enemy/factory art with coherent animation;
+- responsive sound and VFX for death, processing and production;
+- settings, remapping/controller evaluation and accessibility basics;
+- English and PT-BR at minimum, with localization-ready text architecture;
+- stable saves and version migration;
+- performance under the largest advertised horde;
+- multiple enemy archetypes and bosses;
+- enough build diversity for repeat runs;
+- a demo that players want to show, not merely tolerate.
 
 ---
 

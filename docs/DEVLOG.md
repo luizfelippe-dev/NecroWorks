@@ -227,8 +227,7 @@ This is the latest stable gameplay checkpoint.
 
 Recommended next block:
 
-- Zombie-specific upgrades;
-- first Flesh synergy;
+- validate mixed-army choices after Meat Shield Protocol;
 - test composition choice Skeleton vs Zombie.
 
 Then:

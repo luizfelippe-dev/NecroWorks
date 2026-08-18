@@ -33,6 +33,26 @@ Current responsibilities inside `main.gd` include:
 
 Do not perform a big rewrite without a concrete need.
 
+Repository layout:
+
+```text
+main.tscn
+main.gd
+skeleton.tscn
+enemy.tscn
+corpse.tscn
+
+assets/
+└── reference/
+
+scripts/
+└── ui/
+```
+
+The current scene and script entry points intentionally stay at `res://`. Godot's F6 command runs the scene currently open in the editor; keeping these stable prevents stale-resource failures while the prototype is evolving.
+
+`main.gd` remains the prototype orchestrator. New isolated behavior should live in a focused component.
+
 # Scenes
 
 Known prototype scenes:
@@ -97,15 +117,13 @@ zombie_slots
 
 # Shared slot state
 
-Legacy name:
+Current shared occupancy map:
 
 ```text
-occupied_skeleton_slots
+occupied_undead_slots
 ```
 
-It now acts as a shared Undead occupancy map.
-
-Rename only when touching this architecture for a real reason.
+It acts as a shared Undead occupancy map and is limited by `MAX_UNDEAD`.
 
 # Generic Undead helpers
 
@@ -163,16 +181,16 @@ Current logic:
 
 ```text
 if army > 0:
-    continue
+	continue
 
 if corpses > 0:
-    continue
+	continue
 
 if bones >= skeleton_cost:
-    continue
+	continue
 
 if flesh >= zombie_cost:
-    continue
+	continue
 
 finish_run(false)
 ```
@@ -195,6 +213,27 @@ Debug:
 ```text
 F3
 ```
+
+## Unit health presentation
+
+`scripts/ui/unit_health_bar.gd` is a reusable child component attached at runtime.
+
+It receives:
+
+- current HP;
+- Max HP;
+- visual width;
+- vertical offset;
+- faction/accent color.
+
+Updates currently cover:
+
+- normal attacks;
+- Industrial Crush;
+- Final Service / Second Shift;
+- Carrion Recovery;
+- Reassembly;
+- Max HP upgrades.
 
 # Architectural risk
 

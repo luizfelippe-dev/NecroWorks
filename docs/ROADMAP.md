@@ -61,8 +61,10 @@
 
 ### Next
 
-- [ ] Zombie-specific upgrades
-- [ ] first Flesh synergy
+- [x] Zombie-specific upgrades
+- [x] runtime health bars
+- [x] initial professional folder organization
+- [x] first Flesh synergy — Meat Shield Protocol
 - [ ] test meaningful Skeleton vs Zombie composition choices
 - [ ] decide Flesh resource pacing
 - [ ] begin generic Undead refactor only where needed
@@ -102,6 +104,8 @@
 ### Gate for v0.2.0
 
 Two runs should produce meaningfully different armies/builds.
+
+Health, damage and resource changes must also remain readable without opening Debug.
 
 ---
 

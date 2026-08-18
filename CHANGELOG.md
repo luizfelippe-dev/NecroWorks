@@ -20,6 +20,28 @@
 - Zombie frontline priority.
 - Zombie metrics in Run Summary.
 - Defeat condition aware of Skeletons + Zombies + Bones + Flesh + Corpses.
+- Zombie-specific upgrade set:
+  - Rotten Bulk;
+  - Grave Hunger;
+  - Dead Weight;
+  - Carrion Recovery.
+- First industrial-necromancy visual pass based on `assets/reference/necrodesign.png`:
+  - procedural factory backdrop;
+  - separated battlefield and production floor;
+  - NecroWorks brand header;
+  - framed Wave, Resources, Run Metrics and Synergy panels;
+  - dedicated Corpse Processing and Undead Production modules;
+  - dark-metal upgrade and production cards.
+- Main scene configured for Project Run.
+- Runtime health bars for Skeletons, Zombies, normal Enemies, Elites and The Foreman.
+- Health bars update on damage, healing, revival and Max HP upgrades.
+- Project structure clarified while preserving Godot-compatible root entry points:
+  - `main.tscn`, `main.gd` and base prototype scenes remain at `res://` for reliable F6 current-scene execution;
+  - `assets/reference` and `scripts/ui` hold modular resources.
+- Reusable `UnitHealthBar` visual component.
+- First Flesh/Bone cross-synergy, Meat Shield Protocol:
+  - requires Rotten Bulk + Rapid Assault;
+  - every hit absorbed by a Zombie reduces all Skeleton attack timers by 0.12 s.
 
 ### Current Zombie V1 values
 
@@ -54,6 +76,10 @@ Zombie Cost: 6 Flesh
 - Mixed Skeleton + Zombie army functions.
 - Zombie frontline priority works.
 - Defeat logic remains functional with mixed Undead.
+- Zombie upgrade effects validated together in a running scene.
+- Project and main scene start without parser/runtime errors after the visual pass.
+- Health values and rendered bars validated for damaged Skeleton, Zombie and Enemy instances.
+- Project starts correctly after all source/resource paths were reorganized.
 
 ### Known limitations
 

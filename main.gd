@@ -18,9 +18,18 @@ var create_zombie_button: Button = null
 # CENAS
 # =========================================================
 
-var corpse_scene: PackedScene = preload("res://corpse.tscn")
-var skeleton_scene: PackedScene = preload("res://skeleton.tscn")
-var enemy_scene: PackedScene = preload("res://enemy.tscn")
+var corpse_scene: PackedScene = preload(
+	"res://corpse.tscn"
+)
+var skeleton_scene: PackedScene = preload(
+	"res://skeleton.tscn"
+)
+var enemy_scene: PackedScene = preload(
+	"res://enemy.tscn"
+)
+const UNIT_HEALTH_BAR_SCRIPT: Script = preload(
+	"res://scripts/ui/unit_health_bar.gd"
+)
 
 
 # =========================================================
@@ -43,7 +52,7 @@ func create_zombie() -> void:
 
 
 	var free_slot: int = (
-		get_free_skeleton_slot()
+		get_free_undead_slot()
 	)
 
 
@@ -144,7 +153,7 @@ func register_zombie(
 	] = slot
 
 
-	occupied_skeleton_slots[
+	occupied_undead_slots[
 		slot
 	] = true
 
@@ -153,6 +162,15 @@ func register_zombie(
 		get_spawn_position(
 			slot
 		)
+	)
+
+
+	ensure_unit_health_bar(
+		new_zombie,
+		zombie_max_hp,
+		zombie_max_hp,
+		UI_GREEN,
+		UNIT_SIZE
 	)
 
 
@@ -171,6 +189,33 @@ func zombie_attack_enemy(
 
 
 	enemy_hp -= zombie_damage
+	update_unit_health_bar(
+		enemy,
+		enemy_hp,
+		enemy_max_hp
+	)
+
+
+	if (
+		zombie_recovery_per_attack > 0
+		and zombie_hps.has(attacking_zombie)
+	):
+
+		var current_hp: int = int(
+			zombie_hps[attacking_zombie]
+		)
+
+
+		var recovered_hp: int = mini(
+			current_hp + zombie_recovery_per_attack,
+			zombie_max_hp
+		)
+		zombie_hps[attacking_zombie] = recovered_hp
+		update_unit_health_bar(
+			attacking_zombie,
+			recovered_hp,
+			zombie_max_hp
+		)
 
 
 	zombie_attack_timers[
@@ -205,7 +250,7 @@ func kill_zombie(
 		)
 
 
-		occupied_skeleton_slots.erase(
+		occupied_undead_slots.erase(
 			freed_slot
 		)
 
@@ -451,6 +496,10 @@ const UPGRADE_HEAVY_BONES: String = "heavy_bones"
 const UPGRADE_BONE_HARVEST: String = "bone_harvest"
 const UPGRADE_REASSEMBLY: String = "reassembly"
 const UPGRADE_FINAL_SERVICE: String = "final_service"
+const UPGRADE_ROTTEN_BULK: String = "rotten_bulk"
+const UPGRADE_GRAVE_HUNGER: String = "grave_hunger"
+const UPGRADE_DEAD_WEIGHT: String = "dead_weight"
+const UPGRADE_CARRION_RECOVERY: String = "carrion_recovery"
 
 const MIN_SKELETON_ATTACK_COOLDOWN: float = 0.20
 
@@ -463,10 +512,15 @@ const REASSEMBLY_MAX_CHANCE: float = 0.75
 const REASSEMBLY_HP_FRACTION: float = 0.50
 
 const FINAL_SERVICE_DAMAGE_PER_STACK: int = 20
+const ROTTEN_BULK_HP_PER_STACK: int = 40
+const DEAD_WEIGHT_HP_PER_STACK: int = 70
+const DEAD_WEIGHT_SPEED_MULTIPLIER: float = 0.90
+const CARRION_RECOVERY_PER_STACK: int = 4
 
 var bone_harvest_chance: float = 0.0
 var reassembly_chance: float = 0.0
 var final_service_damage: int = 0
+var zombie_recovery_per_attack: int = 0
 
 var upgrade_counts: Dictionary = {}
 var total_upgrades_selected: int = 0
@@ -485,10 +539,12 @@ const SYNERGY_RECYCLING_PLANT: String = "recycling_plant"
 const SYNERGY_SECOND_SHIFT: String = "second_shift"
 const SYNERGY_BONE_ASSEMBLY_LINE: String = "bone_assembly_line"
 const SYNERGY_OVERCLOCKED_OSSUARY: String = "overclocked_ossuary"
+const SYNERGY_MEAT_SHIELD_PROTOCOL: String = "meat_shield_protocol"
 
 const ASSEMBLY_LINE_CHANCE: float = 0.25
 const OVERCLOCK_DOUBLE_STRIKE_CHANCE: float = 0.20
 const SECOND_SHIFT_DAMAGE_MULTIPLIER: float = 0.50
+const MEAT_SHIELD_TIMER_REDUCTION: float = 0.12
 
 var active_synergies: Dictionary = {}
 var synergy_label: Label = null
@@ -529,7 +585,7 @@ var skeleton_slots: Dictionary = {}
 var zombie_slots: Dictionary = {}
 
 # Slot -> ocupado
-var occupied_skeleton_slots: Dictionary = {}
+var occupied_undead_slots: Dictionary = {}
 
 
 # =========================================================
@@ -539,7 +595,7 @@ var occupied_skeleton_slots: Dictionary = {}
 const FORMATION_COLUMNS: int = 6
 const FORMATION_ROWS: int = 6
 
-const MAX_SKELETONS: int = (
+const MAX_UNDEAD: int = (
 	FORMATION_COLUMNS
 	* FORMATION_ROWS
 )
@@ -584,6 +640,19 @@ const COMBAT_ROW_ORDER: Array[int] = [
 
 var debug_label: Label = null
 var wave_label: Label = null
+var brand_label: Label = null
+var metrics_label: Label = null
+var factory_title_label: Label = null
+var processing_label: Label = null
+
+const UI_GREEN: Color = Color(0.38, 0.82, 0.25, 1.0)
+const UI_GREEN_DIM: Color = Color(0.16, 0.36, 0.12, 1.0)
+const UI_BONE: Color = Color(0.88, 0.84, 0.69, 1.0)
+const UI_FLESH: Color = Color(0.70, 0.34, 0.28, 1.0)
+const UI_TEXT: Color = Color(0.86, 0.86, 0.78, 1.0)
+const UI_PANEL: Color = Color(0.025, 0.032, 0.031, 0.96)
+const UI_PANEL_LIGHT: Color = Color(0.075, 0.085, 0.078, 0.98)
+const UI_METAL_BORDER: Color = Color(0.29, 0.28, 0.23, 1.0)
 
 
 # =========================================================
@@ -593,6 +662,7 @@ var wave_label: Label = null
 func _ready() -> void:
 
 	create_zombie_ui()
+	create_visual_shell()
 	configure_primary_hud_layout()
 	create_debug_hud()
 	create_wave_hud()
@@ -1046,6 +1116,7 @@ func start_wave(
 		)
 
 		update_current_enemy_visual_size()
+		ensure_enemy_health_bar()
 
 	else:
 
@@ -1365,7 +1436,7 @@ func register_skeleton(
 	] = slot
 
 
-	occupied_skeleton_slots[
+	occupied_undead_slots[
 		slot
 	] = true
 
@@ -1374,6 +1445,15 @@ func register_skeleton(
 		get_spawn_position(
 			slot
 		)
+	)
+
+
+	ensure_unit_health_bar(
+		new_skeleton,
+		skeleton_max_hp,
+		skeleton_max_hp,
+		UI_GREEN,
+		UNIT_SIZE
 	)
 
 
@@ -1396,13 +1476,13 @@ func register_skeleton(
 # PEGAR SLOT LIVRE
 # =========================================================
 
-func get_free_skeleton_slot() -> int:
+func get_free_undead_slot() -> int:
 
 	for slot: int in range(
-		MAX_SKELETONS
+		MAX_UNDEAD
 	):
 
-		if not occupied_skeleton_slots.has(
+		if not occupied_undead_slots.has(
 			slot
 		):
 
@@ -1513,6 +1593,11 @@ func damage_undead(
 
 
 		skeleton_hps[target] = skeleton_hp
+		update_unit_health_bar(
+			target,
+			skeleton_hp,
+			skeleton_max_hp
+		)
 
 
 		print(
@@ -1543,6 +1628,15 @@ func damage_undead(
 
 
 		zombie_hps[target] = zombie_hp
+		update_unit_health_bar(
+			target,
+			zombie_hp,
+			zombie_max_hp
+		)
+
+
+		if has_synergy(SYNERGY_MEAT_SHIELD_PROTOCOL):
+			accelerate_skeleton_line_from_zombie_hit()
 
 
 		print(
@@ -1557,6 +1651,39 @@ func damage_undead(
 			kill_zombie(
 				target
 			)
+
+
+func accelerate_skeleton_line_from_zombie_hit() -> void:
+
+	var accelerated_count: int = 0
+
+
+	for current_skeleton: Node2D in skeletons:
+
+		if not is_instance_valid(current_skeleton):
+			continue
+
+
+		if not skeleton_attack_timers.has(current_skeleton):
+			continue
+
+
+		var current_timer: float = float(
+			skeleton_attack_timers[current_skeleton]
+		)
+		skeleton_attack_timers[current_skeleton] = maxf(
+			current_timer - MEAT_SHIELD_TIMER_REDUCTION,
+			0.0
+		)
+		accelerated_count += 1
+
+
+	if accelerated_count > 0:
+		print(
+			"MEAT SHIELD PROTOCOL! ",
+			accelerated_count,
+			" Skeleton attack timers accelerated."
+		)
 
 
 # =========================================================
@@ -1589,6 +1716,13 @@ func attack_enemy(
 		enemy_hp -= skeleton_damage
 
 		double_strike_triggered = true
+
+
+	update_unit_health_bar(
+		enemy,
+		enemy_hp,
+		enemy_max_hp
+	)
 
 
 	skeleton_attack_timers[
@@ -1638,6 +1772,11 @@ func damage_skeleton(
 	skeleton_hps[
 		target
 	] = current_hp
+	update_unit_health_bar(
+		target,
+		current_hp,
+		skeleton_max_hp
+	)
 
 
 	print(
@@ -1689,6 +1828,11 @@ func kill_skeleton(
 		skeleton_attack_timers[
 			target
 		] = skeleton_attack_cooldown
+		update_unit_health_bar(
+			target,
+			revived_hp,
+			skeleton_max_hp
+		)
 
 
 		total_skeletons_revived += 1
@@ -1727,6 +1871,11 @@ func kill_skeleton(
 
 
 			enemy_hp -= second_shift_damage
+			update_unit_health_bar(
+				enemy,
+				enemy_hp,
+				enemy_max_hp
+			)
 
 
 			print(
@@ -1773,6 +1922,11 @@ func kill_skeleton(
 	):
 
 		enemy_hp -= final_service_damage
+		update_unit_health_bar(
+			enemy,
+			enemy_hp,
+			enemy_max_hp
+		)
 
 
 		print(
@@ -1800,7 +1954,7 @@ func kill_skeleton(
 		)
 
 
-		occupied_skeleton_slots.erase(
+		occupied_undead_slots.erase(
 			freed_slot
 		)
 
@@ -1912,6 +2066,7 @@ func kill_enemy() -> void:
 	spawn_corpse(
 		death_position
 	)
+	update_metrics_ui()
 
 
 	dead_enemy.queue_free()
@@ -2061,6 +2216,7 @@ func spawn_enemy() -> void:
 	update_current_enemy_visual_size()
 
 	enemy_hp = enemy_max_hp
+	ensure_enemy_health_bar()
 
 	enemy_attack_timer = 0.0
 
@@ -2368,6 +2524,7 @@ func process_corpse(
 
 
 	corpse.queue_free()
+	update_metrics_ui()
 
 
 	# -----------------------------------------------------
@@ -2439,7 +2596,7 @@ func create_skeleton_internal(
 ) -> bool:
 
 	var free_slot: int = (
-		get_free_skeleton_slot()
+		get_free_undead_slot()
 	)
 
 
@@ -2622,6 +2779,102 @@ func ensure_unit_visual(
 	)
 
 
+func ensure_unit_health_bar(
+	unit: Node2D,
+	maximum_health: int,
+	current_health: int,
+	fill_color: Color,
+	visual_size: float
+) -> void:
+
+	if not is_instance_valid(unit):
+		return
+
+
+	var health_bar: Node2D = (
+		unit.get_node_or_null("HealthBar")
+		as Node2D
+	)
+
+
+	if health_bar == null:
+
+		health_bar = (
+			UNIT_HEALTH_BAR_SCRIPT.new()
+			as Node2D
+		)
+
+
+		if health_bar == null:
+			push_error("Não foi possível criar UnitHealthBar.")
+			return
+
+
+		health_bar.name = "HealthBar"
+		health_bar.z_index = 30
+		unit.add_child(health_bar)
+
+
+	health_bar.call(
+		"configure",
+		maximum_health,
+		current_health,
+		visual_size + 8.0,
+		-visual_size * 0.5 - 14.0,
+		fill_color
+	)
+
+
+func update_unit_health_bar(
+	unit: Node2D,
+	current_health: int,
+	maximum_health: int
+) -> void:
+
+	if not is_instance_valid(unit):
+		return
+
+
+	var health_bar: Node = unit.get_node_or_null(
+		"HealthBar"
+	)
+
+
+	if health_bar == null:
+		return
+
+
+	health_bar.call(
+		"set_health",
+		current_health,
+		maximum_health
+	)
+
+
+func ensure_enemy_health_bar() -> void:
+
+	if not is_instance_valid(enemy):
+		return
+
+
+	var visual_size: float = UNIT_SIZE
+	var fill_color: Color = Color(0.88, 0.16, 0.10, 1.0)
+
+
+	if boss_active:
+		visual_size = BOSS_SIZE
+		fill_color = Color(0.68, 0.18, 0.82, 1.0)
+
+
+	ensure_unit_health_bar(
+		enemy,
+		enemy_max_hp,
+		enemy_hp,
+		fill_color,
+		visual_size
+	)
+
+
 
 # =========================================================
 # UPGRADE SYSTEM
@@ -2635,19 +2888,19 @@ func create_upgrade_ui() -> void:
 
 	upgrade_panel.position = Vector2(
 		300.0,
-		220.0
+		230.0
 	)
 
 	upgrade_panel.size = Vector2(
 		1320.0,
-		500.0
+		540.0
 	)
 
 	upgrade_panel.color = Color(
-		0.04,
-		0.04,
-		0.04,
-		0.96
+		0.018,
+		0.024,
+		0.022,
+		0.985
 	)
 
 	upgrade_panel.z_index = 500
@@ -2681,6 +2934,9 @@ func create_upgrade_ui() -> void:
 	upgrade_title_label.text = (
 		"SELECT AN UPGRADE"
 	)
+	upgrade_title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	upgrade_title_label.add_theme_font_size_override("font_size", 26)
+	upgrade_title_label.add_theme_color_override("font_color", UI_GREEN)
 
 
 	upgrade_panel.add_child(
@@ -2722,6 +2978,9 @@ func create_upgrade_button(
 		390.0,
 		340.0
 	)
+	button.add_theme_font_size_override("font_size", 18)
+	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	apply_button_style(button, UI_GREEN)
 
 
 	button.pressed.connect(
@@ -2753,7 +3012,11 @@ func get_upgrade_pool() -> Array[String]:
 		UPGRADE_HEAVY_BONES,
 		UPGRADE_BONE_HARVEST,
 		UPGRADE_REASSEMBLY,
-		UPGRADE_FINAL_SERVICE
+		UPGRADE_FINAL_SERVICE,
+		UPGRADE_ROTTEN_BULK,
+		UPGRADE_GRAVE_HUNGER,
+		UPGRADE_DEAD_WEIGHT,
+		UPGRADE_CARRION_RECOVERY
 	]
 
 
@@ -2933,6 +3196,24 @@ func update_upgrade_ui() -> void:
 				upgrade_id
 			)
 		)
+
+
+		if is_zombie_upgrade(upgrade_id):
+			apply_button_style(button, UI_FLESH)
+		else:
+			apply_button_style(button, UI_GREEN)
+
+
+func is_zombie_upgrade(
+	upgrade_id: String
+) -> bool:
+
+	return upgrade_id in [
+		UPGRADE_ROTTEN_BULK,
+		UPGRADE_GRAVE_HUNGER,
+		UPGRADE_DEAD_WEIGHT,
+		UPGRADE_CARRION_RECOVERY
+	]
 
 
 func get_upgrade_card_text(
@@ -3158,6 +3439,11 @@ func apply_upgrade(
 				skeleton_hps[
 					current_skeleton
 				] = current_hp + 25
+				update_unit_health_bar(
+					current_skeleton,
+					current_hp + 25,
+					skeleton_max_hp
+				)
 
 
 		UPGRADE_EFFICIENT_RECYCLING:
@@ -3239,6 +3525,43 @@ func apply_upgrade(
 			)
 
 
+		UPGRADE_ROTTEN_BULK:
+
+			increase_zombie_max_hp(
+				ROTTEN_BULK_HP_PER_STACK
+			)
+
+
+		UPGRADE_GRAVE_HUNGER:
+
+			var hungry_damage: int = int(
+				ceil(float(zombie_damage) * 1.20)
+			)
+
+
+			zombie_damage = maxi(
+				hungry_damage,
+				zombie_damage + 1
+			)
+
+
+		UPGRADE_DEAD_WEIGHT:
+
+			increase_zombie_max_hp(
+				DEAD_WEIGHT_HP_PER_STACK
+			)
+
+
+			zombie_speed *= DEAD_WEIGHT_SPEED_MULTIPLIER
+
+
+		UPGRADE_CARRION_RECOVERY:
+
+			zombie_recovery_per_attack += (
+				CARRION_RECOVERY_PER_STACK
+			)
+
+
 		_:
 
 			push_error(
@@ -3249,6 +3572,34 @@ func apply_upgrade(
 
 	update_bones_ui()
 	update_debug_ui()
+
+
+func increase_zombie_max_hp(
+	amount: int
+) -> void:
+
+	zombie_max_hp += amount
+
+
+	for current_zombie: Node2D in zombies:
+
+		if not is_instance_valid(current_zombie):
+			continue
+
+
+		if not zombie_hps.has(current_zombie):
+			continue
+
+
+		zombie_hps[current_zombie] = (
+			int(zombie_hps[current_zombie])
+			+ amount
+		)
+		update_unit_health_bar(
+			current_zombie,
+			int(zombie_hps[current_zombie]),
+			zombie_max_hp
+		)
 
 
 func get_upgrade_name(
@@ -3286,6 +3637,18 @@ func get_upgrade_name(
 
 		UPGRADE_FINAL_SERVICE:
 			return "Final Service"
+
+		UPGRADE_ROTTEN_BULK:
+			return "Rotten Bulk"
+
+		UPGRADE_GRAVE_HUNGER:
+			return "Grave Hunger"
+
+		UPGRADE_DEAD_WEIGHT:
+			return "Dead Weight"
+
+		UPGRADE_CARRION_RECOVERY:
+			return "Carrion Recovery"
 
 		_:
 			return "Unknown Upgrade"
@@ -3340,6 +3703,27 @@ func get_upgrade_description(
 			return (
 				"When a Skeleton dies,"
 				+ "\ndeal +20 damage to the Enemy"
+			)
+
+		UPGRADE_ROTTEN_BULK:
+			return (
+				"Zombie Max HP +40"
+				+ "\nExisting Zombies gain +40 HP"
+			)
+
+		UPGRADE_GRAVE_HUNGER:
+			return "Zombie Damage +20%"
+
+		UPGRADE_DEAD_WEIGHT:
+			return (
+				"Zombie Max HP +70"
+				+ "\nMovement Speed -10%"
+			)
+
+		UPGRADE_CARRION_RECOVERY:
+			return (
+				"Zombies recover 4 HP"
+				+ "\nafter every attack"
 			)
 
 		_:
@@ -3450,6 +3834,33 @@ func get_upgrade_status(
 				)
 			)
 
+		UPGRADE_ROTTEN_BULK:
+			return (
+				"Zombie Max HP: "
+				+ str(zombie_max_hp)
+			)
+
+		UPGRADE_GRAVE_HUNGER:
+			return (
+				"Zombie DMG: "
+				+ str(zombie_damage)
+			)
+
+		UPGRADE_DEAD_WEIGHT:
+			return (
+				"HP "
+				+ str(zombie_max_hp)
+				+ " | Speed "
+				+ str(int(round(zombie_speed)))
+			)
+
+		UPGRADE_CARRION_RECOVERY:
+			return (
+				"Recovery per Attack: "
+				+ str(zombie_recovery_per_attack)
+				+ " HP"
+			)
+
 		_:
 			return ""
 
@@ -3513,6 +3924,20 @@ func check_synergy_unlocks() -> void:
 
 		unlock_synergy(
 			SYNERGY_OVERCLOCKED_OSSUARY
+		)
+
+
+	if (
+		get_upgrade_count(
+			UPGRADE_ROTTEN_BULK
+		) > 0
+		and get_upgrade_count(
+			UPGRADE_RAPID_ASSAULT
+		) > 0
+	):
+
+		unlock_synergy(
+			SYNERGY_MEAT_SHIELD_PROTOCOL
 		)
 
 
@@ -3583,6 +4008,9 @@ func get_synergy_name(
 		SYNERGY_OVERCLOCKED_OSSUARY:
 			return "Overclocked Ossuary"
 
+		SYNERGY_MEAT_SHIELD_PROTOCOL:
+			return "Meat Shield Protocol"
+
 		_:
 			return "Unknown Synergy"
 
@@ -3617,6 +4045,12 @@ func get_synergy_description(
 				+ "\nSkeleton attacks gain a 20% chance to strike twice."
 			)
 
+		SYNERGY_MEAT_SHIELD_PROTOCOL:
+			return (
+				"Rotten Bulk + Rapid Assault"
+				+ "\nZombie hits accelerate every Skeleton attack timer by 0.12s."
+			)
+
 		_:
 			return ""
 
@@ -3628,16 +4062,18 @@ func create_synergy_hud() -> void:
 	synergy_label.name = "SynergyLabel"
 
 	synergy_label.position = Vector2(
-		1430.0,
-		40.0
+		1565.0,
+		320.0
 	)
 
 	synergy_label.size = Vector2(
-		450.0,
-		300.0
+		305.0,
+		125.0
 	)
 
 	synergy_label.z_index = 100
+	synergy_label.add_theme_font_size_override("font_size", 16)
+	synergy_label.add_theme_color_override("font_color", UI_TEXT)
 
 
 	add_child(
@@ -3669,7 +4105,8 @@ func update_synergy_ui() -> void:
 			SYNERGY_RECYCLING_PLANT,
 			SYNERGY_SECOND_SHIFT,
 			SYNERGY_BONE_ASSEMBLY_LINE,
-			SYNERGY_OVERCLOCKED_OSSUARY
+			SYNERGY_OVERCLOCKED_OSSUARY,
+			SYNERGY_MEAT_SHIELD_PROTOCOL
 		]
 
 
@@ -4065,7 +4502,8 @@ func get_run_synergy_summary() -> String:
 		SYNERGY_RECYCLING_PLANT,
 		SYNERGY_SECOND_SHIFT,
 		SYNERGY_BONE_ASSEMBLY_LINE,
-		SYNERGY_OVERCLOCKED_OSSUARY
+		SYNERGY_OVERCLOCKED_OSSUARY,
+		SYNERGY_MEAT_SHIELD_PROTOCOL
 	]
 
 
@@ -4111,16 +4549,19 @@ func create_wave_hud() -> void:
 	wave_label.name = "WaveLabel"
 
 	wave_label.position = Vector2(
-		800.0,
-		40.0
+		675.0,
+		38.0
 	)
 
 	wave_label.size = Vector2(
-		500.0,
-		120.0
+		570.0,
+		110.0
 	)
 
 	wave_label.z_index = 100
+	wave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	wave_label.add_theme_font_size_override("font_size", 19)
+	wave_label.add_theme_color_override("font_color", UI_TEXT)
 
 
 	add_child(
@@ -4214,36 +4655,276 @@ func create_zombie_ui() -> void:
 
 
 # =========================================================
+# NECROWORKS VISUAL SHELL
+# =========================================================
+
+func create_visual_shell() -> void:
+
+	create_hud_panel(
+		"WavePanel",
+		Rect2(650.0, 22.0, 620.0, 140.0)
+	)
+
+	create_hud_panel(
+		"MetricsPanel",
+		Rect2(1540.0, 18.0, 355.0, 280.0)
+	)
+
+	create_hud_panel(
+		"SynergyPanel",
+		Rect2(1540.0, 305.0, 355.0, 155.0)
+	)
+
+	create_hud_panel(
+		"ResourcesPanel",
+		Rect2(20.0, 842.0, 330.0, 215.0)
+	)
+
+	create_hud_panel(
+		"ProductionPanel",
+		Rect2(365.0, 842.0, 700.0, 215.0)
+	)
+
+	create_hud_panel(
+		"ProcessingPanel",
+		Rect2(1080.0, 842.0, 815.0, 215.0)
+	)
+
+	brand_label = Label.new()
+	brand_label.name = "BrandLabel"
+	brand_label.position = Vector2(28.0, 20.0)
+	brand_label.size = Vector2(560.0, 60.0)
+	brand_label.text = "NECROWORKS"
+	brand_label.z_index = 100
+	brand_label.add_theme_font_size_override("font_size", 38)
+	brand_label.add_theme_color_override("font_color", UI_BONE)
+	brand_label.add_theme_color_override("font_shadow_color", Color.BLACK)
+	brand_label.add_theme_constant_override("shadow_offset_x", 3)
+	brand_label.add_theme_constant_override("shadow_offset_y", 3)
+	add_child(brand_label)
+
+	var tagline_label: Label = Label.new()
+	tagline_label.name = "TaglineLabel"
+	tagline_label.position = Vector2(31.0, 82.0)
+	tagline_label.size = Vector2(560.0, 75.0)
+	tagline_label.text = (
+		"INDUSTRIAL REANIMATION SOLUTIONS"
+		+ "\nWASTE NOTHING. RAISE EVERYTHING."
+	)
+	tagline_label.z_index = 100
+	tagline_label.add_theme_font_size_override("font_size", 18)
+	tagline_label.add_theme_color_override("font_color", UI_GREEN)
+	add_child(tagline_label)
+
+	metrics_label = Label.new()
+	metrics_label.name = "MetricsLabel"
+	metrics_label.position = Vector2(1565.0, 35.0)
+	metrics_label.size = Vector2(305.0, 245.0)
+	metrics_label.z_index = 100
+	metrics_label.add_theme_font_size_override("font_size", 16)
+	metrics_label.add_theme_color_override("font_color", UI_TEXT)
+	add_child(metrics_label)
+
+	factory_title_label = Label.new()
+	factory_title_label.name = "FactoryTitleLabel"
+	factory_title_label.position = Vector2(390.0, 855.0)
+	factory_title_label.size = Vector2(650.0, 45.0)
+	factory_title_label.text = "UNDEAD PRODUCTION LINE"
+	factory_title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	factory_title_label.z_index = 100
+	factory_title_label.add_theme_font_size_override("font_size", 22)
+	factory_title_label.add_theme_color_override("font_color", UI_GREEN)
+	add_child(factory_title_label)
+
+	processing_label = Label.new()
+	processing_label.name = "ProcessingLabel"
+	processing_label.position = Vector2(1110.0, 862.0)
+	processing_label.size = Vector2(755.0, 170.0)
+	processing_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	processing_label.z_index = 100
+	processing_label.add_theme_font_size_override("font_size", 18)
+	processing_label.add_theme_color_override("font_color", UI_TEXT)
+	add_child(processing_label)
+
+	update_metrics_ui()
+
+
+func create_hud_panel(
+	panel_name: String,
+	panel_rect: Rect2
+) -> Panel:
+
+	var panel: Panel = Panel.new()
+	panel.name = panel_name
+	panel.position = panel_rect.position
+	panel.size = panel_rect.size
+	panel.z_index = 40
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_theme_stylebox_override(
+		"panel",
+		create_stylebox(
+			UI_PANEL,
+			UI_METAL_BORDER,
+			3,
+			4
+		)
+	)
+	add_child(panel)
+
+	return panel
+
+
+func create_stylebox(
+	fill_color: Color,
+	border_color: Color,
+	border_width: int,
+	corner_radius: int
+) -> StyleBoxFlat:
+
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = fill_color
+	style.border_color = border_color
+	style.border_width_left = border_width
+	style.border_width_top = border_width
+	style.border_width_right = border_width
+	style.border_width_bottom = border_width
+	style.corner_radius_top_left = corner_radius
+	style.corner_radius_top_right = corner_radius
+	style.corner_radius_bottom_left = corner_radius
+	style.corner_radius_bottom_right = corner_radius
+	style.content_margin_left = 12.0
+	style.content_margin_top = 10.0
+	style.content_margin_right = 12.0
+	style.content_margin_bottom = 10.0
+
+	return style
+
+
+func apply_button_style(
+	button: Button,
+	accent_color: Color
+) -> void:
+
+	button.add_theme_stylebox_override(
+		"normal",
+		create_stylebox(
+			UI_PANEL_LIGHT,
+			accent_color.darkened(0.48),
+			3,
+			3
+		)
+	)
+	button.add_theme_stylebox_override(
+		"hover",
+		create_stylebox(
+			Color(0.08, 0.105, 0.08, 0.99),
+			accent_color,
+			3,
+			3
+		)
+	)
+	button.add_theme_stylebox_override(
+		"pressed",
+		create_stylebox(
+			accent_color.darkened(0.72),
+			accent_color.lightened(0.15),
+			4,
+			3
+		)
+	)
+	button.add_theme_stylebox_override(
+		"disabled",
+		create_stylebox(
+			Color(0.035, 0.04, 0.037, 0.92),
+			Color(0.13, 0.14, 0.12, 1.0),
+			2,
+			3
+		)
+	)
+	button.add_theme_color_override("font_color", UI_TEXT)
+	button.add_theme_color_override("font_hover_color", Color.WHITE)
+	button.add_theme_color_override(
+		"font_disabled_color",
+		Color(0.35, 0.37, 0.33, 1.0)
+	)
+
+
+func update_metrics_ui() -> void:
+
+	if metrics_label == null:
+		return
+
+
+	metrics_label.text = (
+		"RUN METRICS"
+		+ "\n\nENEMIES KILLED        "
+		+ str(total_enemies_killed)
+		+ "\nCORPSES PROCESSED  "
+		+ str(total_corpses_processed)
+		+ "\nSKELETONS BUILT       "
+		+ str(total_skeletons_created)
+		+ "\nSKELETONS LOST         "
+		+ str(total_skeletons_lost)
+		+ "\nZOMBIES BUILT            "
+		+ str(total_zombies_created)
+		+ "\nZOMBIES LOST              "
+		+ str(total_zombies_lost)
+		+ "\nARMY ACTIVE                "
+		+ str(get_total_undead_count())
+	)
+
+
+	if processing_label != null:
+		processing_label.text = (
+			"CORPSE PROCESSING"
+			+ "\n\nCORPSES WAITING: "
+			+ str(corpses.size())
+			+ "\nCLICK A CORPSE ON THE BATTLEFIELD TO RECYCLE"
+			+ "\nYIELD: +"
+			+ str(bones_per_corpse)
+			+ " BONES  /  +"
+			+ str(flesh_per_corpse)
+			+ " FLESH"
+		)
+
+
+# =========================================================
 # PRIMARY HUD LAYOUT
 # =========================================================
 
 func configure_primary_hud_layout() -> void:
 
 	bones_label.position = Vector2(
-		40.0,
-		55.0
+		45.0,
+		862.0
 	)
 
 	bones_label.size = Vector2(
 		280.0,
-		120.0
+		180.0
 	)
+	bones_label.z_index = 100
 
 	bones_label.add_theme_font_size_override(
 		"font_size",
 		18
 	)
+	bones_label.add_theme_color_override(
+		"font_color",
+		UI_TEXT
+	)
 
 
 	create_skeleton_button.position = Vector2(
-		40.0,
-		185.0
+		400.0,
+		920.0
 	)
 
 	create_skeleton_button.size = Vector2(
-		220.0,
-		62.0
+		290.0,
+		105.0
 	)
+	create_skeleton_button.z_index = 100
 
 	create_skeleton_button.add_theme_font_size_override(
 		"font_size",
@@ -4252,19 +4933,24 @@ func configure_primary_hud_layout() -> void:
 
 
 	create_zombie_button.position = Vector2(
-		275.0,
-		185.0
+		735.0,
+		920.0
 	)
 
 	create_zombie_button.size = Vector2(
-		220.0,
-		62.0
+		290.0,
+		105.0
 	)
+	create_zombie_button.z_index = 100
 
 	create_zombie_button.add_theme_font_size_override(
 		"font_size",
 		16
 	)
+
+
+	apply_button_style(create_skeleton_button, UI_BONE)
+	apply_button_style(create_zombie_button, UI_FLESH)
 
 
 # =========================================================
@@ -4394,7 +5080,7 @@ func update_bones_ui() -> void:
 
 	var full: bool = (
 		get_total_undead_count()
-		>= MAX_SKELETONS
+		>= MAX_UNDEAD
 	)
 
 
@@ -4410,3 +5096,6 @@ func update_bones_ui() -> void:
 		or flesh < zombie_cost
 		or full
 	)
+
+
+	update_metrics_ui()

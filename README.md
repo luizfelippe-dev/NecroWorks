@@ -37,7 +37,7 @@ Funcionalmente completo e validado:
 - Waves;
 - Elite Waves;
 - 10 upgrades;
-- 4 sinergias;
+- 5 sinergias;
 - Run Metrics;
 - Boss Wave 20;
 - The Foreman;
@@ -57,9 +57,11 @@ Em desenvolvimento e já validado parcialmente:
 - HUD temporário de Resources;
 - Debug oculto por padrão e alternável com `F3`;
 - Zombie V1 implementado e testado;
+- 4 upgrades exclusivos de Zombie;
 - Enemy/Boss atacam Skeletons e Zombies;
 - Zombies priorizados na frontline;
 - Game Over considera Bones, Flesh, Skeletons, Zombies e Corpses.
+- barras de vida em tempo real para aliados, inimigos e Boss.
 
 ## Economia atual
 
@@ -136,6 +138,13 @@ Derrotá-lo encerra a run com Victory.
 8. Bone Harvest
 9. Reassembly
 10. Final Service
+11. Rotten Bulk
+12. Grave Hunger
+13. Dead Weight
+14. Carrion Recovery
+
+Os quatro últimos upgrades formam a primeira identidade própria de Flesh/Zombie:
+mais resistência, dano, uma opção de tank pesado com trade-off de velocidade e recuperação de HP ao atacar.
 
 ## Synergies atuais
 
@@ -143,6 +152,7 @@ Derrotá-lo encerra a run com Victory.
 - Second Shift
 - Bone Assembly Line
 - Overclocked Ossuary
+- Meat Shield Protocol
 
 ## Direção visual oficial
 
@@ -162,7 +172,9 @@ Estrutura:
 - maquinário industrial;
 - horror corporativo.
 
-O protótipo ainda usa placeholders, mas novos sistemas devem respeitar essa direção.
+O protótipo ainda usa placeholders, mas já possui a primeira passagem estrutural nessa direção:
+fundo fabril procedural, battlefield separado, faixa de produção, módulos de processamento,
+painéis de metal escuro, acentos necromânticos e cards contextuais.
 
 ## Stack
 
@@ -173,6 +185,17 @@ O protótipo ainda usa placeholders, mas novos sistemas devem respeitar essa dir
 - Windows primeiro
 - Steam como plataforma comercial inicial
 - Git + GitHub
+
+## Estrutura do projeto
+
+```text
+assets/reference/       concept e referências visuais
+docs/                   design, arquitetura, roadmap e plano comercial
+main.tscn / main.gd      entradas estáveis para F5/F6 no Godot
+scripts/ui/              componentes reutilizáveis de interface
+```
+
+O protótipo ainda mantém a orquestração principal centralizada, mas novos componentes devem ser extraídos incrementalmente quando houver uma fronteira clara e testável.
 
 ## Workflow
 
@@ -187,3 +210,5 @@ implementar
 ```
 
 Consulte `docs/AI_HANDOFF.md` antes de continuar o desenvolvimento em outro chat.
+
+Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.

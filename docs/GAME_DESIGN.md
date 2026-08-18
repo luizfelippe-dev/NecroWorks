@@ -301,11 +301,18 @@ Current Bone-oriented synergies:
 - Second Shift;
 - Bone Assembly Line.
 
-Next design goal:
+First Flesh/Bone cross-synergy:
 
-at least one Flesh/Bone cross-synergy.
+### Meat Shield Protocol
 
-Example direction:
+```text
+Rotten Bulk + Rapid Assault
+→ each hit absorbed by a Zombie reduces every Skeleton attack timer by 0.12 s
+```
+
+This converts frontline durability into backline tempo and creates a concrete reason to build a mixed army.
+
+Further synergy direction:
 
 ```text
 Zombie tanks damage
@@ -418,6 +425,48 @@ Official target:
 - industrial horror.
 
 The user owns the conceptual reference image and authorizes close adaptation.
+
+---
+
+# Product review — commercial direction
+
+## Verdict
+
+The concept has a strong, explainable hook and a viable visual identity.
+
+The current prototype proves the loop, but does not yet prove enough decision depth or production fantasy for a commercial launch.
+
+## Strongest promise
+
+> Every corpse becomes a production decision.
+
+The player should repeatedly see:
+
+```text
+Enemy dies
+→ body enters the operation
+→ player routes/processes it
+→ resources and machines react
+→ a visibly different army leaves the line
+```
+
+## Main design risks
+
+1. If Factory stays decorative, the game reads as another necromancer autobattler.
+2. If every upgrade is a percentage increase, runs become mathematically different but experientially similar.
+3. If corpses remain simple buttons, the best part of the fantasy lacks impact.
+4. If enemies only scale HP/Damage, army composition has no real counter-pressure.
+5. If the player mostly watches, the run needs meaningful routing, production and timing decisions.
+
+## Required proof before vertical slice
+
+- at least three army archetypes with different play patterns;
+- one actual production-routing decision;
+- multiple enemy roles that reward changing composition;
+- rule-changing synergies, not only stat stacking;
+- a satisfying corpse-processing animation/audio loop;
+- readable escalation from one unit to an industrial horde;
+- a run that creates at least one memorable build story.
 
 ---
 

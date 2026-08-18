@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsdckf7ca1tym"
-path="res://.godot/imported/necrodesign.png-95d3d1b2bfae7f9216d0cc288c90cb43.ctex"
+path="res://.godot/imported/necrodesign.png-2d5ca83f6a811fade6ea13089bee7b48.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://necrodesign.png"
-dest_files=["res://.godot/imported/necrodesign.png-95d3d1b2bfae7f9216d0cc288c90cb43.ctex"]
+source_file="res://assets/reference/necrodesign.png"
+dest_files=["res://.godot/imported/necrodesign.png-2d5ca83f6a811fade6ea13089bee7b48.ctex"]
 
 [params]
 
