@@ -94,6 +94,15 @@ Zombie Cost: 6 Flesh
 - Project starts correctly after all source/resource paths were reorganized.
 - Wave 6 group state, independent HP, refill behavior and Wave 20 single-Boss cap validated headlessly.
 - Wave 1 Warrior, Wave 8 Mage reinforcement, Wave 11 mixed group and Foreman archetype validated headlessly.
+- Enemy bodies, names and health bars remain outside the right HUD rail at 1920×1080.
+- Run Summary statistics, build details, synergy list and Restart action render without overlap.
+- F5 Project Run and F6-compatible scene entry point share the current `main.tscn` UID.
+
+### Fixed
+
+- Enemies could spawn and fight behind the Run Metrics and Active Synergies panels.
+- Long Run Summary and Active Synergies text overlapped the Restart button.
+- `project.godot` referenced a stale main-scene UID after scene reimport.
 
 ### Known limitations
 

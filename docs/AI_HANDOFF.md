@@ -643,6 +643,26 @@ scripts/ui
 
 `main.tscn` e `main.gd` permanecem na raiz como entry points estáveis para F5/F6.
 
+### Correções de legibilidade — implementadas e validadas
+
+- o trilho de HUD direito começa próximo de `x=1540`;
+- Enemy spawn/movement foi limitado a `x=1450` para manter corpo, nome e HP fora dos painéis;
+- Run Summary final foi dividido em duas colunas;
+- `RunEndBuildSummary` contém build, sinergias e status;
+- Restart fica em uma região inferior isolada;
+- validação visual realizada em 1920×1080.
+
+### Entry point F5/F6
+
+O UID de `main.tscn` mudou durante a reimportação e o `project.godot` ainda apontava para o UID anterior. Ambos agora estão sincronizados no UID atual.
+
+Ao mover/reimportar a cena principal, sempre testar:
+
+```text
+F5 → Project Run
+F6 → Current Scene
+```
+
 ---
 
 # 17. Próxima tarefa recomendada
@@ -658,6 +678,8 @@ Próximo objetivo:
 Testar se Skeleton-only, Zombie-heavy e exército misto produzem decisões e resultados realmente diferentes.
 
 Revisar Flesh pacing e os novos limites de inimigos simultâneos somente com evidência de runs comparáveis.
+
+O próximo bloco recomendado continua sendo um playtest comparativo de composição e pressão dos arquétipos. Não iniciar arte final antes de confirmar que Warrior/Mage/Elf e Skeleton/Zombie geram decisões interessantes.
 
 ### Direções registradas para conteúdo futuro
 

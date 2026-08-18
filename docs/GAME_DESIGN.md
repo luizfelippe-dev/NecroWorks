@@ -416,6 +416,23 @@ Full lore writing is intentionally deferred. Systems and content must leave spac
 
 ---
 
+# Battlefield readability rules
+
+Combat must remain visually separate from permanent HUD panels.
+
+Current 1920×1080 rule:
+
+```text
+Right HUD begins near x=1540
+Enemy/label safe limit = x=1450
+```
+
+No combatant name, health bar or body should render underneath Metrics or Active Synergies. Revisit this rule when the HUD moves to anchors/containers and other aspect ratios are supported.
+
+The Run Summary must keep statistics, build/synergy information and actions in distinct regions. Long synergy lists may never share vertical space with the Restart button.
+
+---
+
 # Victory
 
 The Foreman dies:

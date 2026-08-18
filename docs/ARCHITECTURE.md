@@ -186,6 +186,7 @@ Enemy/Boss:
 - fixed/controlled Y;
 - clamped X;
 - target by horizontal distance.
+- current right-side combat-safe maximum: `x=1450`.
 
 This is a stability fix and should not be casually removed.
 
@@ -239,6 +240,23 @@ Debug:
 ```text
 F3
 ```
+
+## Run-end presentation
+
+The full-screen `RunEndPanel` now owns three independent regions:
+
+```text
+RunEndTitle
+RunEndSummary       → statistics/economy
+RunEndBuildSummary  → build/synergies/status
+RestartRunButton    → isolated bottom action
+```
+
+This prevents dynamic synergy content from colliding with the Restart button.
+
+## Project entry points
+
+`project.godot` and `main.tscn` must reference the same current scene UID. F5 and F6 were revalidated after synchronizing this UID; do not hand-edit only one side.
 
 ## Unit health presentation
 

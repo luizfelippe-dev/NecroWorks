@@ -389,8 +389,9 @@ var enemy_attack_timers: Dictionary = {}
 var enemy_lane_offsets: Dictionary = {}
 var enemy_types: Dictionary = {}
 
+const RIGHT_HUD_COMBAT_SAFE_X: float = 1450.0
 const ENEMY_SPAWN_POSITION: Vector2 = Vector2(
-	1650.0,
+	RIGHT_HUD_COMBAT_SAFE_X,
 	555.0
 )
 
@@ -399,7 +400,7 @@ const ENEMY_SPAWN_POSITION: Vector2 = Vector2(
 # outros infinitamente para fora da tela.
 const ENEMY_LANE_Y: float = 555.0
 const ENEMY_MIN_X: float = 650.0
-const ENEMY_MAX_X: float = 1650.0
+const ENEMY_MAX_X: float = RIGHT_HUD_COMBAT_SAFE_X
 
 const SKELETON_COMBAT_MIN_X: float = 80.0
 const SKELETON_COMBAT_MAX_X: float = 1500.0
@@ -504,6 +505,7 @@ var run_won: bool = false
 var run_end_panel: ColorRect = null
 var run_end_title_label: Label = null
 var run_end_summary_label: Label = null
+var run_end_build_label: Label = null
 var restart_run_button: Button = null
 
 
@@ -4614,7 +4616,7 @@ func create_run_end_ui() -> void:
 		0.015,
 		0.015,
 		0.015,
-		0.96
+		0.985
 	)
 
 	run_end_panel.z_index = 1000
@@ -4634,13 +4636,13 @@ func create_run_end_ui() -> void:
 	run_end_title_label.name = "RunEndTitle"
 
 	run_end_title_label.position = Vector2(
-		510.0,
-		135.0
+		410.0,
+		70.0
 	)
 
 	run_end_title_label.size = Vector2(
-		900.0,
-		120.0
+		1100.0,
+		100.0
 	)
 
 	run_end_title_label.horizontal_alignment = (
@@ -4649,6 +4651,14 @@ func create_run_end_ui() -> void:
 
 	run_end_title_label.text = (
 		"RUN COMPLETE"
+	)
+	run_end_title_label.add_theme_font_size_override(
+		"font_size",
+		30
+	)
+	run_end_title_label.add_theme_color_override(
+		"font_color",
+		UI_BONE
 	)
 
 
@@ -4662,21 +4672,29 @@ func create_run_end_ui() -> void:
 	run_end_summary_label.name = "RunEndSummary"
 
 	run_end_summary_label.position = Vector2(
-		560.0,
-		285.0
+		330.0,
+		205.0
 	)
 
 	run_end_summary_label.size = Vector2(
-		800.0,
-		500.0
+		650.0,
+		560.0
 	)
 
 	run_end_summary_label.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
+		HORIZONTAL_ALIGNMENT_LEFT
 	)
 
 	run_end_summary_label.vertical_alignment = (
 		VERTICAL_ALIGNMENT_TOP
+	)
+	run_end_summary_label.add_theme_font_size_override(
+		"font_size",
+		17
+	)
+	run_end_summary_label.add_theme_color_override(
+		"font_color",
+		UI_TEXT
 	)
 
 
@@ -4685,13 +4703,34 @@ func create_run_end_ui() -> void:
 	)
 
 
+	run_end_build_label = Label.new()
+	run_end_build_label.name = "RunEndBuildSummary"
+	run_end_build_label.position = Vector2(1030.0, 205.0)
+	run_end_build_label.size = Vector2(560.0, 560.0)
+	run_end_build_label.horizontal_alignment = (
+		HORIZONTAL_ALIGNMENT_LEFT
+	)
+	run_end_build_label.vertical_alignment = (
+		VERTICAL_ALIGNMENT_TOP
+	)
+	run_end_build_label.add_theme_font_size_override(
+		"font_size",
+		17
+	)
+	run_end_build_label.add_theme_color_override(
+		"font_color",
+		UI_TEXT
+	)
+	run_end_panel.add_child(run_end_build_label)
+
+
 	restart_run_button = Button.new()
 
 	restart_run_button.name = "RestartRunButton"
 
 	restart_run_button.position = Vector2(
 		760.0,
-		825.0
+		850.0
 	)
 
 	restart_run_button.size = Vector2(
@@ -4777,6 +4816,10 @@ func show_run_end_screen() -> void:
 		return
 
 
+	if run_end_build_label == null:
+		return
+
+
 	if run_won:
 
 		run_end_title_label.text = (
@@ -4793,8 +4836,9 @@ func show_run_end_screen() -> void:
 
 
 	run_end_summary_label.text = (
-		"NECROWORKS — RUN SUMMARY"
-		+ "\n\nWave Reached: "
+		"RUN STATISTICS"
+		+ "\n\nPROGRESS"
+		+ "\nWave Reached: "
 		+ str(current_wave)
 		+ "\nEnemies Killed: "
 		+ str(total_enemies_killed)
@@ -4802,6 +4846,7 @@ func show_run_end_screen() -> void:
 		+ str(total_corpses_processed)
 		+ "\nCorpses Remaining: "
 		+ str(corpses.size())
+		+ "\n\nUNDEAD PRODUCTION"
 		+ "\nSkeletons Built: "
 		+ str(total_skeletons_created)
 		+ "\nSkeletons Lost: "
@@ -4812,6 +4857,7 @@ func show_run_end_screen() -> void:
 		+ str(total_zombies_created)
 		+ "\nZombies Lost: "
 		+ str(total_zombies_lost)
+		+ "\n\nECONOMY"
 		+ "\nBones Earned: "
 		+ str(total_bones_earned)
 		+ "\nFlesh Earned: "
@@ -4824,16 +4870,22 @@ func show_run_end_screen() -> void:
 		+ str(blood)
 		+ "\nSouls Remaining: "
 		+ str(souls)
-		+ "\nArmy Remaining: "
+	)
+
+
+	run_end_build_label.text = (
+		"BUILD SUMMARY"
+		+ "\n\nArmy Remaining: "
 		+ str(get_total_undead_count())
 		+ "\nUpgrades Selected: "
 		+ str(total_upgrades_selected)
 		+ "\nSynergies Unlocked: "
 		+ str(active_synergies.size())
 		+ "\n\n"
-		+ get_run_result_message()
-		+ "\n\n"
 		+ get_run_synergy_summary()
+		+ "\n\nOPERATION STATUS"
+		+ "\n"
+		+ get_run_result_message()
 	)
 
 

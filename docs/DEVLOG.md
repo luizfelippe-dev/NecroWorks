@@ -217,7 +217,38 @@ Added:
 
 User confirmed everything functioning.
 
-This is the latest stable gameplay checkpoint.
+This checkpoint was superseded by the Enemy Groups milestone below.
+
+---
+
+## 18/08/2026 — Enemy Groups & Living Archetypes
+
+Added:
+
+- simultaneous Enemy groups from Wave 6 onward;
+- independent HP, damage, movement speed, range and cooldown;
+- Human Warrior;
+- ranged Mage;
+- fast Elf Skirmisher;
+- individual names, colors and health bars;
+- staged archetype introduction;
+- single-target Foreman encounter preserved.
+
+Validated on Waves 1, 6, 8, 11 and 20.
+
+---
+
+## 18/08/2026 — HUD & Run-End Stabilization
+
+Fixed:
+
+- Enemy spawn/movement no longer enters the right-side Metrics/Synergy panels;
+- a dedicated `x=1450` combat-safe boundary now protects the HUD;
+- final Run Summary split into Statistics and Build Summary columns;
+- Restart button no longer overlaps Active Synergies;
+- Project Run main-scene UID synchronized with `main.tscn`.
+
+Visual validation completed at 1920×1080.
 
 ---
 
@@ -229,6 +260,12 @@ Recommended next block:
 
 - validate mixed-army choices after Meat Shield Protocol;
 - test composition choice Skeleton vs Zombie.
+
+### Enemy depth
+
+- playtest Warrior/Mage/Elf pressure;
+- add advanced behavior only after evidence: Mage AOE/control and Elf precision targeting;
+- improve hit/death feedback.
 
 Then:
 

@@ -62,6 +62,10 @@ Em desenvolvimento e já validado parcialmente:
 - Zombies priorizados na frontline;
 - Game Over considera Bones, Flesh, Skeletons, Zombies e Corpses.
 - barras de vida em tempo real para aliados, inimigos e Boss.
+- grupos de inimigos simultâneos com escalada progressiva;
+- Guerreiro Humano, Mago e Elfo com stats e funções distintas;
+- faixa segura de combate que não invade o HUD lateral;
+- Run Summary final em duas colunas sem sobreposição.
 
 ## Economia atual
 
@@ -193,6 +197,7 @@ assets/reference/       concept e referências visuais
 docs/                   design, arquitetura, roadmap e plano comercial
 main.tscn / main.gd      entradas estáveis para F5/F6 no Godot
 scripts/ui/              componentes reutilizáveis de interface
+scripts/game/            políticas de Waves e catálogo de inimigos
 ```
 
 O protótipo ainda mantém a orquestração principal centralizada, mas novos componentes devem ser extraídos incrementalmente quando houver uma fronteira clara e testável.
@@ -212,3 +217,5 @@ implementar
 Consulte `docs/AI_HANDOFF.md` antes de continuar o desenvolvimento em outro chat.
 
 Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.
+
+Próximo foco: playtests de composição, comportamento avançado dos inimigos e o primeiro sistema de Blood antes de iniciar a produção visual definitiva.

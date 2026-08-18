@@ -71,8 +71,12 @@
 - [x] first living Enemy archetypes: Human Warrior, Mage and Elf
 - [x] per-Enemy HP, damage, speed, range and cooldown
 - [x] progressive archetype introduction on Waves 1, 8 and 11
+- [x] right HUD combat-safe boundary
+- [x] two-column Run Summary layout
+- [x] F5 main-scene UID repaired and synchronized
 - [ ] test meaningful Skeleton vs Zombie composition choices
 - [ ] playtest active-Enemy caps against Skeleton-only, Zombie-heavy and mixed builds
+- [ ] capture a short milestone clip for the second LinkedIn dev update
 - [ ] decide Flesh resource pacing
 - [ ] begin generic Undead refactor only where needed
 

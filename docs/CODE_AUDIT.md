@@ -21,6 +21,9 @@ The repository now separates modular assets/components while keeping stable Godo
 - simultaneous Enemy runtime state introduced without duplicating scene controllers;
 - Wave concurrency rules extracted to `scripts/game/enemy_wave_policy.gd`.
 - Enemy archetype stats and Wave rotation extracted to `scripts/game/enemy_archetype_catalog.gd`.
+- right-side HUD protected by an explicit combat-safe boundary;
+- dynamic Run Summary content separated into two layout regions;
+- stale Project Run scene UID repaired.
 
 ## Priority risks
 
@@ -50,6 +53,8 @@ Before public testing:
 - use anchors/containers;
 - validate 16:9, 16:10, ultrawide and Steam Deck-like resolutions;
 - provide UI scaling.
+
+The current overlap bugs are fixed at 1920×1080, but this does not close the responsive-layout risk.
 
 ### P1 — Parallel unit dictionaries
 

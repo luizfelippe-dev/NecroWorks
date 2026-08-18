@@ -155,6 +155,22 @@ Commercial-facing content should target players:
 
 LinkedIn is useful for portfolio/career, not primary game marketing.
 
+## LinkedIn development updates
+
+The current Enemy Groups milestone is a good portfolio update because it shows visible progress since the first prototype post:
+
+- cohesive industrial UI instead of a gray debug field;
+- two Undead roles;
+- multiple simultaneous Enemies;
+- living Enemy archetypes;
+- real health readability;
+- a completed 20-Wave run and improved Run Summary;
+- engineering work on modular policies, documentation and regression validation.
+
+Use a short 15–30 second gameplay clip or a small before/after carousel. Lead with the gameplay transformation, explain one technical/design challenge, and end with a concrete question. Do not frame the project as nearly finished or promise sales.
+
+Recommended cadence: publish only when there is a visually understandable milestone, not every commit. LinkedIn remains a development/portfolio channel; player acquisition later needs Steam, video platforms, genre communities and creators.
+
 ---
 
 # Risks right now

@@ -302,3 +302,19 @@ Wave 1 must remain readable. Group pressure begins after the first Elite checkpo
 ```
 
 This is a playtest baseline, not final balance. Each Enemy owns independent HP, attack cooldown, lane and health bar. Kills refill open group slots until the Wave total is exhausted.
+
+---
+
+## HUD reserves non-combat space
+
+At the current fixed 1920×1080 prototype resolution, the right Metrics/Synergy rail starts near `x=1540`. Enemy spawn and horizontal movement are capped at `x=1450`, leaving room for bodies, health bars and identity labels.
+
+This is a prototype safety boundary. Responsive layout later must derive the combat rectangle from actual HUD geometry.
+
+---
+
+## Run Summary uses separated information regions
+
+Final statistics and build/synergy details use separate columns. The Restart action owns a dedicated bottom region.
+
+Reason: dynamic synergy text must not overlap the primary action or obscure run results.
