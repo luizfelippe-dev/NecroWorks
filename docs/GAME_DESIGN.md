@@ -1,223 +1,441 @@
 # NecroWorks — Game Design Document
 
-## High Concept
+## High concept
 
-**Kill enemies. Recycle the corpses. Turn them into your army.**
+> Kill enemies. Recycle the corpses. Turn them into your army.
 
-NecroWorks é um roguelite 2D que combina:
+NecroWorks mistura:
 
 - autobattler;
-- estratégia;
-- economia;
-- automação;
-- buildcrafting;
-- progressão incremental.
+- roguelite;
+- resource economy;
+- factory/automation;
+- army growth;
+- buildcrafting.
 
-## Fantasia
+## Fantasy
 
-O jogador administra uma empresa necromântica industrial.
+O jogador administra uma operação industrial necromântica.
 
-O campo de batalha é simultaneamente:
+O cadáver do inimigo não é apenas resultado do combate.
 
-- zona de combate;
-- fonte de matéria-prima;
-- chão de fábrica.
+É matéria-prima.
 
-O inimigo derrotado deixa de ser ameaça e passa a ser estoque.
+```text
+Threat
+→ Corpse
+→ Inventory
+→ Production
+→ Undead
+→ Workforce / Army
+```
 
 ## Pilares
 
-### Cadáver é recurso
+### 1. Waste Nothing
 
-Corpse deve importar economicamente.
+Todo cadáver deve parecer aproveitável.
 
-### Exército descartável
+### 2. Army as production
 
-Perder Undead faz parte da estratégia.
+A horda não é recrutada; ela é fabricada.
 
-### Industrial Necromancy
+### 3. Industrial necromancy
 
-O diferencial não é somente "ter esqueletos": é criar uma linha de produção de mortos-vivos.
+A identidade não é "necromante medieval genérico".
 
-### Builds emergentes
+É:
 
-Poucos sistemas precisam interagir de muitas maneiras.
+- fábrica;
+- maquinário;
+- processamento;
+- linha de produção;
+- eficiência;
+- horror corporativo.
 
-### Power fantasy
+### 4. Different resources, different builds
 
-Runs fortes podem ficar exageradas e visualmente satisfatórias.
+Recursos não devem ser apenas cores diferentes.
 
-### Legibilidade
+Cada um deve criar comportamento de build distinto.
 
-O jogador precisa entender por que sua build funciona ou falha.
+### 5. Power fantasy
 
-## First Run — implementado
+Runs fortes podem ficar exageradas.
+
+Mas o jogo precisa oferecer ameaças e decisões até o fim.
+
+---
+
+# Current playable loop
 
 ```text
-Wave 1
+Enemy
 → Corpse
-→ Bones
-→ Skeleton
-→ Upgrades
-→ Synergies
-→ Elites
-→ Wave 20
+→ Bones + Flesh
+→ Skeleton / Zombie
+→ Upgrade
+→ Synergy
+→ Elite
 → The Foreman
 → Victory / Defeat
+```
+
+---
+
+# Resources
+
+## Bones
+
+Status: implemented.
+
+Primary identity:
+
+- Skeleton;
+- cheap production;
+- swarm;
+- offense;
+- assembly.
+
+Current:
+
+```text
++8 per Corpse
+Skeleton = 5 Bones
+```
+
+## Flesh
+
+Status: implemented foundation.
+
+Primary identity:
+
+- Zombie;
+- HP;
+- tanking;
+- mutation;
+- mass;
+- regeneration.
+
+Current:
+
+```text
++2 per Corpse
+Zombie = 6 Flesh
+```
+
+## Blood
+
+Status: state exists, gameplay not implemented.
+
+Intended identity:
+
+- sacrifice;
+- temporary buffs;
+- vampirism;
+- risk/reward;
+- burst.
+
+Do not add Blood generation until it has a sink.
+
+## Souls
+
+Status: state exists, gameplay not implemented.
+
+Intended identity:
+
+- Ghost;
+- magic;
+- ranged;
+- rare effects;
+- supernatural automation.
+
+---
+
+# Undead
+
+## Skeleton
+
+Role:
+
+- base DPS;
+- cheap;
+- quick;
+- scales well with current upgrades.
+
+Stats:
+
+```text
+HP 100
+DMG 10
+CD 0.7
+Speed 180
+Cost 5 Bones
+```
+
+## Zombie V1
+
+Role:
+
+- frontline;
+- tank;
+- Flesh sink;
+- protects Skeleton-heavy formations.
+
+Stats:
+
+```text
+HP 220
+DMG 6
+CD 1.1
+Speed 120
+Cost 6 Flesh
+```
+
+Design intent:
+
+```text
+Zombie
+→ survives longer
+→ deals less DPS
+→ stands in front
+→ gives Skeletons more uptime
+```
+
+## Ghost — planned
+
+Role:
+
+- ranged/magic;
+- Souls;
+- bypasses or changes standard formation.
+
+## Abomination — planned
+
+Role:
+
+- advanced mixed-resource unit;
+- expensive;
+- visually distinctive.
+
+---
+
+# Mixed army
+
+Current prototype order:
+
+```text
+Enemy
+← Zombies
+← Skeletons
+```
+
+Zombie gets frontline priority.
+
+Future:
+
+- formation should understand roles/tags;
+- ranged units should not use melee slot abstraction forever;
+- tanks may attract/modify threat.
+
+Do not overbuild this until Ghost/ranged exists.
+
+---
+
+# Upgrades
+
+Current 10 were designed around Skeleton gameplay.
+
+Future upgrade taxonomy should include:
+
+```text
+Bone upgrades
+Flesh upgrades
+Blood upgrades
+Soul upgrades
+Factory upgrades
+Universal upgrades
+Mutation / cross-resource upgrades
+```
+
+Avoid making every upgrade simple `+25%`.
+
+Rule-changing upgrades are the long-term goal.
+
+---
+
+# Flesh upgrade direction
+
+Candidate first set:
+
+### Rotten Bulk
+
+Zombie Max HP increases.
+
+### Grave Hunger
+
+Zombie Damage increases.
+
+### Dead Weight
+
+Large Zombie HP bonus at cost of movement/attack speed.
+
+### Carrion Recovery
+
+Zombie recovers HP under a defined condition.
+
+### Packed Frontline
+
+Zombie count/formation affects survivability.
+
+Names and exact values are provisional.
+
+---
+
+# Synergies
+
+Current Bone-oriented synergies:
+
+- Overclocked Ossuary;
+- Recycling Plant;
+- Second Shift;
+- Bone Assembly Line.
+
+Next design goal:
+
+at least one Flesh/Bone cross-synergy.
+
+Example direction:
+
+```text
+Zombie tanks damage
+→ Skeleton behind gains offensive bonus
+```
+
+or:
+
+```text
+Zombie dies
+→ leaves Flesh / generates production value
+```
+
+Do not lock final implementation yet.
+
+---
+
+# Boss
+
+## The Foreman
+
+Wave 20.
+
+Boss design intent:
+
+- attack the horde;
+- punish pure single-unit scaling;
+- create multi-target danger.
+
+Industrial Crush:
+
+- periodic;
+- multi-target;
+- works on Skeletons and Zombies.
+
+---
+
+# Victory
+
+The Foreman dies:
+
+```text
+finish_run(true)
 → Run Summary
 → Restart
 ```
 
-## Recursos
+# Defeat
 
-### Bones — implementado
+Current defeat model is economic:
 
-Uso atual:
-Skeleton.
+```text
+no Undead
++ no Corpse
++ cannot afford Skeleton
++ cannot afford Zombie
+→ Game Over
+```
 
-### Flesh — próxima fase
+This is preferable to immediate army-wipe defeat.
 
-Uso principal planejado:
-Zombie e unidades carnais.
+## Last Stand — future
 
-Identidade:
-HP, massa, regeneração, frontline.
+Potential later evolution:
 
-### Blood — planejado
+- warning state;
+- short recovery timer;
+- emergency production;
+- resource sacrifice.
 
-Uso:
-sacrifício, buffs, vampirismo, multiplicadores temporários.
+Not implemented.
 
-### Souls — planejado
+---
 
-Uso:
-Ghosts, magia, efeitos raros e automação sobrenatural.
+# Factory
 
-## Undead
+Factory is a future pillar, not decoration.
 
-### Skeleton — implementado
-
-- barato;
-- simples;
-- ofensivo;
-- base da economia atual.
-
-### Zombie — próximo
-
-Direção:
-
-- custo em Flesh;
-- mais HP que Skeleton;
-- mais lento;
-- menor dano;
-- frontline/tank.
-
-### Ghost — planejado
-
-- Soul;
-- ranged/magic;
-- mais raro.
-
-### Abomination — planejado
-
-- mistura de recursos;
-- unidade avançada;
-- alto valor visual.
-
-## Upgrades atuais
-
-10 upgrades, 3 escolhas por Wave.
-
-A direção futura é migrar progressivamente de bônus numéricos para efeitos que alteram regras.
-
-## Synergies atuais
-
-- Recycling Plant;
-- Second Shift;
-- Bone Assembly Line;
-- Overclocked Ossuary.
-
-Sinergias devem ser descobertas e produzir momentos de build memoráveis.
-
-## Boss
-
-### The Foreman — implementado
-
-Wave 20.
-
-- 2200 HP;
-- 28 Damage;
-- ataque normal;
-- Industrial Crush;
-- multi-target;
-- encerra a run.
-
-## Defeat
-
-A run termina quando não existe:
-
-- Skeleton vivo;
-- Corpse processável;
-- Bones suficientes para reconstruir.
-
-### Last Stand — futuro
-
-Pode substituir/expandir essa condição depois:
-
-- janela curta;
-- emergency raise;
-- sacrifícios;
-- recuperação dramática.
-
-## Factory — futuro central
-
-A Factory deve transformar processamento manual em cadeia industrial.
-
-Possibilidades:
+Planned concepts:
 
 - Corpse Processor;
 - Skeleton Assembler;
 - Flesh Vat;
-- Soul Extractor;
 - Blood Pump;
-- conveyor/route abstraction;
+- Soul Extractor;
+- automatic processing;
+- queues;
 - efficiency;
+- routing;
 - overload;
-- auto-production.
+- production synergies.
 
-A Factory deve gerar decisões, não apenas automatizar cliques.
+Factory should create choices, not only remove clicks.
 
-## Direção visual oficial
+---
 
-Target visual próprio:
+# Visual target
 
-- battle arena central;
-- arquitetura industrial ao redor;
-- production floor na parte inferior;
-- HUD dividido em módulos;
-- recursos à esquerda;
-- sinergias/métricas à direita;
-- Wave/Boss no topo;
-- cards contextuais;
-- metal escuro;
-- verde necromântico;
-- ossos;
-- iluminação industrial;
-- horror corporativo cartunesco.
+Official target:
 
-Não é necessário reproduzir tudo imediatamente. Novas telas/sistemas devem, porém, respeitar essa hierarquia.
+- central battlefield;
+- factory architecture behind/under combat;
+- resource dashboard;
+- production blocks;
+- synergy/readout panels;
+- upgrade cards;
+- dark metal;
+- toxic/necro green;
+- bone motifs;
+- industrial horror.
 
-## Comercial
+The user owns the conceptual reference image and authorizes close adaptation.
 
-NecroWorks precisa ser explicável visualmente em segundos:
+---
 
-```text
-Enemy dies
-→ Corpse enters production
-→ resources appear
-→ Undead is manufactured
-→ army grows
-→ factory accelerates
-```
+# Balance philosophy
 
-O objetivo é criar momentos fáceis de mostrar em trailer, GIF e vídeo curto.
+Do not balance final numbers while large system pillars are missing.
+
+Current goal:
+
+- units must feel different;
+- resources must have sinks;
+- no obvious softlocks;
+- enough challenge to test systems.
+
+Deep balance after:
+
+- Skeleton;
+- Zombie;
+- Blood gameplay;
+- Soul/Ghost;
+- representative upgrade pool.

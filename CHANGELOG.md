@@ -1,99 +1,137 @@
 # Changelog
 
-## [Unreleased] — v0.2.0 em desenvolvimento
-
-### Planned
-
-- sistema multi-resource;
-- Flesh;
-- Blood;
-- Souls;
-- primeiro novo Undead;
-- expansão da economia necromântica;
-- início da adaptação da UI à direção visual oficial.
-
----
-
-## [0.1.0] — First Run — funcionalmente validado
+## [Unreleased] — v0.2.0 Necromantic Economy
 
 ### Added
 
-- Upgrade selection entre Waves.
-- Pool de 10 upgrades.
-- Três escolhas aleatórias por Wave.
-- Upgrades acumuláveis.
-- Sharpened Bones.
-- Bone Plating.
-- Efficient Recycling.
-- Rapid Assault.
-- Death March.
-- Mass Production.
-- Heavy Bones.
-- Bone Harvest.
-- Reassembly.
-- Final Service.
-- Sistema de sinergias.
-- Recycling Plant.
-- Second Shift.
-- Bone Assembly Line.
-- Overclocked Ossuary.
-- Synergy HUD.
-- Run Metrics.
-- Boss Wave 20.
-- Primeiro Boss: The Foreman.
-- Industrial Crush multi-target.
-- Victory.
-- Game Over.
-- Run Summary.
-- Restart Run após Victory e Defeat.
-- Tracking de Corpses para condição de derrota.
+- Resource foundation:
+  - Bones;
+  - Flesh;
+  - Blood;
+  - Souls.
+- Flesh generation from Corpse processing.
+- Temporary multi-resource HUD.
+- `F3` toggle for compact Debug HUD.
+- Zombie V1.
+- Zombie production using Flesh.
+- Zombie HP / attack timer / slots / metrics.
+- Generic Undead targeting for Enemy.
+- Generic Undead targeting for The Foreman AOE.
+- Zombie frontline priority.
+- Zombie metrics in Run Summary.
+- Defeat condition aware of Skeletons + Zombies + Bones + Flesh + Corpses.
 
-### Changed
+### Current Zombie V1 values
 
-- Enemy/Boss passa a lutar em lane horizontal controlada.
-- Formação de Skeletons fecha lacunas após mortes.
-- Enemy/Boss e posições de combate possuem limites de arena.
-- Próxima Wave aguarda escolha de upgrade.
-- HUD exibe Skeleton Cost.
-- Debug exibe Corpses e possibilidade de reconstrução.
+```text
+HP: 220
+Damage: 6
+Cooldown: 1.1 s
+Speed: 120
+Cost: 6 Flesh
+```
 
-### Fixed
+### Current resource values
 
-- Main não congela após perda total do exército.
-- Enemy/Boss não deve mais ser arrastado para fora da tela pelo feedback da formação.
-- Formação não mantém buracos permanentes que puxavam o combate para fora da arena.
-- Game Over não acontece enquanto ainda houver Corpse processável ou Bones suficientes para reconstruir.
+```text
+Bones per Corpse: 8
+Flesh per Corpse: 2
+Skeleton Cost: 5 Bones
+Zombie Cost: 6 Flesh
+```
 
 ### Verified
 
-- primeira run completa validada;
-- Waves 1–20 funcionais;
-- Elite Waves funcionais;
-- The Foreman funcional;
-- Industrial Crush funcional;
-- Victory funcional;
-- Defeat funcional;
-- Run Summary funcional;
-- Restart funcional;
-- Overclocked Ossuary observado em runtime;
-- Recycling Plant observado em runtime;
-- Second Shift observado em runtime;
-- Bone Assembly Line teve unlock validado.
+- Resource HUD no longer overlaps the production buttons.
+- Skeleton Max HP restored to 100 after accidental test value.
+- Skeleton combat remains functional.
+- Flesh is generated correctly.
+- Zombie button unlocks with sufficient Flesh.
+- Zombie spawns and moves.
+- Zombie attacks.
+- Enemy attacks Zombie.
+- Zombie dies and releases slot.
+- Mixed Skeleton + Zombie army functions.
+- Zombie frontline priority works.
+- Defeat logic remains functional with mixed Undead.
+
+### Known limitations
+
+- Blood has no source/sink yet.
+- Souls has no source/sink yet.
+- Skeleton-only upgrades do not yet have Zombie equivalents.
+- Mixed formation is still prototype-level.
+- Skeletons still attack through the current formation abstraction.
+- No ranged/magic unit yet.
+- Full balance pass intentionally postponed.
+- `main.gd` remains large and centralized.
+
+---
+
+## [0.1.0] — First Run
+
+### Added
+
+- Automatic combat.
+- Multiple Skeletons.
+- Corpses.
+- Bones.
+- Skeleton production.
+- Waves.
+- Wave scaling.
+- Elite Waves.
+- 10 upgrades.
+- 3 random upgrade choices between Waves.
+- 4 synergies.
+- Run Metrics.
+- Boss Wave 20.
+- The Foreman.
+- Industrial Crush.
+- Victory.
+- Game Over.
+- Run Summary.
+- Restart after Victory/Defeat.
+- Corpse tracking for defeat logic.
+
+### Changed
+
+- Enemy/Boss combat moved to a controlled horizontal lane.
+- Skeleton combat formation compacts after deaths.
+- Combat positions are clamped to arena bounds.
+- Wave progression waits for upgrade selection.
+
+### Fixed
+
+- Main freeze after complete army wipe.
+- Boss leaving the screen due to feedback between pursuit and formation.
+- Formation gaps pulling combat outside the arena.
+- Premature Game Over while player still has Corpses or enough Bones to rebuild.
+
+### Verified
+
+- Full run from Wave 1 to Wave 20.
+- Elite Waves.
+- The Foreman.
+- Victory flow.
+- Defeat flow.
+- Run Summary.
+- Restart.
+- Overclocked Ossuary.
+- Recycling Plant.
+- Second Shift.
+- Bone Assembly Line unlock.
 
 ### Balance
 
-Os números atuais **não representam balanceamento final**.
+Balance is intentionally provisional.
 
-Problemas conhecidos:
+Known issues:
 
-- crescimento da horda pode acontecer cedo demais;
-- economia de Bones pode saturar;
-- muitos Enemies comuns deixam de pressionar uma horda grande;
-- upgrades multiplicativos podem escalar rápido;
-- Elite/Boss precisarão ser reavaliados quando existirem múltiplos tipos de Undead.
-
-Decisão:
-realizar o balance pass mais profundo depois da primeira expansão de economia/unidades.
+- Bones can saturate.
+- Army may snowball early.
+- Late-game normal Enemies can lose pressure.
+- Damage/attack-speed stacking can scale strongly.
+- Boss/Elites will need reevaluation after multi-unit economy exists.
 
 ---
 
@@ -105,19 +143,15 @@ realizar o balance pass mais profundo depois da primeira expansão de economia/u
 - Elite Waves.
 - Wave HUD.
 
----
-
 ## [0.0.2] — Corpse Loop
 
 - Corpse.
 - Bones.
 - Skeleton production.
-- múltiplos Skeletons.
-- Node2D.
-- target-based movement.
-- dynamic visuals.
-
----
+- Multiple Skeletons.
+- Node2D migration.
+- Target movement.
+- Dynamic placeholders.
 
 ## [0.0.1] — Combat Prototype
 
@@ -126,5 +160,5 @@ realizar o balance pass mais profundo depois da primeira expansão de economia/u
 - Enemy.
 - HP.
 - Damage.
-- cooldown.
-- auto combat.
+- Cooldown.
+- Auto combat.

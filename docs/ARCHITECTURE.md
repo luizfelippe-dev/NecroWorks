@@ -2,34 +2,40 @@
 
 **Atualizado:** 18/08/2026
 
-## Stack
+# Stack
 
 - Godot 4.7.1
 - GDScript
 - 2D
 - Git/GitHub
 
-## Estado
+# Current structure
 
-A lógica continua majoritariamente centralizada em `main.gd`.
+The prototype remains mostly centralized in `main.gd`.
 
-Isso foi intencional para provar `v0.1.0`.
+This was deliberate for speed through `v0.1.0`.
 
-O arquivo já concentra:
+Current responsibilities inside `main.gd` include:
 
-- combat;
-- skeleton state;
-- enemy state;
-- corpse/resource;
-- waves;
+- Skeleton combat;
+- Zombie combat;
+- Enemy combat;
+- Boss;
+- Waves;
+- Corpses;
+- Resources;
+- production;
 - upgrades;
 - synergies;
-- Boss;
+- metrics;
 - run end;
-- UI;
-- metrics.
+- runtime UI.
 
-## Scenes
+Do not perform a big rewrite without a concrete need.
+
+# Scenes
+
+Known prototype scenes:
 
 ```text
 main.tscn
@@ -38,145 +44,236 @@ enemy.tscn
 corpse.tscn
 ```
 
-## Runtime UI
+Zombie V1 currently reuses the Skeleton Node2D scene as a placeholder and applies Zombie-specific state/visual behavior in `main.gd`.
 
-- Wave HUD
-- Upgrade UI
-- Synergy HUD
-- Debug HUD
-- Run End panel
+This is acceptable for the prototype.
 
-## Skeleton state
+Later, Zombie should receive its own scene/art.
+
+# Resource state
+
+```gdscript
+bones
+flesh
+blood
+souls
+```
+
+Current income:
+
+```text
+Corpse → Bones + Flesh
+```
+
+# Corpse tracking
+
+```gdscript
+var corpses: Array[Button] = []
+```
+
+Used for:
+
+- processing;
+- recovery;
+- defeat condition.
+
+# Skeleton state
 
 ```text
 skeletons
 skeleton_hps
 skeleton_attack_timers
 skeleton_slots
+```
+
+# Zombie state
+
+```text
+zombies
+zombie_hps
+zombie_attack_timers
+zombie_slots
+```
+
+# Shared slot state
+
+Legacy name:
+
+```text
 occupied_skeleton_slots
 ```
 
-## Corpses
+It now acts as a shared Undead occupancy map.
 
-Agora são rastreados em:
+Rename only when touching this architecture for a real reason.
 
-```gdscript
-var corpses: Array[Button] = []
+# Generic Undead helpers
+
+Current layer:
+
+```text
+get_total_undead_count()
+get_all_undead_units()
+get_closest_undead_to_enemy()
+damage_undead()
 ```
 
-Isso permite saber se ainda existe matéria-prima para recuperação antes de declarar Game Over.
+This is the beginning of the future generic unit system.
 
-## Movement model
+# Formation
+
+Current priority:
+
+```text
+Zombie
+→ front combat slots
+
+Skeleton
+→ behind Zombie
+```
+
+Combat-slot compaction keeps formations from leaving gaps after deaths.
+
+# Movement
 
 Enemy/Boss:
 
-- lane horizontal;
-- Y fixo;
-- X limitado;
-- target via distância horizontal.
+- horizontal lane;
+- fixed/controlled Y;
+- clamped X;
+- target by horizontal distance.
 
-Skeleton:
+This is a stability fix and should not be casually removed.
 
-- spawn slot persistente;
-- combat slot compactado;
-- formação fecha buracos;
-- target position limitada à arena.
+# Boss AOE
 
-## Wave / Boss
-
-Wave 20 é Boss.
-
-Estado:
+The Foreman collects:
 
 ```text
-boss_active
-boss_special_attack_timer
-run_finished
-run_won
+get_all_undead_units()
 ```
 
-Boss defeated:
+then damages random valid targets.
+
+So Zombie support is already generic at Boss level.
+
+# Defeat
+
+Current logic:
 
 ```text
-finish_run(true)
+if army > 0:
+    continue
+
+if corpses > 0:
+    continue
+
+if bones >= skeleton_cost:
+    continue
+
+if flesh >= zombie_cost:
+    continue
+
+finish_run(false)
 ```
 
-Defeat:
+# UI
+
+Current runtime UI:
+
+- Resources block;
+- Create Skeleton button;
+- Create Zombie button;
+- Wave HUD;
+- Synergy HUD;
+- Upgrade UI;
+- Run End UI;
+- compact Debug HUD.
+
+Debug:
 
 ```text
-Skeletons == 0
-AND Corpses == 0
-AND Bones < Skeleton Cost
-→ finish_run(false)
+F3
 ```
 
-Restart:
+# Architectural risk
 
-```gdscript
-get_tree().reload_current_scene()
-```
+Adding a third/fourth unit type by copying Zombie functions may create excessive duplication.
 
-## Próxima necessidade arquitetural
-
-`v0.2.0` adicionará múltiplos recursos e tipos de Undead.
-
-O maior risco é continuar tratando tudo como "Skeleton" internamente.
-
-Antes de adicionar muitos tipos, migrar progressivamente para um conceito genérico de **Undead Unit**.
-
-Direção provável:
+Likely future direction:
 
 ```text
-Undead
-├── Skeleton
-├── Zombie
-├── Ghost
-└── Abomination
+Undead Unit
+├── node
+├── unit_type
+├── hp
+├── max_hp
+├── damage
+├── cooldown
+├── timer
+├── speed
+├── slot
+└── tags
 ```
 
-O Enemy deve mirar `undead_units`, não um array exclusivo de Skeletons.
+Possible structures:
 
-## Refatoração recomendada
-
-Fazer incrementalmente durante v0.2.0, não uma reescrita total.
-
-Primeiro:
-
-- resource state central;
-- `undead_units`;
-- unit type metadata.
-
-Depois, quando estável:
-
-- ResourceManager;
-- WaveManager;
-- UpgradeManager;
-- FactoryManager.
-
-## Data-driven futuro
-
-Quando a quantidade crescer:
-
-- Upgrade Resource;
+- dictionary-based runtime state;
 - UnitDefinition Resource;
-- EnemyDefinition Resource;
+- lightweight component script.
+
+Do not decide prematurely.
+
+# Recommended refactor trigger
+
+Start a real generic Undead refactor when at least one becomes true:
+
+1. Ghost implementation requires different range/behavior.
+2. A third unit copies too much code.
+3. Upgrades need tags across multiple unit types.
+4. formation logic becomes role-driven.
+
+# Data-driven future
+
+Potential Resources:
+
+```text
+UnitDefinition
+UpgradeDefinition
+EnemyDefinition
+SynergyDefinition
+```
+
+Useful fields:
+
+- id;
+- display_name;
 - tags;
-- rarity;
+- stats;
 - costs;
-- icons;
-- localization keys.
+- rarity;
+- icon;
+- localization key.
 
-Não fazer prematuramente.
+Do this later.
 
-## Performance
+# Performance
 
-Com mais Undead:
+With large hordes, measure before optimizing:
 
-- medir node count;
-- frame time;
-- attack loops;
-- visual effects;
+- number of active Node2D units;
+- per-frame loops;
 - corpse count;
-- path/movement work.
+- UI updates;
+- attack loops;
+- AOE;
+- VFX.
 
-Otimizar somente após medição.
+Potential future optimization:
+
+- state arrays;
+- reduced update frequency;
+- object pooling;
+- batching visuals.
+
+Not required yet.

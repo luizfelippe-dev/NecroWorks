@@ -1,176 +1,176 @@
 # NecroWorks — Commercial Plan
 
-## Objetivo
+## Goal
 
-Maximizar as chances de NecroWorks se tornar um produto comercialmente relevante na Steam.
+Increase the probability that NecroWorks becomes a commercially strong Steam product.
 
-Não existe garantia de receita.
+No revenue outcome is guaranteed.
 
-## Hook
+---
+
+# Hook
 
 > Kill enemies. Recycle the corpses. Turn them into your army.
 
-A mensagem precisa ser entendida em poucos segundos.
+The loop must be understood in seconds.
 
-## Diferenciação
+---
 
-O jogo não deve vender apenas "necromancer roguelite".
+# Product identity
 
-Precisa vender:
+Avoid reading as a generic necromancer roguelite.
 
-**industrial necromancy**.
+Primary differentiation:
+
+## Industrial Necromancy
 
 ```text
-Corpse
+Battlefield
+→ corpse supply
 → processing
-→ resource
-→ machinery
-→ undead production
-→ runaway factory
+→ resource streams
+→ production machines
+→ undead manufacturing
+→ runaway operation
 ```
 
-## Visual identity
+---
 
-Target oficial do projeto:
+# Visual target
 
-- battlefield central;
-- factory floor;
-- dark metal;
-- necromantic green;
+Official project concept:
+
+- central combat arena;
+- industrial skyline/factory;
+- machinery;
+- resource panel;
+- production floor;
+- metrics dashboard;
+- synergy dashboard;
+- green necromantic lighting;
 - bones;
-- industrial UI;
-- corporate horror;
-- dashboards;
-- machines;
-- strong silhouettes.
+- dark metal;
+- corporate horror.
 
-A interface conceitual existente pertence ao próprio projeto e pode ser seguida de perto.
+The concept image belongs to the project and may be adapted closely.
 
-## Road to market
+---
 
-### 1. Functional game
+# Marketable moments
 
-Concluído em v0.1.0:
+Good clips should show:
 
-- run;
-- win;
-- lose;
-- restart.
+```text
+1 Skeleton
+→ kill
+→ Corpse
+→ Bones/Flesh
+→ Skeleton + Zombie
+→ frontline grows
+→ synergy activates
+→ factory accelerates
+→ huge mixed army
+→ Boss AOE
+→ horde survives
+```
 
-### 2. Product differentiation
+---
 
-Próximo:
+# Development priorities before serious marketing
 
-- multiple resources;
-- multiple Undead;
+1. Build diversity.
+2. Factory identity.
+3. Representative final-ish UI.
+4. Better unit/enemy art.
+5. Good VFX/SFX.
+6. Strong trailer loop.
+7. Stable demo.
+
+---
+
+# Steam timing
+
+Create Coming Soon page when:
+
+- screenshots look representative;
+- hook is obvious;
+- visual quality is credible;
+- store assets are strong.
+
+Do not wait until 100% finished.
+
+---
+
+# Demo
+
+The demo needs to prove:
+
+- kill → corpse;
+- corpse → resources;
+- resources → different Undead;
+- build decisions;
+- synergy;
 - Factory;
-- meaningful build differences.
+- strong end-of-run escalation.
 
-### 3. Vertical Slice
+---
 
-Depois:
-
-- final-ish UI;
-- representative art;
-- VFX;
-- audio;
-- polished Boss;
-- onboarding.
-
-### 4. Steam page
-
-Quando screenshots/trailer já representarem qualidade comercial:
-
-- Coming Soon;
-- capsule;
-- trailer;
-- screenshots;
-- tags;
-- copy;
-- wishlists.
-
-### 5. Demo
-
-Demo precisa provar rapidamente:
-
-- Corpse loop;
-- army growth;
-- resource choice;
-- Factory;
-- build synergy.
-
-### 6. Public validation
-
-Medir:
+# Metrics to track
 
 - wishlists;
 - page conversion;
 - demo downloads;
 - demo completion;
 - second-run rate;
-- playtime;
+- median playtime;
 - creator interest;
 - qualitative feedback.
 
-### 7. Full production
+---
 
-Somente depois de ter sinais reais de que:
+# Channels
 
-- hook é entendido;
-- visual chama atenção;
-- demo retém;
-- builds geram conversa.
+Commercial-facing content should target players:
 
-## Marketing content
+- Steam;
+- YouTube;
+- Shorts;
+- TikTok;
+- Reddit;
+- X;
+- Discord;
+- creators;
+- genre communities.
 
-NecroWorks combina com conteúdo visual:
+LinkedIn is useful for portfolio/career, not primary game marketing.
 
-```text
-1 Skeleton
-→ 1 Corpse
-→ machine starts
-→ 10 Skeletons
-→ mixed undead
-→ synergy
-→ production explosion
-→ Boss disappears under the horde
-```
+---
 
-Conteúdo deve mirar jogadores, não apenas devs.
+# Risks right now
 
-## Scope discipline
+- placeholder visuals;
+- no Factory yet;
+- only Skeleton/Zombie;
+- Blood/Souls incomplete;
+- current balance provisional;
+- content depth still limited;
+- `main.gd` prototype architecture will eventually need modularization.
 
-Antes de feature:
+These risks explain roadmap order.
 
-> aumenta diversão, diferenciação, replayability, legibilidade, valor percebido ou marketing?
+---
 
-Se não, adiar/cortar.
+# Scope rule
 
-## Known commercial risks
+A feature should justify itself by improving at least one:
 
-- visual ainda placeholder;
-- gameplay late-game ainda pode ficar trivial;
-- Bones saturam;
-- Factory ainda não existe;
-- variedade de Undead ainda não existe;
-- conteúdo ainda estreito.
+- fun;
+- differentiation;
+- replayability;
+- clarity;
+- perceived value;
+- marketability;
+- retention;
+- quality.
 
-Esses riscos definem a ordem do roadmap.
-
-## Revenue mindset
-
-O objetivo é aumentar probabilidade:
-
-```text
-strong hook
-+ fun
-+ replayability
-+ distinct visual identity
-+ professional presentation
-+ early Steam page
-+ wishlists
-+ strong demo
-+ creators
-+ market feedback
-+ stable launch
-```
+Otherwise postpone/cut.

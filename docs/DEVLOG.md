@@ -1,44 +1,46 @@
 # NecroWorks — Devlog
 
-## 14/08/2026 — Combat Prototype
+## 14/08/2026 — Initial Combat
 
-Criado:
+Created:
 
 - Main;
 - Skeleton;
 - Enemy;
-- movement;
 - HP;
-- damage;
+- Damage;
 - cooldown;
 - auto combat.
 
-## 14–16/08/2026 — Corpse Loop
+---
 
-Adicionado:
+## 14–16/08/2026 — Corpse Economy
+
+Added:
 
 - Corpse;
 - Bones;
 - processing;
 - Skeleton production;
-- multiple Skeletons;
-- individual HP/cooldown;
-- Enemy respawn.
+- multiple Skeletons.
 
-Loop validado:
+Loop:
 
 ```text
 Enemy → Corpse → Bones → Skeleton
 ```
 
+---
+
 ## 16/08/2026 — Movement V1
 
-- Node2D;
-- dynamic placeholder visuals;
+- Node2D units;
 - target movement;
-- retarget;
 - combat slots;
+- dynamic placeholders;
 - debug HUD.
+
+---
 
 ## 17/08/2026 — Waves
 
@@ -47,35 +49,50 @@ Enemy → Corpse → Bones → Skeleton
 - Elite Waves;
 - Wave HUD.
 
-## 17/08/2026 — Upgrades
+---
 
-Primeiro 3, depois pool de 10.
+## 17/08/2026 — Upgrade System
 
-- random selection;
+Built pool of 10 upgrades.
+
+- 3 random choices;
 - stacking;
 - caps.
 
+---
+
 ## 17/08/2026 — Synergies
+
+Implemented:
 
 - Overclocked Ossuary;
 - Recycling Plant;
 - Second Shift;
 - Bone Assembly Line.
 
-Run Metrics adicionadas.
+Run Metrics added.
+
+---
 
 ## 17/08/2026 — Long Playtest
 
-Chegou à Wave 21.
+Reached Wave 21.
 
-Conclusão:
-sistemas estáveis, porém economia/poder muito generosos.
+Conclusion:
+
+- stable;
+- economy too generous;
+- horde snowballs heavily.
+
+Deep balance postponed.
+
+---
 
 ## 17/08/2026 — The Foreman
 
-Wave 20 virou Boss.
+Wave 20 became Boss.
 
-Adicionado:
+Added:
 
 - The Foreman;
 - 2200 HP;
@@ -84,51 +101,139 @@ Adicionado:
 
 ### Bug
 
-Boss podia sair da tela.
+Boss could leave screen.
 
 ### Fix
 
 - horizontal lane;
 - bounds;
-- compact combat formation.
+- compact formation;
+- horizontal attack distance.
 
-Fix validado.
+Validated.
 
-## 17–18/08/2026 — Run Ending
+---
 
-Adicionado:
+## 17–18/08/2026 — Run End
+
+Added:
 
 - Victory;
 - Run Summary;
 - Restart;
 - Corpse tracking;
-- formal Defeat;
+- Defeat;
 - Game Over;
-- Restart after defeat.
+- Restart after Defeat.
 
-## 18/08/2026 — First Complete Run
+Full run validated.
 
-A primeira run completa do estado normal foi testada com sucesso.
+`v0.1.0 — First Run` became functionally complete.
 
-`v0.1.0 — First Run` está funcionalmente completo.
+---
 
-### Decisão
+## 18/08/2026 — Visual Target Defined
 
-Não fazer balanceamento profundo ainda.
+A dedicated AI concept image created by the user became the official visual target for NecroWorks.
 
-A economia Skeleton-only será substituída/expandida em seguida. O próximo balance pass importante deve considerar múltiplos recursos e pelo menos Skeleton + Zombie.
+Direction:
 
-## Próximo trabalho
+- industrial dark fantasy;
+- central battlefield;
+- factory layer;
+- resources;
+- metrics;
+- synergies;
+- upgrade cards;
+- green necromantic accents;
+- heavy metal machinery.
 
-`v0.2.0 — Necromantic Economy`
+---
 
-Primeiro:
+## 18/08/2026 — Resource Foundation
 
-- resource foundation;
-- Flesh/Blood/Souls state;
-- Resource HUD.
+Added state:
 
-Logo depois:
+```text
+Bones
+Flesh
+Blood
+Souls
+```
 
-- Flesh processing;
-- Zombie.
+Corpse now gives:
+
+```text
+Bones + Flesh
+```
+
+Temporary Resource HUD added.
+
+### Bug
+
+Previous test accidentally left Skeleton at 10000 HP.
+
+Fix:
+
+```text
+Skeleton Max HP → 100
+```
+
+HUD overlap also fixed.
+
+Debug was reduced and moved behind `F3`.
+
+Validated.
+
+---
+
+## 18/08/2026 — Zombie V1
+
+First new Undead added.
+
+```text
+HP: 220
+Damage: 6
+Cooldown: 1.1
+Speed: 120
+Cost: 6 Flesh
+```
+
+Added:
+
+- Zombie production;
+- Zombie state;
+- Zombie HP;
+- Zombie attack;
+- Zombie death;
+- Zombie metrics;
+- frontline priority;
+- mixed Undead target selection;
+- Boss AOE compatibility;
+- Defeat compatibility;
+- Run Summary support.
+
+### Validation
+
+User confirmed everything functioning.
+
+This is the latest stable gameplay checkpoint.
+
+---
+
+## Next
+
+### Flesh Identity
+
+Recommended next block:
+
+- Zombie-specific upgrades;
+- first Flesh synergy;
+- test composition choice Skeleton vs Zombie.
+
+Then:
+
+- Blood sink;
+- Blood generation;
+- Soul/Ghost;
+- representative balance pass.

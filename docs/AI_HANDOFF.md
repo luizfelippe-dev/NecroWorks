@@ -1,64 +1,80 @@
 # NecroWorks — AI Handoff
 
-**Atualizado:** 18/08/2026
+**Atualizado em:** 18/08/2026  
+**Objetivo:** permitir continuar o projeto em outro chat sem perder decisões, estado técnico ou próximos passos.
 
-Este é o documento principal de continuidade do projeto.
+---
 
-# Identidade
+# 1. Identidade do jogo
 
-**NecroWorks**  
-**Industrial Reanimation Solutions**  
-**Waste Nothing. Raise Everything.**
+**Nome:** NecroWorks  
+**Descriptor:** Industrial Reanimation Solutions  
+**Slogan:** Waste Nothing. Raise Everything.
 
-# Produto
+High concept:
 
-Roguelite 2D de autobattler + estratégia + automação necromântica.
+> **Kill enemies. Recycle the corpses. Turn them into your army.**
 
-Core:
+Core loop:
 
 ```text
 Enemy
 → Corpse
-→ Resource
-→ Undead
-→ Army
-→ Wave
-→ Upgrade
-→ Synergy
-→ Boss
-→ Victory / Defeat
-→ Restart
+→ Processing
+→ Necromantic Resources
+→ Undead Production
+→ Army Growth
+→ Waves
+→ Upgrades
+→ Synergies
+→ Elites / Boss
+→ Victory ou Defeat
 ```
 
-# Tecnologia
+---
 
-- Godot 4.7.1
-- GDScript
+# 2. Tecnologia
+
+- Engine: Godot 4.7.1 stable
+- Language: GDScript
 - 2D
 - single-player
 - Windows primeiro
-- Steam planejada
+- Steam como plataforma comercial inicial
 - Git/GitHub
+- warnings tratados com rigor; preferir tipos explícitos
 
-# Estado de desenvolvimento
+### Estilo de trabalho
 
-## v0.1.0 — First Run
+O usuário prefere:
 
-**Funcionalmente completo e validado.**
+- arquivos completos para substituir;
+- passos exatos;
+- um milestone estável por vez;
+- evitar overengineering;
+- implementar → testar → corrigir → documentar → commit/push.
 
-Já existe:
+---
 
-- start de run;
-- Skeleton inicial;
-- Enemy;
+# 3. Estado atual do projeto
+
+## `v0.1.0 — First Run`
+
+Funcionalmente completo e validado.
+
+Possui:
+
 - combate automático;
-- Corpse;
+- Skeleton;
+- Enemy;
+- Corpses;
 - Bones;
-- Skeleton production;
+- produção de Skeletons;
+- múltiplos Skeletons;
 - Waves;
 - Elite Waves;
+- scaling;
 - upgrades;
-- random choices;
 - synergies;
 - Boss;
 - Victory;
@@ -66,78 +82,327 @@ Já existe:
 - Run Summary;
 - Restart.
 
-O próximo trabalho é `v0.2.0 — Necromantic Economy`.
+### Importante sobre Git
 
-Não realizar grande refatoração antes de existir necessidade concreta.
+O milestone `v0.1.0` está funcionalmente fechado.
 
-# Valores atuais importantes
+**Não assumir que a tag Git foi publicada.**
+
+Ao continuar em outro PC/chat, verificar:
+
+```powershell
+git status
+git tag
+git remote -v
+```
+
+Se necessário:
+
+```powershell
+git pull origin main
+```
+
+O remote historicamente foi `corpse-factory.git`; havia intenção de renomear para `necroworks.git`. Confirmar no GitHub antes de alterar `origin`.
+
+---
+
+# 4. Milestone atual — v0.2.0 Necromantic Economy
+
+## Resource Foundation — validado
+
+Estados atuais:
 
 ```gdscript
-var skeleton_max_hp: int = 100
-var skeleton_damage: int = 10
-var skeleton_attack_cooldown: float = 0.7
-var skeleton_speed: float = 180.0
-
 var bones: int = 0
-var bones_per_corpse: int = 8
-var skeleton_cost: int = 5
+var flesh: int = 0
+var blood: int = 0
+var souls: int = 0
+```
+
+Economia atual:
+
+```text
+Corpse
+→ +8 Bones
+→ +2 Flesh
+```
+
+Blood e Souls existem no estado, mas permanecem em 0.
+
+HUD atual:
+
+```text
+RESOURCES
+BONES: X
+FLESH: X
+BLOOD: X
+SOULS: X
+```
+
+Produção:
+
+```text
+CREATE SKELETON
+5 BONES
+
+CREATE ZOMBIE
+6 FLESH
+```
+
+Debug:
+
+- oculto por padrão;
+- `F3` mostra/esconde;
+- compacto;
+- não repetir métricas/recursos desnecessariamente.
+
+---
+
+# 5. Undead atuais
+
+## Skeleton
+
+```text
+HP: 100
+Damage: 10
+Attack Cooldown: 0.7
+Speed: 180
+Cost: 5 Bones
+Role: DPS / unidade base
+Placeholder: branco
+```
+
+## Zombie V1 — IMPLEMENTADO E VALIDADO
+
+```text
+HP: 220
+Damage: 6
+Attack Cooldown: 1.1
+Speed: 120
+Cost: 6 Flesh
+Role: Tank / Frontline
+Placeholder: verde
+```
+
+Zombie:
+
+- usa Flesh;
+- possui array/state próprios;
+- possui HP próprio;
+- possui attack timer próprio;
+- possui slot próprio;
+- conta em Run Metrics;
+- morre e libera slot;
+- Enemy pode atacá-lo;
+- The Foreman pode acertá-lo;
+- possui prioridade de frontline.
+
+### Estado de formação mista
+
+Conceito atual:
+
+```text
+Enemy →
+
+Zombies       ← frontline
+Skeletons     ← atrás
+```
+
+A formação é abstrata; Skeleton ainda pode atacar ao chegar ao seu combat slot.
+
+Não refinar melee/ranged ainda, a menos que esteja bloqueando o próximo sistema.
+
+---
+
+# 6. Estrutura de estado atual
+
+### Skeleton
+
+```text
+skeletons
+skeleton_hps
+skeleton_attack_timers
+skeleton_slots
+```
+
+### Zombie
+
+```text
+zombies
+zombie_hps
+zombie_attack_timers
+zombie_slots
+```
+
+### Shared slots
+
+```text
+occupied_skeleton_slots
+```
+
+O nome do dicionário ainda é legado de Skeleton-only.
+
+### Corpses
+
+```gdscript
+var corpses: Array[Button] = []
+```
+
+---
+
+# 7. Generic Undead layer já iniciada
+
+O código atual possui helpers de exército misto:
+
+```text
+get_total_undead_count()
+get_all_undead_units()
+get_closest_undead_to_enemy()
+damage_undead()
+```
+
+Isso foi o primeiro passo para não manter o Enemy preso ao conceito de Skeleton.
+
+Próximo refactor arquitetural deve continuar nessa direção.
+
+Não fazer big rewrite de `main.gd`.
+
+---
+
+# 8. Enemy movement / combat fix importante
+
+Bug histórico:
+
+- The Foreman saía da tela;
+- Skeletons podiam ser arrastados junto.
+
+Causa:
+
+```text
+Enemy persegue Skeleton
++
+Skeleton combat target depende da posição do Enemy
+→ feedback de movimento
+→ ambos saem da arena
+```
+
+Correção validada:
+
+- Enemy/Boss usa lane horizontal;
+- Y controlado;
+- X limitado;
+- distância de ataque horizontal;
+- formação compactável;
+- posições de combate limitadas.
+
+Não remover esse comportamento sem substituir por uma solução igualmente estável.
+
+---
+
+# 9. Waves
+
+Valores atuais conhecidos:
+
+```gdscript
+const BASE_ENEMIES_PER_WAVE: int = 5
+const ENEMIES_PER_WAVE_GROWTH: int = 1
 
 const BASE_ENEMY_HP: int = 100
 const ENEMY_HP_GROWTH: int = 20
 
 const BASE_ENEMY_DAMAGE: int = 7
 const ENEMY_DAMAGE_GROWTH: int = 1
+
+const ELITE_WAVE_INTERVAL: int = 5
 ```
 
-Esses valores são provisórios.
+Elite:
 
-# Waves
+- a cada 5 Waves;
+- Wave 20 não é Elite porque é Boss.
 
-- Wave inicial: 1.
-- base enemies: 5.
-- +1 Enemy por Wave.
-- Elite a cada 5 Waves, exceto Wave 20.
-- Wave 20 = Boss.
+---
 
-# The Foreman
+# 10. The Foreman
+
+Wave 20.
 
 ```text
-Wave: 20
 HP: 2200
 Damage: 28
-Industrial Crush:
-- ~4 s
-- até 6 Skeletons
-- 35 dano/alvo
+Size: 140x140
+Color: purple/dark
 ```
 
-Boss usa lane horizontal controlada.
+Industrial Crush:
 
-Bug já corrigido:
-Boss podia sair da tela devido ao feedback entre perseguição e formação.
+```text
+Interval: ~4 s
+Targets: até 6 Undead
+Damage: 35 por alvo
+```
 
-Correção:
+Boss AOE usa a camada genérica de Undead e pode atingir Skeleton/Zombie.
 
-- Y fixo de combate;
-- limites de X;
-- ataque baseado em distância horizontal;
-- posições de combate limitadas;
-- compactação dos slots de combate após mortes.
+Boss defeat:
 
-# Game Over
+```text
+finish_run(true)
+```
 
-Derrota somente quando:
+---
+
+# 11. Game Over
+
+A derrota não é simplesmente `army == 0`.
+
+A run deve continuar se ainda for possível reconstruir.
+
+Condição atual:
 
 ```text
 Wave ativa
-AND Skeletons == 0
+AND total Undead == 0
 AND Corpses == 0
 AND Bones < Skeleton Cost
+AND Flesh < Zombie Cost
+→ Defeat
 ```
 
-Isso permite recuperação se houver Corpse ou recursos suficientes.
+Isso permite recuperação com:
 
-# Upgrades
+- Corpse;
+- Bones;
+- Flesh.
+
+---
+
+# 12. Run Metrics
+
+Atuais:
+
+```text
+Enemies Killed
+Corpses Processed
+
+Skeletons Built
+Skeletons Lost
+Skeletons Revived
+
+Zombies Built
+Zombies Lost
+
+Bones Earned
+Flesh Earned
+
+Army Remaining
+Upgrades
+Synergies
+```
+
+---
+
+# 13. Upgrades atuais
 
 1. Sharpened Bones
 2. Bone Plating
@@ -150,103 +415,293 @@ Isso permite recuperação se houver Corpse ou recursos suficientes.
 9. Reassembly
 10. Final Service
 
-Três aparecem por Wave.
+Problema atual:
 
-# Synergies
+**quase todos foram desenhados na era Skeleton-only.**
 
-- Recycling Plant
-- Second Shift
-- Bone Assembly Line
-- Overclocked Ossuary
+Não aplicar automaticamente os mesmos bônus ao Zombie sem decisão de design.
 
-# Métricas
+A próxima fase deve começar a introduzir identidade própria de Flesh/Zombie.
 
-- Enemies Killed
-- Corpses Processed
-- Skeletons Built
-- Skeletons Lost
-- Skeletons Revived
-- Bones Earned
-- upgrades
-- synergies
+---
 
-# Estado de balanceamento
+# 14. Synergies atuais
 
-Não está final.
+## Overclocked Ossuary
 
-Problemas observados:
+Heavy Bones + Rapid Assault
 
-- Army cresce cedo demais.
-- Bones podem acumular em excesso.
-- 30+ Skeletons trituram Enemies sequenciais.
-- Enemy comum ataca apenas um alvo e perde pressão em late game.
-- upgrades de dano/attack speed podem multiplicar o problema.
+- chance de Double Strike.
 
-Decisão do projeto em 18/08/2026:
-**não fazer o balance pass profundo ainda.**
+## Recycling Plant
 
-Primeiro inserir a base da economia multi-resource e pelo menos um novo Undead; depois balancear o sistema representativo do jogo final.
+Efficient Recycling + Bone Harvest
 
-# Próxima tarefa imediata
+- dobra bônus de Bone Harvest.
 
-## v0.2.0 — Necromantic Economy, Phase A
+## Second Shift
 
-Objetivo:
+Reassembly + Final Service
 
-- introduzir resource state para:
-  - Bones;
-  - Flesh;
-  - Blood;
-  - Souls;
-- criar HUD de recursos compatível com a direção visual futura;
-- preservar Bones/Skeleton funcional;
-- preparar Corpse processing para múltiplos outputs;
-- em seguida implementar o primeiro novo Undead: Zombie.
+- Reassembly causa parte do Final Service.
 
-Evitar adicionar Flesh/Blood/Souls como números sem propósito durante muitas etapas. A intenção é fazer o primeiro novo recurso ganhar um sink rapidamente.
+## Bone Assembly Line
 
-# Direção visual oficial
+Mass Production + Efficient Recycling
 
-Foi definido um target visual próprio do projeto:
+- chance de Skeleton grátis ao processar Corpse.
 
-- battlefield central;
-- HUD superior para Wave/Boss;
-- painel de recursos à esquerda;
-- Run Metrics e Active Synergies à direita;
-- Factory/production na faixa inferior;
-- cards de upgrade na parte inferior/contextual;
-- estética dark fantasy industrial;
+Unlock validado.
+
+---
+
+# 15. Balanceamento
+
+## Decisão atual
+
+O usuário pediu para **balancear de verdade depois**, não agora.
+
+Motivo:
+
+- sistema acabou de ganhar Zombie;
+- Blood/Souls ainda não possuem gameplay;
+- economia ainda vai mudar;
+- balancear Skeleton-only profundamente seria retrabalho.
+
+Problemas conhecidos:
+
+- Bones podem saturar;
+- Army cresce cedo;
+- normal Enemies perdem pressão;
+- upgrades de Skeleton podem snowball;
+- late game precisa de mais formas de ameaçar hordas.
+
+Pode corrigir números somente se houver:
+
+- softlock;
+- exploit absurdo que impede testar;
+- bug de flow;
+- unidade completamente inútil.
+
+---
+
+# 16. Direção visual oficial
+
+A imagem conceitual criada pelo próprio usuário é o target visual oficial.
+
+Estrutura desejada:
+
+```text
+┌──────────────────────────────────────────────────────┐
+│ Logo          Wave / Boss             Run Metrics   │
+│                                      Synergies      │
+│                                                      │
+│               BATTLEFIELD                            │
+│                                                      │
+├──────────────────────────────────────────────────────┤
+│ Corpse Processing / Resources / Undead Production    │
+├──────────────────────────────────────────────────────┤
+│ Resources    Upgrade Cards         Synergy Details   │
+└──────────────────────────────────────────────────────┘
+```
+
+Visual:
+
+- dark fantasy industrial;
+- corporate necromancy;
 - metal escuro;
 - verde necromântico;
-- osso;
-- equipamentos/máquinas;
-- branding corporativo macabro.
+- ossos;
+- máquinas;
+- esteiras;
+- painéis;
+- fábrica ao fundo.
 
-Usar essa referência nas novas decisões de UI.
+Não parar o desenvolvimento inteiro para reproduzir a UI final agora.
 
-# Próximos milestones
+Novos sistemas devem apenas evitar decisões que contradigam essa estrutura.
+
+---
+
+# 17. Próxima tarefa recomendada
+
+## v0.2.0 — Flesh Identity / Zombie Build
+
+Zombie V1 está funcionando.
+
+Próximo objetivo:
+fazer Flesh/Zombie deixar de ser apenas "outra moeda + unidade tank".
+
+Ordem recomendada:
+
+### Phase 1 — Zombie-specific upgrades
+
+Adicionar 3–5 opções iniciais, por exemplo:
 
 ```text
-v0.2.0 Necromantic Economy
-v0.3.0 Factory / Automation
-v0.4.0 Build Diversity & Content
-v0.5.0 Meta Progression
-v0.6.0 Vertical Slice
-v0.7.0 Steam Demo / Market Validation
-v0.8.0 Alpha
-v0.9.0 Beta / RC
-v1.0.0 Steam Launch
+Rotten Bulk
+→ Zombie Max HP +
+
+Grave Hunger
+→ Zombie Damage +
+
+Dead Weight
+→ mais HP, menos Speed
+
+Carrion Recovery
+→ Zombie recupera HP em condição específica
 ```
 
-# Workflow
+Os nomes/valores ainda podem mudar.
+
+### Phase 2 — Flesh synergy
+
+Criar pelo menos uma sinergia Flesh/Zombie.
+
+### Phase 3 — Blood
+
+Só depois dar geração real ao Blood e um sink concreto.
+
+### Phase 4 — Souls/Ghost
+
+Depois:
 
 ```text
-implementar
-→ testar
-→ corrigir
-→ documentar
-→ commit
-→ push
+Souls → Ghost
 ```
 
-User prefere arquivos completos para substituir, não snippets.
+Ghost deve introduzir comportamento ranged/magic.
+
+---
+
+# 18. Arquitetura — próxima melhoria
+
+O maior risco futuro é continuar crescendo:
+
+```text
+skeletons
+zombies
+ghosts
+abominations
+...
+```
+
+com duplicação de toda função.
+
+Direção:
+
+```text
+Undead Unit
+├── type
+├── hp
+├── max_hp
+├── damage
+├── cooldown
+├── speed
+├── slot
+└── tags
+```
+
+Porém:
+
+**não fazer essa refatoração inteira agora.**
+
+Fazer incrementalmente quando Ghost ou terceiro tipo tornar a duplicação realmente cara.
+
+---
+
+# 19. Comercial
+
+Objetivo:
+maximizar probabilidade de sucesso comercial na Steam.
+
+Não existe garantia de receita.
+
+Hook:
+
+```text
+Kill
+→ Recycle
+→ Manufacture
+→ Swarm
+```
+
+A diferença visual/comercial precisa ser:
+
+**industrial necromancy**, não somente "skeleton roguelite".
+
+Antes de marketing forte:
+
+- build diversity;
+- Factory;
+- representative visuals;
+- readable UI;
+- satisfying corpse-to-production loop.
+
+---
+
+# 20. Roadmap macro
+
+```text
+v0.1.0  First Run                    ← funcionalmente concluído
+v0.2.0  Necromantic Economy          ← AGORA
+v0.3.0  Factory / Automation
+v0.4.0  Build Diversity & Content
+v0.5.0  Meta Progression
+v0.6.0  Vertical Slice
+v0.7.0  Steam Demo / Market Validation
+v0.8.0  Alpha
+v0.9.0  Beta / Release Candidate
+v1.0.0  Steam Launch
+```
+
+---
+
+# 21. Git / continuidade
+
+Antes de trabalhar:
+
+```powershell
+git status
+git pull origin main
+```
+
+Depois de um bloco estável:
+
+```powershell
+git add .
+git commit -m "..."
+git push origin main
+```
+
+Após atualizar estes docs, um commit apropriado seria algo como:
+
+```powershell
+git add .
+git commit -m "feat: add flesh economy and zombie unit"
+git push origin main
+```
+
+Antes disso, verificar se existem alterações locais não relacionadas.
+
+---
+
+# 22. Baseline atual para próximo chat
+
+O arquivo funcional validado pelo usuário equivale à versão:
+
+```text
+main_necroworks_v0_2_zombie_v1.gd
+```
+
+No projeto real, ele deve estar salvo como:
+
+```text
+main.gd
+```
+
+Último teste confirmado pelo usuário:
+
+> Resource Foundation funcionando e Zombie V1 funcionando.
+
+Próxima conversa deve começar daqui, não da versão Skeleton-only.

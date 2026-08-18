@@ -3,9 +3,13 @@
 > **Industrial Reanimation Solutions**  
 > **Waste Nothing. Raise Everything.**
 
-**NecroWorks** é um roguelite 2D de autobattler, estratégia, automação e progressão incremental, desenvolvido em **Godot 4.7.1** com **GDScript**.
+**NecroWorks** é um roguelite 2D de autobattler, estratégia, economia e automação necromântica desenvolvido em **Godot 4.7.1** com **GDScript**.
 
-A fantasia central é transformar o campo de batalha em uma linha de produção necromântica:
+## High concept
+
+> **Kill enemies. Recycle the corpses. Turn them into your army.**
+
+Loop central:
 
 ```text
 Enemy
@@ -13,45 +17,95 @@ Enemy
 → Processing
 → Resources
 → Undead
-→ Bigger Army
+→ Army Growth
 → Upgrades
 → Synergies
 → Elites / Boss
 → Victory ou Defeat
 ```
 
-## Estado do projeto
+## Estado atual
 
-**Milestone funcional atual:** `v0.1.0 — First Run`  
-**Status:** funcionalmente completo e validado em playtest.  
-**Próxima fase:** `v0.2.0 — Necromantic Economy`.
+### `v0.1.0 — First Run`
 
-> O balanceamento atual ainda não é definitivo. Um balance pass completo será feito depois que a economia multi-resource e os primeiros novos Undead estiverem representados, para evitar balancear um sistema que logo mudará de forma significativa.
-
-## O que já existe
+Funcionalmente completo e validado:
 
 - combate automático;
-- movimentação por alvo;
-- formação compactável;
-- Skeletons com HP/cooldown individuais;
-- Enemy respawn;
 - Corpses;
 - Bones;
-- criação de Skeleton;
+- Skeleton production;
 - Waves;
 - Elite Waves;
 - 10 upgrades;
-- escolha de 3 upgrades aleatórios;
 - 4 sinergias;
-- métricas de run;
+- Run Metrics;
 - Boss Wave 20;
 - The Foreman;
-- ataque AOE `Industrial Crush`;
 - Victory;
-- Game Over;
+- Defeat;
 - Run Summary;
-- Restart após vitória ou derrota;
-- primeira run completa validada do início ao fim.
+- Restart.
+
+> O status exato da tag Git `v0.1.0` deve ser verificado com `git tag`. A documentação confirma o milestone funcional, não presume que a tag já foi publicada.
+
+### `v0.2.0 — Necromantic Economy`
+
+Em desenvolvimento e já validado parcialmente:
+
+- resource foundation com Bones, Flesh, Blood e Souls;
+- Corpse processado gera Bones + Flesh;
+- HUD temporário de Resources;
+- Debug oculto por padrão e alternável com `F3`;
+- Zombie V1 implementado e testado;
+- Enemy/Boss atacam Skeletons e Zombies;
+- Zombies priorizados na frontline;
+- Game Over considera Bones, Flesh, Skeletons, Zombies e Corpses.
+
+## Economia atual
+
+```text
+CORPSE
+├── + Bones
+└── + Flesh
+```
+
+Valores atuais:
+
+```text
+Bones per Corpse: 8
+Flesh per Corpse: 2
+
+Skeleton Cost: 5 Bones
+Zombie Cost: 6 Flesh
+```
+
+Blood e Souls já existem no estado do jogo, mas ainda não possuem geração/sink próprios.
+
+## Undead atuais
+
+### Skeleton
+
+```text
+HP: 100
+Damage: 10
+Attack Cooldown: 0.7 s
+Movement Speed: 180
+Cost: 5 Bones
+Role: DPS / unidade base
+```
+
+### Zombie V1
+
+```text
+HP: 220
+Damage: 6
+Attack Cooldown: 1.1 s
+Movement Speed: 120
+Cost: 6 Flesh
+Role: Tank / Frontline
+```
+
+O Zombie usa placeholder verde no protótipo.
 
 ## Boss atual
 
@@ -59,70 +113,68 @@ Enemy
 
 Wave 20.
 
-- 1 Boss;
-- 2200 HP;
-- 28 Damage;
-- visual maior/roxo no protótipo;
-- `Industrial Crush` aproximadamente a cada 4 s;
-- atinge até 6 Skeletons;
-- 35 de dano por alvo;
-- derrota encerra a run com Victory.
+```text
+HP: 2200
+Damage: 28
+Industrial Crush:
+- aproximadamente a cada 4 s
+- até 6 Undead
+- 35 damage por alvo
+```
+
+Derrotá-lo encerra a run com Victory.
 
 ## Upgrades atuais
 
-| Upgrade | Efeito |
-|---|---|
-| Sharpened Bones | +25% Skeleton Damage |
-| Bone Plating | +25 Skeleton Max HP |
-| Efficient Recycling | +2 Bones/Corpse |
-| Rapid Assault | +15% Attack Speed |
-| Death March | +20% Movement Speed |
-| Mass Production | -1 Bone no custo de Skeleton |
-| Heavy Bones | +50% Damage, -20% Attack Speed |
-| Bone Harvest | chance de Bones extras |
-| Reassembly | chance de Skeleton reviver |
-| Final Service | dano ao Enemy quando Skeleton morre |
+1. Sharpened Bones
+2. Bone Plating
+3. Efficient Recycling
+4. Rapid Assault
+5. Death March
+6. Mass Production
+7. Heavy Bones
+8. Bone Harvest
+9. Reassembly
+10. Final Service
 
-## Sinergias atuais
+## Synergies atuais
 
-| Sinergia | Requisitos | Efeito |
-|---|---|---|
-| Recycling Plant | Efficient Recycling + Bone Harvest | dobra o bônus de Bone Harvest |
-| Second Shift | Reassembly + Final Service | revive também causa parte do Final Service |
-| Bone Assembly Line | Mass Production + Efficient Recycling | chance de produzir Skeleton grátis |
-| Overclocked Ossuary | Heavy Bones + Rapid Assault | chance de Double Strike |
-
-## Stack
-
-- Godot 4.7.1
-- GDScript
-- 2D
-- Windows
-- single-player
-- Steam como plataforma comercial inicial
-- Git + GitHub
+- Recycling Plant
+- Second Shift
+- Bone Assembly Line
+- Overclocked Ossuary
 
 ## Direção visual oficial
 
-A referência visual definida para NecroWorks é uma interface dark-fantasy industrial/corporativa criada para o próprio projeto.
+A interface conceitual criada para o próprio NecroWorks é o target visual principal.
 
-Estrutura desejada:
+Estrutura:
 
 - battlefield central;
 - Wave/Boss no topo;
-- recursos na lateral;
+- recursos à esquerda;
 - Run Metrics e Active Synergies à direita;
-- área de produção/fábrica na parte inferior;
-- cards de upgrade contextuais;
+- fábrica/produção na faixa inferior;
+- cards de upgrade contextuais na parte inferior;
 - metal escuro;
 - verde necromântico;
 - ossos;
-- máquinas;
-- sinalização industrial/corporativa.
+- maquinário industrial;
+- horror corporativo.
 
-Durante o protótipo, placeholders continuam aceitáveis. A migração visual será incremental.
+O protótipo ainda usa placeholders, mas novos sistemas devem respeitar essa direção.
 
-## Desenvolvimento
+## Stack
+
+- Godot 4.7.1 stable
+- GDScript
+- 2D
+- single-player
+- Windows primeiro
+- Steam como plataforma comercial inicial
+- Git + GitHub
+
+## Workflow
 
 ```text
 implementar
@@ -130,7 +182,8 @@ implementar
 → corrigir
 → documentar
 → commit
+→ push
 → próxima funcionalidade
 ```
 
-Consulte `docs/ROADMAP.md` e `docs/AI_HANDOFF.md`.
+Consulte `docs/AI_HANDOFF.md` antes de continuar o desenvolvimento em outro chat.

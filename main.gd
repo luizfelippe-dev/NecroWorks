@@ -11,6 +11,8 @@ extends Node2D
 @onready var bones_label: Label = $BonesLabel
 @onready var create_skeleton_button: Button = $CreateSkeletonButton
 
+var create_zombie_button: Button = null
+
 
 # =========================================================
 # CENAS
@@ -22,10 +24,225 @@ var enemy_scene: PackedScene = preload("res://enemy.tscn")
 
 
 # =========================================================
+# ZOMBIE
+# =========================================================
+
+func create_zombie() -> void:
+
+	if run_finished:
+		return
+
+
+	if flesh < zombie_cost:
+
+		print(
+			"FLESH INSUFICIENTE!"
+		)
+
+		return
+
+
+	var free_slot: int = (
+		get_free_skeleton_slot()
+	)
+
+
+	if free_slot == -1:
+
+		print(
+			"LIMITE DE UNDEAD ATINGIDO!"
+		)
+
+		return
+
+
+	var zombie_node: Node = (
+		skeleton_scene.instantiate()
+	)
+
+
+	var new_zombie: Node2D = (
+		zombie_node as Node2D
+	)
+
+
+	if new_zombie == null:
+
+		push_error(
+			"Placeholder de Zombie precisa de Node2D."
+		)
+
+		zombie_node.queue_free()
+
+		return
+
+
+	flesh -= zombie_cost
+
+
+	add_child(
+		new_zombie
+	)
+
+
+	ensure_unit_visual(
+		new_zombie,
+		ZOMBIE_COLOR
+	)
+
+
+	register_zombie(
+		new_zombie,
+		free_slot
+	)
+
+
+	total_zombies_created += 1
+
+
+	update_bones_ui()
+	update_debug_ui()
+
+
+	print(
+		"NOVO ZOMBIE CRIADO!"
+	)
+
+	print(
+		"HP: ",
+		zombie_max_hp,
+		" | DMG: ",
+		zombie_damage,
+		" | COST: ",
+		zombie_cost,
+		" FLESH"
+	)
+
+
+func register_zombie(
+	new_zombie: Node2D,
+	slot: int
+) -> void:
+
+	zombies.append(
+		new_zombie
+	)
+
+
+	zombie_hps[
+		new_zombie
+	] = zombie_max_hp
+
+
+	zombie_attack_timers[
+		new_zombie
+	] = 0.0
+
+
+	zombie_slots[
+		new_zombie
+	] = slot
+
+
+	occupied_skeleton_slots[
+		slot
+	] = true
+
+
+	new_zombie.position = (
+		get_spawn_position(
+			slot
+		)
+	)
+
+
+	print(
+		"ZOMBIE REGISTRADO! | SLOT: ",
+		slot
+	)
+
+
+func zombie_attack_enemy(
+	attacking_zombie: Node2D
+) -> void:
+
+	if not is_instance_valid(enemy):
+		return
+
+
+	enemy_hp -= zombie_damage
+
+
+	zombie_attack_timers[
+		attacking_zombie
+	] = zombie_attack_cooldown
+
+
+	print(
+		"ZOMBIE ATACOU! | Enemy HP: ",
+		enemy_hp,
+		" | Zombies vivos: ",
+		zombies.size()
+	)
+
+
+func kill_zombie(
+	target: Node2D
+) -> void:
+
+	print(
+		"ZOMBIE MORREU!"
+	)
+
+
+	total_zombies_lost += 1
+
+
+	if zombie_slots.has(target):
+
+		var freed_slot: int = int(
+			zombie_slots[target]
+		)
+
+
+		occupied_skeleton_slots.erase(
+			freed_slot
+		)
+
+
+		zombie_slots.erase(
+			target
+		)
+
+
+	zombie_hps.erase(
+		target
+	)
+
+
+	zombie_attack_timers.erase(
+		target
+	)
+
+
+	zombies.erase(
+		target
+	)
+
+
+	target.queue_free()
+
+
+	update_bones_ui()
+	update_debug_ui()
+
+
+# =========================================================
 # VISUAL TEMPORÁRIO
 # =========================================================
 
 const SKELETON_COLOR: Color = Color.WHITE
+const ZOMBIE_COLOR: Color = Color(0.35, 0.65, 0.25, 1.0)
 const ENEMY_COLOR: Color = Color.RED
 const ELITE_ENEMY_COLOR: Color = Color(0.55, 0.05, 0.15, 1.0)
 
@@ -37,6 +254,7 @@ const UNIT_SIZE: float = 70.0
 # =========================================================
 
 var skeleton_speed: float = 180.0
+var zombie_speed: float = 120.0
 var enemy_speed: float = 100.0
 
 
@@ -45,6 +263,7 @@ var enemy_speed: float = 100.0
 # =========================================================
 
 var skeleton_max_hp: int = 100
+var zombie_max_hp: int = 220
 
 var enemy_max_hp: int = 100
 var enemy_hp: int = 100
@@ -55,6 +274,7 @@ var enemy_hp: int = 100
 # =========================================================
 
 var skeleton_damage: int = 10
+var zombie_damage: int = 6
 var enemy_damage: int = 8
 
 
@@ -63,6 +283,7 @@ var enemy_damage: int = 8
 # =========================================================
 
 var skeleton_attack_cooldown: float = 0.7
+var zombie_attack_cooldown: float = 1.1
 var enemy_attack_cooldown: float = 0.7
 
 var enemy_attack_timer: float = 0.0
@@ -83,9 +304,15 @@ var combat_position_tolerance: float = 15.0
 # Se quiser acelerar um teste manual, pode colocar 100
 # temporariamente e voltar para 0 antes do commit.
 var bones: int = 0
+var flesh: int = 0
+var blood: int = 0
+var souls: int = 0
 
 var bones_per_corpse: int = 8
+var flesh_per_corpse: int = 2
+
 var skeleton_cost: int = 5
+var zombie_cost: int = 6
 
 
 # =========================================================
@@ -113,6 +340,34 @@ const SKELETON_COMBAT_MAX_Y: float = 810.0
 
 # Dentro da mesma Wave o próximo Enemy aparece rápido.
 var enemy_spawn_delay: float = 0.5
+
+
+# =========================================================
+# DEBUG INPUT
+# =========================================================
+
+func _unhandled_input(
+	event: InputEvent
+) -> void:
+
+	if event is InputEventKey:
+
+		var key_event: InputEventKey = (
+			event as InputEventKey
+		)
+
+
+		if (
+			key_event.pressed
+			and not key_event.echo
+			and key_event.keycode == KEY_F3
+		):
+
+			if debug_label != null:
+
+				debug_label.visible = (
+					not debug_label.visible
+				)
 
 
 # =========================================================
@@ -248,7 +503,11 @@ var total_corpses_processed: int = 0
 var total_skeletons_created: int = 0
 var total_skeletons_lost: int = 0
 var total_skeletons_revived: int = 0
+
+var total_zombies_created: int = 0
+var total_zombies_lost: int = 0
 var total_bones_earned: int = 0
+var total_flesh_earned: int = 0
 
 
 # =========================================================
@@ -256,13 +515,18 @@ var total_bones_earned: int = 0
 # =========================================================
 
 var skeletons: Array[Node2D] = []
+var zombies: Array[Node2D] = []
 var corpses: Array[Button] = []
 
 var skeleton_hps: Dictionary = {}
 var skeleton_attack_timers: Dictionary = {}
 
-# Skeleton -> slot
+var zombie_hps: Dictionary = {}
+var zombie_attack_timers: Dictionary = {}
+
+# Unit -> slot
 var skeleton_slots: Dictionary = {}
+var zombie_slots: Dictionary = {}
 
 # Slot -> ocupado
 var occupied_skeleton_slots: Dictionary = {}
@@ -328,6 +592,8 @@ var wave_label: Label = null
 
 func _ready() -> void:
 
+	create_zombie_ui()
+	configure_primary_hud_layout()
 	create_debug_hud()
 	create_wave_hud()
 	create_upgrade_ui()
@@ -356,6 +622,11 @@ func _ready() -> void:
 
 	create_skeleton_button.pressed.connect(
 		create_skeleton
+	)
+
+
+	create_zombie_button.pressed.connect(
+		create_zombie
 	)
 
 
@@ -394,13 +665,11 @@ func _process(delta: float) -> void:
 		return
 
 
-	# Estamos entre um Enemy e outro ou entre Waves.
 	if not is_instance_valid(enemy):
 		return
 
 
-	# Sem exército, o Enemy fica esperando.
-	if skeletons.is_empty():
+	if get_total_undead_count() <= 0:
 		return
 
 
@@ -424,7 +693,7 @@ func _process(delta: float) -> void:
 
 		if (
 			boss_special_attack_timer <= 0.0
-			and not skeletons.is_empty()
+			and get_total_undead_count() > 0
 		):
 
 			boss_special_attack()
@@ -440,7 +709,7 @@ func _process(delta: float) -> void:
 			continue
 
 
-		var timer: float = float(
+		var skeleton_timer: float = float(
 			skeleton_attack_timers.get(
 				current_skeleton,
 				0.0
@@ -448,48 +717,69 @@ func _process(delta: float) -> void:
 		)
 
 
-		timer = maxf(
-			timer - delta,
+		skeleton_timer = maxf(
+			skeleton_timer - delta,
 			0.0
 		)
 
 
 		skeleton_attack_timers[
 			current_skeleton
-		] = timer
+		] = skeleton_timer
+
+
+	for current_zombie: Node2D in zombies:
+
+		if not is_instance_valid(current_zombie):
+			continue
+
+
+		var zombie_timer: float = float(
+			zombie_attack_timers.get(
+				current_zombie,
+				0.0
+			)
+		)
+
+
+		zombie_timer = maxf(
+			zombie_timer - delta,
+			0.0
+		)
+
+
+		zombie_attack_timers[
+			current_zombie
+		] = zombie_timer
 
 
 	# =====================================================
-	# ENEMY PERSEGUE O SKELETON MAIS PRÓXIMO
+	# ENEMY PERSEGUE O UNDEAD MAIS PRÓXIMO
 	# =====================================================
 
-	var closest_skeleton: Node2D = (
-		get_closest_skeleton_to_enemy()
+	var closest_undead: Node2D = (
+		get_closest_undead_to_enemy()
 	)
 
 
-	if closest_skeleton == null:
+	if closest_undead == null:
 		return
 
 
-	var distance_to_skeleton: float = absf(
+	var distance_to_undead: float = absf(
 		enemy.position.x
-		- closest_skeleton.position.x
+		- closest_undead.position.x
 	)
 
 
-	# Enemy/Boss luta em uma lane horizontal.
-	# Não perseguimos o Y do Skeleton porque a formação também
-	# depende da posição do Enemy. Perseguir nos dois eixos criava
-	# um feedback em que os dois lados podiam sair da tela.
 	enemy.position.y = ENEMY_LANE_Y
 
 
-	if distance_to_skeleton > enemy_attack_range:
+	if distance_to_undead > enemy_attack_range:
 
 		var next_enemy_x: float = move_toward(
 			enemy.position.x,
-			closest_skeleton.position.x,
+			closest_undead.position.x,
 			enemy_speed * delta
 		)
 
@@ -507,8 +797,10 @@ func _process(delta: float) -> void:
 
 		if enemy_attack_timer <= 0.0:
 
-			damage_skeleton(
-				closest_skeleton
+			damage_undead(
+				closest_undead,
+				enemy_damage,
+				"ENEMY"
 			)
 
 			enemy_attack_timer = (
@@ -516,13 +808,12 @@ func _process(delta: float) -> void:
 			)
 
 
-	# Enemy pode ter matado o último Skeleton.
-	if skeletons.is_empty():
+	if get_total_undead_count() <= 0:
 		return
 
 
 	# =====================================================
-	# SKELETONS BUSCAM POSIÇÃO DE COMBATE
+	# SKELETON COMBAT
 	# =====================================================
 
 	for current_skeleton: Node2D in skeletons:
@@ -537,32 +828,32 @@ func _process(delta: float) -> void:
 			continue
 
 
-		var slot: int = int(
+		var skeleton_slot: int = int(
 			skeleton_slots[
 				current_skeleton
 			]
 		)
 
 
-		var combat_target: Vector2 = (
+		var skeleton_target: Vector2 = (
 			get_combat_target_position(
-				slot
+				skeleton_slot
 			)
 		)
 
 
-		var distance_to_target: float = (
+		var skeleton_distance: float = (
 			current_skeleton.position.distance_to(
-				combat_target
+				skeleton_target
 			)
 		)
 
 
-		if distance_to_target > combat_position_tolerance:
+		if skeleton_distance > combat_position_tolerance:
 
 			current_skeleton.position = (
 				current_skeleton.position.move_toward(
-					combat_target,
+					skeleton_target,
 					skeleton_speed * delta
 				)
 			)
@@ -581,6 +872,76 @@ func _process(delta: float) -> void:
 
 				attack_enemy(
 					current_skeleton
+				)
+
+
+				if enemy_hp <= 0:
+
+					kill_enemy()
+
+					return
+
+
+	# =====================================================
+	# ZOMBIE COMBAT
+	# =====================================================
+
+	for current_zombie: Node2D in zombies:
+
+		if not is_instance_valid(current_zombie):
+			continue
+
+
+		if not zombie_slots.has(
+			current_zombie
+		):
+			continue
+
+
+		var zombie_slot: int = int(
+			zombie_slots[
+				current_zombie
+			]
+		)
+
+
+		var zombie_target: Vector2 = (
+			get_combat_target_position(
+				zombie_slot
+			)
+		)
+
+
+		var zombie_distance: float = (
+			current_zombie.position.distance_to(
+				zombie_target
+			)
+		)
+
+
+		if zombie_distance > combat_position_tolerance:
+
+			current_zombie.position = (
+				current_zombie.position.move_toward(
+					zombie_target,
+					zombie_speed * delta
+				)
+			)
+
+		else:
+
+			var zombie_timer: float = float(
+				zombie_attack_timers.get(
+					current_zombie,
+					0.0
+				)
+			)
+
+
+			if zombie_timer <= 0.0:
+
+				zombie_attack_enemy(
+					current_zombie
 				)
 
 
@@ -896,29 +1257,50 @@ func get_compacted_combat_slot(
 	original_slot: int
 ) -> int:
 
-	var compacted_slot: int = 0
+	var ordered_slots: Array[int] = []
 
 
-	for slot_index: int in range(
-		MAX_SKELETONS
-	):
+	# Zombies entram primeiro na formação de combate.
+	# Isso faz o tank ocupar naturalmente a linha de frente.
+	for current_zombie: Node2D in zombies:
 
-		if not occupied_skeleton_slots.has(
-			slot_index
-		):
-
+		if not is_instance_valid(current_zombie):
 			continue
 
 
-		if slot_index == original_slot:
-
-			return compacted_slot
-
-
-		compacted_slot += 1
+		if not zombie_slots.has(current_zombie):
+			continue
 
 
-	# Fallback defensivo. Normalmente não deve acontecer.
+		ordered_slots.append(
+			int(zombie_slots[current_zombie])
+		)
+
+
+	# Skeletons ficam atrás dos Zombies.
+	for current_skeleton: Node2D in skeletons:
+
+		if not is_instance_valid(current_skeleton):
+			continue
+
+
+		if not skeleton_slots.has(current_skeleton):
+			continue
+
+
+		ordered_slots.append(
+			int(skeleton_slots[current_skeleton])
+		)
+
+
+	for index: int in range(
+		ordered_slots.size()
+	):
+
+		if ordered_slots[index] == original_slot:
+			return index
+
+
 	return original_slot
 
 
@@ -1031,74 +1413,150 @@ func get_free_skeleton_slot() -> int:
 
 
 # =========================================================
-# SKELETON MAIS PRÓXIMO DO ENEMY
+# UNDEAD ARMY HELPERS
 # =========================================================
 
-func get_closest_skeleton_to_enemy() -> Node2D:
+func get_total_undead_count() -> int:
+
+	return (
+		skeletons.size()
+		+ zombies.size()
+	)
+
+
+func get_all_undead_units() -> Array[Node2D]:
+
+	var units: Array[Node2D] = []
+
+
+	for current_zombie: Node2D in zombies:
+
+		if is_instance_valid(current_zombie):
+
+			units.append(
+				current_zombie
+			)
+
+
+	for current_skeleton: Node2D in skeletons:
+
+		if is_instance_valid(current_skeleton):
+
+			units.append(
+				current_skeleton
+			)
+
+
+	return units
+
+
+func get_closest_undead_to_enemy() -> Node2D:
 
 	if not is_instance_valid(enemy):
 		return null
 
 
-	var closest_skeleton: Node2D = null
-
+	var closest_undead: Node2D = null
 	var closest_horizontal_distance: float = INF
-
 	var closest_vertical_distance: float = INF
 
 
-	for current_skeleton: Node2D in skeletons:
-
-		if not is_instance_valid(current_skeleton):
-			continue
-
+	for current_undead: Node2D in get_all_undead_units():
 
 		var horizontal_distance: float = absf(
 			enemy.position.x
-			- current_skeleton.position.x
+			- current_undead.position.x
 		)
 
 
 		var vertical_distance: float = absf(
 			ENEMY_LANE_Y
-			- current_skeleton.position.y
+			- current_undead.position.y
 		)
 
 
 		if horizontal_distance < closest_horizontal_distance:
 
-			closest_horizontal_distance = (
-				horizontal_distance
-			)
-
-			closest_vertical_distance = (
-				vertical_distance
-			)
-
-			closest_skeleton = (
-				current_skeleton
-			)
-
+			closest_horizontal_distance = horizontal_distance
+			closest_vertical_distance = vertical_distance
+			closest_undead = current_undead
 
 		elif (
 			is_equal_approx(
 				horizontal_distance,
 				closest_horizontal_distance
 			)
-			and vertical_distance
-			< closest_vertical_distance
+			and vertical_distance < closest_vertical_distance
 		):
 
-			closest_vertical_distance = (
-				vertical_distance
+			closest_vertical_distance = vertical_distance
+			closest_undead = current_undead
+
+
+	return closest_undead
+
+
+func damage_undead(
+	target: Node2D,
+	damage_amount: int,
+	source: String
+) -> void:
+
+	if skeleton_hps.has(target):
+
+		var skeleton_hp: int = int(
+			skeleton_hps[target]
+		)
+
+
+		skeleton_hp -= damage_amount
+
+
+		skeleton_hps[target] = skeleton_hp
+
+
+		print(
+			source,
+			" ATACOU! | Skeleton HP: ",
+			skeleton_hp
+		)
+
+
+		if skeleton_hp <= 0:
+
+			kill_skeleton(
+				target
 			)
 
-			closest_skeleton = (
-				current_skeleton
+
+		return
+
+
+	if zombie_hps.has(target):
+
+		var zombie_hp: int = int(
+			zombie_hps[target]
+		)
+
+
+		zombie_hp -= damage_amount
+
+
+		zombie_hps[target] = zombie_hp
+
+
+		print(
+			source,
+			" ATACOU! | Zombie HP: ",
+			zombie_hp
+		)
+
+
+		if zombie_hp <= 0:
+
+			kill_zombie(
+				target
 			)
-
-
-	return closest_skeleton
 
 
 # =========================================================
@@ -1683,22 +2141,13 @@ func boss_special_attack() -> void:
 		return
 
 
-	if skeletons.is_empty():
+	var valid_targets: Array[Node2D] = (
+		get_all_undead_units()
+	)
+
+
+	if valid_targets.is_empty():
 		return
-
-
-	var valid_targets: Array[Node2D] = []
-
-
-	for current_skeleton: Node2D in skeletons:
-
-		if is_instance_valid(
-			current_skeleton
-		):
-
-			valid_targets.append(
-				current_skeleton
-			)
 
 
 	valid_targets.shuffle()
@@ -1729,58 +2178,28 @@ func boss_special_attack() -> void:
 	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
-	var targets_to_damage: Array[Node2D] = []
-
-
 	for index: int in range(
 		target_count
 	):
 
-		targets_to_damage.append(
+		var target: Node2D = (
 			valid_targets[index]
 		)
 
-
-	for target: Node2D in targets_to_damage:
 
 		if not is_instance_valid(target):
 			continue
 
 
-		if not skeleton_hps.has(target):
-			continue
-
-
-		var current_hp: int = int(
-			skeleton_hps[target]
+		damage_undead(
+			target,
+			BOSS_SPECIAL_ATTACK_DAMAGE,
+			"BOSS AOE"
 		)
 
 
-		current_hp -= (
-			BOSS_SPECIAL_ATTACK_DAMAGE
-		)
-
-
-		skeleton_hps[
-			target
-		] = current_hp
-
-
-		print(
-			"BOSS AOE | Skeleton HP: ",
-			current_hp
-		)
-
-
-		if current_hp <= 0:
-
-			kill_skeleton(
-				target
-			)
-
-
-			if not is_instance_valid(enemy):
-				return
+		if not is_instance_valid(enemy):
+			return
 
 
 	update_debug_ui()
@@ -1887,9 +2306,14 @@ func process_corpse(
 		harvest_triggered = true
 
 
+	var flesh_gained: int = flesh_per_corpse
+
+
 	bones += bones_gained
+	flesh += flesh_gained
 
 	total_bones_earned += bones_gained
+	total_flesh_earned += flesh_gained
 
 	total_corpses_processed += 1
 
@@ -1905,6 +2329,12 @@ func process_corpse(
 		"+",
 		bones_gained,
 		" BONES"
+	)
+
+	print(
+		"+",
+		flesh_gained,
+		" FLESH"
 	)
 
 
@@ -3273,35 +3703,40 @@ func check_defeat_condition() -> void:
 		return
 
 
-	# Não existe derrota durante a escolha de upgrade.
-	# Uma escolha ainda pode alterar custo/economia antes
-	# da próxima Wave começar.
 	if wave_transition_in_progress:
 		return
 
 
-	# Só avaliamos derrota dentro de uma Wave ativa.
 	if not wave_in_progress:
 		return
 
 
-	# Se ainda existe algum Skeleton vivo, a operação continua.
-	if not skeletons.is_empty():
+	if get_total_undead_count() > 0:
 		return
 
 
 	cleanup_invalid_corpses()
 
 
-	# Ainda existe matéria-prima processável.
-	# O jogador pode recuperar Bones e reconstruir.
 	if not corpses.is_empty():
 		return
 
 
-	# Ainda existem Bones suficientes para produzir
-	# pelo menos um Skeleton.
-	if bones >= skeleton_cost:
+	var can_build_skeleton: bool = (
+		bones >= skeleton_cost
+	)
+
+
+	var can_build_zombie: bool = (
+		flesh >= zombie_cost
+	)
+
+
+	if (
+		can_build_skeleton
+		or can_build_zombie
+	):
+
 		return
 
 
@@ -3309,10 +3744,17 @@ func check_defeat_condition() -> void:
 	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	print("NO VIABLE UNDEAD PRODUCTION REMAINS")
 	print(
-		"Skeletons: 0 | Corpses: 0 | Bones: ",
+		"Skeletons: 0 | Zombies: 0 | Corpses: 0"
+	)
+	print(
+		"Bones: ",
 		bones,
 		" / ",
-		skeleton_cost
+		skeleton_cost,
+		" | Flesh: ",
+		flesh,
+		" / ",
+		zombie_cost
 	)
 	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	print("")
@@ -3489,6 +3931,9 @@ func finish_run(
 
 	create_skeleton_button.disabled = true
 
+	if create_zombie_button != null:
+		create_zombie_button.disabled = true
+
 
 	if victory:
 
@@ -3557,12 +4002,24 @@ func show_run_end_screen() -> void:
 		+ str(total_skeletons_lost)
 		+ "\nSkeletons Revived: "
 		+ str(total_skeletons_revived)
+		+ "\nZombies Built: "
+		+ str(total_zombies_created)
+		+ "\nZombies Lost: "
+		+ str(total_zombies_lost)
 		+ "\nBones Earned: "
 		+ str(total_bones_earned)
+		+ "\nFlesh Earned: "
+		+ str(total_flesh_earned)
 		+ "\nBones Remaining: "
 		+ str(bones)
+		+ "\nFlesh Remaining: "
+		+ str(flesh)
+		+ "\nBlood Remaining: "
+		+ str(blood)
+		+ "\nSouls Remaining: "
+		+ str(souls)
 		+ "\nArmy Remaining: "
-		+ str(skeletons.size())
+		+ str(get_total_undead_count())
 		+ "\nUpgrades Selected: "
 		+ str(total_upgrades_selected)
 		+ "\nSynergies Unlocked: "
@@ -3587,8 +4044,8 @@ func get_run_result_message() -> String:
 
 
 	return (
-		"Result: No Skeletons, no Corpses, "
-		+ "and insufficient Bones to rebuild."
+		"Result: No Undead, no Corpses, "
+		+ "and insufficient resources to rebuild."
 	)
 
 
@@ -3737,6 +4194,80 @@ func update_wave_ui() -> void:
 
 
 # =========================================================
+# ZOMBIE UI
+# =========================================================
+
+func create_zombie_ui() -> void:
+
+	create_zombie_button = Button.new()
+
+	create_zombie_button.name = "CreateZombieButton"
+
+	create_zombie_button.text = (
+		"CREATE ZOMBIE"
+	)
+
+
+	add_child(
+		create_zombie_button
+	)
+
+
+# =========================================================
+# PRIMARY HUD LAYOUT
+# =========================================================
+
+func configure_primary_hud_layout() -> void:
+
+	bones_label.position = Vector2(
+		40.0,
+		55.0
+	)
+
+	bones_label.size = Vector2(
+		280.0,
+		120.0
+	)
+
+	bones_label.add_theme_font_size_override(
+		"font_size",
+		18
+	)
+
+
+	create_skeleton_button.position = Vector2(
+		40.0,
+		185.0
+	)
+
+	create_skeleton_button.size = Vector2(
+		220.0,
+		62.0
+	)
+
+	create_skeleton_button.add_theme_font_size_override(
+		"font_size",
+		16
+	)
+
+
+	create_zombie_button.position = Vector2(
+		275.0,
+		185.0
+	)
+
+	create_zombie_button.size = Vector2(
+		220.0,
+		62.0
+	)
+
+	create_zombie_button.add_theme_font_size_override(
+		"font_size",
+		16
+	)
+
+
+# =========================================================
 # DEBUG HUD
 # =========================================================
 
@@ -3748,13 +4279,21 @@ func create_debug_hud() -> void:
 
 	debug_label.position = Vector2(
 		40.0,
-		165.0
+		275.0
 	)
 
 	debug_label.size = Vector2(
-		650.0,
-		380.0
+		360.0,
+		220.0
 	)
+
+	debug_label.add_theme_font_size_override(
+		"font_size",
+		15
+	)
+
+	# F3 mostra/esconde durante o desenvolvimento.
+	debug_label.visible = false
 
 
 	add_child(
@@ -3787,72 +4326,30 @@ func update_debug_ui() -> void:
 		enemy_text = "SPAWNING"
 
 
-	var closest_distance_text: String = "-"
-
-
-	if (
-		is_instance_valid(enemy)
-		and not skeletons.is_empty()
-	):
-
-		var closest: Node2D = (
-			get_closest_skeleton_to_enemy()
-		)
-
-
-		if closest != null:
-
-			var distance: float = absf(
-				enemy.position.x
-				- closest.position.x
-			)
-
-
-			closest_distance_text = str(
-				round(distance)
-			)
-
-
 	debug_label.text = (
-		"DEBUG"
+		"DEBUG — F3"
 		+ "\nWave: "
 		+ str(current_wave)
-		+ "\nEnemies Remaining: "
-		+ str(get_enemies_remaining())
+		+ "\nEnemy: "
+		+ enemy_text
 		+ "\nSkeletons: "
 		+ str(skeletons.size())
+		+ "\nZombies: "
+		+ str(zombies.size())
+		+ "\nArmy: "
+		+ str(get_total_undead_count())
 		+ "\nCorpses: "
 		+ str(corpses.size())
 		+ "\nCan Rebuild: "
 		+ str(
 			bones >= skeleton_cost
+			or flesh >= zombie_cost
 			or not corpses.is_empty()
 		)
-		+ "\nUpgrades: "
-		+ str(total_upgrades_selected)
-		+ "\nSynergies: "
-		+ str(active_synergies.size())
-		+ "\nBoss Active: "
+		+ "\nBoss: "
 		+ str(boss_active)
 		+ "\nRun Finished: "
 		+ str(run_finished)
-		+ "\nEnemy: "
-		+ enemy_text
-		+ "\nClosest X distance: "
-		+ closest_distance_text
-		+ "\n--- RUN METRICS ---"
-		+ "\nEnemies Killed: "
-		+ str(total_enemies_killed)
-		+ "\nCorpses Processed: "
-		+ str(total_corpses_processed)
-		+ "\nSkeletons Built: "
-		+ str(total_skeletons_created)
-		+ "\nSkeletons Lost: "
-		+ str(total_skeletons_lost)
-		+ "\nSkeletons Revived: "
-		+ str(total_skeletons_revived)
-		+ "\nBones Earned: "
-		+ str(total_bones_earned)
 	)
 
 
@@ -3862,21 +4359,54 @@ func update_debug_ui() -> void:
 
 func update_bones_ui() -> void:
 
+	# v0.2.0 Resource Foundation:
+	# reutilizamos o BonesLabel atual como painel temporário
+	# de recursos. Depois ele será substituído pela UI final
+	# inspirada no target visual do NecroWorks.
 	bones_label.text = (
-		"Bones: "
+		"RESOURCES"
+		+ "\nBONES: "
 		+ str(bones)
-		+ " | Skeleton Cost: "
+		+ "\nFLESH: "
+		+ str(flesh)
+		+ "\nBLOOD: "
+		+ str(blood)
+		+ "\nSOULS: "
+		+ str(souls)
+	)
+
+
+	create_skeleton_button.text = (
+		"CREATE SKELETON"
+		+ "\n"
 		+ str(skeleton_cost)
+		+ " BONES"
+	)
+
+
+	create_zombie_button.text = (
+		"CREATE ZOMBIE"
+		+ "\n"
+		+ str(zombie_cost)
+		+ " FLESH"
 	)
 
 
 	var full: bool = (
-		skeletons.size()
+		get_total_undead_count()
 		>= MAX_SKELETONS
 	)
 
 
 	create_skeleton_button.disabled = (
-		bones < skeleton_cost
+		run_finished
+		or bones < skeleton_cost
+		or full
+	)
+
+
+	create_zombie_button.disabled = (
+		run_finished
+		or flesh < zombie_cost
 		or full
 	)

@@ -1,130 +1,263 @@
 # NecroWorks — Decisions
 
-## Engine / Language
+**Atualizado:** 18/08/2026
+
+---
+
+## Engine
 
 Godot 4.7.1 + GDScript.
 
-## 2D / Single-player
+Reason:
+fast solo iteration and strong 2D workflow.
 
-Primeira versão permanece 2D e single-player para manter escopo viável.
+---
 
-## Placeholder first
+## Single-player / 2D first
 
-Core gameplay é validado antes de arte final.
+Keep scope controlled for first commercial release.
+
+---
+
+## Placeholder before final art
+
+Gameplay proof before expensive art production.
+
+---
 
 ## Name
 
-`Corpse Factory` foi substituído por **NecroWorks**.
+Project renamed from Corpse Factory to **NecroWorks**.
 
 Brand:
 
-**Industrial Reanimation Solutions**  
-**Waste Nothing. Raise Everything.**
+```text
+NecroWorks
+Industrial Reanimation Solutions
+Waste Nothing. Raise Everything.
+```
+
+---
 
 ## Core loop
 
+Identity:
+
 ```text
-Enemy → Corpse → Resource → Undead
+Enemy
+→ Corpse
+→ Resource
+→ Undead
 ```
 
-É a identidade central e não deve ser diluída.
+Do not dilute this.
 
-## Centralized main.gd
+---
 
-Foi aceita centralização temporária para velocidade de prototipação.
+## Centralized `main.gd`
 
-Após `v0.1.0`, a expansão multi-unit deve iniciar refatoração incremental, sem big rewrite.
+Accepted through early prototype.
 
-## Target-based movement
+No big rewrite before pressure from actual features.
 
-Movimentação global do exército foi substituída por perseguição baseada em target.
+---
 
-## Horizontal combat lane
+## Horizontal Enemy/Boss lane
 
-Após bug no The Foreman:
+Implemented after The Foreman could leave the screen.
 
-- Enemy/Boss usa lane horizontal;
-- limites de arena;
-- distância horizontal;
-- formação compactável.
+Reason:
+break the pursuit/formation feedback loop.
 
-Motivo:
-eliminar feedback que arrastava Boss e Skeletons para fora da tela.
+Includes:
+
+- lane Y;
+- X bounds;
+- horizontal attack distance;
+- compact formation.
+
+---
 
 ## Upgrade model
 
-10 upgrades, 3 escolhas aleatórias, stacking permitido quando não há cap.
+3 random choices between Waves.
+
+Stacking allowed unless capped.
+
+---
 
 ## Synergy model
 
-Combinações desbloqueiam automaticamente efeitos adicionais.
+Synergies activate automatically when required upgrades are owned.
 
-## Metrics
+---
 
-Métricas básicas foram adicionadas antes do balanceamento.
+## First Boss
 
-## Boss
+Wave 20 = The Foreman.
 
-Wave 20 encerra a primeira run com The Foreman.
+Boss needs to threaten groups.
 
-Boss precisa ameaçar a horda, não apenas um Skeleton.
+---
 
 ## Victory
 
-The Foreman derrotado → `finish_run(true)`.
+The Foreman defeated:
 
-## Defeat
+```text
+finish_run(true)
+```
 
-Game Over só acontece quando não existe possibilidade imediata de reconstrução com Corpses/Bones.
+---
+
+## Defeat is economic, not immediate army wipe
+
+The run continues if the player can still rebuild.
+
+Initially:
+
+- Bones;
+- Corpses.
+
+After Zombie:
+
+- Bones;
+- Flesh;
+- Corpses.
+
+This is intentional and supports recovery.
+
+---
 
 ## Restart
 
-Protótipo usa reload completo da cena.
+Prototype uses:
 
-## Balance timing — 18/08/2026
+```gdscript
+get_tree().reload_current_scene()
+```
 
-**Decisão:** adiar o balance pass profundo até a base de economia multi-resource e primeiro novo Undead estarem implementados.
+Revisit only when persistent systems require it.
 
-Motivo:
-Skeleton-only não representa mais o estado futuro do combate e da economia. Ajustar profundamente agora causaria retrabalho.
+---
 
-Ainda podem ser feitos ajustes emergenciais se houver softlock ou bug de flow.
+## Balance timing
 
-## v0.2.0 direction
+**Decision:** postpone deep balance.
 
-A ordem será:
+Reason:
 
-1. resource foundation;
-2. Flesh;
-3. Zombie;
-4. Blood;
-5. Souls/Ghost;
-6. balance economy/combat.
+- economy is still expanding;
+- Zombie was just added;
+- Blood/Souls not active;
+- Skeleton-only balance would become obsolete.
+
+Balance only enough to keep systems testable.
+
+---
+
+## Multi-resource design
+
+Resources need gameplay identity.
+
+```text
+Bones → Skeleton / swarm / offense
+Flesh → Zombie / durability / mutation
+Blood → sacrifice / burst / vampirism
+Souls → magic / Ghost / rare effects
+```
+
+Do not add resource generation before a meaningful sink is close.
+
+---
+
+## Zombie V1
+
+Added as first Flesh sink.
+
+Role:
+
+```text
+tank
+frontline
+slow
+durable
+low DPS
+```
+
+Current:
+
+```text
+220 HP
+6 Damage
+1.1 s CD
+120 Speed
+6 Flesh
+```
+
+---
+
+## Zombie frontline priority
+
+Zombie combat slots are resolved before Skeletons.
+
+Reason:
+make the role visible without needing a complex threat system yet.
+
+---
+
+## Generic Undead layer
+
+Enemy/Boss should think in `Undead`, not only `Skeleton`.
+
+Initial helper layer was added before Ghost.
+
+No complete refactor yet.
+
+---
+
+## Blood next only after Flesh identity
+
+Do not immediately implement every resource.
+
+First:
+Zombie-specific upgrades/synergy.
+
+Then:
+Blood sink → Blood generation.
+
+---
 
 ## Visual target
 
-A interface conceitual criada para o projeto é referência oficial.
+The conceptual image created by the user is the official visual target.
 
-Novas decisões devem considerar:
+It can be followed closely because it was created specifically for NecroWorks.
 
-- battlefield central;
+Key layout:
+
+- central combat;
+- factory lower section;
 - resources left;
 - metrics/synergies right;
-- factory bottom;
 - Wave/Boss top;
-- dark metal;
-- necromantic green;
-- industrial/corporate language.
+- contextual upgrade cards.
 
-## Commercial principle
+---
 
-Objetivo: maximizar probabilidade de sucesso comercial na Steam, sem tratar receita como garantida.
+## Commercial goal
 
-Priorizar features que aumentem:
+Maximize probability of strong Steam performance.
 
-- diversão;
-- diferenciação;
+Not a revenue guarantee.
+
+Priority:
+
+- hook;
+- fun;
+- differentiation;
 - replayability;
-- legibilidade;
-- valor percebido;
-- capacidade de marketing.
+- visual identity;
+- marketability;
+- polish;
+- demo quality.
