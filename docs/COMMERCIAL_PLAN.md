@@ -85,6 +85,12 @@ Good clips should show:
 → horde survives
 ```
 
+## Factory proof milestone
+
+Processing Directive V1 is the first Factory choice that directly changes the run: every Corpse can now be routed through Balanced, Bone Focus, or Flesh Focus processing, with visible resource yields and distinct production potential.
+
+A future marketing clip can communicate the loop in a few seconds: an enemy falls, its Corpse is recycled, the player changes the directive, the yield changes, and a different Undead composition becomes viable. Before this becomes Steam-facing footage, the same sequence still needs stronger animation, sound, impact feedback, and a more physical sense of factory machinery.
+
 ---
 
 # Development priorities before serious marketing

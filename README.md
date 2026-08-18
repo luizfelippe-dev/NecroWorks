@@ -66,6 +66,7 @@ Em desenvolvimento e já validado parcialmente:
 - Guerreiro Humano, Mago e Elfo com stats e funções distintas;
 - faixa segura de combate que não invade o HUD lateral;
 - Run Summary final em duas colunas sem sobreposição.
+- primeira decisão de Factory: processamento Balanced, Bone Focus ou Flesh Focus.
 
 ## Economia atual
 
@@ -198,9 +199,16 @@ docs/                   design, arquitetura, roadmap e plano comercial
 main.tscn / main.gd      entradas estáveis para F5/F6 no Godot
 scripts/ui/              componentes reutilizáveis de interface
 scripts/game/            políticas de Waves e catálogo de inimigos
+scripts/economy/         regras isoladas de processamento e recursos
 ```
 
 O protótipo ainda mantém a orquestração principal centralizada, mas novos componentes devem ser extraídos incrementalmente quando houver uma fronteira clara e testável.
+
+## Testes de balanceamento
+
+O runner persistente em `tests/balance/composition_scenario_runner.gd` compara exércitos Skeleton-only, Zombie-heavy e mistos usando o combate real da Wave 8.
+
+Consulte `tests/README.md` para o comando reproduzível e o baseline atual.
 
 ## Workflow
 

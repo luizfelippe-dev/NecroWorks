@@ -571,3 +571,38 @@ Deep balance after:
 - Blood gameplay;
 - Soul/Ghost;
 - representative upgrade pool.
+
+## Composition baseline — Wave 8
+
+A deterministic eight-unit, no-upgrade, no-reinforcement scenario produced:
+
+```text
+8 Skeletons           → 5/12 kills, wiped at 33.2 s
+8 Zombies             → 5/12 kills, wiped at 70.2 s
+4 Skeletons + 4 Zombies → 7/12 kills, wiped at 51.2 s
+```
+
+The roles are meaningfully different: Skeletons provide damage, Zombies provide time, and mixed armies convert both into more progress.
+
+The more important finding was economic: fixed Bones + Flesh output made producing both unit types automatic rather than strategic. Processing Directive V1 now lets the player bias output toward Bone, Flesh or a balanced result.
+
+## Processing Directive V1 — implemented
+
+Before recycling a Corpse, the player selects the factory output:
+
+```text
+Balanced    → 8 Bones + 2 Flesh
+Bone Focus  → 12 Bones + 0 Flesh
+Flesh Focus → 2 Bones + 6 Flesh
+```
+
+Design intent:
+
+- Balanced preserves flexibility and naturally supports mixed armies;
+- Bone Focus accelerates Skeleton production and offensive tempo;
+- Flesh Focus guarantees one Zombie per Corpse and favors durable frontline growth;
+- both focused modes can immediately rebuild at least one unit from the last available Corpse, avoiding an accidental no-production softlock.
+
+Efficient Recycling increases the Bone component before directive modifiers are applied, so the upgrade remains useful in every mode.
+
+The Run Summary records how many Corpses used each route so playtests can distinguish an actual processing strategy from the final selected button.

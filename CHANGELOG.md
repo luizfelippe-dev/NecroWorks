@@ -54,6 +54,15 @@
   - Elf Skirmisher as a fast attacker from Wave 11;
   - independent HP, damage, speed, attack range and cooldown per archetype;
   - temporary identity labels and color coding above each Enemy.
+- Persistent deterministic composition balance runner for Skeleton-only, Zombie-heavy and mixed armies.
+- Processing Directive V1:
+  - Balanced yields 8 Bones / 2 Flesh;
+  - Bone Focus yields 12 Bones / 0 Flesh;
+  - Flesh Focus yields 2 Bones / 6 Flesh;
+  - three live factory controls and dynamic yield feedback;
+  - focused modes preserve one-Corpse emergency production.
+  - per-route processing history in the final Run Summary.
+- Persistent economy runner for directive yields, UI bounds and upgrade compatibility.
 
 ### Current Zombie V1 values
 
@@ -97,6 +106,7 @@ Zombie Cost: 6 Flesh
 - Enemy bodies, names and health bars remain outside the right HUD rail at 1920×1080.
 - Run Summary statistics, build details, synergy list and Restart action render without overlap.
 - F5 Project Run and F6-compatible scene entry point share the current `main.tscn` UID.
+- Wave 8 composition baseline confirms distinct Skeleton damage, Zombie durability and mixed-army performance.
 
 ### Fixed
 

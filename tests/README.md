@@ -1,0 +1,50 @@
+# NecroWorks Test Harnesses
+
+## Composition balance
+
+Runs three deterministic, upgrade-free armies against Wave 8 using the real runtime combat:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/balance/composition_scenario_runner.gd
+```
+
+Baseline army size: 8.
+
+| Scenario | Wave 8 kills | Survival time | Outcome |
+|---|---:|---:|---|
+| 8 Skeletons | 5 / 12 | 33.2 s | wiped |
+| 8 Zombies | 5 / 12 | 70.2 s | wiped |
+| 4 Skeletons + 4 Zombies | 7 / 12 | 51.2 s | wiped |
+
+Interpretation:
+
+- Skeletons provide damage but collapse quickly;
+- Zombies materially extend survival but do not improve kill count alone;
+- the mixed army converts frontline durability into more total kills;
+- Wave 8 is not intended to be cleared by eight base units without upgrades, processing or reinforcement.
+
+This is a regression baseline, not a final balance target. Run with the exact fixed-FPS command so simulated-time results remain comparable.
+
+## Processing directives
+
+Validates Balanced, Bone Focus and Flesh Focus yields, UI bounds, Corpse consumption and Efficient Recycling compatibility:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/economy/processing_directive_runner.gd
+```
+
+Current base yields:
+
+| Directive | Per Corpse | Six-Corpse production capacity |
+|---|---:|---:|
+| Balanced | 8 Bones + 2 Flesh | 9 Skeletons + 2 Zombies |
+| Bone Focus | 12 Bones + 0 Flesh | 14 Skeletons |
+| Flesh Focus | 2 Bones + 6 Flesh | 2 Skeletons + 6 Zombies |

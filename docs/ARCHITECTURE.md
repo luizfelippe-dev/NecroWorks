@@ -46,10 +46,18 @@ assets/
 └── reference/
 
 scripts/
+├── economy/
+│   └── processing_directive_policy.gd
 ├── game/
 │   ├── enemy_archetype_catalog.gd
 │   └── enemy_wave_policy.gd
 └── ui/
+
+tests/
+├── balance/
+│   └── composition_scenario_runner.gd
+└── economy/
+    └── processing_directive_runner.gd
 ```
 
 The current scene and script entry points intentionally stay at `res://`. Godot's F6 command runs the scene currently open in the editor; keeping these stable prevents stale-resource failures while the prototype is evolving.
@@ -85,8 +93,13 @@ souls
 Current income:
 
 ```text
-Corpse → Bones + Flesh
+Corpse
+→ Processing Directive
+→ Balanced / Bone Focus / Flesh Focus
+→ Bones and/or Flesh
 ```
+
+Directive state lives in `processing_directive`. Pure yield/name validation lives in `scripts/economy/processing_directive_policy.gd`; `get_processing_yield()` is the orchestrator-facing entry point used by processing logic, HUD labels, buttons and economy validation.
 
 # Corpse tracking
 
@@ -306,6 +319,14 @@ Possible structures:
 - lightweight component script.
 
 Do not decide prematurely.
+
+# Persistent balance validation
+
+`tests/balance/composition_scenario_runner.gd` instantiates the real main scene and runs deterministic fixed-FPS combat scenarios. It intentionally uses runtime production, movement, targeting, damage and Wave code instead of duplicating formulas in a separate simulator.
+
+`tests/economy/processing_directive_runner.gd` validates directive yields, Corpse consumption, button layout bounds and compatibility with dynamic Bone yield upgrades.
+
+The runner must remain outside production scene dependencies and execute only through an explicit CLI test command.
 
 # Recommended refactor trigger
 

@@ -21,6 +21,7 @@ The repository now separates modular assets/components while keeping stable Godo
 - simultaneous Enemy runtime state introduced without duplicating scene controllers;
 - Wave concurrency rules extracted to `scripts/game/enemy_wave_policy.gd`.
 - Enemy archetype stats and Wave rotation extracted to `scripts/game/enemy_archetype_catalog.gd`.
+- Corpse routing calculations extracted to `scripts/economy/processing_directive_policy.gd`.
 - right-side HUD protected by an explicit combat-safe boundary;
 - dynamic Run Summary content separated into two layout regions;
 - stale Project Run scene UID repaired.
@@ -68,7 +69,10 @@ Programmatic UI enabled fast iteration but is harder to edit visually and locali
 
 ### P2 — Automated regression coverage
 
-Targeted headless validations are currently temporary. Before the demo, create a persistent test harness for:
+A persistent deterministic composition harness now exists at `tests/balance/composition_scenario_runner.gd`.
+Economy routing has persistent coverage at `tests/economy/processing_directive_runner.gd`.
+
+Before the demo, extend persistent coverage for:
 
 - resource transactions;
 - upgrade caps;

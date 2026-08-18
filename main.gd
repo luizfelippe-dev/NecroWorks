@@ -36,6 +36,9 @@ const ENEMY_WAVE_POLICY: Script = preload(
 const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 	"res://scripts/game/enemy_archetype_catalog.gd"
 )
+const PROCESSING_DIRECTIVE_POLICY: Script = preload(
+	"res://scripts/economy/processing_directive_policy.gd"
+)
 
 
 # =========================================================
@@ -369,6 +372,17 @@ var souls: int = 0
 var bones_per_corpse: int = 8
 var flesh_per_corpse: int = 2
 
+const PROCESSING_BALANCED: String = PROCESSING_DIRECTIVE_POLICY.BALANCED
+const PROCESSING_BONE_FOCUS: String = PROCESSING_DIRECTIVE_POLICY.BONE_FOCUS
+const PROCESSING_FLESH_FOCUS: String = PROCESSING_DIRECTIVE_POLICY.FLESH_FOCUS
+
+var processing_directive: String = PROCESSING_BALANCED
+var corpses_processed_by_directive: Dictionary = {
+	PROCESSING_BALANCED: 0,
+	PROCESSING_BONE_FOCUS: 0,
+	PROCESSING_FLESH_FOCUS: 0
+}
+
 var skeleton_cost: int = 5
 var zombie_cost: int = 6
 
@@ -671,6 +685,8 @@ var brand_label: Label = null
 var metrics_label: Label = null
 var factory_title_label: Label = null
 var processing_label: Label = null
+var processing_directive_buttons: Dictionary = {}
+var processing_directive_button_group: ButtonGroup = null
 
 const UI_GREEN: Color = Color(0.38, 0.82, 0.25, 1.0)
 const UI_GREEN_DIM: Color = Color(0.16, 0.36, 0.12, 1.0)
@@ -2747,6 +2763,55 @@ func spawn_corpse(
 # PROCESSAR CORPSE
 # =========================================================
 
+func get_processing_yield(
+	directive: String = processing_directive
+) -> Vector2i:
+
+	return PROCESSING_DIRECTIVE_POLICY.get_yield(
+		directive,
+		bones_per_corpse,
+		flesh_per_corpse
+	)
+
+
+func get_processing_directive_name(
+	directive: String = processing_directive
+) -> String:
+
+	return PROCESSING_DIRECTIVE_POLICY.get_display_name(
+		directive
+	)
+
+
+func set_processing_directive(directive: String) -> void:
+
+	if not PROCESSING_DIRECTIVE_POLICY.is_valid(directive):
+		push_warning("Unknown processing directive: " + directive)
+		return
+
+
+	processing_directive = directive
+
+
+	for directive_id: String in processing_directive_buttons:
+		var directive_button: Button = processing_directive_buttons[
+			directive_id
+		] as Button
+
+
+		if directive_button != null:
+			directive_button.button_pressed = (
+				directive_id == processing_directive
+			)
+
+
+	print(
+		"PROCESSING DIRECTIVE: ",
+		get_processing_directive_name()
+	)
+	update_metrics_ui()
+
+
 func process_corpse(
 	corpse: Button
 ) -> void:
@@ -2759,7 +2824,8 @@ func process_corpse(
 		return
 
 
-	var bones_gained: int = bones_per_corpse
+	var directive_yield: Vector2i = get_processing_yield()
+	var bones_gained: int = directive_yield.x
 
 	var harvest_triggered: bool = false
 
@@ -2785,7 +2851,7 @@ func process_corpse(
 		harvest_triggered = true
 
 
-	var flesh_gained: int = flesh_per_corpse
+	var flesh_gained: int = directive_yield.y
 
 
 	bones += bones_gained
@@ -2795,6 +2861,15 @@ func process_corpse(
 	total_flesh_earned += flesh_gained
 
 	total_corpses_processed += 1
+	corpses_processed_by_directive[processing_directive] = (
+		int(
+			corpses_processed_by_directive.get(
+				processing_directive,
+				0
+			)
+		)
+		+ 1
+	)
 
 
 	update_bones_ui()
@@ -2802,6 +2877,10 @@ func process_corpse(
 
 	print(
 		"CADÁVER PROCESSADO!"
+	)
+	print(
+		"DIRECTIVE: ",
+		get_processing_directive_name()
 	)
 
 	print(
@@ -4780,6 +4859,14 @@ func finish_run(
 		create_zombie_button.disabled = true
 
 
+	for directive_button_value: Variant in processing_directive_buttons.values():
+		var directive_button: Button = directive_button_value as Button
+
+
+		if directive_button != null:
+			directive_button.disabled = true
+
+
 	if victory:
 
 		print("")
@@ -4881,6 +4968,13 @@ func show_run_end_screen() -> void:
 		+ str(total_upgrades_selected)
 		+ "\nSynergies Unlocked: "
 		+ str(active_synergies.size())
+		+ "\n\nPROCESSING ROUTES"
+		+ "\nBalanced: "
+		+ str(int(corpses_processed_by_directive[PROCESSING_BALANCED]))
+		+ "\nBone Focus: "
+		+ str(int(corpses_processed_by_directive[PROCESSING_BONE_FOCUS]))
+		+ "\nFlesh Focus: "
+		+ str(int(corpses_processed_by_directive[PROCESSING_FLESH_FOCUS]))
 		+ "\n\n"
 		+ get_run_synergy_summary()
 		+ "\n\nOPERATION STATUS"
@@ -5166,12 +5260,13 @@ func create_visual_shell() -> void:
 	processing_label = Label.new()
 	processing_label.name = "ProcessingLabel"
 	processing_label.position = Vector2(1110.0, 862.0)
-	processing_label.size = Vector2(755.0, 170.0)
+	processing_label.size = Vector2(755.0, 96.0)
 	processing_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	processing_label.z_index = 100
 	processing_label.add_theme_font_size_override("font_size", 18)
 	processing_label.add_theme_color_override("font_color", UI_TEXT)
 	add_child(processing_label)
+	create_processing_directive_ui()
 
 	update_metrics_ui()
 
@@ -5199,6 +5294,85 @@ func create_hud_panel(
 	add_child(panel)
 
 	return panel
+
+
+func create_processing_directive_ui() -> void:
+
+	processing_directive_button_group = ButtonGroup.new()
+	processing_directive_button_group.allow_unpress = false
+
+
+	var directive_ids: Array[String] = [
+		PROCESSING_BALANCED,
+		PROCESSING_BONE_FOCUS,
+		PROCESSING_FLESH_FOCUS
+	]
+	var directive_accents: Array[Color] = [
+		UI_GREEN,
+		UI_BONE,
+		Color(0.72, 0.25, 0.20, 1.0)
+	]
+	var start_x: float = 1100.0
+	var button_width: float = 245.0
+	var button_gap: float = 10.0
+
+
+	for index: int in range(directive_ids.size()):
+		var directive_id: String = directive_ids[index]
+		var directive_button: Button = Button.new()
+		directive_button.name = (
+			"ProcessingDirective"
+			+ str(index)
+		)
+		directive_button.position = Vector2(
+			start_x + float(index) * (button_width + button_gap),
+			966.0
+		)
+		directive_button.size = Vector2(button_width, 66.0)
+		directive_button.z_index = 110
+		directive_button.toggle_mode = true
+		directive_button.button_group = processing_directive_button_group
+		directive_button.add_theme_font_size_override("font_size", 15)
+		apply_button_style(
+			directive_button,
+			directive_accents[index]
+		)
+		directive_button.pressed.connect(
+			set_processing_directive.bind(directive_id)
+		)
+		add_child(directive_button)
+		processing_directive_buttons[directive_id] = directive_button
+
+
+	update_processing_directive_buttons()
+
+
+func update_processing_directive_buttons() -> void:
+
+	for directive_id: String in processing_directive_buttons:
+		var directive_button: Button = processing_directive_buttons[
+			directive_id
+		] as Button
+
+
+		if directive_button == null:
+			continue
+
+
+		var directive_yield: Vector2i = get_processing_yield(
+			directive_id
+		)
+		directive_button.text = (
+			get_processing_directive_name(directive_id)
+			+ "\n"
+			+ str(directive_yield.x)
+			+ "B / "
+			+ str(directive_yield.y)
+			+ "F"
+		)
+		directive_button.button_pressed = (
+			directive_id == processing_directive
+		)
 
 
 func create_stylebox(
@@ -5302,17 +5476,22 @@ func update_metrics_ui() -> void:
 
 
 	if processing_label != null:
+		var directive_yield: Vector2i = get_processing_yield()
 		processing_label.text = (
 			"CORPSE PROCESSING"
-			+ "\n\nCORPSES WAITING: "
+			+ "\nMODE: "
+			+ get_processing_directive_name()
+			+ "  |  CORPSES: "
 			+ str(corpses.size())
-			+ "\nCLICK A CORPSE ON THE BATTLEFIELD TO RECYCLE"
 			+ "\nYIELD: +"
-			+ str(bones_per_corpse)
+			+ str(directive_yield.x)
 			+ " BONES  /  +"
-			+ str(flesh_per_corpse)
+			+ str(directive_yield.y)
 			+ " FLESH"
 		)
+
+
+	update_processing_directive_buttons()
 
 
 # =========================================================

@@ -318,3 +318,21 @@ This is a prototype safety boundary. Responsive layout later must derive the com
 Final statistics and build/synergy details use separate columns. The Restart action owns a dedicated bottom region.
 
 Reason: dynamic synergy text must not overlap the primary action or obscure run results.
+
+---
+
+## Composition balance requires economic choice
+
+The first deterministic Wave 8 comparison confirmed distinct combat roles but exposed that fixed `Corpse → Bones + Flesh` output makes a mixed army the default resource-efficient answer.
+
+Decision: do not flatten unit stats to force artificial parity. A Factory processing directive now lets players bias Corpse output toward Bone, Flesh or a balanced result.
+
+Initial values:
+
+```text
+Balanced    8B / 2F
+Bone Focus  12B / 0F
+Flesh Focus 2B / 6F
+```
+
+Focused yields deliberately guarantee immediate recovery: Bone Focus can build Skeletons and Flesh Focus can build one Zombie from a single Corpse.

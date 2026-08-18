@@ -74,7 +74,9 @@
 - [x] right HUD combat-safe boundary
 - [x] two-column Run Summary layout
 - [x] F5 main-scene UID repaired and synchronized
-- [ ] test meaningful Skeleton vs Zombie composition choices
+- [x] establish deterministic Skeleton/Zombie/mixed Wave 8 baseline
+- [x] confirm distinct damage, durability and mixed-army outcomes
+- [x] turn Corpse output into a real Bone/Flesh routing decision
 - [ ] playtest active-Enemy caps against Skeleton-only, Zombie-heavy and mixed builds
 - [ ] capture a short milestone clip for the second LinkedIn dev update
 - [ ] decide Flesh resource pacing
@@ -123,6 +125,8 @@ Health, damage and resource changes must also remain readable without opening De
 # v0.3.0 — Factory / Automation
 
 - [ ] Corpse Processor
+- [x] processing directive: Bone / Flesh / Balanced
+- [x] focused modes preserve emergency rebuild viability
 - [ ] automatic processing
 - [ ] Skeleton Assembler
 - [ ] Flesh Vat

@@ -250,16 +250,44 @@ Fixed:
 
 Visual validation completed at 1920×1080.
 
+## 18/08/2026 — Composition Baseline
+
+Added a persistent deterministic balance runner using real runtime combat.
+
+Wave 8 with eight base units and no upgrades/reinforcement:
+
+```text
+Skeleton-only → 5 kills, 33.2 s
+Zombie-heavy  → 5 kills, 70.2 s
+Mixed 4+4     → 7 kills, 51.2 s
+```
+
+Conclusion: unit roles are distinct enough for the current milestone. The missing decision is economic routing because every Corpse currently provides both unit resources.
+
+---
+
+## 18/08/2026 — Processing Directive V1
+
+First functional Factory decision added:
+
+```text
+Balanced    8B / 2F
+Bone Focus  12B / 0F
+Flesh Focus 2B / 6F
+```
+
+Added three live controls to the Corpse Processing panel, dynamic yield feedback and persistent economy validation. Flesh Focus was raised from the initial 5 Flesh draft to 6 so processing the last available Corpse can always produce a Zombie.
+
 ---
 
 ## Next
 
-### Flesh Identity
+### Factory feedback
 
 Recommended next block:
 
-- validate mixed-army choices after Meat Shield Protocol;
-- test composition choice Skeleton vs Zombie.
+- playtest switching directives during a normal run;
+- add stronger visual/audio feedback when a Corpse enters the selected route.
 
 ### Enemy depth
 

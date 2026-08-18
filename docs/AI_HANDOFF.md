@@ -681,6 +681,39 @@ Revisar Flesh pacing e os novos limites de inimigos simultâneos somente com evi
 
 O próximo bloco recomendado continua sendo um playtest comparativo de composição e pressão dos arquétipos. Não iniciar arte final antes de confirmar que Warrior/Mage/Elf e Skeleton/Zombie geram decisões interessantes.
 
+### Composition baseline — concluído
+
+Runner persistente: `tests/balance/composition_scenario_runner.gd`.
+
+Wave 8, oito unidades, sem upgrades/reposição:
+
+```text
+Skeleton-only → 5 kills / 33.2 s
+Zombie-heavy  → 5 kills / 70.2 s
+Mixed 4+4     → 7 kills / 51.2 s
+```
+
+Não houve ajuste de stats: os papéis estão distintos. O problema identificado foi a ausência de escolha econômica no rendimento fixo do Corpse; a diretiva descrita abaixo foi implementada para resolver esse ponto.
+
+### Processing Directive V1 — implementado e validado
+
+```text
+Balanced    → 8 Bones + 2 Flesh
+Bone Focus  → 12 Bones + 0 Flesh
+Flesh Focus → 2 Bones + 6 Flesh
+```
+
+- seleção feita por três botões no painel Corpse Processing;
+- HUD mostra modo, cadáveres e rendimento atual;
+- `scripts/economy/processing_directive_policy.gd` centraliza a regra pura;
+- `get_processing_yield()` expõe a regra ao orquestrador;
+- Efficient Recycling atualiza o componente de Bones em todos os modos;
+- Focus modes garantem produção emergencial com um único Corpse;
+- Run Summary registra contagem de Corpses por rota;
+- teste persistente: `tests/economy/processing_directive_runner.gd`.
+
+Próximo passo recomendado: playtest manual da troca de diretiva durante uma run e depois decidir entre feedback/juice de processamento ou primeiro sink de Blood.
+
 ### Direções registradas para conteúdo futuro
 
 Os inimigos são povos vivos com papéis distintos; a primeira versão mecânica já existe:
