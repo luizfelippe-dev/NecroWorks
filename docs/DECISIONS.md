@@ -1,227 +1,130 @@
-# NecroWorks — Design & Technical Decisions
+# NecroWorks — Decisions
 
-Este documento registra decisões importantes e os motivos por trás delas.
+## Engine / Language
 
----
+Godot 4.7.1 + GDScript.
 
-## 14/08/2026 — Engine
+## 2D / Single-player
 
-**Decisão:** Godot 4.
+Primeira versão permanece 2D e single-player para manter escopo viável.
 
-**Motivo:** foco 2D, desenvolvimento solo e iteração rápida.
+## Placeholder first
 
----
+Core gameplay é validado antes de arte final.
 
-## 14/08/2026 — Linguagem
+## Name
 
-**Decisão:** GDScript.
+`Corpse Factory` foi substituído por **NecroWorks**.
 
-**Motivo:** integração direta com Godot e baixa fricção durante prototipação.
+Brand:
 
----
+**Industrial Reanimation Solutions**  
+**Waste Nothing. Raise Everything.**
 
-## 14/08/2026 — 2D
-
-**Decisão:** primeira versão em 2D.
-
-**Motivo:** controlar custo, prazo e produção de assets.
-
----
-
-## 14/08/2026 — Single-player
-
-**Decisão:** não incluir multiplayer na primeira versão.
-
-**Motivo:** networking aumentaria muito o escopo e o risco técnico.
-
----
-
-## 14/08/2026 — Arte de protótipo
-
-**Decisão:** usar placeholders até o core loop estar validado.
-
-**Motivo:** evitar gastar tempo/dinheiro em apresentação antes de provar o jogo.
-
----
-
-## 14/08/2026 — Core Design
-
-**Decisão:** poucas regras devem gerar muitas combinações.
-
-**Motivo:** replayability sistêmica é mais viável para solo dev do que depender de enorme volume de conteúdo artesanal.
-
----
-
-## 14/08/2026 — Automação necromântica
-
-**Decisão:** automação será um diferencial central.
-
-**Motivo:** NecroWorks não deve ser apenas um autobattler de Skeletons.
-
-Core:
+## Core loop
 
 ```text
-Enemy → Corpse → Processing → Resources → Production → Undead
+Enemy → Corpse → Resource → Undead
 ```
 
----
+É a identidade central e não deve ser diluída.
 
-## 16/08/2026 — Rename
+## Centralized main.gd
 
-**Decisão:** `Corpse Factory` → `NecroWorks`.
+Foi aceita centralização temporária para velocidade de prototipação.
 
-**Identidade:**
+Após `v0.1.0`, a expansão multi-unit deve iniciar refatoração incremental, sem big rewrite.
 
-NecroWorks  
-Industrial Reanimation Solutions  
-Waste Nothing. Raise Everything.
+## Target-based movement
 
-**Motivo:** o nome anterior já era usado comercialmente e NecroWorks comunica melhor a proposta industrial.
+Movimentação global do exército foi substituída por perseguição baseada em target.
 
----
+## Horizontal combat lane
 
-## 16/08/2026 — Node2D para unidades
+Após bug no The Foreman:
 
-**Decisão:** Skeleton e Enemy usam Node2D.
+- Enemy/Boss usa lane horizontal;
+- limites de arena;
+- distância horizontal;
+- formação compactável.
 
-**Motivo:** são entidades do mundo e precisam de movimentação/posicionamento real.
+Motivo:
+eliminar feedback que arrastava Boss e Skeletons para fora da tela.
 
----
+## Upgrade model
 
-## 16/08/2026 — Placeholder visual via código
+10 upgrades, 3 escolhas aleatórias, stacking permitido quando não há cap.
 
-**Decisão:** garantir visual temporário programaticamente.
+## Synergy model
 
-**Motivo:** impedir regressões em que entidades dinâmicas existem mecanicamente, mas não aparecem.
+Combinações desbloqueiam automaticamente efeitos adicionais.
 
----
+## Metrics
 
-## 16/08/2026 — Target-Based Movement
+Métricas básicas foram adicionadas antes do balanceamento.
 
-**Decisão:** remover deslocamento global do exército.
+## Boss
 
-**Motivo:** reforços estavam nascendo avançados e a movimentação produzia atravessamentos/comportamentos inconsistentes.
+Wave 20 encerra a primeira run com The Foreman.
 
----
+Boss precisa ameaçar a horda, não apenas um Skeleton.
 
-## 16/08/2026 — Centralização temporária em `main.gd`
+## Victory
 
-**Decisão:** não criar managers prematuramente.
+The Foreman derrotado → `finish_run(true)`.
 
-**Motivo:** velocidade de prototipação.
+## Defeat
 
-**Revisão:** após `v0.1.0`, o crescimento do script justifica reavaliar refatoração.
+Game Over só acontece quando não existe possibilidade imediata de reconstrução com Corpses/Bones.
 
----
+## Restart
 
-## 17/08/2026 — Waves antes de balanceamento definitivo
+Protótipo usa reload completo da cena.
 
-**Decisão:** validar estrutura de Waves antes de otimizar dificuldade.
+## Balance timing — 18/08/2026
 
-**Motivo:** upgrades e sinergias alteram drasticamente a curva de poder e tornariam um balanceamento antecipado descartável.
+**Decisão:** adiar o balance pass profundo até a base de economia multi-resource e primeiro novo Undead estarem implementados.
 
----
+Motivo:
+Skeleton-only não representa mais o estado futuro do combate e da economia. Ajustar profundamente agora causaria retrabalho.
 
-## 17/08/2026 — Economia temporariamente generosa
+Ainda podem ser feitos ajustes emergenciais se houver softlock ou bug de flow.
 
-**Decisão:** manter `bones_per_corpse = 8` e dano base de Enemy reduzido durante prototipação.
+## v0.2.0 direction
 
-**Motivo:** facilitar testes de Waves altas e novos sistemas.
+A ordem será:
 
-**Status:** valores de desenvolvimento, não valores comerciais finais.
+1. resource foundation;
+2. Flesh;
+3. Zombie;
+4. Blood;
+5. Souls/Ghost;
+6. balance economy/combat.
 
----
+## Visual target
 
-## 17/08/2026 — 10 upgrades, 3 escolhas aleatórias
+A interface conceitual criada para o projeto é referência oficial.
 
-**Decisão:** pool inicial com 10 upgrades e apresentação de 3 opções aleatórias por Wave.
+Novas decisões devem considerar:
 
-**Motivo:** gerar decisões diferentes entre runs sem exigir grande volume de conteúdo.
+- battlefield central;
+- resources left;
+- metrics/synergies right;
+- factory bottom;
+- Wave/Boss top;
+- dark metal;
+- necromantic green;
+- industrial/corporate language.
 
----
+## Commercial principle
 
-## 17/08/2026 — Upgrades acumuláveis
+Objetivo: maximizar probabilidade de sucesso comercial na Steam, sem tratar receita como garantida.
 
-**Decisão:** upgrades podem ser escolhidos múltiplas vezes quando não atingiram limite.
-
-**Motivo:** permitir especialização e power fantasy.
-
----
-
-## 17/08/2026 — Sinergias automáticas
-
-**Decisão:** combinações específicas desbloqueiam efeitos extras automaticamente.
-
-**Motivo:** recompensar descoberta de builds e criar efeitos emergentes.
-
-Primeiras sinergias:
-
-- Overclocked Ossuary;
-- Recycling Plant;
-- Second Shift;
-- Bone Assembly Line.
-
----
-
-## 17/08/2026 — Métricas antes do balance pass
-
-**Decisão:** coletar estatísticas básicas de run desde o protótipo.
-
-**Motivo:** substituir sensação subjetiva por dados durante balanceamento.
-
-Métricas:
-
-- kills;
-- corpses;
-- Skeletons construídos;
-- Skeletons perdidos;
-- revives;
-- Bones ganhos.
-
----
-
-## 17/08/2026 — Boss como encerramento da primeira run
-
-**Decisão:** primeiro protótipo de run será encerrado por Boss na Wave 20.
-
-**Motivo:** criar objetivo claro e testar um ciclo completo antes de ampliar recursos/conteúdo.
-
----
-
-## 17/08/2026 — Boss deve atacar a horda
-
-**Decisão:** primeiro Boss precisa possuir ameaça multi-target/AOE.
-
-**Motivo:** Enemies atuais atacam um Skeleton por vez e ficam incapazes de pressionar uma horda grande.
-
----
-
-## 17/08/2026 — Comercialização é parte do produto
-
-**Decisão:** Steam page, demo, wishlists, trailer, capsule art e testes públicos entram no roadmap antes do jogo estar 100% concluído.
-
-**Motivo:** o potencial comercial precisa ser validado antes do lançamento, não apenas depois de terminar o jogo.
-
----
-
-## 17/08/2026 — Receita não é premissa
-
-**Decisão:** tratar "vender muito" como objetivo, não garantia.
-
-**Motivo:** receita depende de produto, posicionamento, apresentação, mercado, timing e execução. Decisões futuras devem ser orientadas por playtests, wishlists, demo e resposta real do público.
-
----
-
-## 17/08/2026 — Escopo comercial
-
-**Decisão:** cortar features que não aumentem claramente um destes fatores:
+Priorizar features que aumentem:
 
 - diversão;
 - diferenciação;
 - replayability;
+- legibilidade;
 - valor percebido;
-- capacidade de marketing;
-- retenção;
-- qualidade técnica.
-
-**Motivo:** terminar um jogo forte é comercialmente melhor do que construir um projeto enorme que nunca fica pronto.
+- capacidade de marketing.

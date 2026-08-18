@@ -44,7 +44,7 @@ var enemy_speed: float = 100.0
 # VIDA
 # =========================================================
 
-var skeleton_max_hp: int = 1
+var skeleton_max_hp: int = 100
 
 var enemy_max_hp: int = 100
 var enemy_hp: int = 100

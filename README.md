@@ -3,53 +3,70 @@
 > **Industrial Reanimation Solutions**  
 > **Waste Nothing. Raise Everything.**
 
-**NecroWorks** é um roguelite 2D com elementos de autobattler, estratégia, automação e progressão incremental, desenvolvido em **Godot 4.7.1** com **GDScript**.
+**NecroWorks** é um roguelite 2D de autobattler, estratégia, automação e progressão incremental, desenvolvido em **Godot 4.7.1** com **GDScript**.
 
-O jogador transforma o campo de batalha em uma linha de produção necromântica:
+A fantasia central é transformar o campo de batalha em uma linha de produção necromântica:
 
-**Enemy → Corpse → Resources → Undead → Bigger Army → Stronger Waves → Upgrades → Synergies**
+```text
+Enemy
+→ Corpse
+→ Processing
+→ Resources
+→ Undead
+→ Bigger Army
+→ Upgrades
+→ Synergies
+→ Elites / Boss
+→ Victory ou Defeat
+```
 
-A proposta central é criar um jogo fácil de entender, satisfatório de assistir e com profundidade emergente: poucas regras devem gerar muitas combinações.
+## Estado do projeto
 
----
+**Milestone funcional atual:** `v0.1.0 — First Run`  
+**Status:** funcionalmente completo e validado em playtest.  
+**Próxima fase:** `v0.2.0 — Necromantic Economy`.
 
-## Estado atual
+> O balanceamento atual ainda não é definitivo. Um balance pass completo será feito depois que a economia multi-resource e os primeiros novos Undead estiverem representados, para evitar balancear um sistema que logo mudará de forma significativa.
 
-**Versão estável mais recente:** `v0.0.3`  
-**Versão em desenvolvimento:** `v0.1.0 — First Run`
-
-### Implementado
+## O que já existe
 
 - combate automático;
-- HP, dano e cooldown;
-- múltiplos Skeletons;
-- HP e cooldown individuais;
-- target-based movement;
-- retarget de Enemy e Skeletons;
-- Corpse;
-- processamento de Corpse;
+- movimentação por alvo;
+- formação compactável;
+- Skeletons com HP/cooldown individuais;
+- Enemy respawn;
+- Corpses;
 - Bones;
 - criação de Skeleton;
 - Waves;
-- scaling de HP e dano;
-- Elite Wave a cada 5 Waves;
-- HUD de Wave;
-- 10 upgrades acumuláveis;
-- escolha de 3 upgrades aleatórios entre Waves;
-- 4 sinergias automáticas;
+- Elite Waves;
+- 10 upgrades;
+- escolha de 3 upgrades aleatórios;
+- 4 sinergias;
 - métricas de run;
-- placeholders visuais para unidades dinâmicas;
-- recuperação do exército após perda total enquanto houver recursos disponíveis.
-
-### Em desenvolvimento
-
-- Boss Wave;
+- Boss Wave 20;
+- The Foreman;
+- ataque AOE `Industrial Crush`;
 - Victory;
 - Game Over;
-- Restart Run;
-- encerramento da primeira run completa.
+- Run Summary;
+- Restart após vitória ou derrota;
+- primeira run completa validada do início ao fim.
 
----
+## Boss atual
+
+### The Foreman
+
+Wave 20.
+
+- 1 Boss;
+- 2200 HP;
+- 28 Damage;
+- visual maior/roxo no protótipo;
+- `Industrial Crush` aproximadamente a cada 4 s;
+- atinge até 6 Skeletons;
+- 35 de dano por alvo;
+- derrota encerra a run com Victory.
 
 ## Upgrades atuais
 
@@ -57,43 +74,55 @@ A proposta central é criar um jogo fácil de entender, satisfatório de assisti
 |---|---|
 | Sharpened Bones | +25% Skeleton Damage |
 | Bone Plating | +25 Skeleton Max HP |
-| Efficient Recycling | +2 Bones por Corpse |
+| Efficient Recycling | +2 Bones/Corpse |
 | Rapid Assault | +15% Attack Speed |
 | Death March | +20% Movement Speed |
 | Mass Production | -1 Bone no custo de Skeleton |
 | Heavy Bones | +50% Damage, -20% Attack Speed |
-| Bone Harvest | +20% chance de Bones extras ao processar Corpse |
-| Reassembly | +15% chance de Skeleton reviver com 50% HP |
-| Final Service | Skeleton causa dano ao Enemy ao morrer |
-
----
+| Bone Harvest | chance de Bones extras |
+| Reassembly | chance de Skeleton reviver |
+| Final Service | dano ao Enemy quando Skeleton morre |
 
 ## Sinergias atuais
 
 | Sinergia | Requisitos | Efeito |
 |---|---|---|
 | Recycling Plant | Efficient Recycling + Bone Harvest | dobra o bônus de Bone Harvest |
-| Second Shift | Reassembly + Final Service | revive e causa parte do dano de Final Service |
-| Bone Assembly Line | Mass Production + Efficient Recycling | chance de produzir Skeleton grátis ao processar Corpse |
-| Overclocked Ossuary | Heavy Bones + Rapid Assault | chance de ataque duplo |
+| Second Shift | Reassembly + Final Service | revive também causa parte do Final Service |
+| Bone Assembly Line | Mass Production + Efficient Recycling | chance de produzir Skeleton grátis |
+| Overclocked Ossuary | Heavy Bones + Rapid Assault | chance de Double Strike |
 
----
+## Stack
 
-## Tecnologia
+- Godot 4.7.1
+- GDScript
+- 2D
+- Windows
+- single-player
+- Steam como plataforma comercial inicial
+- Git + GitHub
 
-- **Engine:** Godot 4.7.1
-- **Linguagem:** GDScript
-- **Dimensão:** 2D
-- **Plataforma inicial:** Windows
-- **Distribuição planejada:** Steam
-- **Modo:** single-player
-- **Versionamento:** Git + GitHub
+## Direção visual oficial
 
----
+A referência visual definida para NecroWorks é uma interface dark-fantasy industrial/corporativa criada para o próprio projeto.
 
-## Filosofia de desenvolvimento
+Estrutura desejada:
 
-O projeto segue desenvolvimento incremental:
+- battlefield central;
+- Wave/Boss no topo;
+- recursos na lateral;
+- Run Metrics e Active Synergies à direita;
+- área de produção/fábrica na parte inferior;
+- cards de upgrade contextuais;
+- metal escuro;
+- verde necromântico;
+- ossos;
+- máquinas;
+- sinalização industrial/corporativa.
+
+Durante o protótipo, placeholders continuam aceitáveis. A migração visual será incremental.
+
+## Desenvolvimento
 
 ```text
 implementar
@@ -101,32 +130,7 @@ implementar
 → corrigir
 → documentar
 → commit
-→ push
 → próxima funcionalidade
 ```
 
-Durante a fase de protótipo, gameplay e arquitetura funcional têm prioridade sobre arte definitiva.
-
----
-
-## Próximo milestone
-
-### `v0.1.0 — First Run`
-
-Objetivo:
-
-```text
-Wave 1
-→ crescimento
-→ upgrades
-→ sinergias
-→ Elite Waves
-→ Boss
-→ Victory / Game Over
-→ Run Summary
-→ Restart
-```
-
-Depois disso o projeto entra em expansão de economia necromântica, variedade de unidades, Factory, conteúdo, polimento e preparação comercial para Steam.
-
-Consulte `docs/ROADMAP.md` para o plano completo.
+Consulte `docs/ROADMAP.md` e `docs/AI_HANDOFF.md`.
