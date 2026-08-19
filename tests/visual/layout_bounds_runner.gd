@@ -3,6 +3,7 @@ extends SceneTree
 
 const MAIN_SCENE: PackedScene = preload("res://main.tscn")
 const DESIGN_SIZE: Vector2 = Vector2(1920.0, 1080.0)
+const EMBEDDED_SAFE_BOTTOM_Y: float = 1015.0
 
 
 func _initialize() -> void:
@@ -26,17 +27,32 @@ func run_validation() -> void:
 		game.create_zombie_button,
 		game.production_quantity_selector,
 		game.production_queue_label,
+		game.factory_title_label,
+		game.processing_label,
+		game.bones_label,
 		game.factory_nav_button,
 		game.doctrine_nav_button,
 		game.ritual_nav_button
 	]
+	for directive_button: Variant in game.processing_directive_buttons.values():
+		controls.append(directive_button as Control)
 
 
 	for control: Control in controls:
+		var control_bottom: float = control.position.y + control.size.y
 		assert(control.position.x >= 0.0)
 		assert(control.position.y >= 0.0)
 		assert(control.position.x + control.size.x <= DESIGN_SIZE.x)
-		assert(control.position.y + control.size.y <= DESIGN_SIZE.y)
+		assert(
+			control_bottom <= EMBEDDED_SAFE_BOTTOM_Y,
+			(
+				control.name
+				+ " ends at y="
+				+ str(control_bottom)
+				+ ", below the embedded safe limit y="
+				+ str(EMBEDDED_SAFE_BOTTOM_Y)
+			)
+		)
 
 
 	print("RESPONSIVE LAYOUT BOUNDS VALIDATION: PASS")

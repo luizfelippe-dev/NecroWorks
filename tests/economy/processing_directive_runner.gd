@@ -26,11 +26,17 @@ func run_validation() -> void:
 		assert(directive_button != null and directive_button.disabled)
 		assert(
 			directive_button.position.y
-			>= game.processing_label.position.y + game.processing_label.size.y
+			>= game.processing_label.position.y + game.processing_label.size.y,
+			(
+				"Processing directive starts at y="
+				+ str(directive_button.position.y)
+				+ ", but the processing summary ends at y="
+				+ str(game.processing_label.position.y + game.processing_label.size.y)
+			)
 		)
 		assert(directive_button.position.x >= 1080.0)
 		assert(directive_button.position.x + directive_button.size.x <= 1895.0)
-		assert(directive_button.position.y + directive_button.size.y <= 1057.0)
+		assert(directive_button.position.y + directive_button.size.y <= 1015.0)
 
 
 	game.set_processing_directive(game.PROCESSING_BONE_FOCUS)

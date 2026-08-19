@@ -6474,11 +6474,11 @@ func create_zombie_ui() -> void:
 
 	production_queue_label = Label.new()
 	production_queue_label.name = "ProductionQueueLabel"
-	production_queue_label.position = Vector2(390.0, 1028.0)
-	production_queue_label.size = Vector2(650.0, 28.0)
+	production_queue_label.position = Vector2(390.0, 988.0)
+	production_queue_label.size = Vector2(650.0, 18.0)
 	production_queue_label.z_index = 110
 	production_queue_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	production_queue_label.add_theme_font_size_override("font_size", 14)
+	production_queue_label.add_theme_font_size_override("font_size", 12)
 	production_queue_label.add_theme_color_override("font_color", UI_GREEN)
 	add_child(production_queue_label)
 
@@ -6506,17 +6506,17 @@ func create_visual_shell() -> void:
 
 	resources_panel = create_hud_panel(
 		"ResourcesPanel",
-		Rect2(20.0, 842.0, 330.0, 215.0)
+		Rect2(20.0, 842.0, 330.0, 170.0)
 	)
 
 	create_hud_panel(
 		"ProductionPanel",
-		Rect2(365.0, 842.0, 700.0, 215.0)
+		Rect2(365.0, 842.0, 700.0, 170.0)
 	)
 
 	processing_panel = create_hud_panel(
 		"ProcessingPanel",
-		Rect2(1080.0, 842.0, 815.0, 215.0)
+		Rect2(1080.0, 842.0, 815.0, 170.0)
 	)
 
 	brand_label = Label.new()
@@ -6556,22 +6556,22 @@ func create_visual_shell() -> void:
 
 	factory_title_label = Label.new()
 	factory_title_label.name = "FactoryTitleLabel"
-	factory_title_label.position = Vector2(390.0, 855.0)
-	factory_title_label.size = Vector2(650.0, 45.0)
+	factory_title_label.position = Vector2(390.0, 850.0)
+	factory_title_label.size = Vector2(650.0, 38.0)
 	factory_title_label.text = tr("FACTORY_PRODUCTION_LINE")
 	factory_title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	factory_title_label.z_index = 100
-	factory_title_label.add_theme_font_size_override("font_size", 22)
+	factory_title_label.add_theme_font_size_override("font_size", 20)
 	factory_title_label.add_theme_color_override("font_color", UI_GREEN)
 	add_child(factory_title_label)
 
 	processing_label = Label.new()
 	processing_label.name = "ProcessingLabel"
-	processing_label.position = Vector2(1110.0, 862.0)
-	processing_label.size = Vector2(755.0, 118.0)
+	processing_label.position = Vector2(1110.0, 850.0)
+	processing_label.size = Vector2(755.0, 78.0)
 	processing_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	processing_label.z_index = 100
-	processing_label.add_theme_font_size_override("font_size", 18)
+	processing_label.add_theme_font_size_override("font_size", 16)
 	processing_label.add_theme_color_override("font_color", UI_TEXT)
 	add_child(processing_label)
 	create_processing_directive_ui()
@@ -7356,13 +7356,13 @@ func create_processing_directive_ui() -> void:
 		)
 		directive_button.position = Vector2(
 			start_x + float(index) * (button_width + button_gap),
-			987.0
+			952.0
 		)
 		directive_button.size = Vector2(button_width, 55.0)
 		directive_button.z_index = 110
 		directive_button.toggle_mode = true
 		directive_button.button_group = processing_directive_button_group
-		directive_button.add_theme_font_size_override("font_size", 14)
+		directive_button.add_theme_font_size_override("font_size", 13)
 		apply_button_style(
 			directive_button,
 			directive_accents[index]
@@ -7553,18 +7553,18 @@ func configure_primary_hud_layout() -> void:
 
 	bones_label.position = Vector2(
 		45.0,
-		862.0
+		858.0
 	)
 
 	bones_label.size = Vector2(
 		280.0,
-		180.0
+		145.0
 	)
 	bones_label.z_index = 100
 
 	bones_label.add_theme_font_size_override(
 		"font_size",
-		18
+		16
 	)
 	bones_label.add_theme_color_override(
 		"font_color",
@@ -7574,35 +7574,35 @@ func configure_primary_hud_layout() -> void:
 
 	create_skeleton_button.position = Vector2(
 		400.0,
-		945.0
+		930.0
 	)
 
 	create_skeleton_button.size = Vector2(
 		290.0,
-		82.0
+		62.0
 	)
 	create_skeleton_button.z_index = 100
 
 	create_skeleton_button.add_theme_font_size_override(
 		"font_size",
-		16
+		14
 	)
 
 
 	create_zombie_button.position = Vector2(
 		735.0,
-		945.0
+		930.0
 	)
 
 	create_zombie_button.size = Vector2(
 		290.0,
-		82.0
+		62.0
 	)
 	create_zombie_button.z_index = 100
 
 	create_zombie_button.add_theme_font_size_override(
 		"font_size",
-		16
+		14
 	)
 
 
@@ -7610,8 +7610,8 @@ func configure_primary_hud_layout() -> void:
 	apply_button_style(create_zombie_button, UI_FLESH)
 
 
-	production_quantity_selector.position = Vector2(555.0, 895.0)
-	production_quantity_selector.size = Vector2(320.0, 38.0)
+	production_quantity_selector.position = Vector2(555.0, 889.0)
+	production_quantity_selector.size = Vector2(320.0, 34.0)
 
 
 # =========================================================

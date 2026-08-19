@@ -164,10 +164,13 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 
 ## Responsive layout bounds
 
-Validates preserved aspect mode and all primary lower-HUD controls inside the 1920×1080 design canvas:
+Validates preserved aspect mode and all primary lower-HUD controls inside the
+conservative `y=1015` safe frame used by Godot's embedded 1920×1080 game view.
+The gate covers panels, resource text, production controls, queue status and all
+processing-directive buttons, including their runtime minimum sizes:
 
 ```powershell
-Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/layout_bounds_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/visual/layout_bounds_runner.gd
 ```
 
 The five-second local milestone clip is reproducible with `tests/visual/milestone_capture_runner.gd` and Godot's `--write-movie` option.

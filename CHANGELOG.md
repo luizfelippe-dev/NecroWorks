@@ -181,6 +181,11 @@ Zombie Cost: 6 Flesh
 
 ### Fixed
 
+- Lower Factory HUD no longer extends below the usable embedded-game viewport:
+  - Resources, production and Corpse-processing panels use a compact 170 px shell;
+  - production controls, queue status and processing directives remain fully visible;
+  - the lower conveyor detail now renders inside the safe frame;
+  - regression coverage enforces a conservative `y=1015` bottom boundary.
 - Enemies could spawn and fight behind the Run Metrics and Active Synergies panels.
 - Long Run Summary and Active Synergies text overlapped the Restart button.
 - `project.godot` referenced a stale main-scene UID after scene reimport.

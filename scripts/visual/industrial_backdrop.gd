@@ -76,8 +76,8 @@ func _draw() -> void:
 	draw_rect(Rect2(0.0, 823.0, 1920.0, 257.0), Color(0.018, 0.022, 0.021, 1.0))
 	for roller: int in range(40):
 		var roller_x: float = 18.0 + float(roller) * 49.0
-		draw_circle(Vector2(roller_x, 1052.0), 8.0, METAL_LIGHT)
-		draw_circle(Vector2(roller_x, 1052.0), 3.0, Color(0.025, 0.03, 0.027, 1.0))
+		draw_circle(Vector2(roller_x, 1022.0), 8.0, METAL_LIGHT)
+		draw_circle(Vector2(roller_x, 1022.0), 3.0, Color(0.025, 0.03, 0.027, 1.0))
 
 	# Luminárias verdes discretas que repetem a linguagem do concept.
 	for lamp: int in range(7):
