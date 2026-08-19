@@ -280,13 +280,31 @@ Added three live controls to the Corpse Processing panel, dynamic yield feedback
 
 ---
 
+## 19/08/2026 — Wave Commitment & Basic Sprites
+
+Processing routes are now a free between-Wave commitment instead of a live per-Corpse toggle:
+
+```text
+Wave 1             → Balanced onboarding
+Between Waves      → choose next route
+Active Wave        → route locked
+```
+
+This keeps experimentation accessible while removing repetitive optimal micro-management.
+
+Square combat placeholders were replaced with transparent prototype sprites for Skeleton, Zombie, Human Warrior, Mage, Elf and The Foreman. Base scenes now expose `Sprite2D` content in the 2D editor; runtime texture selection is isolated in `scripts/visual/unit_sprite_catalog.gd` and covered by a persistent validation runner.
+
+The procedural factory backdrop moved to `scripts/visual/`, leaving only stable entry points and base scenes at the repository root.
+
+---
+
 ## Next
 
 ### Factory feedback
 
 Recommended next block:
 
-- playtest switching directives during a normal run;
+- playtest route commitment across full Waves;
 - add stronger visual/audio feedback when a Corpse enters the selected route.
 
 ### Enemy depth

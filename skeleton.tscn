@@ -1,3 +1,10 @@
-[gd_scene format=3 uid="uid://x2jlhh16abtt"]
+[gd_scene load_steps=2 format=3 uid="uid://x2jlhh16abtt"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/units/skeleton_prototype.png" id="1_sprite"]
 
 [node name="Skeleton" type="Node2D" unique_id=602521724]
+
+[node name="UnitSprite" type="Sprite2D" parent="."]
+z_index = 10
+texture = ExtResource("1_sprite")
+scale = Vector2(0.1875, 0.1875)

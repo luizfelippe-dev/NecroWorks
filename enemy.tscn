@@ -1,3 +1,10 @@
-[gd_scene format=3 uid="uid://cm4q4sl2bv5xq"]
+[gd_scene load_steps=2 format=3 uid="uid://cm4q4sl2bv5xq"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/units/human_warrior_prototype.png" id="1_sprite"]
 
 [node name="Enemy" type="Node2D" unique_id=89982878]
+
+[node name="UnitSprite" type="Sprite2D" parent="."]
+z_index = 10
+texture = ExtResource("1_sprite")
+scale = Vector2(0.2207, 0.2207)

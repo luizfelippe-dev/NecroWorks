@@ -67,6 +67,8 @@ Em desenvolvimento e já validado parcialmente:
 - faixa segura de combate que não invade o HUD lateral;
 - Run Summary final em duas colunas sem sobreposição.
 - primeira decisão de Factory: processamento Balanced, Bone Focus ou Flesh Focus.
+- Wave 1 usa Balanced; entre Waves, a diretiva da próxima Wave pode ser escolhida gratuitamente e fica travada durante o combate.
+- sprites básicos para Skeleton, Zombie, Warrior, Mage, Elf e The Foreman.
 
 ## Economia atual
 
@@ -112,7 +114,7 @@ Cost: 6 Flesh
 Role: Tank / Frontline
 ```
 
-O Zombie usa placeholder verde no protótipo.
+O Zombie ainda compartilha a cena-base do Skeleton, mas já possui sprite e identidade visual próprios em runtime.
 
 ## Boss atual
 
@@ -177,9 +179,7 @@ Estrutura:
 - maquinário industrial;
 - horror corporativo.
 
-O protótipo ainda usa placeholders, mas já possui a primeira passagem estrutural nessa direção:
-fundo fabril procedural, battlefield separado, faixa de produção, módulos de processamento,
-painéis de metal escuro, acentos necromânticos e cards contextuais.
+O protótipo já substituiu os quadrados por sprites básicos de todas as unidades atuais. A arte ainda é temporária e sem animação, mas a primeira passagem estrutural também inclui fundo fabril procedural, battlefield separado, faixa de produção, módulos de processamento, painéis de metal escuro, acentos necromânticos e cards contextuais.
 
 ## Stack
 
@@ -195,11 +195,14 @@ painéis de metal escuro, acentos necromânticos e cards contextuais.
 
 ```text
 assets/reference/       concept e referências visuais
+assets/sprites/units/   sprites temporários usados pelo runtime
 docs/                   design, arquitetura, roadmap e plano comercial
 main.tscn / main.gd      entradas estáveis para F5/F6 no Godot
 scripts/ui/              componentes reutilizáveis de interface
 scripts/game/            políticas de Waves e catálogo de inimigos
 scripts/economy/         regras isoladas de processamento e recursos
+scripts/visual/          backdrop e catálogo de sprites
+tests/visual/            validação persistente dos assets de unidade
 ```
 
 O protótipo ainda mantém a orquestração principal centralizada, mas novos componentes devem ser extraídos incrementalmente quando houver uma fronteira clara e testável.

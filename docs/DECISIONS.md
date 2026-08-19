@@ -1,6 +1,6 @@
 # NecroWorks — Decisions
 
-**Atualizado:** 18/08/2026
+**Atualizado:** 19/08/2026
 
 ---
 
@@ -336,3 +336,26 @@ Flesh Focus 2B / 6F
 ```
 
 Focused yields deliberately guarantee immediate recovery: Bone Focus can build Skeletons and Flesh Focus can build one Zombie from a single Corpse.
+
+---
+
+## Processing directives are free but committed per Wave
+
+Wave 1 uses Balanced as an onboarding baseline. After each Wave, the player may choose Balanced, Bone Focus or Flesh Focus for free while selecting the next upgrade. Starting the next Wave locks that directive until combat ends.
+
+Reasoning:
+
+- a currency fee would punish experimentation before the economy has enough sinks;
+- unrestricted mid-Wave switching turns every Corpse into repetitive micro-optimization;
+- Wave commitment creates prediction, risk and build identity without adding grind;
+- the between-Wave decision aligns naturally with enemy previews and upgrade selection.
+
+Revisit only after playtests show that one route dominates or that Wave commitment creates unrecoverable states.
+
+---
+
+## Hybrid scene-and-code presentation
+
+Stable visual content belongs in scenes/assets; dynamic combat state and archetype selection remain in code. `skeleton.tscn` and `enemy.tscn` expose editable `Sprite2D` children, while the runtime catalog swaps Skeleton, Zombie, Warrior, Mage, Elf and Foreman textures.
+
+The industrial background may remain procedural during prototyping. Final production can combine procedural layers, TileMaps, shaders and painted images; using code is not itself a quality problem, but hiding all stable layout/content from the editor would slow visual iteration.

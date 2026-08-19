@@ -31,7 +31,7 @@ This is a regression baseline, not a final balance target. Run with the exact fi
 
 ## Processing directives
 
-Validates Balanced, Bone Focus and Flesh Focus yields, UI bounds, Corpse consumption and Efficient Recycling compatibility:
+Validates Balanced, Bone Focus and Flesh Focus yields, Wave locking, UI bounds, Corpse consumption and Efficient Recycling compatibility:
 
 ```powershell
 Godot_v4.7.1-stable_win64_console.exe `
@@ -48,3 +48,16 @@ Current base yields:
 | Balanced | 8 Bones + 2 Flesh | 9 Skeletons + 2 Zombies |
 | Bone Focus | 12 Bones + 0 Flesh | 14 Skeletons |
 | Flesh Focus | 2 Bones + 6 Flesh | 2 Skeletons + 6 Zombies |
+
+Wave 1 is fixed to Balanced. Directive controls unlock between Waves and lock again when the next Wave starts.
+
+## Unit sprites
+
+Validates that every current unit visual resolves to a real texture, respects the 512 px runtime import cap and that the main Skeleton/Enemy instances no longer use square debug visuals:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --path . `
+  --script res://tests/visual/unit_sprite_runner.gd
+```

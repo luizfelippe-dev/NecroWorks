@@ -1,6 +1,6 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 18/08/2026
+**Atualizado:** 19/08/2026
 
 # Stack
 
@@ -43,7 +43,9 @@ enemy.tscn
 corpse.tscn
 
 assets/
-└── reference/
+├── reference/
+└── sprites/
+    └── units/
 
 scripts/
 ├── economy/
@@ -51,13 +53,19 @@ scripts/
 ├── game/
 │   ├── enemy_archetype_catalog.gd
 │   └── enemy_wave_policy.gd
-└── ui/
+├── ui/
+│   └── unit_health_bar.gd
+└── visual/
+    ├── industrial_backdrop.gd
+    └── unit_sprite_catalog.gd
 
 tests/
 ├── balance/
 │   └── composition_scenario_runner.gd
-└── economy/
-    └── processing_directive_runner.gd
+├── economy/
+│   └── processing_directive_runner.gd
+└── visual/
+    └── unit_sprite_runner.gd
 ```
 
 The current scene and script entry points intentionally stay at `res://`. Godot's F6 command runs the scene currently open in the editor; keeping these stable prevents stale-resource failures while the prototype is evolving.
@@ -75,11 +83,15 @@ enemy.tscn
 corpse.tscn
 ```
 
-Zombie V1 currently reuses the Skeleton Node2D scene as a placeholder and applies Zombie-specific state/visual behavior in `main.gd`.
+`skeleton.tscn` and `enemy.tscn` now contain visible `Sprite2D` children, so their base art can be inspected in the 2D editor. Runtime archetype selection swaps textures through `scripts/visual/unit_sprite_catalog.gd`.
 
-This is acceptable for the prototype.
+Zombie V1 still reuses the Skeleton Node2D scene structurally, but receives its own texture and combat state at runtime. This is acceptable for the prototype.
 
-Later, Zombie should receive its own scene/art.
+Later, Zombie and each commercial unit should receive dedicated scenes with animations, effects and audio hooks.
+
+The factory background is procedural and lives in `scripts/visual/industrial_backdrop.gd`. Procedural rendering is an intentional prototype technique, not an architectural problem; static illustration layers can replace or complement it when final art direction requires richer depth.
+
+Prototype sprite source PNGs remain available at full resolution, while Godot import settings cap runtime textures at 512 px. This preserves editable source quality without loading unnecessary resolution for sub-200 px battlefield rendering.
 
 # Resource state
 
@@ -99,7 +111,7 @@ Corpse
 → Bones and/or Flesh
 ```
 
-Directive state lives in `processing_directive`. Pure yield/name validation lives in `scripts/economy/processing_directive_policy.gd`; `get_processing_yield()` is the orchestrator-facing entry point used by processing logic, HUD labels, buttons and economy validation.
+Directive state lives in `processing_directive`; `processing_directive_locked` prevents mid-Wave changes. Wave 1 starts Balanced, controls unlock during the upgrade transition, and `start_wave()` locks the selected route. Pure yield/name validation lives in `scripts/economy/processing_directive_policy.gd`; `get_processing_yield()` is the orchestrator-facing entry point used by processing logic, HUD labels, buttons and economy validation.
 
 # Corpse tracking
 

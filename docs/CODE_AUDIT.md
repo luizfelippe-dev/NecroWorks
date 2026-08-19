@@ -1,6 +1,6 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 18/08/2026
+**Revisado:** 19/08/2026
 
 ## Current verdict
 
@@ -25,6 +25,10 @@ The repository now separates modular assets/components while keeping stable Godo
 - right-side HUD protected by an explicit combat-safe boundary;
 - dynamic Run Summary content separated into two layout regions;
 - stale Project Run scene UID repaired.
+- temporary square rendering replaced with scene-visible `Sprite2D` assets;
+- runtime texture lookup isolated in `scripts/visual/unit_sprite_catalog.gd`;
+- procedural backdrop moved out of the repository root;
+- persistent unit-sprite validation added.
 
 ## Priority risks
 
@@ -59,9 +63,9 @@ The current overlap bugs are fixed at 1920×1080, but this does not close the re
 
 ### P1 — Parallel unit dictionaries
 
-Skeleton and Zombie state is split across arrays and dictionaries. This is acceptable for two units but becomes fragile with Ghost.
+Skeleton and Zombie state is split across arrays and dictionaries. This is acceptable for two units but becomes fragile with Skeleton Archer, Lich or Ghost.
 
-Ghost is the refactor trigger for a generic runtime unit record or component.
+The first third playable unit is now the refactor trigger for a generic runtime unit record or component. Do not implement Archer or Lich as another copied dictionary family.
 
 ### P2 — Runtime-created UI
 
@@ -71,6 +75,7 @@ Programmatic UI enabled fast iteration but is harder to edit visually and locali
 
 A persistent deterministic composition harness now exists at `tests/balance/composition_scenario_runner.gd`.
 Economy routing has persistent coverage at `tests/economy/processing_directive_runner.gd`.
+Unit texture resolution has persistent coverage at `tests/visual/unit_sprite_runner.gd`.
 
 Before the demo, extend persistent coverage for:
 
@@ -81,9 +86,9 @@ Before the demo, extend persistent coverage for:
 - wave progression;
 - save compatibility.
 
-### P2 — Placeholder unit scenes
+### P2 — Prototype unit scenes
 
-Zombie still reuses the Skeleton scene and placeholder rendering. Each commercial unit needs its own scene, animation, hit feedback and audio identity.
+Square placeholders are gone and all current combatants have temporary sprites. Zombie still reuses the Skeleton scene structurally, and none of the units have animation state machines, hit feedback or audio identity. Each commercial unit eventually needs a dedicated presentation scene even if combat data remains shared.
 
 ## Engineering rules going forward
 

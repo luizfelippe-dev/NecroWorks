@@ -1,6 +1,6 @@
 # NecroWorks — Commercial Plan
 
-**Revisado:** 18/08/2026
+**Revisado:** 19/08/2026
 
 ## Goal
 
@@ -90,6 +90,8 @@ Good clips should show:
 Processing Directive V1 is the first Factory choice that directly changes the run: every Corpse can now be routed through Balanced, Bone Focus, or Flesh Focus processing, with visible resource yields and distinct production potential.
 
 A future marketing clip can communicate the loop in a few seconds: an enemy falls, its Corpse is recycled, the player changes the directive, the yield changes, and a different Undead composition becomes viable. Before this becomes Steam-facing footage, the same sequence still needs stronger animation, sound, impact feedback, and a more physical sense of factory machinery.
+
+The next commercially legible Factory proof is Army Doctrine: show a target such as `5 Zombies + 30 Skeletons`, visible production queues and machines automatically replacing battlefield losses. This can communicate both automation spectacle and strategic intent, but only if throughput, priorities and resource scarcity remain readable.
 
 ---
 
@@ -181,7 +183,7 @@ Recommended cadence: publish only when there is a visually understandable milest
 
 # Risks right now
 
-- placeholder visuals;
+- temporary static sprites without animation or combat VFX;
 - no Factory yet;
 - only Skeleton/Zombie;
 - Blood/Souls incomplete;

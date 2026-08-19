@@ -62,7 +62,17 @@
   - three live factory controls and dynamic yield feedback;
   - focused modes preserve one-Corpse emergency production.
   - per-route processing history in the final Run Summary.
+- Processing directives now use Wave commitment:
+  - Wave 1 starts in Balanced mode;
+  - selection is free during the between-Wave upgrade phase;
+  - the selected route is locked while combat is active.
 - Persistent economy runner for directive yields, UI bounds and upgrade compatibility.
+- First runtime character sprite pass for Skeleton, Zombie, Human Warrior, Mage, Elf and The Foreman.
+- `skeleton.tscn` and `enemy.tscn` now expose visible `Sprite2D` children in the 2D editor.
+- Runtime sprite selection centralized in `scripts/visual/unit_sprite_catalog.gd`.
+- Procedural backdrop moved from the repository root to `scripts/visual/industrial_backdrop.gd`.
+- Persistent visual runner validates every current unit texture and verifies square placeholders are gone.
+- Runtime sprite imports are capped at 512 px while original transparent PNG sources are preserved.
 
 ### Current Zombie V1 values
 

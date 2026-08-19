@@ -586,9 +586,9 @@ The roles are meaningfully different: Skeletons provide damage, Zombies provide 
 
 The more important finding was economic: fixed Bones + Flesh output made producing both unit types automatic rather than strategic. Processing Directive V1 now lets the player bias output toward Bone, Flesh or a balanced result.
 
-## Processing Directive V1 — implemented
+## Processing Directive V1.1 — Wave commitment implemented
 
-Before recycling a Corpse, the player selects the factory output:
+The player selects the factory output for the next Wave during the between-Wave upgrade phase:
 
 ```text
 Balanced    → 8 Bones + 2 Flesh
@@ -602,7 +602,88 @@ Design intent:
 - Bone Focus accelerates Skeleton production and offensive tempo;
 - Flesh Focus guarantees one Zombie per Corpse and favors durable frontline growth;
 - both focused modes can immediately rebuild at least one unit from the last available Corpse, avoiding an accidental no-production softlock.
+- selection is free, but the route is locked for the full Wave;
+- Wave 1 always uses Balanced to teach the base economy before introducing specialization;
+- commitment prevents per-Corpse micro-management and asks the player to anticipate enemy composition.
 
 Efficient Recycling increases the Bone component before directive modifiers are applied, so the upgrade remains useful in every mode.
 
 The Run Summary records how many Corpses used each route so playtests can distinguish an actual processing strategy from the final selected button.
+
+---
+
+# Factory automation vision
+
+Automation should remove repetitive clicking without removing army planning. The preferred model is an **Army Doctrine**: the player defines a target composition and the Factory attempts to maintain it.
+
+Example:
+
+```text
+Target frontline  → 5 Zombies
+Target backline   → 30 Skeletons
+Zombie dies       → Flesh Vat queues one replacement
+Skeleton dies     → Skeleton Assembler queues one replacement
+```
+
+The system must respect:
+
+- available Bones, Flesh and future resources;
+- the Undead population cap;
+- machine throughput and queue capacity;
+- production priority when multiple roles are missing;
+- an optional minimum resource reserve;
+- unlocked unit recipes;
+- player pause/disable controls.
+
+Target composition is strategically stronger than an unrestricted instant quantity field because it expresses intent over time. A bulk production order remains useful as a secondary manual tool, preferably with controller-friendly stepper buttons rather than free text only.
+
+## Automation progression
+
+```text
+Manual Corpse click
+→ Auto-collect unlock
+→ processing queue
+→ faster/multiple processing
+→ production orders
+→ Army Doctrine auto-replenishment
+→ specialized production lines
+```
+
+Automatic processing and replenishment must have visible queues, machine activity and resource transactions. Hidden instant automation would weaken the Factory fantasy.
+
+## Factory upgrade panel
+
+A dedicated button should open a Factory panel without permanently covering the battlefield. Candidate run-scoped upgrade branches:
+
+- Corpse Processor: collection radius, queue capacity and processing speed;
+- Skeleton Assembler: throughput, batch size and Bone efficiency;
+- Flesh Vat: Zombie production speed, durability recipes and recovery;
+- Logistics: target composition slots, priority rules and resource reserve;
+- Advanced Research: Archer, Lich and future unit recipes;
+- Routing: specialized directives and multi-output processing.
+
+The currency for Factory upgrades is still an open design question. Do not automatically charge Bones/Flesh if that makes upgrading compete too directly with producing the army; Wave/Elite-earned Factory points are a candidate for prototyping.
+
+## Planned Undead roles
+
+```text
+Skeleton Warrior → cheap melee damage / base Bone recipe
+Skeleton Archer  → ranged Bone damage / unlockable recipe
+Zombie Tank      → durable frontline / Flesh recipe
+Lich             → rare caster-support / unlockable advanced recipe
+```
+
+The Lich may summon temporary Skeletons, but summoning needs a cooldown, cap or resource cost so it cannot create infinite exponential growth. Adding Archer or Lich requires the generic Undead runtime refactor first; duplicating another full family of arrays and dictionaries is not acceptable.
+
+## Menus, settings and localization
+
+Required languages are PT-BR, English and Spanish. Translation keys/resources should be introduced before the UI expands into multiple Factory and meta-progression panels. Final translation and linguistic QA happen after interface copy stabilizes.
+
+The vertical slice requires:
+
+- Main Menu;
+- Continue/New Run flow when saves exist;
+- Pause Menu;
+- Options for audio, display, language and accessibility basics;
+- remappable controls where practical;
+- persistent settings and versioned save data.

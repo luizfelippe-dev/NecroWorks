@@ -39,6 +39,9 @@ const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
 )
+const UNIT_SPRITE_CATALOG: Script = preload(
+	"res://scripts/visual/unit_sprite_catalog.gd"
+)
 
 
 # =========================================================
@@ -105,7 +108,8 @@ func create_zombie() -> void:
 
 	ensure_unit_visual(
 		new_zombie,
-		ZOMBIE_COLOR
+		ZOMBIE_COLOR,
+		"zombie"
 	)
 
 
@@ -308,6 +312,7 @@ const ENEMY_COLOR: Color = Color.RED
 const ELITE_ENEMY_COLOR: Color = Color(0.55, 0.05, 0.15, 1.0)
 
 const UNIT_SIZE: float = 70.0
+const UNIT_SPRITE_HEIGHT: float = 96.0
 
 
 # =========================================================
@@ -377,6 +382,7 @@ const PROCESSING_BONE_FOCUS: String = PROCESSING_DIRECTIVE_POLICY.BONE_FOCUS
 const PROCESSING_FLESH_FOCUS: String = PROCESSING_DIRECTIVE_POLICY.FLESH_FOCUS
 
 var processing_directive: String = PROCESSING_BALANCED
+var processing_directive_locked: bool = true
 var corpses_processed_by_directive: Dictionary = {
 	PROCESSING_BALANCED: 0,
 	PROCESSING_BONE_FOCUS: 0,
@@ -493,6 +499,7 @@ const BOSS_NAME: String = "THE FOREMAN"
 const BOSS_HP: int = 2200
 const BOSS_DAMAGE: int = 28
 const BOSS_SIZE: float = 140.0
+const BOSS_SPRITE_HEIGHT: float = 168.0
 
 const BOSS_SPECIAL_ATTACK_INTERVAL: float = 4.0
 const BOSS_SPECIAL_ATTACK_TARGETS: int = 6
@@ -720,7 +727,8 @@ func _ready() -> void:
 
 	ensure_unit_visual(
 		initial_skeleton,
-		SKELETON_COLOR
+		SKELETON_COLOR,
+		"skeleton"
 	)
 
 	register_skeleton(
@@ -1131,6 +1139,7 @@ func start_wave(
 
 	wave_in_progress = true
 	wave_transition_in_progress = false
+	set_processing_directive_locked(true)
 
 
 	print("")
@@ -1496,7 +1505,8 @@ func register_enemy(new_enemy: Node2D) -> void:
 	)
 	ensure_unit_visual(
 		new_enemy,
-		visual_color
+		visual_color,
+		archetype_id
 	)
 
 
@@ -2470,6 +2480,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 		wave_in_progress = false
 		wave_transition_in_progress = true
+		set_processing_directive_locked(false)
 
 
 		print("")
@@ -2588,41 +2599,10 @@ func update_current_enemy_visual_size(
 		return
 
 
-	var visual_node: Node = (
-		target_enemy.get_node_or_null(
-			"DebugVisual"
-		)
-	)
-
-
-	var visual: Polygon2D = (
-		visual_node as Polygon2D
-	)
-
-
-	if visual == null:
-		return
-
-
-	var target_size: float = UNIT_SIZE
-
-
-	if boss_active:
-		target_size = BOSS_SIZE
-
-
-	var half_size: float = (
-		target_size / 2.0
-	)
-
-
-	visual.polygon = PackedVector2Array(
-		[
-			Vector2(-half_size, -half_size),
-			Vector2(half_size, -half_size),
-			Vector2(half_size, half_size),
-			Vector2(-half_size, half_size)
-		]
+	configure_unit_sprite(
+		target_enemy,
+		str(enemy_types.get(target_enemy, "human_warrior")),
+		BOSS_SPRITE_HEIGHT if boss_active else UNIT_SPRITE_HEIGHT
 	)
 
 
@@ -2790,6 +2770,12 @@ func set_processing_directive(directive: String) -> void:
 		return
 
 
+	if processing_directive_locked:
+		print("PROCESSING DIRECTIVE LOCKED FOR WAVE ", current_wave)
+		update_processing_directive_buttons()
+		return
+
+
 	processing_directive = directive
 
 
@@ -2809,6 +2795,12 @@ func set_processing_directive(directive: String) -> void:
 		"PROCESSING DIRECTIVE: ",
 		get_processing_directive_name()
 	)
+	update_metrics_ui()
+
+
+func set_processing_directive_locked(is_locked: bool) -> void:
+
+	processing_directive_locked = is_locked
 	update_metrics_ui()
 
 
@@ -3053,7 +3045,8 @@ func create_skeleton_internal(
 
 	ensure_unit_visual(
 		new_skeleton,
-		SKELETON_COLOR
+		SKELETON_COLOR,
+		"skeleton"
 	)
 
 
@@ -3109,76 +3102,46 @@ func create_skeleton_internal(
 
 func ensure_unit_visual(
 	unit: Node2D,
-	color: Color
+	color: Color,
+	visual_id: String
 ) -> void:
 
-	var existing_node: Node = (
-		unit.get_node_or_null(
-			"DebugVisual"
-		)
+	unit.set_meta("visual_accent", color)
+	configure_unit_sprite(
+		unit,
+		visual_id,
+		BOSS_SPRITE_HEIGHT if visual_id == "foreman" else UNIT_SPRITE_HEIGHT
 	)
 
 
-	if existing_node != null:
+func configure_unit_sprite(
+	unit: Node2D,
+	visual_id: String,
+	target_height: float
+) -> void:
 
-		var existing_visual: Polygon2D = (
-			existing_node as Polygon2D
-		)
-
-
-		if existing_visual != null:
-
-			existing_visual.color = color
+	var texture: Texture2D = UNIT_SPRITE_CATALOG.get_texture(visual_id)
 
 
+	if texture == null:
+		push_warning("Missing unit sprite for: " + visual_id)
 		return
 
 
-	var visual: Polygon2D = Polygon2D.new()
-
-	visual.name = "DebugVisual"
-
-	visual.color = color
-
-	visual.z_index = 10
+	var sprite: Sprite2D = unit.get_node_or_null("UnitSprite") as Sprite2D
 
 
-	var half_size: float = (
-		UNIT_SIZE / 2.0
-	)
+	if sprite == null:
+		sprite = Sprite2D.new()
+		sprite.name = "UnitSprite"
+		sprite.z_index = 10
+		unit.add_child(sprite)
 
 
-	var points: PackedVector2Array = PackedVector2Array(
-		[
-			Vector2(
-				-half_size,
-				-half_size
-			),
-
-			Vector2(
-				half_size,
-				-half_size
-			),
-
-			Vector2(
-				half_size,
-				half_size
-			),
-
-			Vector2(
-				-half_size,
-				half_size
-			)
-		]
-	)
-
-
-	visual.polygon = points
-
-
-	unit.add_child(
-		visual
-	)
+	sprite.texture = texture
+	var texture_height: float = maxf(float(texture.get_height()), 1.0)
+	var uniform_scale: float = target_height / texture_height
+	sprite.scale = Vector2(uniform_scale, uniform_scale)
 
 
 func ensure_unit_health_bar(
@@ -3262,14 +3225,11 @@ func ensure_enemy_health_bar(
 
 
 	var visual_size: float = UNIT_SIZE
-	var fill_color: Color = Color(0.88, 0.16, 0.10, 1.0)
-	var enemy_visual: Polygon2D = target_enemy.get_node_or_null(
-		"DebugVisual"
-	) as Polygon2D
-
-
-	if enemy_visual != null:
-		fill_color = enemy_visual.color.lightened(0.18)
+	var visual_accent: Color = target_enemy.get_meta(
+		"visual_accent",
+		Color(0.88, 0.16, 0.10, 1.0)
+	) as Color
+	var fill_color: Color = visual_accent.lightened(0.18)
 
 
 	if boss_active:
@@ -5373,6 +5333,10 @@ func update_processing_directive_buttons() -> void:
 		directive_button.button_pressed = (
 			directive_id == processing_directive
 		)
+		directive_button.disabled = (
+			run_finished
+			or processing_directive_locked
+		)
 
 
 func create_stylebox(
@@ -5477,10 +5441,17 @@ func update_metrics_ui() -> void:
 
 	if processing_label != null:
 		var directive_yield: Vector2i = get_processing_yield()
+		var directive_state: String = (
+			"LOCKED THIS WAVE"
+			if processing_directive_locked
+			else "CHOOSE FOR NEXT WAVE"
+		)
 		processing_label.text = (
 			"CORPSE PROCESSING"
 			+ "\nMODE: "
 			+ get_processing_directive_name()
+			+ "  |  "
+			+ directive_state
 			+ "  |  CORPSES: "
 			+ str(corpses.size())
 			+ "\nYIELD: +"

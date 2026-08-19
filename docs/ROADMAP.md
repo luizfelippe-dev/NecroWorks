@@ -1,6 +1,25 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 18/08/2026
+**Atualizado:** 19/08/2026
+
+---
+
+# Immediate execution order
+
+1. Manually validate the new sprites and per-Wave processing commitment; close the current milestone with commit/push.
+2. Add visible Corpse processing feedback before making processing automatic.
+3. Introduce the localization foundation and translation keys before creating more large panels.
+4. Implement Corpse Processor queue, automatic collection toggle, throughput and capacity.
+5. Create the Factory panel shell and its first run-scoped upgrade branch.
+6. Add manual bulk production orders with a controller-friendly quantity stepper.
+7. Prototype Army Doctrine: target composition, priority, reserves and automatic replenishment.
+8. Extract generic Undead runtime state before implementing a third playable unit.
+9. Add Skeleton Archer first; use it to validate ranged player-unit architecture.
+10. Add Lich only after Souls/advanced recipe costs and summon limits are defined.
+11. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice.
+12. Complete PT-BR, English and Spanish coverage after interface text stabilizes.
+
+This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 
 ---
 
@@ -77,6 +96,9 @@
 - [x] establish deterministic Skeleton/Zombie/mixed Wave 8 baseline
 - [x] confirm distinct damage, durability and mixed-army outcomes
 - [x] turn Corpse output into a real Bone/Flesh routing decision
+- [x] lock the selected processing route for each Wave
+- [x] replace square combat placeholders with basic unit sprites
+- [x] expose base Skeleton/Enemy sprites in editable scenes
 - [ ] playtest active-Enemy caps against Skeleton-only, Zombie-heavy and mixed builds
 - [ ] capture a short milestone clip for the second LinkedIn dev update
 - [ ] decide Flesh resource pacing
@@ -124,20 +146,30 @@ Health, damage and resource changes must also remain readable without opening De
 
 # v0.3.0 — Factory / Automation
 
-- [ ] Corpse Processor
+- [ ] visible Corpse processing feedback: movement, machine reaction, yield popup and sound hook
+- [ ] Corpse Processor queue
+- [ ] automatic Corpse collection unlock/toggle
+- [ ] processing throughput and queue capacity
 - [x] processing directive: Bone / Flesh / Balanced
 - [x] focused modes preserve emergency rebuild viability
-- [ ] automatic processing
-- [ ] Skeleton Assembler
-- [ ] Flesh Vat
+- [x] free between-Wave selection with in-Wave commitment
+- [ ] localization foundation before adding more large UI panels
+- [ ] PT-BR, English and Spanish translation resources
+- [ ] Factory panel shell opened by a dedicated button
+- [ ] run-scoped Factory upgrade model and currency prototype
+- [ ] Corpse Processor upgrade branch
+- [ ] Skeleton Assembler production queue
+- [ ] Flesh Vat production queue
+- [ ] manual bulk order with stepper/quantity control
+- [ ] Army Doctrine target-composition model
+- [ ] automatic replenishment toward target composition
+- [ ] production priority and minimum-resource-reserve rules
+- [ ] automation pause/disable controls
 - [ ] Blood production machine
 - [ ] Soul extraction machine
 - [ ] resource routing
-- [ ] production queues
 - [ ] efficiency
-- [ ] factory upgrades
 - [ ] factory synergies
-- [ ] visible production feedback
 
 ### Gate
 
@@ -147,6 +179,12 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 
 # v0.4.0 — Build Diversity & Content
 
+- [ ] generic Undead runtime record/component before the third player unit family
+- [ ] Skeleton Warrior formalized as the base Bone melee recipe
+- [ ] Skeleton Archer ranged recipe and unlock
+- [ ] Zombie Tank formalized as the Flesh frontline recipe
+- [ ] Lich caster/summoner recipe and unlock
+- [ ] temporary-Skeleton summon cap/cooldown/resource constraint
 - [ ] 30–40 upgrades
 - [ ] 10–15 synergies
 - [ ] rare upgrades
@@ -171,6 +209,8 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 
 - [ ] save
 - [ ] unlocks
+- [ ] unit recipe unlocks
+- [ ] Factory technology unlocks
 - [ ] characters/operators
 - [ ] starting modifiers
 - [ ] challenges
@@ -183,10 +223,16 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 
 # v0.6.0 — Vertical Slice
 
+- [ ] Main Menu
+- [ ] Pause Menu
+- [ ] Options: audio, display, language and accessibility
+- [ ] persistent settings
+- [ ] PT-BR / English / Spanish UI coverage and QA
 - [ ] final-ish art direction
 - [ ] UI matching official target
-- [ ] final Skeleton art
-- [ ] Zombie art
+- [x] basic temporary sprites for all current combatants
+- [ ] final Skeleton art and animation
+- [ ] final Zombie art and animation
 - [ ] Ghost art
 - [ ] enemies
 - [ ] factory art
@@ -196,7 +242,6 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [ ] SFX
 - [ ] music
 - [ ] tutorial
-- [ ] settings
 - [ ] accessibility basics
 - [ ] performance pass
 

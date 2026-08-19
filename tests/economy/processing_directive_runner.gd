@@ -19,10 +19,11 @@ func run_validation() -> void:
 	assert(game.get_processing_yield(game.PROCESSING_BONE_FOCUS) == Vector2i(12, 0))
 	assert(game.get_processing_yield(game.PROCESSING_FLESH_FOCUS) == Vector2i(2, 6))
 	assert(game.processing_directive_buttons.size() == 3)
+	assert(game.processing_directive_locked)
 	validate_six_corpse_build_options(game)
 	for directive_button_value: Variant in game.processing_directive_buttons.values():
 		var directive_button: Button = directive_button_value as Button
-		assert(directive_button != null)
+		assert(directive_button != null and directive_button.disabled)
 		assert(
 			directive_button.position.y
 			>= game.processing_label.position.y + game.processing_label.size.y
@@ -30,6 +31,14 @@ func run_validation() -> void:
 		assert(directive_button.position.x >= 1080.0)
 		assert(directive_button.position.x + directive_button.size.x <= 1895.0)
 		assert(directive_button.position.y + directive_button.size.y <= 1057.0)
+
+
+	game.set_processing_directive(game.PROCESSING_BONE_FOCUS)
+	assert(game.processing_directive == game.PROCESSING_BALANCED)
+	game.set_processing_directive_locked(false)
+	for directive_button_value: Variant in game.processing_directive_buttons.values():
+		var directive_button: Button = directive_button_value as Button
+		assert(directive_button != null and not directive_button.disabled)
 
 
 	process_one_corpse(game, game.PROCESSING_BALANCED, Vector2i(8, 2))
@@ -48,6 +57,10 @@ func run_validation() -> void:
 	assert("14B / 0F" in game.processing_directive_buttons[game.PROCESSING_BONE_FOCUS].text)
 
 
+	game.set_processing_directive_locked(true)
+	game.set_processing_directive(game.PROCESSING_BALANCED)
+	assert(game.processing_directive == game.PROCESSING_FLESH_FOCUS)
+	game.set_processing_directive_locked(false)
 	game.set_processing_directive(game.PROCESSING_BALANCED)
 	game.finish_run(true)
 	assert("Balanced: 1" in game.run_end_build_label.text)

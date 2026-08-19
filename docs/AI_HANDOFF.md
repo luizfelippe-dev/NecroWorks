@@ -1,6 +1,6 @@
 # NecroWorks — AI Handoff
 
-**Atualizado em:** 18/08/2026  
+**Atualizado em:** 19/08/2026
 **Objetivo:** permitir continuar o projeto em outro chat sem perder decisões, estado técnico ou próximos passos.
 
 ---
@@ -613,7 +613,8 @@ Novos sistemas devem apenas evitar decisões que contradigam essa estrutura.
 - painéis de Wave, Run Metrics e Active Synergies;
 - módulos de Resources, Undead Production e Corpse Processing;
 - produção e cards com metal escuro e acentos por categoria;
-- continua usando placeholders para unidades e arte procedural temporária.
+- sprites temporários substituem os quadrados de Skeleton, Zombie, Warrior, Mage, Elf e The Foreman;
+- o backdrop continua procedural e temporário.
 
 ### Barras de vida — implementadas e validadas
 
@@ -638,7 +639,9 @@ Objetivo: transformar a frontline de Zombie em tempo ofensivo para a backline de
 
 ```text
 assets/reference
+assets/sprites/units
 scripts/ui
+scripts/visual
 ```
 
 `main.tscn` e `main.gd` permanecem na raiz como entry points estáveis para F5/F6.
@@ -704,6 +707,9 @@ Flesh Focus → 2 Bones + 6 Flesh
 ```
 
 - seleção feita por três botões no painel Corpse Processing;
+- Wave 1 permanece Balanced;
+- botões desbloqueiam entre Waves e travam quando a próxima Wave começa;
+- a troca não custa recursos: o custo estratégico é o compromisso pela Wave inteira;
 - HUD mostra modo, cadáveres e rendimento atual;
 - `scripts/economy/processing_directive_policy.gd` centraliza a regra pura;
 - `get_processing_yield()` expõe a regra ao orquestrador;
@@ -712,7 +718,57 @@ Flesh Focus → 2 Bones + 6 Flesh
 - Run Summary registra contagem de Corpses por rota;
 - teste persistente: `tests/economy/processing_directive_runner.gd`.
 
-Próximo passo recomendado: playtest manual da troca de diretiva durante uma run e depois decidir entre feedback/juice de processamento ou primeiro sink de Blood.
+### Basic Unit Sprites — implementado e validado
+
+- `skeleton.tscn` e `enemy.tscn` possuem `Sprite2D` visível no editor;
+- `scripts/visual/unit_sprite_catalog.gd` seleciona Skeleton, Zombie, Human Warrior, Mage, Elf e Foreman;
+- quadrados temporários e `placeholder_unit.gd` foram removidos;
+- `tests/visual/unit_sprite_runner.gd` valida texturas e ausência de `DebugVisual`;
+- os sprites são temporários, sem animação, VFX de ataque ou hit feedback.
+
+Próximo passo recomendado: playtest manual da diretiva travada por Wave e adicionar feedback visual ao processamento/combate antes de iniciar o primeiro sink de Blood.
+
+### Factory Automation / Army Doctrine — direção registrada
+
+O usuário quer reduzir cliques repetitivos sem remover estratégia. Direção preferida:
+
+```text
+Target Army: 5 Zombies + 30 Skeletons
+→ Factory monitora perdas
+→ cria reposições quando houver recursos, população e throughput
+```
+
+O sistema futuro deve incluir:
+
+- auto-coleta de Corpses como unlock/toggle;
+- fila e velocidade do Corpse Processor;
+- quantidade manual por stepper para ordens em lote;
+- Army Doctrine com composição-alvo;
+- prioridades de reposição e reserva mínima de recursos;
+- pausa/desativação da automação;
+- painel de Factory Upgrades aberto por botão;
+- upgrades de Processor, Skeleton Assembler, Flesh Vat, Logistics e Research.
+
+Não implementar reposição instantânea e ilimitada. Produção deve respeitar recursos, `MAX_UNDEAD`, capacidade da fila e tempo das máquinas, além de mostrar feedback visível.
+
+### Unidades futuras registradas
+
+```text
+Skeleton Warrior → Bone melee base
+Skeleton Archer  → Bone ranged, receita desbloqueável
+Zombie Tank      → Flesh frontline
+Lich             → caster/support desbloqueável, pode invocar Skeletons temporários
+```
+
+Archer/Lich exigem primeiro uma camada genérica de Undead. O summon do Lich precisa de cap, cooldown ou custo para impedir crescimento infinito.
+
+### Menus e idiomas registrados
+
+- Main Menu, Pause e Options são obrigatórios para o vertical slice;
+- idiomas-alvo: PT-BR, English e Spanish;
+- criar infraestrutura de chaves/traduções antes de multiplicar painéis de UI;
+- tradução final e QA somente quando os textos estabilizarem;
+- settings e saves precisam ser persistentes e versionados.
 
 ### Direções registradas para conteúdo futuro
 
@@ -774,7 +830,7 @@ Porém:
 
 **não fazer essa refatoração inteira agora.**
 
-Fazer incrementalmente quando Ghost ou terceiro tipo tornar a duplicação realmente cara.
+Fazer incrementalmente antes do primeiro terceiro tipo jogável (Skeleton Archer, Lich ou Ghost). A nova direção de tropas torna esse gatilho concreto.
 
 ---
 
