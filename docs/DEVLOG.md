@@ -332,15 +332,35 @@ Localization coverage was extended to the Wave panel, living enemy identities, C
 
 ---
 
+## 19/08/2026 — Factory Control V1
+
+A dedicated localized Factory panel now exposes the first machine-upgrade branch. Waves award Factory Points, with an extra point for Elite clears. Automated Retrieval is a purchased, reversible toggle; Queue Expansion and Processor Overclock each offer three increasingly expensive levels.
+
+Automatic collection scans for available Corpses but never bypasses queue capacity or deletes overflow. The Factory panel yields to the Wave upgrade overlay so the two decision surfaces cannot overlap. Persistent validation covers currency income, locked-state behavior, purchases, toggling and automatic refill.
+
+All values remain provisional until full-run playtests establish whether the player faces real timing and investment tradeoffs.
+
+---
+
+## 19/08/2026 — Manual Batch Production V1
+
+The Undead Production panel now has a shared typed quantity selector. Skeleton and Zombie actions preview total cost and build the complete requested batch only when every resource and army slot is available.
+
+The implementation reuses existing unit creation paths and emits a batch-level presentation hook. Deterministic validation confirms successful five-unit orders and zero-mutation rejection for insufficient resources/capacity.
+
+This reduces click repetition but remains manual and instant. Timed Skeleton Assembler/Flesh Vat queues and Army Doctrine replenishment are intentionally still open.
+
+---
+
 ## Next
 
-### Corpse Processor
+### Production planning
 
 Recommended next block:
 
-- add a strategic automatic-collection unlock/toggle;
-- create the first run-scoped capacity/speed upgrades;
-- keep manual collection available and useful before automation is purchased.
+- playtest Factory Point income and upgrade timing;
+- prototype manual batch production;
+- design Army Doctrine target composition and reserve rules.
 
 ### Enemy depth
 

@@ -666,7 +666,21 @@ A dedicated button should open a Factory panel without permanently covering the 
 - Advanced Research: Archer, Lich and future unit recipes;
 - Routing: specialized directives and multi-output processing.
 
-The currency for Factory upgrades is still an open design question. Do not automatically charge Bones/Flesh if that makes upgrading compete too directly with producing the army; Wave/Elite-earned Factory points are a candidate for prototyping.
+Factory Points are now the active run-scoped prototype currency. A completed Wave grants 1 point and an Elite Wave grants 1 bonus point. This keeps machine investment separate from emergency army production with Bones/Flesh. Income and prices remain provisional and require full-run playtests before becoming a permanent economy decision.
+
+Current Corpse Processor branch:
+
+```text
+Automated Retrieval → one-time unlock for a reversible auto-collection toggle
+Queue Expansion     → 3 levels / +2 queue slots per level
+Processor Overclock → 3 levels / -0.10 s cycle time per level
+```
+
+Automation may fill only available queue slots. Overflow Corpses remain manually available on the battlefield.
+
+Manual unit production now supports a shared typed quantity from 1 to 36. Buttons preview the total cost and execute only if the whole order can be afforded and placed. This removes repetitive clicking without making production autonomous.
+
+The current batch action is deliberately instant for the prototype. Skeleton Assembler and Flesh Vat production queues remain future systems that must introduce visible timing/capacity before Army Doctrine can automatically replenish losses.
 
 ## Planned Undead roles
 

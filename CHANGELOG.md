@@ -94,6 +94,19 @@
   - each queue entry snapshots its processing directive;
   - full queues preserve unqueued Corpses on the battlefield;
   - persistent runner validates capacity, delayed rewards and directive integrity.
+- Factory Control V1:
+  - dedicated localized Factory panel and navigation button;
+  - one Factory Point per completed Wave plus one bonus point for Elite Waves;
+  - Automated Retrieval purchase and reversible auto-collection toggle;
+  - three queue-capacity levels and three processing-speed levels with escalating costs;
+  - automatic retrieval respects queue capacity and never destroys overflow Corpses;
+  - persistent runner validates locks, earnings, purchases, toggling and queue refill.
+- Manual Batch Production V1:
+  - shared 1–36 quantity selector supports typing and arrow adjustment;
+  - Skeleton/Zombie buttons display requested quantity and total resource cost;
+  - a batch is all-or-nothing when resources or army slots are insufficient;
+  - `batch_production_completed` exposes a future machine-feedback/audio hook;
+  - persistent runner validates costs, counts, capacity rejection and insufficient-resource rejection.
 
 ### Current Zombie V1 values
 

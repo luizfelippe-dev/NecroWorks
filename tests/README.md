@@ -97,3 +97,27 @@ Godot_v4.7.1-stable_win64_console.exe `
   --path . `
   --script res://tests/factory/corpse_processor_runner.gd
 ```
+
+## Factory automation
+
+Validates locked auto-collection, Wave/Elite Factory Point income, purchases, reversible toggling, automatic queue refill and capacity/speed upgrades:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/factory/factory_automation_runner.gd
+```
+
+## Manual batch production
+
+Validates Skeleton/Zombie batch counts, total costs, emitted transaction payloads and all-or-nothing rejection for insufficient resources or army capacity:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/factory/batch_production_runner.gd
+```

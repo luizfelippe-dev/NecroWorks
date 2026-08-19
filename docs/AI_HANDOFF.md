@@ -760,6 +760,34 @@ Isto é a fundação, não a tradução integral. Textos de combate, telas de re
 
 Próximo passo: desenhar o desbloqueio de auto-coleta e o primeiro upgrade de capacidade/velocidade dentro do painel de Factory.
 
+### Factory Control V1 — implementado e validado
+
+- botão `FÁBRICA` abre/fecha um painel central localizado;
+- cada Wave concluída concede 1 Ponto de Fábrica;
+- Waves Elite concedem +1 ponto adicional;
+- Coleta Automática custa 2 pontos, começa bloqueada e pode ser ligada/desligada depois da compra;
+- Expansão da Fila possui 3 níveis, +2 espaços por nível e custo crescente;
+- Sobrecarga do Processador possui 3 níveis, -0,10 s por ciclo e custo crescente;
+- auto-coleta só preenche espaços livres e preserva Corpses excedentes;
+- o painel fecha quando a seleção de upgrade de Wave aparece;
+- runner: `tests/factory/factory_automation_runner.gd`.
+
+Próximo passo: playtestar o ritmo dos Pontos de Fábrica e iniciar produção em lote/Army Doctrine sem transformar automação em reposição instantânea.
+
+### Manual Batch Production V1 — implementada e validada
+
+- `SpinBox` compartilhado aceita quantidade de 1 a `MAX_UNDEAD` (36);
+- valor pode ser digitado ou ajustado pelas setas;
+- botões de Skeleton/Zombie exibem quantidade e custo total;
+- lote é atômico: recursos ou vagas insuficientes produzem zero unidades;
+- produção individual continua sendo o caso `quantidade = 1`;
+- signal `batch_production_completed(unit_type, quantity, total_cost)` reserva integração visual/sonora;
+- runner: `tests/factory/batch_production_runner.gd`.
+
+Isto ainda é produção manual instantânea. Não marcar Skeleton Assembler/Flesh Vat queues como concluídos; essas máquinas precisarão de tempo, fila e feedback próprios.
+
+Próximo passo: desenhar Army Doctrine com composição-alvo e reserva mínima de recursos antes de ativar reposição automática.
+
 ### Factory Automation / Army Doctrine — direção registrada
 
 O usuário quer reduzir cliques repetitivos sem remover estratégia. Direção preferida:

@@ -6,6 +6,11 @@ signal corpse_processing_feedback_started(
 	bones_gained: int,
 	flesh_gained: int
 )
+signal batch_production_completed(
+	unit_type: String,
+	quantity: int,
+	total_cost: int
+)
 
 
 func _notification(what: int) -> void:
@@ -32,6 +37,7 @@ func refresh_localized_ui() -> void:
 	update_wave_ui()
 	update_synergy_ui()
 	refresh_world_localization()
+	update_factory_panel_ui()
 
 
 func refresh_world_localization() -> void:
@@ -72,6 +78,7 @@ func refresh_world_localization() -> void:
 @onready var create_skeleton_button: Button = $CreateSkeletonButton
 
 var create_zombie_button: Button = null
+var production_quantity_selector: SpinBox = null
 
 
 # =========================================================
@@ -110,6 +117,122 @@ const CORPSE_PROCESSING_FEEDBACK_SCRIPT: Script = preload(
 # =========================================================
 # ZOMBIE
 # =========================================================
+
+func get_selected_production_quantity() -> int:
+
+	if production_quantity_selector == null:
+		return 1
+
+
+	return clampi(
+		int(round(production_quantity_selector.value)),
+		1,
+		MAX_UNDEAD
+	)
+
+
+func get_available_undead_capacity() -> int:
+
+	return maxi(MAX_UNDEAD - get_total_undead_count(), 0)
+
+
+func create_skeleton_batch_from_ui() -> void:
+
+	create_skeleton_batch(get_selected_production_quantity())
+
+
+func create_zombie_batch_from_ui() -> void:
+
+	create_zombie_batch(get_selected_production_quantity())
+
+
+func create_skeleton_batch(quantity: int) -> int:
+
+	if quantity < 1 or quantity > MAX_UNDEAD:
+		return 0
+
+
+	var requested_quantity: int = quantity
+	var total_cost: int = requested_quantity * skeleton_cost
+
+
+	if run_finished:
+		return 0
+
+
+	if requested_quantity > get_available_undead_capacity():
+		return 0
+
+
+	if bones < total_cost:
+		return 0
+
+
+	var produced: int = 0
+
+
+	for _unit: int in range(requested_quantity):
+		if not create_skeleton_internal(false, "MANUAL BATCH"):
+			break
+
+
+		produced += 1
+
+
+	if produced == requested_quantity:
+		batch_production_completed.emit(
+			"skeleton",
+			produced,
+			total_cost
+		)
+
+
+	update_bones_ui()
+	return produced
+
+
+func create_zombie_batch(quantity: int) -> int:
+
+	if quantity < 1 or quantity > MAX_UNDEAD:
+		return 0
+
+
+	var requested_quantity: int = quantity
+	var total_cost: int = requested_quantity * zombie_cost
+
+
+	if run_finished:
+		return 0
+
+
+	if requested_quantity > get_available_undead_capacity():
+		return 0
+
+
+	if flesh < total_cost:
+		return 0
+
+
+	var initial_zombie_count: int = zombies.size()
+
+
+	for _unit: int in range(requested_quantity):
+		create_zombie()
+
+
+	var produced: int = zombies.size() - initial_zombie_count
+
+
+	if produced == requested_quantity:
+		batch_production_completed.emit(
+			"zombie",
+			produced,
+			total_cost
+		)
+
+
+	update_bones_ui()
+	return produced
 
 func create_zombie() -> void:
 
@@ -693,6 +816,21 @@ var corpse_processor_capacity: int = CORPSE_PROCESSOR_BASE_CAPACITY
 var corpse_processor_seconds_per_corpse: float = CORPSE_PROCESSOR_BASE_SECONDS
 var corpse_processor_timer: float = 0.0
 
+const FACTORY_AUTO_COLLECTION_COST: int = 2
+const FACTORY_QUEUE_UPGRADE_BASE_COST: int = 1
+const FACTORY_SPEED_UPGRADE_BASE_COST: int = 1
+const FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL: int = 3
+const FACTORY_AUTO_COLLECTION_SCAN_INTERVAL: float = 0.25
+const FACTORY_QUEUE_CAPACITY_PER_LEVEL: int = 2
+const FACTORY_PROCESSING_SECONDS_REDUCTION: float = 0.10
+
+var factory_points: int = 0
+var factory_queue_upgrade_level: int = 0
+var factory_speed_upgrade_level: int = 0
+var automatic_corpse_collection_unlocked: bool = false
+var automatic_corpse_collection_enabled: bool = false
+var automatic_corpse_collection_timer: float = 0.0
+
 var skeleton_hps: Dictionary = {}
 var skeleton_attack_timers: Dictionary = {}
 
@@ -768,6 +906,12 @@ var processing_panel: Panel = null
 var processing_directive_buttons: Dictionary = {}
 var processing_directive_button_group: ButtonGroup = null
 var resources_panel_tween: Tween = null
+var factory_nav_button: Button = null
+var factory_panel: ColorRect = null
+var factory_points_label: Label = null
+var factory_auto_collection_button: Button = null
+var factory_queue_upgrade_button: Button = null
+var factory_speed_upgrade_button: Button = null
 
 const RESOURCE_FEEDBACK_TARGET: Vector2 = Vector2(185.0, 820.0)
 
@@ -795,6 +939,7 @@ func _ready() -> void:
 	create_upgrade_ui()
 	create_synergy_hud()
 	create_run_end_ui()
+	create_factory_panel_ui()
 
 
 	# -----------------------------------------------------
@@ -818,12 +963,12 @@ func _ready() -> void:
 	# -----------------------------------------------------
 
 	create_skeleton_button.pressed.connect(
-		create_skeleton
+		create_skeleton_batch_from_ui
 	)
 
 
 	create_zombie_button.pressed.connect(
-		create_zombie
+		create_zombie_batch_from_ui
 	)
 
 
@@ -856,6 +1001,7 @@ func _process(delta: float) -> void:
 
 
 	update_corpse_processor(delta)
+	update_automatic_corpse_collection(delta)
 
 
 	check_defeat_condition()
@@ -2558,6 +2704,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 		wave_in_progress = false
 		wave_transition_in_progress = true
 		set_processing_directive_locked(false)
+		award_factory_points_for_wave(current_wave)
 
 
 		print("")
@@ -2914,6 +3061,145 @@ func cleanup_invalid_processing_queue() -> void:
 
 		if not is_instance_valid(queued_corpse):
 			corpse_processing_queue.remove_at(index)
+
+
+func update_automatic_corpse_collection(delta: float) -> void:
+
+	if not automatic_corpse_collection_enabled:
+		return
+
+
+	if not automatic_corpse_collection_unlocked:
+		automatic_corpse_collection_enabled = false
+		update_factory_panel_ui()
+		return
+
+
+	automatic_corpse_collection_timer = maxf(
+		automatic_corpse_collection_timer - delta,
+		0.0
+	)
+
+
+	if automatic_corpse_collection_timer > 0.0:
+		return
+
+
+	automatic_corpse_collection_timer = (
+		FACTORY_AUTO_COLLECTION_SCAN_INTERVAL
+	)
+
+
+	for corpse: Button in corpses:
+		if corpse_processing_queue.size() >= corpse_processor_capacity:
+			break
+
+
+		if is_instance_valid(corpse) and not is_corpse_queued(corpse):
+			enqueue_corpse_for_processing(corpse)
+
+
+func set_automatic_corpse_collection_enabled(is_enabled: bool) -> bool:
+
+	if is_enabled and not automatic_corpse_collection_unlocked:
+		return false
+
+
+	automatic_corpse_collection_enabled = is_enabled
+	automatic_corpse_collection_timer = 0.0
+	update_factory_panel_ui()
+	return true
+
+
+func toggle_automatic_corpse_collection() -> void:
+
+	if not automatic_corpse_collection_unlocked:
+		purchase_automatic_corpse_collection()
+		return
+
+
+	set_automatic_corpse_collection_enabled(
+		not automatic_corpse_collection_enabled
+	)
+
+
+func purchase_automatic_corpse_collection() -> bool:
+
+	if automatic_corpse_collection_unlocked:
+		return false
+
+
+	if factory_points < FACTORY_AUTO_COLLECTION_COST:
+		return false
+
+
+	factory_points -= FACTORY_AUTO_COLLECTION_COST
+	automatic_corpse_collection_unlocked = true
+	update_factory_panel_ui()
+	return true
+
+
+func purchase_factory_queue_upgrade() -> bool:
+
+	if factory_queue_upgrade_level >= FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL:
+		return false
+
+
+	var cost: int = FACTORY_QUEUE_UPGRADE_BASE_COST + factory_queue_upgrade_level
+
+
+	if factory_points < cost:
+		return false
+
+
+	factory_points -= cost
+	factory_queue_upgrade_level += 1
+	corpse_processor_capacity = (
+		CORPSE_PROCESSOR_BASE_CAPACITY
+		+ factory_queue_upgrade_level * FACTORY_QUEUE_CAPACITY_PER_LEVEL
+	)
+	update_metrics_ui()
+	update_factory_panel_ui()
+	return true
+
+
+func purchase_factory_speed_upgrade() -> bool:
+
+	if factory_speed_upgrade_level >= FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL:
+		return false
+
+
+	var cost: int = FACTORY_SPEED_UPGRADE_BASE_COST + factory_speed_upgrade_level
+
+
+	if factory_points < cost:
+		return false
+
+
+	factory_points -= cost
+	factory_speed_upgrade_level += 1
+	corpse_processor_seconds_per_corpse = maxf(
+		CORPSE_PROCESSOR_BASE_SECONDS
+		- factory_speed_upgrade_level * FACTORY_PROCESSING_SECONDS_REDUCTION,
+		0.1
+	)
+	update_metrics_ui()
+	update_factory_panel_ui()
+	return true
+
+
+func award_factory_points_for_wave(wave_number: int) -> int:
+
+	var points_earned: int = 1
+
+
+	if is_elite_wave(wave_number):
+		points_earned += 1
+
+
+	factory_points += points_earned
+	update_factory_panel_ui()
+	return points_earned
 
 func get_processing_yield(
 	directive: String = processing_directive
@@ -3803,6 +4089,10 @@ func show_upgrade_selection() -> void:
 
 	roll_upgrade_choices()
 	update_upgrade_ui()
+
+
+	if factory_panel != null:
+		factory_panel.visible = false
 
 
 	upgrade_panel.visible = true
@@ -5421,6 +5711,24 @@ func create_zombie_ui() -> void:
 	)
 
 
+	production_quantity_selector = SpinBox.new()
+	production_quantity_selector.name = "ProductionQuantitySelector"
+	production_quantity_selector.min_value = 1.0
+	production_quantity_selector.max_value = float(MAX_UNDEAD)
+	production_quantity_selector.step = 1.0
+	production_quantity_selector.value = 1.0
+	production_quantity_selector.allow_greater = false
+	production_quantity_selector.allow_lesser = false
+	production_quantity_selector.update_on_text_changed = true
+	production_quantity_selector.z_index = 110
+	production_quantity_selector.add_theme_font_size_override("font_size", 16)
+	production_quantity_selector.value_changed.connect(
+		func(_value: float) -> void:
+			update_bones_ui()
+	)
+	add_child(production_quantity_selector)
+
+
 # =========================================================
 # NECROWORKS VISUAL SHELL
 # =========================================================
@@ -5515,6 +5823,232 @@ func create_visual_shell() -> void:
 	create_processing_directive_ui()
 
 	update_metrics_ui()
+
+
+func create_factory_panel_ui() -> void:
+
+	factory_nav_button = Button.new()
+	factory_nav_button.name = "FactoryNavButton"
+	factory_nav_button.position = Vector2(20.0, 770.0)
+	factory_nav_button.size = Vector2(180.0, 52.0)
+	factory_nav_button.z_index = 160
+	apply_button_style(factory_nav_button, UI_GREEN)
+	factory_nav_button.pressed.connect(toggle_factory_panel)
+	add_child(factory_nav_button)
+
+
+	factory_panel = ColorRect.new()
+	factory_panel.name = "FactoryPanel"
+	factory_panel.position = Vector2(510.0, 190.0)
+	factory_panel.size = Vector2(900.0, 600.0)
+	factory_panel.color = Color(0.018, 0.024, 0.022, 0.992)
+	factory_panel.z_index = 650
+	factory_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(factory_panel)
+
+
+	var title_label: Label = Label.new()
+	title_label.name = "FactoryPanelTitle"
+	title_label.position = Vector2(40.0, 25.0)
+	title_label.size = Vector2(820.0, 45.0)
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_label.add_theme_font_size_override("font_size", 28)
+	title_label.add_theme_color_override("font_color", UI_GREEN)
+	factory_panel.add_child(title_label)
+
+
+	factory_points_label = Label.new()
+	factory_points_label.name = "FactoryPointsLabel"
+	factory_points_label.position = Vector2(40.0, 78.0)
+	factory_points_label.size = Vector2(820.0, 38.0)
+	factory_points_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	factory_points_label.add_theme_font_size_override("font_size", 18)
+	factory_points_label.add_theme_color_override("font_color", UI_BONE)
+	factory_panel.add_child(factory_points_label)
+
+
+	var close_button: Button = Button.new()
+	close_button.name = "FactoryCloseButton"
+	close_button.position = Vector2(740.0, 525.0)
+	close_button.size = Vector2(120.0, 48.0)
+	apply_button_style(close_button, UI_FLESH)
+	close_button.pressed.connect(toggle_factory_panel)
+	factory_panel.add_child(close_button)
+
+
+	factory_auto_collection_button = create_factory_upgrade_button(
+		"FactoryAutoCollectionButton",
+		Vector2(40.0, 140.0),
+		UI_GREEN
+	)
+	factory_auto_collection_button.pressed.connect(
+		toggle_automatic_corpse_collection
+	)
+
+
+	factory_queue_upgrade_button = create_factory_upgrade_button(
+		"FactoryQueueUpgradeButton",
+		Vector2(320.0, 140.0),
+		UI_BONE
+	)
+	factory_queue_upgrade_button.pressed.connect(
+		purchase_factory_queue_upgrade
+	)
+
+
+	factory_speed_upgrade_button = create_factory_upgrade_button(
+		"FactorySpeedUpgradeButton",
+		Vector2(600.0, 140.0),
+		Color(0.35, 0.62, 0.82, 1.0)
+	)
+	factory_speed_upgrade_button.pressed.connect(
+		purchase_factory_speed_upgrade
+	)
+
+
+	factory_panel.visible = false
+	update_factory_panel_ui()
+
+
+func create_factory_upgrade_button(
+	button_name: String,
+	button_position: Vector2,
+	accent_color: Color
+) -> Button:
+
+	var button: Button = Button.new()
+	button.name = button_name
+	button.position = button_position
+	button.size = Vector2(260.0, 330.0)
+	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.add_theme_font_size_override("font_size", 17)
+	apply_button_style(button, accent_color)
+	factory_panel.add_child(button)
+	return button
+
+
+func toggle_factory_panel() -> void:
+
+	if factory_panel == null:
+		return
+
+
+	if upgrade_panel != null and upgrade_panel.visible:
+		factory_panel.visible = false
+		return
+
+
+	factory_panel.visible = not factory_panel.visible
+	update_factory_panel_ui()
+
+
+func update_factory_panel_ui() -> void:
+
+	if factory_nav_button == null or factory_panel == null:
+		return
+
+
+	factory_nav_button.text = tr("FACTORY_NAV")
+	var title_label: Label = factory_panel.get_node_or_null(
+		"FactoryPanelTitle"
+	) as Label
+	var close_button: Button = factory_panel.get_node_or_null(
+		"FactoryCloseButton"
+	) as Button
+
+
+	if title_label != null:
+		title_label.text = tr("FACTORY_PANEL_TITLE")
+
+
+	if close_button != null:
+		close_button.text = tr("FACTORY_CLOSE")
+
+
+	factory_points_label.text = (
+		tr("FACTORY_POINTS") + ": " + str(factory_points)
+	)
+	update_factory_auto_collection_button()
+	update_factory_queue_upgrade_button()
+	update_factory_speed_upgrade_button()
+
+
+func update_factory_auto_collection_button() -> void:
+
+	if factory_auto_collection_button == null:
+		return
+
+
+	if automatic_corpse_collection_unlocked:
+		var state_key: String = (
+			"FACTORY_AUTO_ENABLED"
+			if automatic_corpse_collection_enabled
+			else "FACTORY_AUTO_DISABLED"
+		)
+		factory_auto_collection_button.text = (
+			tr("FACTORY_AUTO_COLLECTION")
+			+ "\n\n" + tr(state_key)
+			+ "\n\n" + tr("FACTORY_COST") + ": 0"
+		)
+		factory_auto_collection_button.disabled = false
+		return
+
+
+	factory_auto_collection_button.text = (
+		tr("FACTORY_AUTO_COLLECTION")
+		+ "\n\n" + tr("FACTORY_AUTO_LOCKED")
+		+ "\n\n" + tr("FACTORY_COST") + ": "
+		+ str(FACTORY_AUTO_COLLECTION_COST)
+	)
+	factory_auto_collection_button.disabled = (
+		factory_points < FACTORY_AUTO_COLLECTION_COST
+	)
+
+
+func update_factory_queue_upgrade_button() -> void:
+
+	if factory_queue_upgrade_button == null:
+		return
+
+
+	var at_max: bool = (
+		factory_queue_upgrade_level >= FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL
+	)
+	var cost: int = FACTORY_QUEUE_UPGRADE_BASE_COST + factory_queue_upgrade_level
+	factory_queue_upgrade_button.text = (
+		tr("FACTORY_QUEUE_UPGRADE")
+		+ "\n\n" + tr("FACTORY_LEVEL") + ": "
+		+ str(factory_queue_upgrade_level)
+		+ " / " + str(FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL)
+		+ "\n" + tr("FACTORY_CAPACITY") + ": "
+		+ str(corpse_processor_capacity)
+		+ "\n\n"
+		+ (tr("FACTORY_MAX_LEVEL") if at_max else tr("FACTORY_COST") + ": " + str(cost))
+	)
+	factory_queue_upgrade_button.disabled = at_max or factory_points < cost
+
+
+func update_factory_speed_upgrade_button() -> void:
+
+	if factory_speed_upgrade_button == null:
+		return
+
+
+	var at_max: bool = (
+		factory_speed_upgrade_level >= FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL
+	)
+	var cost: int = FACTORY_SPEED_UPGRADE_BASE_COST + factory_speed_upgrade_level
+	factory_speed_upgrade_button.text = (
+		tr("FACTORY_SPEED_UPGRADE")
+		+ "\n\n" + tr("FACTORY_LEVEL") + ": "
+		+ str(factory_speed_upgrade_level)
+		+ " / " + str(FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL)
+		+ "\n" + tr("FACTORY_CYCLE") + ": "
+		+ str(corpse_processor_seconds_per_corpse) + "s"
+		+ "\n\n"
+		+ (tr("FACTORY_MAX_LEVEL") if at_max else tr("FACTORY_COST") + ": " + str(cost))
+	)
+	factory_speed_upgrade_button.disabled = at_max or factory_points < cost
 
 
 func create_hud_panel(
@@ -5786,12 +6320,12 @@ func configure_primary_hud_layout() -> void:
 
 	create_skeleton_button.position = Vector2(
 		400.0,
-		920.0
+		945.0
 	)
 
 	create_skeleton_button.size = Vector2(
 		290.0,
-		105.0
+		82.0
 	)
 	create_skeleton_button.z_index = 100
 
@@ -5803,12 +6337,12 @@ func configure_primary_hud_layout() -> void:
 
 	create_zombie_button.position = Vector2(
 		735.0,
-		920.0
+		945.0
 	)
 
 	create_zombie_button.size = Vector2(
 		290.0,
-		105.0
+		82.0
 	)
 	create_zombie_button.z_index = 100
 
@@ -5820,6 +6354,10 @@ func configure_primary_hud_layout() -> void:
 
 	apply_button_style(create_skeleton_button, UI_BONE)
 	apply_button_style(create_zombie_button, UI_FLESH)
+
+
+	production_quantity_selector.position = Vector2(555.0, 895.0)
+	production_quantity_selector.size = Vector2(320.0, 38.0)
 
 
 # =========================================================
@@ -5935,39 +6473,48 @@ func update_bones_ui() -> void:
 	)
 
 
+	var quantity: int = get_selected_production_quantity()
+	var skeleton_batch_cost: int = quantity * skeleton_cost
+	var zombie_batch_cost: int = quantity * zombie_cost
+	var has_batch_capacity: bool = (
+		quantity <= get_available_undead_capacity()
+	)
+
+
+	if production_quantity_selector != null:
+		production_quantity_selector.prefix = (
+			tr("PRODUCTION_QUANTITY") + ": "
+		)
+		production_quantity_selector.editable = not run_finished
+
+
 	create_skeleton_button.text = (
 		tr("FACTORY_CREATE_SKELETON")
-		+ "\n"
-		+ str(skeleton_cost)
+		+ " x" + str(quantity)
+		+ "\n" + str(skeleton_batch_cost)
 		+ " " + tr("RESOURCE_BONES")
 	)
 
 
 	create_zombie_button.text = (
 		tr("FACTORY_CREATE_ZOMBIE")
-		+ "\n"
-		+ str(zombie_cost)
+		+ " x" + str(quantity)
+		+ "\n" + str(zombie_batch_cost)
 		+ " " + tr("RESOURCE_FLESH")
-	)
-
-
-	var full: bool = (
-		get_total_undead_count()
-		>= MAX_UNDEAD
 	)
 
 
 	create_skeleton_button.disabled = (
 		run_finished
-		or bones < skeleton_cost
-		or full
+		or bones < skeleton_batch_cost
+		or not has_batch_capacity
 	)
 
 
 	create_zombie_button.disabled = (
 		run_finished
-		or flesh < zombie_cost
-		or full
+		or flesh < zombie_batch_cost
+		or not has_batch_capacity
 	)
 
 

@@ -79,6 +79,8 @@ Unit texture resolution has persistent coverage at `tests/visual/unit_sprite_run
 Localization switching and visible translated HUD coverage live at `tests/localization/localization_runner.gd`.
 Corpse transaction feedback and cleanup live at `tests/visual/corpse_processing_feedback_runner.gd`.
 Corpse queue capacity, delayed settlement and directive snapshots live at `tests/factory/corpse_processor_runner.gd`.
+Factory currency, purchases, toggles and automatic collection live at `tests/factory/factory_automation_runner.gd`.
+Atomic manual batch costs, counts and rejection paths live at `tests/factory/batch_production_runner.gd`.
 
 Before the demo, extend persistent coverage for:
 

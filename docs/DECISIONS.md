@@ -377,3 +377,33 @@ Reasoning:
 - automatic collection remains a purchased unlock/toggle so early manual play teaches the loop.
 
 Rebalance cycle time and capacity from playtest evidence rather than removing the queue abstraction.
+
+---
+
+## Factory Points are the run-scoped machine currency prototype
+
+Completed Waves grant one Factory Point; Elite Waves grant one additional point. Current purchases are Automated Retrieval and three levels each of queue capacity and processing speed.
+
+Reasoning:
+
+- Bones and Flesh remain readable army-production resources;
+- machine upgrades become strategic without directly blocking emergency unit creation;
+- Wave/Elite income creates predictable pacing and makes Elite victories materially valuable;
+- a separate currency gives later Factory branches a common budget.
+
+This is a prototype decision, not a locked final economy. Full-run data must determine whether point income, costs and Elite bonuses create meaningful choices or simply unlock everything on schedule.
+
+---
+
+## Manual batch orders are atomic
+
+The shared production quantity accepts 1–36 units. A Skeleton or Zombie batch executes only when both the full resource cost and all requested army slots are available.
+
+Reasoning:
+
+- quantity controls remove repetitive clicks without making composition automatic;
+- total-cost previews make the commitment readable;
+- partial fulfillment would create surprising army/resource outcomes;
+- reusing single-unit creation paths preserves metrics and runtime state consistency.
+
+This instant action is temporary prototype behavior. Timed Assembler/Vat queues must be designed separately rather than silently changing batch semantics.

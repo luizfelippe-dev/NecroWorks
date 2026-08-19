@@ -9,8 +9,8 @@
 1. Manually validate the new sprites and per-Wave processing commitment; close the current milestone with commit/push.
 2. Add visible Corpse processing feedback before making processing automatic. **Completed.**
 3. Introduce the localization foundation and translation keys before creating more large panels. **Completed for the first stable HUD slice.**
-4. Implement Corpse Processor queue, automatic collection toggle, throughput and capacity. **Queue, base capacity and throughput completed; auto-collection remains locked.**
-5. Create the Factory panel shell and its first run-scoped upgrade branch.
+4. Implement Corpse Processor queue, automatic collection toggle, throughput and capacity. **Completed as V1.**
+5. Create the Factory panel shell and its first run-scoped upgrade branch. **Completed as V1; balance requires playtest.**
 6. Add manual bulk production orders with a controller-friendly quantity stepper.
 7. Prototype Army Doctrine: target composition, priority, reserves and automatic replenishment.
 8. Extract generic Undead runtime state before implementing a third playable unit.
@@ -148,19 +148,19 @@ Health, damage and resource changes must also remain readable without opening De
 
 - [x] visible Corpse processing feedback: movement, machine reaction, yield popup and sound hook
 - [x] Corpse Processor queue
-- [ ] automatic Corpse collection unlock/toggle
+- [x] automatic Corpse collection unlock/toggle
 - [x] processing throughput and queue capacity
 - [x] processing directive: Bone / Flesh / Balanced
 - [x] focused modes preserve emergency rebuild viability
 - [x] free between-Wave selection with in-Wave commitment
 - [x] localization foundation before adding more large UI panels
 - [x] PT-BR, English and Spanish translation resources
-- [ ] Factory panel shell opened by a dedicated button
-- [ ] run-scoped Factory upgrade model and currency prototype
-- [ ] Corpse Processor upgrade branch
+- [x] Factory panel shell opened by a dedicated button
+- [x] run-scoped Factory upgrade model and currency prototype
+- [x] Corpse Processor upgrade branch
 - [ ] Skeleton Assembler production queue
 - [ ] Flesh Vat production queue
-- [ ] manual bulk order with stepper/quantity control
+- [x] manual bulk order with stepper/quantity control
 - [ ] Army Doctrine target-composition model
 - [ ] automatic replenishment toward target composition
 - [ ] production priority and minimum-resource-reserve rules

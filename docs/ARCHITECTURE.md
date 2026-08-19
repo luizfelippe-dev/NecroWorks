@@ -133,7 +133,21 @@ Localization is intentionally incremental: only stable interface copy is migrate
 
 `corpse_processing_queue` stores a Corpse reference together with the processing directive selected when it entered the machine. Manual clicks enqueue instead of granting resources immediately. `update_corpse_processor()` advances the single processing lane and calls the existing deterministic transaction only when the base 0.65-second cycle completes.
 
-The initial capacity is five. A full queue leaves additional Corpses on the battlefield, preserving player agency and preventing silent resource loss. Capacity and seconds-per-Corpse are explicit runtime values so later Factory upgrades can modify them without rewriting the transaction. Automatic collection is intentionally absent from V1 and must be implemented as an unlock/toggle.
+The initial capacity is five. A full queue leaves additional Corpses on the battlefield, preserving player agency and preventing silent resource loss. Capacity and seconds-per-Corpse are explicit runtime values modified by the Factory Control upgrade layer without rewriting the transaction. Manual collection remains available before and after Automated Retrieval is unlocked.
+
+# Factory Control
+
+Factory Control is a run-scoped prototype layered over the Corpse Processor. Completed Waves award one Factory Point and Elite Waves award one additional point. The currency is intentionally separate from Bones/Flesh so machine investment does not directly consume the same stock used for emergency army production.
+
+Automated Retrieval is locked by default, purchased once, and controlled by a reversible toggle. Its 0.25-second scan only enqueues valid Corpses while capacity remains. Queue Expansion and Processor Overclock each have three levels; their runtime effects modify the explicit processor capacity/cycle values already consumed by the queue.
+
+`tests/factory/factory_automation_runner.gd` validates locked-state safety, Wave/Elite income, purchases, automatic queue filling, overflow preservation and upgrade effects. Costs and income are provisional balance values.
+
+# Manual batch production
+
+`production_quantity_selector` owns a shared 1–36 request quantity. `create_skeleton_batch()` and `create_zombie_batch()` validate the complete resource cost and available Undead capacity before creating anything. A rejected request therefore has no partial resource or army mutation.
+
+Successful requests use the existing per-unit creation paths so HP, slots, metrics, sprites and combat dictionaries remain identical to single production. `batch_production_completed` is the presentation boundary for future assembler animation/audio. This is not yet a timed Skeleton Assembler or Flesh Vat queue.
 
 # Corpse tracking
 

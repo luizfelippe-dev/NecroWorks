@@ -71,6 +71,8 @@ Em desenvolvimento e já validado parcialmente:
 - sprites básicos para Skeleton, Zombie, Warrior, Mage, Elf e The Foreman.
 - processamento de Corpses com token animado, reação do painel e popup do rendimento real.
 - fundação de localização em English, PT-BR e Español aplicada ao primeiro recorte estável da HUD.
+- painel inicial de Factory com Pontos de Fábrica, auto-coleta desbloqueável e upgrades de capacidade/velocidade do Corpse Processor.
+- produção manual em lote com quantidade digitável, custo total visível e validação atômica de recursos/vagas.
 
 ## Economia atual
 
