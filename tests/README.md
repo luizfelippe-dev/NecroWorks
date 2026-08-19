@@ -61,3 +61,39 @@ Godot_v4.7.1-stable_win64_console.exe `
   --path . `
   --script res://tests/visual/unit_sprite_runner.gd
 ```
+
+## Corpse processing feedback
+
+Validates settled rewards, directive-aware signal payload, animated feedback creation, Resources panel recovery and automatic transient-node cleanup:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/visual/corpse_processing_feedback_runner.gd
+```
+
+## Localization foundation
+
+Validates English, PT-BR and Spanish resource registration, regional locale normalization and live HUD refresh:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/localization/localization_runner.gd
+```
+
+## Corpse Processor queue
+
+Validates five-slot capacity, delayed resource settlement, full-queue rejection and directive snapshots:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/factory/corpse_processor_runner.gd
+```

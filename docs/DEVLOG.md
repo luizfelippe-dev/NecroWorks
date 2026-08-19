@@ -298,14 +298,49 @@ The procedural factory backdrop moved to `scripts/visual/`, leaving only stable 
 
 ---
 
+## 19/08/2026 — Corpse Processing Feedback V1
+
+Corpse recycling now produces a short visible transaction without delaying the economy:
+
+```text
+Corpse click
+→ directive-colored token travels to the processor
+→ Resources panel pulses
+→ actual Bones/Flesh yield rises above the factory
+→ feedback node cleans itself up
+```
+
+The `corpse_processing_feedback_started` signal is reserved for the future SFX layer. A persistent visual runner validates rewards, signal payload, panel recovery and transient-node cleanup.
+
+---
+
+## 19/08/2026 — Localization Foundation V1
+
+The project now has a Godot-native CSV localization pipeline with English, Brazilian Portuguese and Spanish resources. The first stable HUD slice—Resources, production, Corpse Processing, directives, run metrics and resource feedback—uses translation keys and refreshes live when the locale changes.
+
+`LocalizationService` maps regional variants to the supported catalog and falls back to English. A dedicated runner changes languages at runtime and validates both translation lookup and visible HUD text. Remaining UI copy will migrate incrementally as each interface becomes stable.
+
+---
+
+## 19/08/2026 — Visual Target V2 & Corpse Processor Queue
+
+`assets/reference/necrodesignv2.png` is now the authoritative visual reference. It strengthens the intended hierarchy between battlefield, processing machinery, resource storage, troop assembly, upgrades and navigation.
+
+The first Factory machine now has actual timing and capacity. Manual Corpse clicks enter a five-slot queue and resolve through a 0.65-second processing lane. Each entry snapshots its directive, so a later selection cannot rewrite queued rewards. This establishes the technical seams required for capacity/speed upgrades and a separately purchased automatic-collection toggle.
+
+Localization coverage was extended to the Wave panel, living enemy identities, Corpse states and Active Synergies.
+
+---
+
 ## Next
 
-### Factory feedback
+### Corpse Processor
 
 Recommended next block:
 
-- playtest route commitment across full Waves;
-- add stronger visual/audio feedback when a Corpse enters the selected route.
+- add a strategic automatic-collection unlock/toggle;
+- create the first run-scoped capacity/speed upgrades;
+- keep manual collection available and useful before automation is purchased.
 
 ### Enemy depth
 

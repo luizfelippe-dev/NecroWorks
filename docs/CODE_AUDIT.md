@@ -76,6 +76,9 @@ Programmatic UI enabled fast iteration but is harder to edit visually and locali
 A persistent deterministic composition harness now exists at `tests/balance/composition_scenario_runner.gd`.
 Economy routing has persistent coverage at `tests/economy/processing_directive_runner.gd`.
 Unit texture resolution has persistent coverage at `tests/visual/unit_sprite_runner.gd`.
+Localization switching and visible translated HUD coverage live at `tests/localization/localization_runner.gd`.
+Corpse transaction feedback and cleanup live at `tests/visual/corpse_processing_feedback_runner.gd`.
+Corpse queue capacity, delayed settlement and directive snapshots live at `tests/factory/corpse_processor_runner.gd`.
 
 Before the demo, extend persistent coverage for:
 

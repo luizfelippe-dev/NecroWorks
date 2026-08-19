@@ -7,9 +7,9 @@
 # Immediate execution order
 
 1. Manually validate the new sprites and per-Wave processing commitment; close the current milestone with commit/push.
-2. Add visible Corpse processing feedback before making processing automatic.
-3. Introduce the localization foundation and translation keys before creating more large panels.
-4. Implement Corpse Processor queue, automatic collection toggle, throughput and capacity.
+2. Add visible Corpse processing feedback before making processing automatic. **Completed.**
+3. Introduce the localization foundation and translation keys before creating more large panels. **Completed for the first stable HUD slice.**
+4. Implement Corpse Processor queue, automatic collection toggle, throughput and capacity. **Queue, base capacity and throughput completed; auto-collection remains locked.**
 5. Create the Factory panel shell and its first run-scoped upgrade branch.
 6. Add manual bulk production orders with a controller-friendly quantity stepper.
 7. Prototype Army Doctrine: target composition, priority, reserves and automatic replenishment.
@@ -146,15 +146,15 @@ Health, damage and resource changes must also remain readable without opening De
 
 # v0.3.0 — Factory / Automation
 
-- [ ] visible Corpse processing feedback: movement, machine reaction, yield popup and sound hook
-- [ ] Corpse Processor queue
+- [x] visible Corpse processing feedback: movement, machine reaction, yield popup and sound hook
+- [x] Corpse Processor queue
 - [ ] automatic Corpse collection unlock/toggle
-- [ ] processing throughput and queue capacity
+- [x] processing throughput and queue capacity
 - [x] processing directive: Bone / Flesh / Balanced
 - [x] focused modes preserve emergency rebuild viability
 - [x] free between-Wave selection with in-Wave commitment
-- [ ] localization foundation before adding more large UI panels
-- [ ] PT-BR, English and Spanish translation resources
+- [x] localization foundation before adding more large UI panels
+- [x] PT-BR, English and Spanish translation resources
 - [ ] Factory panel shell opened by a dedicated button
 - [ ] run-scoped Factory upgrade model and currency prototype
 - [ ] Corpse Processor upgrade branch

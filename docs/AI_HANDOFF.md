@@ -571,7 +571,7 @@ Pode corrigir números somente se houver:
 
 # 16. Direção visual oficial
 
-A imagem conceitual criada pelo próprio usuário é o target visual oficial.
+A referência oficial é `assets/reference/necrodesignv2.png` (Visual Target V2). `necrodesign.png` permanece apenas como histórico. V2 melhora a hierarquia das máquinas, estoques, criação de tropas, navegação inferior e cards de upgrade.
 
 Estrutura desejada:
 
@@ -726,7 +726,39 @@ Flesh Focus → 2 Bones + 6 Flesh
 - `tests/visual/unit_sprite_runner.gd` valida texturas e ausência de `DebugVisual`;
 - os sprites são temporários, sem animação, VFX de ataque ou hit feedback.
 
-Próximo passo recomendado: playtest manual da diretiva travada por Wave e adicionar feedback visual ao processamento/combate antes de iniciar o primeiro sink de Blood.
+### Corpse Processing Feedback V1 — implementado e validado
+
+- Corpse clicado gera token visual na cor da diretiva;
+- token viaja até a borda superior do painel de Resources;
+- painel de Resources recebe pulso curto;
+- popup mostra o ganho real, incluindo futuros bônus de Bones;
+- após a fila V1, recursos entram quando o ciclo de processamento termina; a animação não adiciona atraso extra à transação;
+- signal `corpse_processing_feedback_started` funciona como hook para SFX;
+- runner: `tests/visual/corpse_processing_feedback_runner.gd`.
+
+### Localization Foundation V1 — implementada e validada
+
+- catálogo principal: `localization/ui.csv`;
+- idiomas registrados: `en`, `pt_BR` e `es`, com fallback em inglês;
+- `scripts/core/localization_service.gd` normaliza variantes como `pt-BR`, `es_MX` e `en_US`;
+- primeiro recorte migrado: Resources, produção, Corpse Processing, diretivas, métricas e popup de rendimento;
+- a HUD atualiza quando `TranslationServer` troca o idioma;
+- runner: `tests/localization/localization_runner.gd`.
+
+Isto é a fundação, não a tradução integral. Textos de combate, telas de resultado, upgrades e menus devem migrar para chaves à medida que suas interfaces forem estabilizadas.
+
+### Corpse Processor Queue V1 — implementada e validada
+
+- clique manual envia o Corpse para uma fila visível;
+- capacidade inicial: 5 Corpses;
+- ritmo inicial: 0,65 segundo por Corpse;
+- recursos são concedidos somente quando o processamento termina;
+- a diretiva é capturada na entrada da fila, impedindo troca retroativa de rendimento;
+- fila cheia rejeita nova entrada sem destruir o Corpse;
+- auto-coleta continua bloqueada para um futuro upgrade/toggle;
+- runner: `tests/factory/corpse_processor_runner.gd`.
+
+Próximo passo: desenhar o desbloqueio de auto-coleta e o primeiro upgrade de capacidade/velocidade dentro do painel de Factory.
 
 ### Factory Automation / Army Doctrine — direção registrada
 

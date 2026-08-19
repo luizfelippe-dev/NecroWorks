@@ -69,6 +69,8 @@ Em desenvolvimento e já validado parcialmente:
 - primeira decisão de Factory: processamento Balanced, Bone Focus ou Flesh Focus.
 - Wave 1 usa Balanced; entre Waves, a diretiva da próxima Wave pode ser escolhida gratuitamente e fica travada durante o combate.
 - sprites básicos para Skeleton, Zombie, Warrior, Mage, Elf e The Foreman.
+- processamento de Corpses com token animado, reação do painel e popup do rendimento real.
+- fundação de localização em English, PT-BR e Español aplicada ao primeiro recorte estável da HUD.
 
 ## Economia atual
 
@@ -163,7 +165,7 @@ mais resistência, dano, uma opção de tank pesado com trade-off de velocidade 
 
 ## Direção visual oficial
 
-A interface conceitual criada para o próprio NecroWorks é o target visual principal.
+A referência principal agora é `assets/reference/necrodesignv2.png`. Ela substitui a primeira versão como Visual Target V2 sem exigir uma reconstrução imediata de toda a interface.
 
 Estrutura:
 
@@ -173,6 +175,8 @@ Estrutura:
 - Run Metrics e Active Synergies à direita;
 - fábrica/produção na faixa inferior;
 - cards de upgrade contextuais na parte inferior;
+- máquinas legíveis para Corpse Processing, estoques e montagem de tropas;
+- navegação inferior para Facility, Bestiary, Research, Upgrades e Options;
 - metal escuro;
 - verde necromântico;
 - ossos;

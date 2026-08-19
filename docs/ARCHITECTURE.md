@@ -48,6 +48,8 @@ assets/
     └── units/
 
 scripts/
+├── core/
+│   └── localization_service.gd
 ├── economy/
 │   └── processing_directive_policy.gd
 ├── game/
@@ -56,6 +58,7 @@ scripts/
 ├── ui/
 │   └── unit_health_bar.gd
 └── visual/
+    ├── corpse_processing_feedback.gd
     ├── industrial_backdrop.gd
     └── unit_sprite_catalog.gd
 
@@ -64,7 +67,12 @@ tests/
 │   └── composition_scenario_runner.gd
 ├── economy/
 │   └── processing_directive_runner.gd
+├── factory/
+│   └── corpse_processor_runner.gd
+├── localization/
+│   └── localization_runner.gd
 └── visual/
+    ├── corpse_processing_feedback_runner.gd
     └── unit_sprite_runner.gd
 ```
 
@@ -112,6 +120,20 @@ Corpse
 ```
 
 Directive state lives in `processing_directive`; `processing_directive_locked` prevents mid-Wave changes. Wave 1 starts Balanced, controls unlock during the upgrade transition, and `start_wave()` locks the selected route. Pure yield/name validation lives in `scripts/economy/processing_directive_policy.gd`; `get_processing_yield()` is the orchestrator-facing entry point used by processing logic, HUD labels, buttons and economy validation.
+
+`scripts/visual/corpse_processing_feedback.gd` owns the transient processing token and yield popup. The token terminates above the Resources panel, which pulses when the queued transaction settles. The economy transaction remains synchronous inside `process_corpse()` after the processor cycle; visual timing adds no further delay and cannot change deterministic balance. `corpse_processing_feedback_started` is the integration boundary for future SFX.
+
+# Localization
+
+`localization/ui.csv` is the source-of-truth catalog imported by Godot for `en`, `pt_BR` and `es`. `project.godot` registers the generated Translation resources and uses English as fallback. `scripts/core/localization_service.gd` owns locale normalization so future Options UI does not need to know regional fallback rules. Programmatic HUD text uses translation keys and `main.gd` reacts to `NOTIFICATION_TRANSLATION_CHANGED` by refreshing the migrated UI slice.
+
+Localization is intentionally incremental: only stable interface copy is migrated. The persistent runner verifies resource registration, regional normalization and live HUD refresh in all three supported languages.
+
+# Corpse Processor queue
+
+`corpse_processing_queue` stores a Corpse reference together with the processing directive selected when it entered the machine. Manual clicks enqueue instead of granting resources immediately. `update_corpse_processor()` advances the single processing lane and calls the existing deterministic transaction only when the base 0.65-second cycle completes.
+
+The initial capacity is five. A full queue leaves additional Corpses on the battlefield, preserving player agency and preventing silent resource loss. Capacity and seconds-per-Corpse are explicit runtime values so later Factory upgrades can modify them without rewriting the transaction. Automatic collection is intentionally absent from V1 and must be implemented as an unlock/toggle.
 
 # Corpse tracking
 

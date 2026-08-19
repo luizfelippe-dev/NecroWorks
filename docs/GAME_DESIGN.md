@@ -494,7 +494,9 @@ Factory should create choices, not only remove clicks.
 
 # Visual target
 
-Official target:
+Official Visual Target V2: `assets/reference/necrodesignv2.png`. The original remains as historical reference; V2 is authoritative for future layout and art decisions.
+
+Target structure:
 
 - central battlefield;
 - factory architecture behind/under combat;
@@ -506,6 +508,8 @@ Official target:
 - toxic/necro green;
 - bone motifs;
 - industrial horror.
+- readable Corpse Processor, Bone Storage, Flesh Vat and Skeleton Assembler machinery;
+- persistent lower navigation for Factory and meta/system panels.
 
 The user owns the conceptual reference image and authorizes close adaptation.
 

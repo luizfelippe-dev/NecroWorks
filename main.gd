@@ -1,6 +1,66 @@
 extends Node2D
 
 
+signal corpse_processing_feedback_started(
+	directive: String,
+	bones_gained: int,
+	flesh_gained: int
+)
+
+
+func _notification(what: int) -> void:
+
+	if what != NOTIFICATION_TRANSLATION_CHANGED:
+		return
+
+
+	if not is_node_ready():
+		return
+
+
+	refresh_localized_ui()
+
+
+func refresh_localized_ui() -> void:
+
+	if factory_title_label != null:
+		factory_title_label.text = tr("FACTORY_PRODUCTION_LINE")
+
+
+	update_bones_ui()
+	update_metrics_ui()
+	update_wave_ui()
+	update_synergy_ui()
+	refresh_world_localization()
+
+
+func refresh_world_localization() -> void:
+
+	for current_enemy: Node2D in enemies:
+		if not is_instance_valid(current_enemy):
+			continue
+
+
+		var identity_label: Label = current_enemy.get_node_or_null(
+			"IdentityLabel"
+		) as Label
+
+
+		if identity_label != null:
+			identity_label.text = get_enemy_display_name(
+				str(enemy_types.get(current_enemy, "human_warrior"))
+			)
+
+
+	for corpse: Button in corpses:
+		if is_instance_valid(corpse):
+			corpse.text = (
+				tr("CORPSE_QUEUED")
+				if is_corpse_queued(corpse)
+				else tr("CORPSE_LABEL")
+			)
+
+
 # =========================================================
 # NÓS DA CENA
 # =========================================================
@@ -41,6 +101,9 @@ const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 )
 const UNIT_SPRITE_CATALOG: Script = preload(
 	"res://scripts/visual/unit_sprite_catalog.gd"
+)
+const CORPSE_PROCESSING_FEEDBACK_SCRIPT: Script = preload(
+	"res://scripts/visual/corpse_processing_feedback.gd"
 )
 
 
@@ -621,6 +684,14 @@ var total_flesh_earned: int = 0
 var skeletons: Array[Node2D] = []
 var zombies: Array[Node2D] = []
 var corpses: Array[Button] = []
+var corpse_processing_queue: Array[Dictionary] = []
+
+const CORPSE_PROCESSOR_BASE_CAPACITY: int = 5
+const CORPSE_PROCESSOR_BASE_SECONDS: float = 0.65
+
+var corpse_processor_capacity: int = CORPSE_PROCESSOR_BASE_CAPACITY
+var corpse_processor_seconds_per_corpse: float = CORPSE_PROCESSOR_BASE_SECONDS
+var corpse_processor_timer: float = 0.0
 
 var skeleton_hps: Dictionary = {}
 var skeleton_attack_timers: Dictionary = {}
@@ -692,8 +763,13 @@ var brand_label: Label = null
 var metrics_label: Label = null
 var factory_title_label: Label = null
 var processing_label: Label = null
+var resources_panel: Panel = null
+var processing_panel: Panel = null
 var processing_directive_buttons: Dictionary = {}
 var processing_directive_button_group: ButtonGroup = null
+var resources_panel_tween: Tween = null
+
+const RESOURCE_FEEDBACK_TARGET: Vector2 = Vector2(185.0, 820.0)
 
 const UI_GREEN: Color = Color(0.38, 0.82, 0.25, 1.0)
 const UI_GREEN_DIM: Color = Color(0.16, 0.36, 0.12, 1.0)
@@ -777,6 +853,9 @@ func _process(delta: float) -> void:
 
 	if run_finished:
 		return
+
+
+	update_corpse_processor(delta)
 
 
 	check_defeat_condition()
@@ -1461,9 +1540,7 @@ func register_enemy(new_enemy: Node2D) -> void:
 		BOSS_WAVE
 	)
 	var archetype_id: String = str(archetype.get("id", "human_warrior"))
-	var display_name: String = str(
-		archetype.get("display_name", "HUMAN WARRIOR")
-	)
+	var display_name: String = get_enemy_display_name(archetype_id)
 	var maximum_hp: int = maxi(
 		1,
 		int(
@@ -2717,6 +2794,7 @@ func spawn_corpse(
 	corpses.append(
 		corpse
 	)
+	corpse.text = tr("CORPSE_LABEL")
 
 
 	corpse.position = (
@@ -2728,7 +2806,7 @@ func spawn_corpse(
 
 		func() -> void:
 
-			process_corpse(
+			enqueue_corpse_for_processing(
 				corpse
 			)
 	)
@@ -2742,6 +2820,100 @@ func spawn_corpse(
 # =========================================================
 # PROCESSAR CORPSE
 # =========================================================
+
+func enqueue_corpse_for_processing(corpse: Button) -> bool:
+
+	if run_finished or not is_instance_valid(corpse):
+		return false
+
+
+	if is_corpse_queued(corpse):
+		return false
+
+
+	if corpse_processing_queue.size() >= corpse_processor_capacity:
+		return false
+
+
+	corpse_processing_queue.append(
+		{
+			"corpse": corpse,
+			"directive": processing_directive
+		}
+	)
+	corpse.disabled = true
+	corpse.text = tr("CORPSE_QUEUED")
+
+
+	if corpse_processing_queue.size() == 1:
+		corpse_processor_timer = corpse_processor_seconds_per_corpse
+
+
+	update_metrics_ui()
+	return true
+
+
+func update_corpse_processor(delta: float) -> void:
+
+	cleanup_invalid_processing_queue()
+
+
+	if corpse_processing_queue.is_empty():
+		corpse_processor_timer = 0.0
+		return
+
+
+	corpse_processor_timer = maxf(corpse_processor_timer - delta, 0.0)
+
+
+	if corpse_processor_timer > 0.0:
+		return
+
+
+	var queue_entry: Dictionary = corpse_processing_queue.pop_front()
+	var corpse: Button = queue_entry.get("corpse") as Button
+	var queued_directive: String = str(
+		queue_entry.get("directive", processing_directive)
+	)
+
+
+	if not corpse_processing_queue.is_empty():
+		corpse_processor_timer = corpse_processor_seconds_per_corpse
+
+
+	if is_instance_valid(corpse):
+		process_corpse(corpse, queued_directive)
+	else:
+		update_metrics_ui()
+
+
+func is_corpse_queued(corpse: Button) -> bool:
+
+	for queue_entry: Dictionary in corpse_processing_queue:
+		if queue_entry.get("corpse") == corpse:
+			return true
+
+
+	return false
+
+
+func remove_corpse_from_processing_queue(corpse: Button) -> void:
+
+	for index: int in range(corpse_processing_queue.size() - 1, -1, -1):
+		if corpse_processing_queue[index].get("corpse") == corpse:
+			corpse_processing_queue.remove_at(index)
+
+
+func cleanup_invalid_processing_queue() -> void:
+
+	for index: int in range(corpse_processing_queue.size() - 1, -1, -1):
+		var queued_corpse: Button = (
+			corpse_processing_queue[index].get("corpse") as Button
+		)
+
+
+		if not is_instance_valid(queued_corpse):
+			corpse_processing_queue.remove_at(index)
 
 func get_processing_yield(
 	directive: String = processing_directive
@@ -2758,9 +2930,32 @@ func get_processing_directive_name(
 	directive: String = processing_directive
 ) -> String:
 
-	return PROCESSING_DIRECTIVE_POLICY.get_display_name(
-		directive
-	)
+	match directive:
+		PROCESSING_BALANCED:
+			return tr("PROCESSING_BALANCED")
+		PROCESSING_BONE_FOCUS:
+			return tr("PROCESSING_BONE_FOCUS")
+		PROCESSING_FLESH_FOCUS:
+			return tr("PROCESSING_FLESH_FOCUS")
+		_:
+			return PROCESSING_DIRECTIVE_POLICY.get_display_name(
+				directive
+			)
+
+
+func get_enemy_display_name(archetype_id: String) -> String:
+
+	match archetype_id:
+		"human_warrior":
+			return tr("ENEMY_HUMAN_WARRIOR")
+		"mage":
+			return tr("ENEMY_MAGE")
+		"elf":
+			return tr("ENEMY_ELF_SKIRMISHER")
+		"foreman":
+			return tr("ENEMY_THE_FOREMAN")
+		_:
+			return archetype_id.replace("_", " ").to_upper()
 
 
 func set_processing_directive(directive: String) -> void:
@@ -2805,7 +3000,8 @@ func set_processing_directive_locked(is_locked: bool) -> void:
 
 
 func process_corpse(
-	corpse: Button
+	corpse: Button,
+	directive: String = processing_directive
 ) -> void:
 
 	if run_finished:
@@ -2816,7 +3012,13 @@ func process_corpse(
 		return
 
 
-	var directive_yield: Vector2i = get_processing_yield()
+	remove_corpse_from_processing_queue(corpse)
+	corpse.disabled = true
+	var feedback_origin: Vector2 = (
+		corpse.global_position
+		+ corpse.size * 0.5
+	)
+	var directive_yield: Vector2i = get_processing_yield(directive)
 	var bones_gained: int = directive_yield.x
 
 	var harvest_triggered: bool = false
@@ -2853,14 +3055,20 @@ func process_corpse(
 	total_flesh_earned += flesh_gained
 
 	total_corpses_processed += 1
-	corpses_processed_by_directive[processing_directive] = (
+	corpses_processed_by_directive[directive] = (
 		int(
 			corpses_processed_by_directive.get(
-				processing_directive,
+				directive,
 				0
 			)
 		)
 		+ 1
+	)
+	play_corpse_processing_feedback(
+		feedback_origin,
+		bones_gained,
+		flesh_gained,
+		directive
 	)
 
 
@@ -2872,7 +3080,7 @@ func process_corpse(
 	)
 	print(
 		"DIRECTIVE: ",
-		get_processing_directive_name()
+		get_processing_directive_name(directive)
 	)
 
 	print(
@@ -2947,6 +3155,86 @@ func process_corpse(
 
 
 	update_debug_ui()
+
+
+func play_corpse_processing_feedback(
+	feedback_origin: Vector2,
+	bones_gained: int,
+	flesh_gained: int,
+	directive: String = processing_directive
+) -> void:
+
+	var accent_color: Color = get_processing_accent_color(directive)
+	var feedback: Node2D = (
+		CORPSE_PROCESSING_FEEDBACK_SCRIPT.new()
+		as Node2D
+	)
+
+
+	if feedback == null:
+		push_warning("Could not create Corpse processing feedback.")
+		return
+
+
+	feedback.name = "CorpseProcessingFeedback"
+	add_child(feedback)
+	feedback.call(
+		"play",
+		feedback_origin,
+		RESOURCE_FEEDBACK_TARGET,
+		bones_gained,
+		flesh_gained,
+		accent_color
+	)
+	pulse_resources_panel(accent_color)
+	corpse_processing_feedback_started.emit(
+		directive,
+		bones_gained,
+		flesh_gained
+	)
+
+
+func get_processing_accent_color(
+	directive: String = processing_directive
+) -> Color:
+
+	match directive:
+		PROCESSING_BONE_FOCUS:
+			return UI_BONE
+		PROCESSING_FLESH_FOCUS:
+			return UI_FLESH
+		_:
+			return UI_GREEN
+
+
+func pulse_resources_panel(accent_color: Color) -> void:
+
+	if resources_panel == null:
+		return
+
+
+	if (
+		resources_panel_tween != null
+		and resources_panel_tween.is_valid()
+	):
+		resources_panel_tween.kill()
+
+
+	resources_panel.modulate = Color(
+		1.0 + accent_color.r * 0.22,
+		1.0 + accent_color.g * 0.22,
+		1.0 + accent_color.b * 0.22,
+		1.0
+	)
+	resources_panel_tween = create_tween()
+	resources_panel_tween.set_trans(Tween.TRANS_QUAD)
+	resources_panel_tween.set_ease(Tween.EASE_OUT)
+	resources_panel_tween.tween_property(
+		resources_panel,
+		"modulate",
+		Color.WHITE,
+		0.32
+	)
 
 
 # =========================================================
@@ -4407,19 +4695,19 @@ func get_synergy_name(
 	match synergy_id:
 
 		SYNERGY_RECYCLING_PLANT:
-			return "Recycling Plant"
+			return tr("SYNERGY_RECYCLING_PLANT")
 
 		SYNERGY_SECOND_SHIFT:
-			return "Second Shift"
+			return tr("SYNERGY_SECOND_SHIFT")
 
 		SYNERGY_BONE_ASSEMBLY_LINE:
-			return "Bone Assembly Line"
+			return tr("SYNERGY_BONE_ASSEMBLY_LINE")
 
 		SYNERGY_OVERCLOCKED_OSSUARY:
-			return "Overclocked Ossuary"
+			return tr("SYNERGY_OVERCLOCKED_OSSUARY")
 
 		SYNERGY_MEAT_SHIELD_PROTOCOL:
-			return "Meat Shield Protocol"
+			return tr("SYNERGY_MEAT_SHIELD_PROTOCOL")
 
 		_:
 			return "Unknown Synergy"
@@ -4500,14 +4788,12 @@ func update_synergy_ui() -> void:
 		return
 
 
-	var text_value: String = (
-		"ACTIVE SYNERGIES"
-	)
+	var text_value: String = tr("SYNERGIES_ACTIVE")
 
 
 	if active_synergies.is_empty():
 
-		text_value += "\nNone"
+		text_value += "\n" + tr("COMMON_NONE")
 
 	else:
 
@@ -5054,21 +5340,21 @@ func update_wave_ui() -> void:
 
 		if run_won:
 			wave_label.text = (
-				"RUN COMPLETE"
-				+ "\nVICTORY"
+				tr("RUN_COMPLETE")
+				+ "\n" + tr("RUN_VICTORY")
 			)
 
 		else:
 			wave_label.text = (
-				"RUN COMPLETE"
-				+ "\nDEFEAT"
+				tr("RUN_COMPLETE")
+				+ "\n" + tr("RUN_DEFEAT")
 			)
 
 		return
 
 
 	var wave_title: String = (
-		"WAVE "
+		tr("HUD_WAVE") + " "
 		+ str(current_wave)
 	)
 
@@ -5076,21 +5362,21 @@ func update_wave_ui() -> void:
 	if is_boss_wave(current_wave):
 
 		wave_title += (
-			" - BOSS: "
-			+ BOSS_NAME
+			" - " + tr("WAVE_BOSS") + ": "
+			+ get_enemy_display_name("foreman")
 		)
 
 	elif is_elite_wave(current_wave):
 
-		wave_title += " - ELITE"
+		wave_title += " - " + tr("WAVE_ELITE")
 
 
 	if wave_transition_in_progress:
 
 		wave_label.text = (
 			wave_title
-			+ " COMPLETE"
-			+ "\nSELECT AN UPGRADE"
+			+ " " + tr("WAVE_COMPLETE")
+			+ "\n" + tr("WAVE_SELECT_UPGRADE")
 		)
 
 		return
@@ -5098,19 +5384,19 @@ func update_wave_ui() -> void:
 
 	wave_label.text = (
 		wave_title
-		+ "\nEnemies Remaining: "
+		+ "\n" + tr("WAVE_ENEMIES_REMAINING") + ": "
 		+ str(get_enemies_remaining())
 		+ " / "
 		+ str(enemies_total_this_wave)
-		+ " | Active: "
+		+ " | " + tr("WAVE_ACTIVE") + ": "
 		+ str(enemies.size())
 		+ " / "
 		+ str(get_max_simultaneous_enemies())
-		+ "\nPrimary: "
-		+ str(enemy_types.get(enemy, "enemy")).replace("_", " ").to_upper()
-		+ " | HP: "
+		+ "\n" + tr("WAVE_PRIMARY") + ": "
+		+ get_enemy_display_name(str(enemy_types.get(enemy, "human_warrior")))
+		+ " | " + tr("STAT_HP") + ": "
 		+ str(int(enemy_max_hps.get(enemy, enemy_max_hp)))
-		+ " | DMG: "
+		+ " | " + tr("STAT_DAMAGE") + ": "
 		+ str(int(enemy_damages.get(enemy, enemy_damage)))
 	)
 
@@ -5156,7 +5442,7 @@ func create_visual_shell() -> void:
 		Rect2(1540.0, 305.0, 355.0, 155.0)
 	)
 
-	create_hud_panel(
+	resources_panel = create_hud_panel(
 		"ResourcesPanel",
 		Rect2(20.0, 842.0, 330.0, 215.0)
 	)
@@ -5166,7 +5452,7 @@ func create_visual_shell() -> void:
 		Rect2(365.0, 842.0, 700.0, 215.0)
 	)
 
-	create_hud_panel(
+	processing_panel = create_hud_panel(
 		"ProcessingPanel",
 		Rect2(1080.0, 842.0, 815.0, 215.0)
 	)
@@ -5210,7 +5496,7 @@ func create_visual_shell() -> void:
 	factory_title_label.name = "FactoryTitleLabel"
 	factory_title_label.position = Vector2(390.0, 855.0)
 	factory_title_label.size = Vector2(650.0, 45.0)
-	factory_title_label.text = "UNDEAD PRODUCTION LINE"
+	factory_title_label.text = tr("FACTORY_PRODUCTION_LINE")
 	factory_title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	factory_title_label.z_index = 100
 	factory_title_label.add_theme_font_size_override("font_size", 22)
@@ -5220,7 +5506,7 @@ func create_visual_shell() -> void:
 	processing_label = Label.new()
 	processing_label.name = "ProcessingLabel"
 	processing_label.position = Vector2(1110.0, 862.0)
-	processing_label.size = Vector2(755.0, 96.0)
+	processing_label.size = Vector2(755.0, 118.0)
 	processing_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	processing_label.z_index = 100
 	processing_label.add_theme_font_size_override("font_size", 18)
@@ -5286,13 +5572,13 @@ func create_processing_directive_ui() -> void:
 		)
 		directive_button.position = Vector2(
 			start_x + float(index) * (button_width + button_gap),
-			966.0
+			987.0
 		)
-		directive_button.size = Vector2(button_width, 66.0)
+		directive_button.size = Vector2(button_width, 55.0)
 		directive_button.z_index = 110
 		directive_button.toggle_mode = true
 		directive_button.button_group = processing_directive_button_group
-		directive_button.add_theme_font_size_override("font_size", 15)
+		directive_button.add_theme_font_size_override("font_size", 14)
 		apply_button_style(
 			directive_button,
 			directive_accents[index]
@@ -5421,20 +5707,20 @@ func update_metrics_ui() -> void:
 
 
 	metrics_label.text = (
-		"RUN METRICS"
-		+ "\n\nENEMIES KILLED        "
+		tr("METRICS_TITLE")
+		+ "\n\n" + tr("METRICS_ENEMIES_KILLED") + "        "
 		+ str(total_enemies_killed)
-		+ "\nCORPSES PROCESSED  "
+		+ "\n" + tr("METRICS_CORPSES_PROCESSED") + "  "
 		+ str(total_corpses_processed)
-		+ "\nSKELETONS BUILT       "
+		+ "\n" + tr("METRICS_SKELETONS_BUILT") + "       "
 		+ str(total_skeletons_created)
-		+ "\nSKELETONS LOST         "
+		+ "\n" + tr("METRICS_SKELETONS_LOST") + "         "
 		+ str(total_skeletons_lost)
-		+ "\nZOMBIES BUILT            "
+		+ "\n" + tr("METRICS_ZOMBIES_BUILT") + "            "
 		+ str(total_zombies_created)
-		+ "\nZOMBIES LOST              "
+		+ "\n" + tr("METRICS_ZOMBIES_LOST") + "              "
 		+ str(total_zombies_lost)
-		+ "\nARMY ACTIVE                "
+		+ "\n" + tr("METRICS_ARMY_ACTIVE") + "                "
 		+ str(get_total_undead_count())
 	)
 
@@ -5442,23 +5728,29 @@ func update_metrics_ui() -> void:
 	if processing_label != null:
 		var directive_yield: Vector2i = get_processing_yield()
 		var directive_state: String = (
-			"LOCKED THIS WAVE"
+			tr("PROCESSING_LOCKED_WAVE")
 			if processing_directive_locked
-			else "CHOOSE FOR NEXT WAVE"
+			else tr("PROCESSING_CHOOSE_NEXT")
 		)
 		processing_label.text = (
-			"CORPSE PROCESSING"
-			+ "\nMODE: "
+			tr("PROCESSING_TITLE")
+			+ "\n" + tr("PROCESSING_MODE") + ": "
 			+ get_processing_directive_name()
 			+ "  |  "
 			+ directive_state
-			+ "  |  CORPSES: "
+			+ "  |  " + tr("PROCESSING_CORPSES") + ": "
 			+ str(corpses.size())
-			+ "\nYIELD: +"
+			+ "\n" + tr("PROCESSING_YIELD") + ": +"
 			+ str(directive_yield.x)
-			+ " BONES  /  +"
+			+ " " + tr("RESOURCE_BONES") + "  /  +"
 			+ str(directive_yield.y)
-			+ " FLESH"
+			+ " " + tr("RESOURCE_FLESH")
+			+ "\n" + tr("PROCESSOR_QUEUE") + ": "
+			+ str(corpse_processing_queue.size())
+			+ " / " + str(corpse_processor_capacity)
+			+ "  |  " + tr("PROCESSOR_THROUGHPUT") + ": "
+			+ str(corpse_processor_seconds_per_corpse)
+			+ tr("PROCESSOR_SECONDS_PER_CORPSE")
 		)
 
 
@@ -5631,31 +5923,31 @@ func update_bones_ui() -> void:
 	# de recursos. Depois ele será substituído pela UI final
 	# inspirada no target visual do NecroWorks.
 	bones_label.text = (
-		"RESOURCES"
-		+ "\nBONES: "
+		tr("HUD_RESOURCES")
+		+ "\n" + tr("RESOURCE_BONES") + ": "
 		+ str(bones)
-		+ "\nFLESH: "
+		+ "\n" + tr("RESOURCE_FLESH") + ": "
 		+ str(flesh)
-		+ "\nBLOOD: "
+		+ "\n" + tr("RESOURCE_BLOOD") + ": "
 		+ str(blood)
-		+ "\nSOULS: "
+		+ "\n" + tr("RESOURCE_SOULS") + ": "
 		+ str(souls)
 	)
 
 
 	create_skeleton_button.text = (
-		"CREATE SKELETON"
+		tr("FACTORY_CREATE_SKELETON")
 		+ "\n"
 		+ str(skeleton_cost)
-		+ " BONES"
+		+ " " + tr("RESOURCE_BONES")
 	)
 
 
 	create_zombie_button.text = (
-		"CREATE ZOMBIE"
+		tr("FACTORY_CREATE_ZOMBIE")
 		+ "\n"
 		+ str(zombie_cost)
-		+ " FLESH"
+		+ " " + tr("RESOURCE_FLESH")
 	)
 
 

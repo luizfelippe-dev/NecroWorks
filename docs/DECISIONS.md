@@ -359,3 +359,21 @@ Revisit only after playtests show that one route dominates or that Wave commitme
 Stable visual content belongs in scenes/assets; dynamic combat state and archetype selection remain in code. `skeleton.tscn` and `enemy.tscn` expose editable `Sprite2D` children, while the runtime catalog swaps Skeleton, Zombie, Warrior, Mage, Elf and Foreman textures.
 
 The industrial background may remain procedural during prototyping. Final production can combine procedural layers, TileMaps, shaders and painted images; using code is not itself a quality problem, but hiding all stable layout/content from the editor would slow visual iteration.
+
+---
+
+## Corpse processing is queued and directive-safe
+
+Manual Corpse clicks enter a single processing lane instead of granting resources instantly. The prototype starts with five queue slots and a 0.65-second cycle per Corpse.
+
+Each entry snapshots the selected Bone/Flesh/Balanced directive when queued. Changing the next-Wave directive cannot rewrite already accepted work.
+
+Reasoning:
+
+- visible time and capacity make the Factory a system rather than a cosmetic panel;
+- full queues create pressure without silently destroying resources;
+- directive snapshots close a timing exploit and make yields predictable;
+- explicit capacity and speed values create clean upgrade hooks;
+- automatic collection remains a purchased unlock/toggle so early manual play teaches the loop.
+
+Rebalance cycle time and capacity from playtest evidence rather than removing the queue abstraction.

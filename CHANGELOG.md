@@ -73,6 +73,27 @@
 - Procedural backdrop moved from the repository root to `scripts/visual/industrial_backdrop.gd`.
 - Persistent visual runner validates every current unit texture and verifies square placeholders are gone.
 - Runtime sprite imports are capped at 512 px while original transparent PNG sources are preserved.
+- Corpse processing feedback V1:
+  - clicked Corpses emit a directive-colored token toward the Resources intake;
+  - the Resources panel reacts with a short color pulse;
+  - the actual Bones/Flesh yield appears above the factory boundary;
+  - resource transactions remain immediate and deterministic;
+  - `corpse_processing_feedback_started` provides a future SFX integration hook.
+- Persistent visual runner validates the complete feedback lifecycle and cleanup.
+- Localization foundation V1:
+  - Godot-native CSV catalog registered for English, PT-BR and Spanish;
+  - localized Resources, production, Corpse processing, directives, metrics and yield feedback;
+  - runtime locale changes refresh the localized HUD slice immediately;
+  - `LocalizationService` normalizes regional locale variants and provides a safe English fallback;
+  - persistent runner validates all three language routes.
+- Localization coverage expanded to the Wave HUD, enemy identities, Corpse labels and Active Synergies.
+- `necrodesignv2.png` adopted as the authoritative Visual Target V2.
+- Corpse Processor Queue V1:
+  - manual Corpse clicks enqueue work instead of yielding resources instantly;
+  - base queue capacity is 5 with a 0.65-second single-lane processing cycle;
+  - each queue entry snapshots its processing directive;
+  - full queues preserve unqueued Corpses on the battlefield;
+  - persistent runner validates capacity, delayed rewards and directive integrity.
 
 ### Current Zombie V1 values
 
