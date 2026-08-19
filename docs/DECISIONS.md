@@ -407,3 +407,18 @@ Reasoning:
 - reusing single-unit creation paths preserves metrics and runtime state consistency.
 
 This instant action is temporary prototype behavior. Timed Assembler/Vat queues must be designed separately rather than silently changing batch semantics.
+
+---
+
+## Army Doctrine is planning-only until production has time and capacity
+
+The player can configure Skeleton/Zombie targets, minimum Bones/Flesh reserves and a production priority. The current V1 calculates deficits and validates reserve-safe spending, but never creates a unit automatically.
+
+Reasoning:
+
+- instant replacement would erase battlefield attrition and emergency decisions;
+- visible Assembler/Vat queues make throughput and bottlenecks legible;
+- the same target can then produce different outcomes depending on upgrades and resources;
+- separating policy from execution keeps the future automation testable and pausable.
+
+Activate replenishment only after both production queues exist and respect capacity, timing, reserves, army cap and an explicit pause/disable control.

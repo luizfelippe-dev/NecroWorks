@@ -207,7 +207,9 @@ main.tscn / main.gd      entradas estáveis para F5/F6 no Godot
 scripts/ui/              componentes reutilizáveis de interface
 scripts/game/            políticas de Waves e catálogo de inimigos
 scripts/economy/         regras isoladas de processamento e recursos
+scripts/factory/         políticas de produção e Doutrina do Exército
 scripts/visual/          backdrop e catálogo de sprites
+tests/factory/           validação de filas, automação, lotes e Doutrina
 tests/visual/            validação persistente dos assets de unidade
 ```
 
@@ -235,4 +237,6 @@ Consulte `docs/AI_HANDOFF.md` antes de continuar o desenvolvimento em outro chat
 
 Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.
 
-Próximo foco: playtests de composição, comportamento avançado dos inimigos e o primeiro sistema de Blood antes de iniciar a produção visual definitiva.
+O painel de Doutrina do Exército já permite salvar composição-alvo, reservas mínimas e prioridade de produção. Nesta V1 ele é deliberadamente apenas um planejador: a reposição automática será ativada somente depois das filas temporizadas do Skeleton Assembler e Flesh Vat.
+
+Próximo foco: implementar essas duas filas de produção, conectá-las à Doutrina com controles de pausa e então retomar playtests de composição e economia.

@@ -11,13 +11,14 @@
 3. Introduce the localization foundation and translation keys before creating more large panels. **Completed for the first stable HUD slice.**
 4. Implement Corpse Processor queue, automatic collection toggle, throughput and capacity. **Completed as V1.**
 5. Create the Factory panel shell and its first run-scoped upgrade branch. **Completed as V1; balance requires playtest.**
-6. Add manual bulk production orders with a controller-friendly quantity stepper.
-7. Prototype Army Doctrine: target composition, priority, reserves and automatic replenishment.
-8. Extract generic Undead runtime state before implementing a third playable unit.
-9. Add Skeleton Archer first; use it to validate ranged player-unit architecture.
-10. Add Lich only after Souls/advanced recipe costs and summon limits are defined.
-11. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice.
-12. Complete PT-BR, English and Spanish coverage after interface text stabilizes.
+6. Add manual bulk production orders with a controller-friendly quantity stepper. **Completed.**
+7. Prototype Army Doctrine planning: target composition, priority and reserves. **Completed; automatic execution waits for production queues.**
+8. Implement timed Skeleton Assembler and Flesh Vat queues, then connect controlled automatic replenishment.
+9. Extract generic Undead runtime state before implementing a third playable unit.
+10. Add Skeleton Archer first; use it to validate ranged player-unit architecture.
+11. Add Lich only after Souls/advanced recipe costs and summon limits are defined.
+12. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice.
+13. Complete PT-BR, English and Spanish coverage after interface text stabilizes.
 
 This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 
@@ -161,9 +162,10 @@ Health, damage and resource changes must also remain readable without opening De
 - [ ] Skeleton Assembler production queue
 - [ ] Flesh Vat production queue
 - [x] manual bulk order with stepper/quantity control
-- [ ] Army Doctrine target-composition model
+- [x] Army Doctrine target-composition planning model
 - [ ] automatic replenishment toward target composition
-- [ ] production priority and minimum-resource-reserve rules
+- [x] priority and minimum-resource-reserve policy model
+- [ ] execute priority/reserve policy through timed production queues
 - [ ] automation pause/disable controls
 - [ ] Blood production machine
 - [ ] Soul extraction machine

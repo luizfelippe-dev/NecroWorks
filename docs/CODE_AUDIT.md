@@ -81,6 +81,7 @@ Corpse transaction feedback and cleanup live at `tests/visual/corpse_processing_
 Corpse queue capacity, delayed settlement and directive snapshots live at `tests/factory/corpse_processor_runner.gd`.
 Factory currency, purchases, toggles and automatic collection live at `tests/factory/factory_automation_runner.gd`.
 Atomic manual batch costs, counts and rejection paths live at `tests/factory/batch_production_runner.gd`.
+Army Doctrine targets, deficits, reserves, priorities and localized planning UI live at `tests/factory/army_doctrine_runner.gd`.
 
 Before the demo, extend persistent coverage for:
 
@@ -101,5 +102,6 @@ Square placeholders are gone and all current combatants have temporary sprites. 
 - no third copied family of HP/timer/slot dictionaries without reviewing the generic Undead trigger;
 - no external-facing feature without a repeatable validation path;
 - no UI text hardcoded long-term once localization work begins;
+- no instant Doctrine replenishment that bypasses visible production queues;
 - preserve the stable horizontal enemy lane until replaced by a tested combat model;
 - update `AI_HANDOFF.md`, roadmap and changelog after each stable milestone.

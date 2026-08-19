@@ -788,6 +788,19 @@ Isto ainda é produção manual instantânea. Não marcar Skeleton Assembler/Fle
 
 Próximo passo: desenhar Army Doctrine com composição-alvo e reserva mínima de recursos antes de ativar reposição automática.
 
+### Army Doctrine Planning V1 — implementada e validada
+
+- botão `DOUTRINA` abre/fecha painel localizado em PT-BR, inglês e espanhol;
+- composição-alvo separada para Skeletons e Zombies, limitada ao `MAX_UNDEAD` combinado;
+- reservas mínimas configuráveis para Bones e Flesh;
+- prioridades Balanced, Skeletons First e Zombies First;
+- resumo ao vivo mostra meta, exército atual e déficits;
+- `scripts/factory/army_doctrine_policy.gd` isola validação, cálculo de déficit, ordem futura e gasto seguro acima da reserva;
+- aplicação inválida é atômica e não altera a configuração anterior;
+- runner: `tests/factory/army_doctrine_runner.gd`.
+
+A V1 é somente planejamento. Ela não cria tropas automaticamente. Próximo passo obrigatório: filas temporizadas próprias para Skeleton Assembler e Flesh Vat, seguidas da execução da Doutrina com capacidade, reservas e controle de pausa.
+
 ### Factory Automation / Army Doctrine — direção registrada
 
 O usuário quer reduzir cliques repetitivos sem remover estratégia. Direção preferida:
@@ -958,11 +971,11 @@ git commit -m "..."
 git push origin main
 ```
 
-Após atualizar estes docs, um commit apropriado seria algo como:
+Exemplo de commit para o próximo marco estável:
 
 ```powershell
 git add .
-git commit -m "feat: add flesh economy and zombie unit"
+git commit -m "feat: add timed undead production queues"
 git push origin main
 ```
 
@@ -972,20 +985,12 @@ Antes disso, verificar se existem alterações locais não relacionadas.
 
 # 22. Baseline atual para próximo chat
 
-O arquivo funcional validado pelo usuário equivale à versão:
-
-```text
-main_necroworks_v0_2_zombie_v1.gd
-```
-
-O orquestrador está salvo como:
+O orquestrador estável permanece em:
 
 ```text
 main.gd
 ```
 
-Último teste confirmado pelo usuário:
+Último marco confirmado pelo usuário: Factory Control e produção manual em lote funcionando. O bloco local seguinte adiciona Army Doctrine Planning V1, também coberto por runner persistente, sem reposição automática.
 
-> Resource Foundation funcionando e Zombie V1 funcionando.
-
-Próxima conversa deve começar daqui, não da versão Skeleton-only.
+Próxima conversa deve começar pelas filas temporizadas do Skeleton Assembler/Flesh Vat. Não recriar o protótipo antigo nem ligar a Doutrina diretamente aos métodos instantâneos de lote.

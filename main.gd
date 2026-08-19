@@ -11,6 +11,7 @@ signal batch_production_completed(
 	quantity: int,
 	total_cost: int
 )
+signal army_doctrine_changed(configuration: Dictionary)
 
 
 func _notification(what: int) -> void:
@@ -34,10 +35,12 @@ func refresh_localized_ui() -> void:
 
 	update_bones_ui()
 	update_metrics_ui()
+	refresh_army_doctrine_status()
 	update_wave_ui()
 	update_synergy_ui()
 	refresh_world_localization()
 	update_factory_panel_ui()
+	update_army_doctrine_ui()
 
 
 func refresh_world_localization() -> void:
@@ -105,6 +108,9 @@ const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 )
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
+)
+const ARMY_DOCTRINE_POLICY: Script = preload(
+	"res://scripts/factory/army_doctrine_policy.gd"
 )
 const UNIT_SPRITE_CATALOG: Script = preload(
 	"res://scripts/visual/unit_sprite_catalog.gd"
@@ -831,6 +837,13 @@ var automatic_corpse_collection_unlocked: bool = false
 var automatic_corpse_collection_enabled: bool = false
 var automatic_corpse_collection_timer: float = 0.0
 
+var army_doctrine_configured: bool = false
+var doctrine_target_skeletons: int = 0
+var doctrine_target_zombies: int = 0
+var doctrine_bones_reserve: int = 0
+var doctrine_flesh_reserve: int = 0
+var doctrine_priority: String = ARMY_DOCTRINE_POLICY.PRIORITY_BALANCED
+
 var skeleton_hps: Dictionary = {}
 var skeleton_attack_timers: Dictionary = {}
 
@@ -912,6 +925,16 @@ var factory_points_label: Label = null
 var factory_auto_collection_button: Button = null
 var factory_queue_upgrade_button: Button = null
 var factory_speed_upgrade_button: Button = null
+var doctrine_nav_button: Button = null
+var doctrine_panel: ColorRect = null
+var doctrine_subtitle_label: Label = null
+var doctrine_status_label: Label = null
+var doctrine_validation_label: Label = null
+var doctrine_target_skeletons_input: SpinBox = null
+var doctrine_target_zombies_input: SpinBox = null
+var doctrine_bones_reserve_input: SpinBox = null
+var doctrine_flesh_reserve_input: SpinBox = null
+var doctrine_priority_input: OptionButton = null
 
 const RESOURCE_FEEDBACK_TARGET: Vector2 = Vector2(185.0, 820.0)
 
@@ -940,6 +963,7 @@ func _ready() -> void:
 	create_synergy_hud()
 	create_run_end_ui()
 	create_factory_panel_ui()
+	create_army_doctrine_ui()
 
 
 	# -----------------------------------------------------
@@ -3201,6 +3225,87 @@ func award_factory_points_for_wave(wave_number: int) -> int:
 	update_factory_panel_ui()
 	return points_earned
 
+
+func apply_army_doctrine_configuration(
+	target_skeletons: int,
+	target_zombies: int,
+	bones_reserve: int,
+	flesh_reserve: int,
+	priority: String
+) -> bool:
+
+	if not ARMY_DOCTRINE_POLICY.is_valid_configuration(
+		target_skeletons,
+		target_zombies,
+		bones_reserve,
+		flesh_reserve,
+		priority,
+		MAX_UNDEAD
+	):
+		return false
+
+
+	doctrine_target_skeletons = target_skeletons
+	doctrine_target_zombies = target_zombies
+	doctrine_bones_reserve = bones_reserve
+	doctrine_flesh_reserve = flesh_reserve
+	doctrine_priority = priority
+	army_doctrine_configured = (
+		target_skeletons > 0 or target_zombies > 0
+	)
+
+
+	if doctrine_target_skeletons_input != null:
+		doctrine_target_skeletons_input.value = float(target_skeletons)
+		doctrine_target_zombies_input.value = float(target_zombies)
+		doctrine_bones_reserve_input.value = float(bones_reserve)
+		doctrine_flesh_reserve_input.value = float(flesh_reserve)
+
+
+	army_doctrine_changed.emit(get_army_doctrine_configuration())
+	update_army_doctrine_ui()
+	return true
+
+
+func get_army_doctrine_configuration() -> Dictionary:
+
+	return {
+		"configured": army_doctrine_configured,
+		"target_skeletons": doctrine_target_skeletons,
+		"target_zombies": doctrine_target_zombies,
+		"bones_reserve": doctrine_bones_reserve,
+		"flesh_reserve": doctrine_flesh_reserve,
+		"priority": doctrine_priority
+	}
+
+
+func get_army_doctrine_deficits() -> Vector2i:
+
+	return ARMY_DOCTRINE_POLICY.get_deficits(
+		doctrine_target_skeletons,
+		doctrine_target_zombies,
+		skeletons.size(),
+		zombies.size()
+	)
+
+
+func doctrine_can_build_skeleton() -> bool:
+
+	return ARMY_DOCTRINE_POLICY.can_spend_above_reserve(
+		bones,
+		skeleton_cost,
+		doctrine_bones_reserve
+	)
+
+
+func doctrine_can_build_zombie() -> bool:
+
+	return ARMY_DOCTRINE_POLICY.can_spend_above_reserve(
+		flesh,
+		zombie_cost,
+		doctrine_flesh_reserve
+	)
+
 func get_processing_yield(
 	directive: String = processing_directive
 ) -> Vector2i:
@@ -3277,6 +3382,7 @@ func set_processing_directive(directive: String) -> void:
 		get_processing_directive_name()
 	)
 	update_metrics_ui()
+	refresh_army_doctrine_status()
 
 
 func set_processing_directive_locked(is_locked: bool) -> void:
@@ -4093,6 +4199,10 @@ func show_upgrade_selection() -> void:
 
 	if factory_panel != null:
 		factory_panel.visible = false
+
+
+	if doctrine_panel != null:
+		doctrine_panel.visible = false
 
 
 	upgrade_panel.visible = true
@@ -5938,6 +6048,10 @@ func toggle_factory_panel() -> void:
 		return
 
 
+	if doctrine_panel != null:
+		doctrine_panel.visible = false
+
+
 	factory_panel.visible = not factory_panel.visible
 	update_factory_panel_ui()
 
@@ -6049,6 +6163,299 @@ func update_factory_speed_upgrade_button() -> void:
 		+ (tr("FACTORY_MAX_LEVEL") if at_max else tr("FACTORY_COST") + ": " + str(cost))
 	)
 	factory_speed_upgrade_button.disabled = at_max or factory_points < cost
+
+
+func create_army_doctrine_ui() -> void:
+
+	doctrine_nav_button = Button.new()
+	doctrine_nav_button.name = "DoctrineNavButton"
+	doctrine_nav_button.position = Vector2(210.0, 770.0)
+	doctrine_nav_button.size = Vector2(180.0, 52.0)
+	doctrine_nav_button.z_index = 160
+	apply_button_style(doctrine_nav_button, UI_BONE)
+	doctrine_nav_button.pressed.connect(toggle_army_doctrine_panel)
+	add_child(doctrine_nav_button)
+
+
+	doctrine_panel = ColorRect.new()
+	doctrine_panel.name = "ArmyDoctrinePanel"
+	doctrine_panel.position = Vector2(510.0, 190.0)
+	doctrine_panel.size = Vector2(900.0, 600.0)
+	doctrine_panel.color = Color(0.018, 0.024, 0.022, 0.992)
+	doctrine_panel.z_index = 650
+	doctrine_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(doctrine_panel)
+
+
+	var title_label: Label = Label.new()
+	title_label.name = "DoctrineTitle"
+	title_label.position = Vector2(40.0, 24.0)
+	title_label.size = Vector2(820.0, 45.0)
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_label.add_theme_font_size_override("font_size", 28)
+	title_label.add_theme_color_override("font_color", UI_BONE)
+	doctrine_panel.add_child(title_label)
+
+
+	doctrine_subtitle_label = Label.new()
+	doctrine_subtitle_label.name = "DoctrineSubtitle"
+	doctrine_subtitle_label.position = Vector2(40.0, 72.0)
+	doctrine_subtitle_label.size = Vector2(820.0, 35.0)
+	doctrine_subtitle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	doctrine_subtitle_label.add_theme_font_size_override("font_size", 15)
+	doctrine_subtitle_label.add_theme_color_override("font_color", UI_FLESH)
+	doctrine_panel.add_child(doctrine_subtitle_label)
+
+
+	doctrine_target_skeletons_input = create_doctrine_spinbox(
+		"DoctrineTargetSkeletons",
+		Vector2(65.0, 135.0),
+		float(MAX_UNDEAD)
+	)
+	doctrine_target_zombies_input = create_doctrine_spinbox(
+		"DoctrineTargetZombies",
+		Vector2(465.0, 135.0),
+		float(MAX_UNDEAD)
+	)
+	doctrine_bones_reserve_input = create_doctrine_spinbox(
+		"DoctrineBonesReserve",
+		Vector2(65.0, 215.0),
+		99999.0
+	)
+	doctrine_flesh_reserve_input = create_doctrine_spinbox(
+		"DoctrineFleshReserve",
+		Vector2(465.0, 215.0),
+		99999.0
+	)
+
+
+	doctrine_priority_input = OptionButton.new()
+	doctrine_priority_input.name = "DoctrinePriority"
+	doctrine_priority_input.position = Vector2(245.0, 305.0)
+	doctrine_priority_input.size = Vector2(410.0, 48.0)
+	doctrine_priority_input.add_theme_font_size_override("font_size", 16)
+	apply_button_style(doctrine_priority_input, UI_GREEN)
+	doctrine_panel.add_child(doctrine_priority_input)
+
+
+	doctrine_status_label = Label.new()
+	doctrine_status_label.name = "DoctrineStatus"
+	doctrine_status_label.position = Vector2(80.0, 375.0)
+	doctrine_status_label.size = Vector2(740.0, 100.0)
+	doctrine_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	doctrine_status_label.add_theme_font_size_override("font_size", 18)
+	doctrine_status_label.add_theme_color_override("font_color", UI_TEXT)
+	doctrine_panel.add_child(doctrine_status_label)
+
+
+	doctrine_validation_label = Label.new()
+	doctrine_validation_label.name = "DoctrineValidation"
+	doctrine_validation_label.position = Vector2(60.0, 480.0)
+	doctrine_validation_label.size = Vector2(780.0, 35.0)
+	doctrine_validation_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	doctrine_validation_label.add_theme_font_size_override("font_size", 15)
+	doctrine_validation_label.add_theme_color_override("font_color", UI_FLESH)
+	doctrine_panel.add_child(doctrine_validation_label)
+
+
+	var apply_button: Button = Button.new()
+	apply_button.name = "DoctrineApplyButton"
+	apply_button.position = Vector2(525.0, 525.0)
+	apply_button.size = Vector2(170.0, 48.0)
+	apply_button.pressed.connect(apply_army_doctrine_from_ui)
+	apply_button_style(apply_button, UI_GREEN)
+	doctrine_panel.add_child(apply_button)
+
+
+	var close_button: Button = Button.new()
+	close_button.name = "DoctrineCloseButton"
+	close_button.position = Vector2(715.0, 525.0)
+	close_button.size = Vector2(145.0, 48.0)
+	close_button.pressed.connect(toggle_army_doctrine_panel)
+	apply_button_style(close_button, UI_FLESH)
+	doctrine_panel.add_child(close_button)
+
+
+	doctrine_panel.visible = false
+	update_army_doctrine_ui()
+
+
+func create_doctrine_spinbox(
+	input_name: String,
+	input_position: Vector2,
+	maximum_value: float
+) -> SpinBox:
+
+	var input: SpinBox = SpinBox.new()
+	input.name = input_name
+	input.position = input_position
+	input.size = Vector2(370.0, 48.0)
+	input.min_value = 0.0
+	input.max_value = maximum_value
+	input.step = 1.0
+	input.allow_greater = false
+	input.allow_lesser = false
+	input.update_on_text_changed = true
+	input.add_theme_font_size_override("font_size", 16)
+	doctrine_panel.add_child(input)
+	return input
+
+
+func toggle_army_doctrine_panel() -> void:
+
+	if doctrine_panel == null:
+		return
+
+
+	if upgrade_panel != null and upgrade_panel.visible:
+		doctrine_panel.visible = false
+		return
+
+
+	if factory_panel != null:
+		factory_panel.visible = false
+
+
+	doctrine_panel.visible = not doctrine_panel.visible
+	refresh_army_doctrine_status()
+
+
+func apply_army_doctrine_from_ui() -> void:
+
+	var selected_priority: String = str(
+		doctrine_priority_input.get_selected_metadata()
+	)
+	var applied: bool = apply_army_doctrine_configuration(
+		int(round(doctrine_target_skeletons_input.value)),
+		int(round(doctrine_target_zombies_input.value)),
+		int(round(doctrine_bones_reserve_input.value)),
+		int(round(doctrine_flesh_reserve_input.value)),
+		selected_priority
+	)
+
+
+	doctrine_validation_label.text = (
+		tr("DOCTRINE_SAVED")
+		if applied
+		else tr("DOCTRINE_TARGET_LIMIT")
+	)
+	doctrine_validation_label.add_theme_color_override(
+		"font_color",
+		UI_GREEN if applied else UI_FLESH
+	)
+
+
+func update_army_doctrine_ui() -> void:
+
+	if doctrine_nav_button == null or doctrine_panel == null:
+		return
+
+
+	doctrine_nav_button.text = tr("DOCTRINE_NAV")
+	var title_label: Label = doctrine_panel.get_node_or_null(
+		"DoctrineTitle"
+	) as Label
+	var apply_button: Button = doctrine_panel.get_node_or_null(
+		"DoctrineApplyButton"
+	) as Button
+	var close_button: Button = doctrine_panel.get_node_or_null(
+		"DoctrineCloseButton"
+	) as Button
+
+
+	if title_label != null:
+		title_label.text = tr("DOCTRINE_TITLE")
+
+
+	doctrine_subtitle_label.text = tr("DOCTRINE_PLANNING_MODE")
+	doctrine_target_skeletons_input.prefix = (
+		tr("DOCTRINE_TARGET_SKELETONS") + ": "
+	)
+	doctrine_target_zombies_input.prefix = (
+		tr("DOCTRINE_TARGET_ZOMBIES") + ": "
+	)
+	doctrine_bones_reserve_input.prefix = (
+		tr("DOCTRINE_BONES_RESERVE") + ": "
+	)
+	doctrine_flesh_reserve_input.prefix = (
+		tr("DOCTRINE_FLESH_RESERVE") + ": "
+	)
+
+
+	var selected_priority: String = doctrine_priority
+
+
+	doctrine_priority_input.clear()
+	add_doctrine_priority_option(
+		"DOCTRINE_PRIORITY_BALANCED",
+		ARMY_DOCTRINE_POLICY.PRIORITY_BALANCED
+	)
+	add_doctrine_priority_option(
+		"DOCTRINE_PRIORITY_SKELETONS",
+		ARMY_DOCTRINE_POLICY.PRIORITY_SKELETONS
+	)
+	add_doctrine_priority_option(
+		"DOCTRINE_PRIORITY_ZOMBIES",
+		ARMY_DOCTRINE_POLICY.PRIORITY_ZOMBIES
+	)
+	select_doctrine_priority(selected_priority)
+
+
+	if apply_button != null:
+		apply_button.text = tr("DOCTRINE_APPLY")
+
+
+	if close_button != null:
+		close_button.text = tr("FACTORY_CLOSE")
+
+
+	refresh_army_doctrine_status()
+
+
+func add_doctrine_priority_option(label_key: String, priority_id: String) -> void:
+
+	var index: int = doctrine_priority_input.item_count
+	doctrine_priority_input.add_item(tr(label_key))
+	doctrine_priority_input.set_item_metadata(index, priority_id)
+
+
+func select_doctrine_priority(priority_id: String) -> void:
+
+	for index: int in range(doctrine_priority_input.item_count):
+		if str(doctrine_priority_input.get_item_metadata(index)) == priority_id:
+			doctrine_priority_input.select(index)
+			return
+
+
+	doctrine_priority_input.select(0)
+
+
+func refresh_army_doctrine_status() -> void:
+
+	if doctrine_status_label == null:
+		return
+
+
+	if not army_doctrine_configured:
+		doctrine_status_label.text = tr("DOCTRINE_NOT_CONFIGURED")
+		return
+
+
+	var deficits: Vector2i = get_army_doctrine_deficits()
+	doctrine_status_label.text = (
+		tr("DOCTRINE_TARGET_STATUS") % [
+			doctrine_target_skeletons,
+			doctrine_target_zombies
+		]
+		+ "\n" + tr("DOCTRINE_CURRENT_STATUS") % [
+			skeletons.size(),
+			zombies.size()
+		]
+		+ "\n" + tr("DOCTRINE_MISSING_STATUS") % [
+			deficits.x,
+			deficits.y
+		]
+	)
 
 
 func create_hud_panel(
@@ -6519,3 +6926,4 @@ func update_bones_ui() -> void:
 
 
 	update_metrics_ui()
+	refresh_army_doctrine_status()

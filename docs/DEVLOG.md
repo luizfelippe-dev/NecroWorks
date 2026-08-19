@@ -352,6 +352,14 @@ This reduces click repetition but remains manual and instant. Timed Skeleton Ass
 
 ---
 
+## 19/08/2026 — Army Doctrine Planning V1
+
+A localized Doctrine panel now stores target counts for Skeletons/Zombies, minimum Bones/Flesh reserves and Balanced or unit-first production priority. Its live summary compares the target with the current army and exposes missing units without changing combat state.
+
+The stateless policy rejects invalid compositions above the 36-unit cap and provides reserve-safe spending checks for future machines. Automatic replenishment is intentionally disabled until timed Skeleton Assembler and Flesh Vat queues can make production throughput, scarcity and pause control visible.
+
+---
+
 ## Next
 
 ### Production planning
@@ -359,8 +367,8 @@ This reduces click repetition but remains manual and instant. Timed Skeleton Ass
 Recommended next block:
 
 - playtest Factory Point income and upgrade timing;
-- prototype manual batch production;
-- design Army Doctrine target composition and reserve rules.
+- implement timed Skeleton Assembler and Flesh Vat production queues;
+- connect Army Doctrine execution only after queue timing/capacity and pause controls are validated.
 
 ### Enemy depth
 

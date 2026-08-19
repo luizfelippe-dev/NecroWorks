@@ -91,7 +91,7 @@ Processing Directive V1 is the first Factory choice that directly changes the ru
 
 A future marketing clip can communicate the loop in a few seconds: an enemy falls, its Corpse is recycled, the player changes the directive, the yield changes, and a different Undead composition becomes viable. Before this becomes Steam-facing footage, the same sequence still needs stronger animation, sound, impact feedback, and a more physical sense of factory machinery.
 
-The next commercially legible Factory proof is Army Doctrine: show a target such as `5 Zombies + 30 Skeletons`, visible production queues and machines automatically replacing battlefield losses. This can communicate both automation spectacle and strategic intent, but only if throughput, priorities and resource scarcity remain readable.
+Army Doctrine now has its first readable planning surface: the player can set a target such as `5 Zombies + 30 Skeletons`, reserves and production priority. The next commercially legible proof is execution through visible Skeleton Assembler/Flesh Vat queues, with machines replacing battlefield losses over time. This can communicate both automation spectacle and strategic intent, but only if throughput, priorities, pause controls and resource scarcity remain readable.
 
 ---
 

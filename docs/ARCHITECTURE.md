@@ -149,6 +149,12 @@ Automated Retrieval is locked by default, purchased once, and controlled by a re
 
 Successful requests use the existing per-unit creation paths so HP, slots, metrics, sprites and combat dictionaries remain identical to single production. `batch_production_completed` is the presentation boundary for future assembler animation/audio. This is not yet a timed Skeleton Assembler or Flesh Vat queue.
 
+# Army Doctrine planning
+
+`scripts/factory/army_doctrine_policy.gd` is a stateless policy boundary for composition targets, the 36-unit cap, production priority, resource reserves and live deficits. `main.gd` owns the run-scoped configuration and localized panel, and emits `army_doctrine_changed` only after a valid atomic update.
+
+The policy can answer whether a unit cost would preserve the configured reserve, but it does not create units. Automatic replenishment must consume future Skeleton Assembler/Flesh Vat queues so production has visible time, capacity and player-controlled pause behavior. `tests/factory/army_doctrine_runner.gd` protects this planning/execution boundary.
+
 # Corpse tracking
 
 ```gdscript

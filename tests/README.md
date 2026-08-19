@@ -121,3 +121,15 @@ Godot_v4.7.1-stable_win64_console.exe `
   --path . `
   --script res://tests/factory/batch_production_runner.gd
 ```
+
+## Army Doctrine planning
+
+Validates atomic target configuration, 36-unit cap rejection, live deficits, minimum-resource reserves, priority synchronization and localized visible UI. It also confirms that planning does not trigger instant replenishment:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/factory/army_doctrine_runner.gd
+```

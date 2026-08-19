@@ -682,6 +682,8 @@ Manual unit production now supports a shared typed quantity from 1 to 36. Button
 
 The current batch action is deliberately instant for the prototype. Skeleton Assembler and Flesh Vat production queues remain future systems that must introduce visible timing/capacity before Army Doctrine can automatically replenish losses.
 
+Army Doctrine Planning V1 is now playable as a configuration layer. It supports a combined maximum of 36 Undead, separate Skeleton/Zombie targets, Bones/Flesh reserves and Balanced/Skeleton-first/Zombie-first priority. The panel reports current counts and deficits, but does not yet issue production orders. This preserves attrition and player agency while the timed machine layer is still absent.
+
 ## Planned Undead roles
 
 ```text

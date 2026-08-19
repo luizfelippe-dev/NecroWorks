@@ -107,6 +107,14 @@
   - a batch is all-or-nothing when resources or army slots are insufficient;
   - `batch_production_completed` exposes a future machine-feedback/audio hook;
   - persistent runner validates costs, counts, capacity rejection and insufficient-resource rejection.
+- Army Doctrine Planning V1:
+  - dedicated localized panel and lower navigation button;
+  - configurable Skeleton/Zombie target composition;
+  - minimum Bones/Flesh reserves and Balanced/Skeleton-first/Zombie-first priority;
+  - live current-army and composition-deficit readout;
+  - isolated policy validates the 36-unit cap and reserve-safe spending;
+  - automatic replenishment remains locked until timed production queues exist;
+  - persistent runner validates state, rejected configurations, reserves, deficits and localized UI.
 
 ### Current Zombie V1 values
 
