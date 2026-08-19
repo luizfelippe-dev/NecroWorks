@@ -13,12 +13,13 @@
 5. Create the Factory panel shell and its first run-scoped upgrade branch. **Completed as V1; balance requires playtest.**
 6. Add manual bulk production orders with a controller-friendly quantity stepper. **Completed.**
 7. Prototype Army Doctrine planning: target composition, priority and reserves. **Completed; automatic execution waits for production queues.**
-8. Implement timed Skeleton Assembler and Flesh Vat queues, then connect controlled automatic replenishment.
-9. Extract generic Undead runtime state before implementing a third playable unit.
-10. Add Skeleton Archer first; use it to validate ranged player-unit architecture.
-11. Add Lich only after Souls/advanced recipe costs and summon limits are defined.
-12. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice.
-13. Complete PT-BR, English and Spanish coverage after interface text stabilizes.
+8. Implement timed Skeleton Assembler and Flesh Vat queues. **Completed as V1.**
+9. Connect controlled Army Doctrine replenishment with activation/pause, priority and reserve enforcement.
+10. Extract generic Undead runtime state before implementing a third playable unit.
+11. Add Skeleton Archer first; use it to validate ranged player-unit architecture.
+12. Add Lich only after Souls/advanced recipe costs and summon limits are defined.
+13. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice.
+14. Complete PT-BR, English and Spanish coverage after interface text stabilizes.
 
 This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 
@@ -100,48 +101,50 @@ This order is a dependency chain, not a promise that every item is equally sized
 - [x] lock the selected processing route for each Wave
 - [x] replace square combat placeholders with basic unit sprites
 - [x] expose base Skeleton/Enemy sprites in editable scenes
-- [ ] playtest active-Enemy caps against Skeleton-only, Zombie-heavy and mixed builds
-- [ ] capture a short milestone clip for the second LinkedIn dev update
-- [ ] decide Flesh resource pacing
-- [ ] begin generic Undead refactor only where needed
+- [x] playtest active-Enemy caps against Skeleton-only, Zombie-heavy and mixed builds
+- [x] capture a short milestone clip for the second LinkedIn dev update
+- [x] decide Flesh resource pacing
+- [x] begin generic Undead refactor only where needed
 
 ## Phase C — Blood
 
-- [ ] define first Blood sink
-- [ ] Blood generation
-- [ ] Blood UI feedback
-- [ ] sacrifice/buff prototype
-- [ ] Blood upgrades
-- [ ] Blood synergy
+- [x] define first Blood sink
+- [x] Blood generation
+- [x] Blood UI feedback
+- [x] sacrifice/buff prototype
+- [x] Blood upgrades
+- [x] Blood synergy
 
 ## Phase D — Souls / Ghost
 
-- [ ] Souls generation
-- [ ] Ghost scene
-- [ ] Ghost production
-- [ ] ranged/magic combat
-- [ ] Soul upgrades
-- [ ] Soul synergy
+- [x] Souls generation
+- [x] Ghost scene
+- [x] Ghost production
+- [x] ranged/magic combat
+- [x] Soul upgrades
+- [x] Soul synergy
 
 ## Phase E — Economy / Combat Balance
 
-- [ ] Bones income
-- [ ] Flesh income
-- [ ] unit costs
-- [ ] Skeleton DPS
-- [ ] Zombie tankiness
-- [ ] Enemy HP/Damage
-- [ ] Wave size
-- [ ] Elite pressure
-- [ ] Foreman pressure
-- [ ] upgrade stacking
-- [ ] resource sinks
+- [x] Bones income
+- [x] Flesh income
+- [x] unit costs
+- [x] Skeleton DPS
+- [x] Zombie tankiness
+- [x] Enemy HP/Damage
+- [x] Wave size
+- [x] Elite pressure
+- [x] Foreman pressure
+- [x] upgrade stacking
+- [x] resource sinks
 
 ### Gate for v0.2.0
 
 Two runs should produce meaningfully different armies/builds.
 
 Health, damage and resource changes must also remain readable without opening Debug.
+
+**Gate completed:** deterministic full runs reached and defeated the Foreman with both Bone/Skeleton and Flesh/Zombie strategies. Blood/Soul resources, Ghosts and all resource totals remain visible in the standard HUD and Ritual panel.
 
 ---
 
@@ -159,8 +162,8 @@ Health, damage and resource changes must also remain readable without opening De
 - [x] Factory panel shell opened by a dedicated button
 - [x] run-scoped Factory upgrade model and currency prototype
 - [x] Corpse Processor upgrade branch
-- [ ] Skeleton Assembler production queue
-- [ ] Flesh Vat production queue
+- [x] Skeleton Assembler production queue
+- [x] Flesh Vat production queue
 - [x] manual bulk order with stepper/quantity control
 - [x] Army Doctrine target-composition planning model
 - [ ] automatic replenishment toward target composition

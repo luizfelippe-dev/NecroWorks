@@ -46,6 +46,8 @@ CORPSE_LABEL,CORPSE,CADÁVER,CADÁVER
 CORPSE_QUEUED,QUEUED,NA FILA,EN COLA
 SYNERGIES_ACTIVE,ACTIVE SYNERGIES,SINERGIAS ATIVAS,SINERGIAS ACTIVAS
 COMMON_NONE,None,Nenhuma,Ninguna
+COMMON_YES,YES,SIM,SÍ
+COMMON_NO,NO,NÃO,NO
 SYNERGY_RECYCLING_PLANT,Recycling Plant,Usina de Reciclagem,Planta de Reciclaje
 SYNERGY_SECOND_SHIFT,Second Shift,Segundo Turno,Segundo Turno
 SYNERGY_BONE_ASSEMBLY_LINE,Bone Assembly Line,Linha de Montagem Óssea,Línea de Montaje Óseo
@@ -72,6 +74,9 @@ FACTORY_MAX_LEVEL,MAX LEVEL,NÍVEL MÁXIMO,NIVEL MÁXIMO
 FACTORY_COST,COST,CUSTO,COSTE
 PRODUCTION_QUANTITY,QUANTITY,QUANTIDADE,CANTIDAD
 PRODUCTION_BATCH,BATCH,LOTE,LOTE
+PRODUCTION_QUEUE_SKELETON,PRODUCE SKELETON (QUEUE),PRODUZIR ESQUELETO (FILA),PRODUCIR ESQUELETO (COLA)
+PRODUCTION_QUEUE_ZOMBIE,PRODUCE ZOMBIE (QUEUE),PRODUZIR ZUMBI (FILA),PRODUCIR ZOMBI (COLA)
+PRODUCTION_QUEUE_STATUS,"Assembler: %d (%0.1fs) | Flesh Vat: %d (%0.1fs)","Montador: %d (%0.1fs) | Cuba de Carne: %d (%0.1fs)","Ensamblador: %d (%0.1fs) | Cuba de Carne: %d (%0.1fs)"
 DOCTRINE_NAV,DOCTRINE,DOUTRINA,DOCTRINA
 DOCTRINE_TITLE,ARMY DOCTRINE,DOUTRINA DO EXÉRCITO,DOCTRINA DEL EJÉRCITO
 DOCTRINE_PLANNING_MODE,PLANNING MODE — AUTO-REPLENISHMENT LOCKED,MODO DE PLANEJAMENTO — REPOSIÇÃO AUTOMÁTICA BLOQUEADA,MODO DE PLANIFICACIÓN — REPOSICIÓN AUTOMÁTICA BLOQUEADA
@@ -90,3 +95,16 @@ DOCTRINE_CURRENT_STATUS,Current: %d Skeletons / %d Zombies,Atual: %d Esqueletos 
 DOCTRINE_MISSING_STATUS,Missing: %d Skeletons / %d Zombies,Faltam: %d Esqueletos / %d Zumbis,Faltan: %d Esqueletos / %d Zombis
 DOCTRINE_TARGET_LIMIT,Target total cannot exceed 36.,A meta total não pode ultrapassar 36.,El objetivo total no puede superar 36.
 DOCTRINE_SAVED,Doctrine saved. Automatic replenishment remains locked.,Doutrina salva. A reposição automática continua bloqueada.,Doctrina guardada. La reposición automática sigue bloqueada.
+SYNERGY_CRIMSON_ASSEMBLY,Crimson Assembly,Montagem Carmesim,Ensamblaje Carmesí
+SYNERGY_PHANTOM_CONDUIT,Phantom Conduit,Conduto Fantasma,Conducto Fantasma
+RITUAL_NAV,RITUALS,RITUAIS,RITUALES
+RITUAL_TITLE,BLOOD & SOUL RITUALS,RITUAIS DE SANGUE E ALMAS,RITUALES DE SANGRE Y ALMAS
+RITUAL_STATUS,"Blood: %d | Souls: %d | Ghosts: %d | Fervor: %s","Sangue: %d | Almas: %d | Fantasmas: %d | Fervor: %s","Sangre: %d | Almas: %d | Fantasmas: %d | Fervor: %s"
+RITUAL_SACRIFICE,"BLOOD FERVOR — %d BLOOD\n+25%% damage this Wave","FERVOR DE SANGUE — %d SANGUE\n+25%% de dano nesta Onda","FERVOR DE SANGRE — %d SANGRE\n+25%% de daño esta Oleada"
+RITUAL_EXTRACTION,"HEMATIC EXTRACTION %d/2 — %d BLOOD\nBlood generation","EXTRAÇÃO HEMÁTICA %d/2 — %d SANGUE\nGeração de Sangue","EXTRACCIÓN HEMÁTICA %d/2 — %d SANGRE\nGeneración de Sangre"
+RITUAL_INFUSION,"CRIMSON INFUSION %d/2 — %d BLOOD\nFervor strength","INFUSÃO CARMESIM %d/2 — %d SANGUE\nForça do Fervor","INFUSIÓN CARMESÍ %d/2 — %d SANGRE\nFuerza del Fervor"
+RITUAL_GHOST,"SUMMON GHOST — %d SOULS\nRanged magic unit","INVOCAR FANTASMA — %d ALMAS\nUnidade mágica à distância","INVOCAR FANTASMA — %d ALMAS\nUnidad mágica a distancia"
+RITUAL_SOUL_FOCUS,"SPECTRAL FOCUS %d/2 — %d SOULS\nGhost damage","FOCO ESPECTRAL %d/2 — %d ALMAS\nDano dos Fantasmas","FOCO ESPECTRAL %d/2 — %d ALMAS\nDaño de Fantasmas"
+RITUAL_SOUL_ANCHOR,"ETHEREAL ANCHOR %d/2 — %d SOULS\nGhost durability","ÂNCORA ETÉREA %d/2 — %d ALMAS\nResistência dos Fantasmas","ANCLA ETÉREA %d/2 — %d ALMAS\nResistencia de Fantasmas"
+METRICS_GHOSTS_BUILT,GHOSTS BUILT,FANTASMAS CRIADOS,FANTASMAS CREADOS
+METRICS_GHOSTS_LOST,GHOSTS LOST,FANTASMAS PERDIDOS,FANTASMAS PERDIDOS

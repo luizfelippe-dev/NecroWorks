@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/units/undead_runtime_unit.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/units/skeleton_prototype.png" id="2_sprite"]
+
+[node name="Ghost" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="UnitSprite" type="Sprite2D" parent="."]
+z_index = 10
+texture = ExtResource("2_sprite")
+scale = Vector2(0.17, 0.17)
+modulate = Color(0.35, 0.8, 1, 0.72)

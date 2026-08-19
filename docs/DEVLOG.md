@@ -360,6 +360,24 @@ The stateless policy rejects invalid compositions above the 36-unit cap and prov
 
 ---
 
+## 19/08/2026 — Timed Undead Production Queues V1
+
+Manual production buttons now submit atomic orders instead of spawning an entire batch instantly. The order reserves its full cost and future army slots, then Skeleton Assembler and Flesh Vat operate in parallel at 0.45 s and 0.80 s per unit respectively.
+
+Each machine accepts three pending orders. A localized status line exposes remaining units and the current cycle timer, while queued rebuilding prevents a false defeat. Persistent validation covers reservations, independent timing, completion signals, queue limits and localized UI.
+
+---
+
+## 19/08/2026 — Necromantic Economy v0.2 Complete
+
+The lower HUD cutoff was traced to stretch aspect expansion; the project now preserves the complete 1920×1080 canvas. Production copy now says “Produzir … (Fila)” instead of exposing implementation terminology.
+
+Blood and Souls are active resources. A localized Ritual panel provides Blood Fervor, Hematic Extraction, Crimson Infusion, Ghost summoning, Spectral Focus and Ethereal Anchor. Crimson Assembly and Phantom Conduit complete the first rare-resource synergy pair.
+
+Ghost is the first ranged player unit and the first unit whose complete runtime state lives on a reusable scripted node. Two deterministic full runs—Bone/Skeleton and Flesh/Zombie—defeated the Foreman with distinct production histories. Evidence reduced Blood/Soul inflation before the milestone closed. A five-second milestone clip was generated locally.
+
+---
+
 ## Next
 
 ### Production planning
@@ -367,8 +385,8 @@ The stateless policy rejects invalid compositions above the 36-unit cap and prov
 Recommended next block:
 
 - playtest Factory Point income and upgrade timing;
-- implement timed Skeleton Assembler and Flesh Vat production queues;
-- connect Army Doctrine execution only after queue timing/capacity and pause controls are validated.
+- connect Army Doctrine execution to the validated queues;
+- add explicit automation activation/pause and enforce priority plus minimum reserves.
 
 ### Enemy depth
 
@@ -378,7 +396,6 @@ Recommended next block:
 
 Then:
 
-- Blood sink;
-- Blood generation;
-- Soul/Ghost;
-- representative balance pass.
+- Army Doctrine automatic execution through timed queues;
+- automation activation/pause and reserve enforcement;
+- Factory Point pacing playtest during the next full manual run.

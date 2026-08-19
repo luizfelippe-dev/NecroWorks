@@ -421,4 +421,32 @@ Reasoning:
 - the same target can then produce different outcomes depending on upgrades and resources;
 - separating policy from execution keeps the future automation testable and pausable.
 
-Activate replenishment only after both production queues exist and respect capacity, timing, reserves, army cap and an explicit pause/disable control.
+Both production queues now exist. Replenishment may be activated next only through their public enqueue paths and must respect capacity, timing, reserves, army cap and an explicit pause/disable control.
+
+---
+
+## Production orders reserve resources and population atomically
+
+A manual order reserves its complete Bone/Flesh cost and future army slots when accepted. Skeleton Assembler and Flesh Vat then complete one prepaid unit per cycle, independently.
+
+Reasoning:
+
+- later spending cannot invalidate an already accepted order;
+- orders never produce a surprising partial batch because resources disappeared;
+- reserved population prevents two machines from overcommitting the 36-unit cap;
+- independent cycle times create a real composition/throughput tradeoff;
+- the same transaction boundary can safely serve future Army Doctrine automation.
+
+---
+
+## Rare resources come from combat identities, not Corpse routing
+
+Blood arrives from Elites/Bosses and paced normal kills. Souls arrive primarily from Mage/Elf kills and the Foreman. Blood Fervor is the first Blood sink; Ghost production plus Spectral Focus/Ethereal Anchor are the first Soul sinks.
+
+Automated full runs showed the initial rare-resource rates were excessive. Normal Blood was reduced to one per eight kills before upgrades, Mage/Elf Soul drops were throttled, and Ghost cost became four Souls. These remain playtest values.
+
+---
+
+## Preserve the full design canvas before responsive reflow
+
+The prototype uses a 1920×1080 absolute layout. `stretch/aspect="keep"` is required so embedded windows scale/letterbox the full canvas instead of clipping the lower menus. Container-based responsive reflow remains required before public testing.

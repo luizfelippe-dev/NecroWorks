@@ -50,7 +50,7 @@ Funcionalmente completo e validado:
 
 ### `v0.2.0 — Necromantic Economy`
 
-Em desenvolvimento e já validado parcialmente:
+Funcionalmente completo e validado por duas runs determinísticas até o Foreman:
 
 - resource foundation com Bones, Flesh, Blood e Souls;
 - Corpse processado gera Bones + Flesh;
@@ -73,6 +73,11 @@ Em desenvolvimento e já validado parcialmente:
 - fundação de localização em English, PT-BR e Español aplicada ao primeiro recorte estável da HUD.
 - painel inicial de Factory com Pontos de Fábrica, auto-coleta desbloqueável e upgrades de capacidade/velocidade do Corpse Processor.
 - produção manual em lote com quantidade digitável, custo total visível e validação atômica de recursos/vagas.
+- produção temporizada paralela no Skeleton Assembler e Flesh Vat.
+- geração de Blood e Souls por combate, com feedback no HUD.
+- painel de Rituais com Blood Fervor, upgrades de Blood/Soul e duas novas sinergias.
+- Ghost mágico à distância, produzido com Souls e baseado no primeiro runtime genérico de Undead.
+- correção de viewport para preservar toda a interface inferior em janelas mais baixas.
 
 ## Economia atual
 
@@ -92,7 +97,7 @@ Skeleton Cost: 5 Bones
 Zombie Cost: 6 Flesh
 ```
 
-Blood e Souls já existem no estado do jogo, mas ainda não possuem geração/sink próprios.
+Blood é consumido por Blood Fervor e seus upgrades; Souls produzem Ghosts e alimentam Spectral Focus/Ethereal Anchor. Normal kills geram Blood em ritmo controlado, enquanto Mage/Elf/Boss são as fontes principais de Souls.
 
 ## Undead atuais
 
@@ -237,6 +242,6 @@ Consulte `docs/AI_HANDOFF.md` antes de continuar o desenvolvimento em outro chat
 
 Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.
 
-O painel de Doutrina do Exército já permite salvar composição-alvo, reservas mínimas e prioridade de produção. Nesta V1 ele é deliberadamente apenas um planejador: a reposição automática será ativada somente depois das filas temporizadas do Skeleton Assembler e Flesh Vat.
+O painel de Doutrina do Exército permite salvar composição-alvo, reservas mínimas e prioridade de produção. Skeleton Assembler e Flesh Vat agora possuem filas temporizadas independentes: pedidos reservam recursos e vagas atomicamente, e cada máquina entrega uma unidade por ciclo.
 
-Próximo foco: implementar essas duas filas de produção, conectá-las à Doutrina com controles de pausa e então retomar playtests de composição e economia.
+Próximo foco: v0.3.0 — conectar a Doutrina às filas com controles de ativação/pausa, prioridade e reservas.

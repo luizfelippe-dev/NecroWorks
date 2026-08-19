@@ -48,7 +48,7 @@ Recommended extraction order:
 
 The first Wave Director boundary now exists as a stateless active-Enemy policy. Continue extracting only rules with a focused interface; spawning and lifecycle still belong to the orchestrator for now.
 
-### P1 — Fixed 1920×1080 layout
+### P1 — Fixed 1920×1080 layout (cropping mitigated)
 
 Most HUD coordinates are absolute. `stretch/aspect="expand"` can expose gaps or overlap on other aspect ratios.
 
@@ -59,7 +59,7 @@ Before public testing:
 - validate 16:9, 16:10, ultrawide and Steam Deck-like resolutions;
 - provide UI scaling.
 
-The current overlap bugs are fixed at 1920×1080, but this does not close the responsive-layout risk.
+`aspect="keep"` now prevents the production floor from being cropped in shorter embedded windows. This closes the reported cutoff, but does not close the responsive-layout risk.
 
 ### P1 — Parallel unit dictionaries
 
@@ -82,6 +82,10 @@ Corpse queue capacity, delayed settlement and directive snapshots live at `tests
 Factory currency, purchases, toggles and automatic collection live at `tests/factory/factory_automation_runner.gd`.
 Atomic manual batch costs, counts and rejection paths live at `tests/factory/batch_production_runner.gd`.
 Army Doctrine targets, deficits, reserves, priorities and localized planning UI live at `tests/factory/army_doctrine_runner.gd`.
+Timed Skeleton/Zombie queues, resource/capacity reservation and parallel completion live at `tests/factory/undead_production_queue_runner.gd`.
+Blood/Soul pacing, rituals, Ghost combat and rare-resource synergies live at `tests/economy/blood_soul_runner.gd`.
+Complete Bone/Flesh runs and active-Enemy cap stages live at `tests/balance/full_run_runner.gd`.
+Viewport preservation and lower-HUD bounds live at `tests/visual/layout_bounds_runner.gd`.
 
 Before the demo, extend persistent coverage for:
 

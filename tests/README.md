@@ -133,3 +133,41 @@ Godot_v4.7.1-stable_win64_console.exe `
   --path . `
   --script res://tests/factory/army_doctrine_runner.gd
 ```
+
+## Timed Undead production queues
+
+Validates atomic resource/population reservation, independent Skeleton Assembler and Flesh Vat timing, parallel unit completion, three-order limits, completion signals and localized queue UI:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/factory/undead_production_queue_runner.gd
+```
+
+## Blood, Souls and Ghost
+
+Validates rare-resource rewards, Blood Fervor, Blood/Soul upgrades, both new synergies, Ghost production, magic damage, death and localized Ritual UI:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/economy/blood_soul_runner.gd
+```
+
+## Complete v0.2 balance gate
+
+Runs real Bone/Skeleton and Flesh/Zombie strategies from Wave 1 through the Foreman, validating active-Enemy cap stages and distinct build outcomes:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/balance/full_run_runner.gd
+```
+
+## Responsive layout bounds
+
+Validates preserved aspect mode and all primary lower-HUD controls inside the 1920×1080 design canvas:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/layout_bounds_runner.gd
+```
+
+The five-second local milestone clip is reproducible with `tests/visual/milestone_capture_runner.gd` and Godot's `--write-movie` option.

@@ -12,6 +12,15 @@ signal batch_production_completed(
 	total_cost: int
 )
 signal army_doctrine_changed(configuration: Dictionary)
+signal production_order_queued(
+	unit_type: String,
+	quantity: int,
+	total_cost: int
+)
+signal production_unit_completed(
+	unit_type: String,
+	remaining_in_order: int
+)
 
 
 func _notification(what: int) -> void:
@@ -36,6 +45,7 @@ func refresh_localized_ui() -> void:
 	update_bones_ui()
 	update_metrics_ui()
 	refresh_army_doctrine_status()
+	update_ritual_panel_ui()
 	update_wave_ui()
 	update_synergy_ui()
 	refresh_world_localization()
@@ -82,6 +92,7 @@ func refresh_world_localization() -> void:
 
 var create_zombie_button: Button = null
 var production_quantity_selector: SpinBox = null
+var production_queue_label: Label = null
 
 
 # =========================================================
@@ -97,6 +108,9 @@ var skeleton_scene: PackedScene = preload(
 var enemy_scene: PackedScene = preload(
 	"res://enemy.tscn"
 )
+var ghost_scene: PackedScene = preload(
+	"res://ghost.tscn"
+)
 const UNIT_HEALTH_BAR_SCRIPT: Script = preload(
 	"res://scripts/ui/unit_health_bar.gd"
 )
@@ -109,8 +123,14 @@ const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
 )
+const NECROMANTIC_RESOURCE_POLICY: Script = preload(
+	"res://scripts/economy/necromantic_resource_policy.gd"
+)
 const ARMY_DOCTRINE_POLICY: Script = preload(
 	"res://scripts/factory/army_doctrine_policy.gd"
+)
+const UNDEAD_PRODUCTION_POLICY: Script = preload(
+	"res://scripts/factory/undead_production_policy.gd"
 )
 const UNIT_SPRITE_CATALOG: Script = preload(
 	"res://scripts/visual/unit_sprite_catalog.gd"
@@ -142,14 +162,36 @@ func get_available_undead_capacity() -> int:
 	return maxi(MAX_UNDEAD - get_total_undead_count(), 0)
 
 
+func get_total_queued_undead() -> int:
+
+	return (
+		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
+			skeleton_production_queue
+		)
+		+ UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
+			zombie_production_queue
+		)
+	)
+
+
+func get_available_production_capacity() -> int:
+
+	return maxi(
+		MAX_UNDEAD
+		- get_total_undead_count()
+		- get_total_queued_undead(),
+		0
+	)
+
+
 func create_skeleton_batch_from_ui() -> void:
 
-	create_skeleton_batch(get_selected_production_quantity())
+	enqueue_skeleton_production(get_selected_production_quantity())
 
 
 func create_zombie_batch_from_ui() -> void:
 
-	create_zombie_batch(get_selected_production_quantity())
+	enqueue_zombie_production(get_selected_production_quantity())
 
 
 func create_skeleton_batch(quantity: int) -> int:
@@ -166,7 +208,7 @@ func create_skeleton_batch(quantity: int) -> int:
 		return 0
 
 
-	if requested_quantity > get_available_undead_capacity():
+	if requested_quantity > get_available_production_capacity():
 		return 0
 
 
@@ -211,7 +253,7 @@ func create_zombie_batch(quantity: int) -> int:
 		return 0
 
 
-	if requested_quantity > get_available_undead_capacity():
+	if requested_quantity > get_available_production_capacity():
 		return 0
 
 
@@ -240,10 +282,155 @@ func create_zombie_batch(quantity: int) -> int:
 	update_bones_ui()
 	return produced
 
-func create_zombie() -> void:
+
+func enqueue_skeleton_production(quantity: int) -> bool:
+
+	return enqueue_undead_production_order(
+		"skeleton",
+		quantity,
+		skeleton_cost,
+		bones,
+		skeleton_production_queue
+	)
+
+
+func enqueue_zombie_production(quantity: int) -> bool:
+
+	return enqueue_undead_production_order(
+		"zombie",
+		quantity,
+		zombie_cost,
+		flesh,
+		zombie_production_queue
+	)
+
+
+func enqueue_undead_production_order(
+	unit_type: String,
+	quantity: int,
+	unit_cost: int,
+	available_resource: int,
+	queue: Array[Dictionary]
+) -> bool:
 
 	if run_finished:
-		return
+		return false
+
+
+	if not UNDEAD_PRODUCTION_POLICY.can_enqueue_order(
+		quantity,
+		unit_cost,
+		available_resource,
+		get_total_undead_count(),
+		get_total_queued_undead(),
+		MAX_UNDEAD,
+		queue.size(),
+		PRODUCTION_QUEUE_MAX_ORDERS
+	):
+		return false
+
+
+	var order: Dictionary = UNDEAD_PRODUCTION_POLICY.create_order(
+		quantity,
+		unit_cost
+	)
+	var total_cost: int = int(order["total_cost"])
+	queue.append(order)
+
+
+	if unit_type == "skeleton":
+		bones -= total_cost
+
+
+		if skeleton_assembler_timer <= 0.0:
+			skeleton_assembler_timer = SKELETON_ASSEMBLER_BASE_SECONDS
+	else:
+		flesh -= total_cost
+
+
+		if flesh_vat_timer <= 0.0:
+			flesh_vat_timer = FLESH_VAT_BASE_SECONDS
+
+
+	production_order_queued.emit(unit_type, quantity, total_cost)
+	update_bones_ui()
+	return true
+
+
+func update_undead_production_queues(delta: float) -> void:
+
+	skeleton_assembler_timer = update_undead_production_queue(
+		"skeleton",
+		skeleton_production_queue,
+		skeleton_assembler_timer,
+		SKELETON_ASSEMBLER_BASE_SECONDS,
+		delta
+	)
+	flesh_vat_timer = update_undead_production_queue(
+		"zombie",
+		zombie_production_queue,
+		flesh_vat_timer,
+		FLESH_VAT_BASE_SECONDS,
+		delta
+	)
+
+
+func update_undead_production_queue(
+	unit_type: String,
+	queue: Array[Dictionary],
+	timer: float,
+	cycle_seconds: float,
+	delta: float
+) -> float:
+
+	if queue.is_empty():
+		return 0.0
+
+
+	var next_timer: float = maxf(timer - delta, 0.0)
+
+
+	if next_timer > 0.0:
+		return next_timer
+
+
+	if get_available_undead_capacity() <= 0:
+		return 0.0
+
+
+	var order: Dictionary = queue[0]
+	var produced: bool = (
+		create_free_skeleton("SKELETON ASSEMBLER")
+		if unit_type == "skeleton"
+		else create_free_zombie("FLESH VAT")
+	)
+
+
+	if not produced:
+		return 0.0
+
+
+	var remaining: int = maxi(int(order["remaining"]) - 1, 0)
+	order["remaining"] = remaining
+	production_unit_completed.emit(unit_type, remaining)
+
+
+	if remaining <= 0:
+		queue.pop_front()
+		batch_production_completed.emit(
+			unit_type,
+			int(order["quantity"]),
+			int(order["total_cost"])
+		)
+
+
+	update_bones_ui()
+	return cycle_seconds if not queue.is_empty() else 0.0
+
+func create_zombie() -> bool:
+
+	if run_finished:
+		return false
 
 
 	if flesh < zombie_cost:
@@ -252,7 +439,18 @@ func create_zombie() -> void:
 			"FLESH INSUFICIENTE!"
 		)
 
-		return
+		return false
+
+
+	return create_zombie_internal(false, "MANUAL")
+
+
+func create_free_zombie(source: String) -> bool:
+
+	return create_zombie_internal(true, source)
+
+
+func create_zombie_internal(is_free: bool, source: String) -> bool:
 
 
 	var free_slot: int = (
@@ -266,7 +464,7 @@ func create_zombie() -> void:
 			"LIMITE DE UNDEAD ATINGIDO!"
 		)
 
-		return
+		return false
 
 
 	var zombie_node: Node = (
@@ -287,10 +485,16 @@ func create_zombie() -> void:
 
 		zombie_node.queue_free()
 
-		return
+		return false
 
 
-	flesh -= zombie_cost
+	if not is_free:
+		if flesh < zombie_cost:
+			zombie_node.queue_free()
+			return false
+
+
+		flesh -= zombie_cost
 
 
 	add_child(
@@ -331,6 +535,13 @@ func create_zombie() -> void:
 		zombie_cost,
 		" FLESH"
 	)
+
+
+	if is_free:
+		print("ORIGEM: ", source)
+
+
+	return true
 
 
 func register_zombie(
@@ -385,6 +596,89 @@ func register_zombie(
 	)
 
 
+func create_ghost() -> bool:
+
+	if run_finished or souls < ghost_cost:
+		return false
+
+
+	if get_available_production_capacity() <= 0:
+		return false
+
+
+	var free_slot: int = get_free_undead_slot()
+	var ghost_node: Node = ghost_scene.instantiate()
+	var new_ghost: Node2D = ghost_node as Node2D
+
+
+	if free_slot < 0 or new_ghost == null:
+		ghost_node.queue_free()
+		return false
+
+
+	souls -= ghost_cost
+	add_child(new_ghost)
+	new_ghost.set("damage", 16 + soul_focus_level * 4)
+	new_ghost.set("maximum_hp", 70 + soul_anchor_level * 25)
+	new_ghost.set(
+		"attack_cooldown",
+		1.20 if has_synergy(SYNERGY_PHANTOM_CONDUIT) else 1.35
+	)
+	new_ghost.set("formation_slot", free_slot)
+	new_ghost.call("reset_runtime")
+	new_ghost.position = get_spawn_position(free_slot)
+	occupied_undead_slots[free_slot] = true
+	ghosts.append(new_ghost)
+	ensure_unit_health_bar(
+		new_ghost,
+		int(new_ghost.get("maximum_hp")),
+		int(new_ghost.get("maximum_hp")),
+		Color(0.25, 0.75, 0.95, 1.0),
+		UNIT_SIZE
+	)
+	total_ghosts_created += 1
+	update_bones_ui()
+	update_debug_ui()
+	return true
+
+
+func ghost_attack_enemy(attacking_ghost: Node2D) -> void:
+
+	var target_enemy: Node2D = get_closest_enemy_to_unit(attacking_ghost)
+
+
+	if target_enemy == null:
+		return
+
+
+	var remaining_hp: int = apply_damage_to_enemy(
+		target_enemy,
+		get_modified_undead_damage(int(attacking_ghost.get("damage")))
+	)
+	attacking_ghost.set(
+		"attack_timer",
+		float(attacking_ghost.get("attack_cooldown"))
+	)
+
+
+	if remaining_hp <= 0:
+		kill_enemy(target_enemy)
+
+
+func kill_ghost(target: Node2D) -> void:
+
+	if not ghosts.has(target):
+		return
+
+
+	occupied_undead_slots.erase(int(target.get("formation_slot")))
+	ghosts.erase(target)
+	total_ghosts_lost += 1
+	target.queue_free()
+	update_bones_ui()
+	update_debug_ui()
+
+
 func zombie_attack_enemy(
 	attacking_zombie: Node2D
 ) -> void:
@@ -400,7 +694,7 @@ func zombie_attack_enemy(
 
 	var remaining_hp: int = apply_damage_to_enemy(
 		target_enemy,
-		zombie_damage
+		get_modified_undead_damage(zombie_damage)
 	)
 
 
@@ -583,6 +877,15 @@ var corpses_processed_by_directive: Dictionary = {
 
 var skeleton_cost: int = 5
 var zombie_cost: int = 6
+var ghost_cost: int = 4
+
+var blood_extraction_level: int = 0
+var blood_infusion_level: int = 0
+var soul_focus_level: int = 0
+var soul_anchor_level: int = 0
+var blood_fervor_active: bool = false
+var total_blood_earned: int = 0
+var total_souls_earned: int = 0
 
 
 # =========================================================
@@ -780,6 +1083,8 @@ const SYNERGY_SECOND_SHIFT: String = "second_shift"
 const SYNERGY_BONE_ASSEMBLY_LINE: String = "bone_assembly_line"
 const SYNERGY_OVERCLOCKED_OSSUARY: String = "overclocked_ossuary"
 const SYNERGY_MEAT_SHIELD_PROTOCOL: String = "meat_shield_protocol"
+const SYNERGY_CRIMSON_ASSEMBLY: String = "crimson_assembly"
+const SYNERGY_PHANTOM_CONDUIT: String = "phantom_conduit"
 
 const ASSEMBLY_LINE_CHANCE: float = 0.25
 const OVERCLOCK_DOUBLE_STRIKE_CHANCE: float = 0.20
@@ -802,6 +1107,8 @@ var total_skeletons_revived: int = 0
 
 var total_zombies_created: int = 0
 var total_zombies_lost: int = 0
+var total_ghosts_created: int = 0
+var total_ghosts_lost: int = 0
 var total_bones_earned: int = 0
 var total_flesh_earned: int = 0
 
@@ -812,8 +1119,11 @@ var total_flesh_earned: int = 0
 
 var skeletons: Array[Node2D] = []
 var zombies: Array[Node2D] = []
+var ghosts: Array[Node2D] = []
 var corpses: Array[Button] = []
 var corpse_processing_queue: Array[Dictionary] = []
+var skeleton_production_queue: Array[Dictionary] = []
+var zombie_production_queue: Array[Dictionary] = []
 
 const CORPSE_PROCESSOR_BASE_CAPACITY: int = 5
 const CORPSE_PROCESSOR_BASE_SECONDS: float = 0.65
@@ -821,6 +1131,13 @@ const CORPSE_PROCESSOR_BASE_SECONDS: float = 0.65
 var corpse_processor_capacity: int = CORPSE_PROCESSOR_BASE_CAPACITY
 var corpse_processor_seconds_per_corpse: float = CORPSE_PROCESSOR_BASE_SECONDS
 var corpse_processor_timer: float = 0.0
+
+const PRODUCTION_QUEUE_MAX_ORDERS: int = 3
+const SKELETON_ASSEMBLER_BASE_SECONDS: float = 0.45
+const FLESH_VAT_BASE_SECONDS: float = 0.80
+
+var skeleton_assembler_timer: float = 0.0
+var flesh_vat_timer: float = 0.0
 
 const FACTORY_AUTO_COLLECTION_COST: int = 2
 const FACTORY_QUEUE_UPGRADE_BASE_COST: int = 1
@@ -935,6 +1252,15 @@ var doctrine_target_zombies_input: SpinBox = null
 var doctrine_bones_reserve_input: SpinBox = null
 var doctrine_flesh_reserve_input: SpinBox = null
 var doctrine_priority_input: OptionButton = null
+var ritual_nav_button: Button = null
+var ritual_panel: ColorRect = null
+var ritual_status_label: Label = null
+var ritual_sacrifice_button: Button = null
+var ritual_extraction_button: Button = null
+var ritual_infusion_button: Button = null
+var ritual_ghost_button: Button = null
+var ritual_soul_focus_button: Button = null
+var ritual_soul_anchor_button: Button = null
 
 const RESOURCE_FEEDBACK_TARGET: Vector2 = Vector2(185.0, 820.0)
 
@@ -964,6 +1290,7 @@ func _ready() -> void:
 	create_run_end_ui()
 	create_factory_panel_ui()
 	create_army_doctrine_ui()
+	create_ritual_panel_ui()
 
 
 	# -----------------------------------------------------
@@ -1026,6 +1353,8 @@ func _process(delta: float) -> void:
 
 	update_corpse_processor(delta)
 	update_automatic_corpse_collection(delta)
+	update_undead_production_queues(delta)
+	refresh_production_queue_status()
 
 
 	check_defeat_condition()
@@ -1119,6 +1448,22 @@ func _process(delta: float) -> void:
 		zombie_attack_timers[
 			current_zombie
 		] = zombie_timer
+
+
+	for current_ghost: Node2D in ghosts:
+
+		if not is_instance_valid(current_ghost):
+			continue
+
+
+		if not is_instance_valid(enemy):
+			break
+
+
+		current_ghost.set(
+			"attack_timer",
+			maxf(float(current_ghost.get("attack_timer")) - delta, 0.0)
+		)
 
 
 	# =====================================================
@@ -1326,6 +1671,42 @@ func _process(delta: float) -> void:
 				zombie_attack_enemy(
 					current_zombie
 				)
+
+
+	# Ghosts maintain a ranged support line behind physical Undead.
+	for current_ghost: Node2D in ghosts:
+
+		if not is_instance_valid(current_ghost):
+			continue
+
+
+		if not is_instance_valid(enemy):
+			break
+
+
+		var ghost_slot: int = int(current_ghost.get("formation_slot"))
+		var compact_slot: int = get_compacted_combat_slot(ghost_slot)
+		var target_position: Vector2 = Vector2(
+			clampf(
+				enemy.position.x - float(current_ghost.get("attack_range")),
+				SKELETON_COMBAT_MIN_X,
+				SKELETON_COMBAT_MAX_X
+			),
+			clampf(
+				ENEMY_LANE_Y + float(compact_slot % 6 - 3) * 55.0,
+				SKELETON_COMBAT_MIN_Y,
+				SKELETON_COMBAT_MAX_Y
+			)
+		)
+
+
+		if current_ghost.position.distance_to(target_position) > 8.0:
+			current_ghost.position = current_ghost.position.move_toward(
+				target_position,
+				float(current_ghost.get("movement_speed")) * delta
+			)
+		elif float(current_ghost.get("attack_timer")) <= 0.0:
+			ghost_attack_enemy(current_ghost)
 
 
 # =========================================================
@@ -1950,6 +2331,16 @@ func get_compacted_combat_slot(
 		)
 
 
+	# Ghosts form the ranged rear line.
+	for current_ghost: Node2D in ghosts:
+
+		if not is_instance_valid(current_ghost):
+			continue
+
+
+		ordered_slots.append(int(current_ghost.get("formation_slot")))
+
+
 	for index: int in range(
 		ordered_slots.size()
 	):
@@ -2087,6 +2478,7 @@ func get_total_undead_count() -> int:
 	return (
 		skeletons.size()
 		+ zombies.size()
+		+ ghosts.size()
 	)
 
 
@@ -2111,6 +2503,13 @@ func get_all_undead_units() -> Array[Node2D]:
 			units.append(
 				current_skeleton
 			)
+
+
+	for current_ghost: Node2D in ghosts:
+
+		if is_instance_valid(current_ghost):
+
+			units.append(current_ghost)
 
 
 	return units
@@ -2241,6 +2640,23 @@ func damage_undead(
 			)
 
 
+		return
+
+
+	if ghosts.has(target):
+		var ghost_hp: int = int(target.get("current_hp")) - damage_amount
+		target.set("current_hp", ghost_hp)
+		update_unit_health_bar(
+			target,
+			ghost_hp,
+			int(target.get("maximum_hp"))
+		)
+
+
+		if ghost_hp <= 0:
+			kill_ghost(target)
+
+
 func accelerate_skeleton_line_from_zombie_hit() -> void:
 
 	var accelerated_count: int = 0
@@ -2293,7 +2709,7 @@ func attack_enemy(
 
 	var remaining_hp: int = apply_damage_to_enemy(
 		target_enemy,
-		skeleton_damage
+		get_modified_undead_damage(skeleton_damage)
 	)
 
 
@@ -2311,7 +2727,7 @@ func attack_enemy(
 
 		remaining_hp = apply_damage_to_enemy(
 			target_enemy,
-			skeleton_damage
+			get_modified_undead_damage(skeleton_damage)
 		)
 
 		double_strike_triggered = true
@@ -2617,6 +3033,172 @@ func kill_skeleton(
 # MATAR ENEMY / PROGREDIR WAVE
 # =========================================================
 
+func apply_necromantic_kill_rewards(
+	archetype_id: String,
+	defeated_elite: bool,
+	defeated_boss: bool
+) -> Vector2i:
+
+	var rewards: Vector2i = NECROMANTIC_RESOURCE_POLICY.get_kill_rewards(
+		archetype_id,
+		defeated_elite,
+		defeated_boss,
+		total_enemies_killed,
+		blood_extraction_level
+	)
+	blood += rewards.x
+	souls += rewards.y
+	total_blood_earned += rewards.x
+	total_souls_earned += rewards.y
+
+
+	if rewards != Vector2i.ZERO:
+		pulse_resources_panel(
+			Color(0.75, 0.06, 0.12, 1.0)
+			if rewards.x > 0
+			else Color(0.25, 0.75, 0.95, 1.0)
+		)
+		update_bones_ui()
+
+
+	return rewards
+
+
+func has_crimson_assembly_synergy() -> bool:
+
+	return blood_extraction_level > 0 and blood_infusion_level > 0
+
+
+func purchase_blood_extraction_upgrade() -> bool:
+
+	if blood_extraction_level >= 2:
+		return false
+
+
+	var cost: int = 2 + blood_extraction_level
+
+
+	if blood < cost:
+		return false
+
+
+	blood -= cost
+	blood_extraction_level += 1
+	refresh_crimson_synergy()
+	update_bones_ui()
+	return true
+
+
+func purchase_blood_infusion_upgrade() -> bool:
+
+	if blood_infusion_level >= 2:
+		return false
+
+
+	var cost: int = 2 + blood_infusion_level
+
+
+	if blood < cost:
+		return false
+
+
+	blood -= cost
+	blood_infusion_level += 1
+	refresh_crimson_synergy()
+	update_bones_ui()
+	return true
+
+
+func refresh_crimson_synergy() -> void:
+
+	if has_crimson_assembly_synergy():
+		unlock_synergy(SYNERGY_CRIMSON_ASSEMBLY)
+
+
+func purchase_soul_focus_upgrade() -> bool:
+
+	if soul_focus_level >= 2:
+		return false
+
+
+	var cost: int = 2 + soul_focus_level
+
+
+	if souls < cost:
+		return false
+
+
+	souls -= cost
+	soul_focus_level += 1
+	refresh_phantom_synergy()
+	update_bones_ui()
+	return true
+
+
+func purchase_soul_anchor_upgrade() -> bool:
+
+	if soul_anchor_level >= 2:
+		return false
+
+
+	var cost: int = 2 + soul_anchor_level
+
+
+	if souls < cost:
+		return false
+
+
+	souls -= cost
+	soul_anchor_level += 1
+	refresh_phantom_synergy()
+	update_bones_ui()
+	return true
+
+
+func refresh_phantom_synergy() -> void:
+
+	if soul_focus_level > 0 and soul_anchor_level > 0:
+		unlock_synergy(SYNERGY_PHANTOM_CONDUIT)
+
+
+func get_blood_sacrifice_cost() -> int:
+
+	return NECROMANTIC_RESOURCE_POLICY.get_sacrifice_cost(
+		has_crimson_assembly_synergy()
+	)
+
+
+func activate_blood_fervor() -> bool:
+
+	var sacrifice_cost: int = get_blood_sacrifice_cost()
+
+
+	if run_finished or blood_fervor_active or blood < sacrifice_cost:
+		return false
+
+
+	blood -= sacrifice_cost
+	blood_fervor_active = true
+	update_bones_ui()
+	return true
+
+
+func get_modified_undead_damage(base_damage: int) -> int:
+
+	if not blood_fervor_active:
+		return base_damage
+
+
+	return maxi(
+		int(round(
+			float(base_damage)
+			* NECROMANTIC_RESOURCE_POLICY.get_fervor_multiplier(
+				blood_infusion_level
+			)
+		)),
+		1
+	)
+
 func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 	if not is_instance_valid(target_enemy):
@@ -2636,6 +3218,10 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 
 	var defeated_boss: bool = boss_active
+	var defeated_elite: bool = is_elite_wave(current_wave)
+	var defeated_archetype: String = str(
+		enemy_types.get(target_enemy, "human_warrior")
+	)
 
 
 	if defeated_boss:
@@ -2677,6 +3263,11 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 	spawn_corpse(
 		death_position
+	)
+	apply_necromantic_kill_rewards(
+		defeated_archetype,
+		defeated_elite,
+		defeated_boss
 	)
 	update_metrics_ui()
 
@@ -2727,6 +3318,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 		wave_in_progress = false
 		wave_transition_in_progress = true
+		blood_fervor_active = false
 		set_processing_directive_locked(false)
 		award_factory_points_for_wave(current_wave)
 
@@ -3383,6 +3975,7 @@ func set_processing_directive(directive: String) -> void:
 	)
 	update_metrics_ui()
 	refresh_army_doctrine_status()
+	update_ritual_panel_ui()
 
 
 func set_processing_directive_locked(is_locked: bool) -> void:
@@ -4203,6 +4796,10 @@ func show_upgrade_selection() -> void:
 
 	if doctrine_panel != null:
 		doctrine_panel.visible = false
+
+
+	if ritual_panel != null:
+		ritual_panel.visible = false
 
 
 	upgrade_panel.visible = true
@@ -5109,6 +5706,12 @@ func get_synergy_name(
 		SYNERGY_MEAT_SHIELD_PROTOCOL:
 			return tr("SYNERGY_MEAT_SHIELD_PROTOCOL")
 
+		SYNERGY_CRIMSON_ASSEMBLY:
+			return tr("SYNERGY_CRIMSON_ASSEMBLY")
+
+		SYNERGY_PHANTOM_CONDUIT:
+			return tr("SYNERGY_PHANTOM_CONDUIT")
+
 		_:
 			return "Unknown Synergy"
 
@@ -5147,6 +5750,18 @@ func get_synergy_description(
 			return (
 				"Rotten Bulk + Rapid Assault"
 				+ "\nZombie hits accelerate every Skeleton attack timer by 0.12s."
+			)
+
+		SYNERGY_CRIMSON_ASSEMBLY:
+			return (
+				"Hematic Extraction + Crimson Infusion"
+				+ "\nBlood Fervor costs 1 less Blood."
+			)
+
+		SYNERGY_PHANTOM_CONDUIT:
+			return (
+				"Spectral Focus + Ethereal Anchor"
+				+ "\nGhost attack cooldown is reduced."
 			)
 
 		_:
@@ -5202,7 +5817,9 @@ func update_synergy_ui() -> void:
 			SYNERGY_SECOND_SHIFT,
 			SYNERGY_BONE_ASSEMBLY_LINE,
 			SYNERGY_OVERCLOCKED_OSSUARY,
-			SYNERGY_MEAT_SHIELD_PROTOCOL
+			SYNERGY_MEAT_SHIELD_PROTOCOL,
+			SYNERGY_CRIMSON_ASSEMBLY,
+			SYNERGY_PHANTOM_CONDUIT
 		]
 
 
@@ -5255,6 +5872,10 @@ func check_defeat_condition() -> void:
 		return
 
 
+	if get_total_queued_undead() > 0:
+		return
+
+
 	var can_build_skeleton: bool = (
 		bones >= skeleton_cost
 	)
@@ -5263,11 +5884,13 @@ func check_defeat_condition() -> void:
 	var can_build_zombie: bool = (
 		flesh >= zombie_cost
 	)
+	var can_build_ghost: bool = souls >= ghost_cost
 
 
 	if (
 		can_build_skeleton
 		or can_build_zombie
+		or can_build_ghost
 	):
 
 		return
@@ -5590,11 +6213,19 @@ func show_run_end_screen() -> void:
 		+ str(total_zombies_created)
 		+ "\nZombies Lost: "
 		+ str(total_zombies_lost)
+		+ "\nGhosts Built: "
+		+ str(total_ghosts_created)
+		+ "\nGhosts Lost: "
+		+ str(total_ghosts_lost)
 		+ "\n\nECONOMY"
 		+ "\nBones Earned: "
 		+ str(total_bones_earned)
 		+ "\nFlesh Earned: "
 		+ str(total_flesh_earned)
+		+ "\nBlood Earned: "
+		+ str(total_blood_earned)
+		+ "\nSouls Earned: "
+		+ str(total_souls_earned)
 		+ "\nBones Remaining: "
 		+ str(bones)
 		+ "\nFlesh Remaining: "
@@ -5664,7 +6295,9 @@ func get_run_synergy_summary() -> String:
 		SYNERGY_SECOND_SHIFT,
 		SYNERGY_BONE_ASSEMBLY_LINE,
 		SYNERGY_OVERCLOCKED_OSSUARY,
-		SYNERGY_MEAT_SHIELD_PROTOCOL
+		SYNERGY_MEAT_SHIELD_PROTOCOL,
+		SYNERGY_CRIMSON_ASSEMBLY,
+		SYNERGY_PHANTOM_CONDUIT
 	]
 
 
@@ -5839,6 +6472,17 @@ func create_zombie_ui() -> void:
 	add_child(production_quantity_selector)
 
 
+	production_queue_label = Label.new()
+	production_queue_label.name = "ProductionQueueLabel"
+	production_queue_label.position = Vector2(390.0, 1028.0)
+	production_queue_label.size = Vector2(650.0, 28.0)
+	production_queue_label.z_index = 110
+	production_queue_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	production_queue_label.add_theme_font_size_override("font_size", 14)
+	production_queue_label.add_theme_color_override("font_color", UI_GREEN)
+	add_child(production_queue_label)
+
+
 # =========================================================
 # NECROWORKS VISUAL SHELL
 # =========================================================
@@ -5906,7 +6550,7 @@ func create_visual_shell() -> void:
 	metrics_label.position = Vector2(1565.0, 35.0)
 	metrics_label.size = Vector2(305.0, 245.0)
 	metrics_label.z_index = 100
-	metrics_label.add_theme_font_size_override("font_size", 16)
+	metrics_label.add_theme_font_size_override("font_size", 14)
 	metrics_label.add_theme_color_override("font_color", UI_TEXT)
 	add_child(metrics_label)
 
@@ -6050,6 +6694,10 @@ func toggle_factory_panel() -> void:
 
 	if doctrine_panel != null:
 		doctrine_panel.visible = false
+
+
+	if ritual_panel != null:
+		ritual_panel.visible = false
 
 
 	factory_panel.visible = not factory_panel.visible
@@ -6316,6 +6964,10 @@ func toggle_army_doctrine_panel() -> void:
 		factory_panel.visible = false
 
 
+	if ritual_panel != null:
+		ritual_panel.visible = false
+
+
 	doctrine_panel.visible = not doctrine_panel.visible
 	refresh_army_doctrine_status()
 
@@ -6455,6 +7107,197 @@ func refresh_army_doctrine_status() -> void:
 			deficits.x,
 			deficits.y
 		]
+	)
+
+
+func create_ritual_panel_ui() -> void:
+
+	ritual_nav_button = Button.new()
+	ritual_nav_button.position = Vector2(400.0, 770.0)
+	ritual_nav_button.size = Vector2(180.0, 52.0)
+	ritual_nav_button.z_index = 160
+	apply_button_style(ritual_nav_button, Color(0.65, 0.08, 0.14, 1.0))
+	ritual_nav_button.pressed.connect(toggle_ritual_panel)
+	add_child(ritual_nav_button)
+
+
+	ritual_panel = ColorRect.new()
+	ritual_panel.position = Vector2(560.0, 185.0)
+	ritual_panel.size = Vector2(800.0, 610.0)
+	ritual_panel.color = Color(0.025, 0.012, 0.018, 0.992)
+	ritual_panel.z_index = 660
+	ritual_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(ritual_panel)
+
+
+	var title: Label = Label.new()
+	title.name = "RitualTitle"
+	title.position = Vector2(40.0, 25.0)
+	title.size = Vector2(720.0, 44.0)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_color_override("font_color", Color(0.9, 0.35, 0.4, 1.0))
+	ritual_panel.add_child(title)
+
+
+	ritual_status_label = Label.new()
+	ritual_status_label.position = Vector2(65.0, 82.0)
+	ritual_status_label.size = Vector2(670.0, 105.0)
+	ritual_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ritual_status_label.add_theme_font_size_override("font_size", 17)
+	ritual_status_label.add_theme_color_override("font_color", UI_TEXT)
+	ritual_panel.add_child(ritual_status_label)
+
+
+	ritual_sacrifice_button = create_ritual_button(Vector2(70.0, 205.0))
+	ritual_extraction_button = create_ritual_button(Vector2(415.0, 205.0))
+	ritual_infusion_button = create_ritual_button(Vector2(70.0, 325.0))
+	ritual_ghost_button = create_ritual_button(Vector2(415.0, 325.0))
+	ritual_soul_focus_button = create_ritual_button(Vector2(70.0, 435.0))
+	ritual_soul_anchor_button = create_ritual_button(Vector2(415.0, 435.0))
+	ritual_sacrifice_button.pressed.connect(
+		func() -> void:
+			activate_blood_fervor()
+			update_ritual_panel_ui()
+	)
+	ritual_extraction_button.pressed.connect(
+		func() -> void:
+			purchase_blood_extraction_upgrade()
+			update_ritual_panel_ui()
+	)
+	ritual_infusion_button.pressed.connect(
+		func() -> void:
+			purchase_blood_infusion_upgrade()
+			update_ritual_panel_ui()
+	)
+	ritual_ghost_button.pressed.connect(
+		func() -> void:
+			create_ghost()
+			update_ritual_panel_ui()
+	)
+	ritual_soul_focus_button.pressed.connect(
+		func() -> void:
+			purchase_soul_focus_upgrade()
+			update_ritual_panel_ui()
+	)
+	ritual_soul_anchor_button.pressed.connect(
+		func() -> void:
+			purchase_soul_anchor_upgrade()
+			update_ritual_panel_ui()
+	)
+
+
+	var close_button: Button = create_ritual_button(Vector2(245.0, 548.0))
+	close_button.name = "RitualCloseButton"
+	close_button.size = Vector2(310.0, 46.0)
+	close_button.pressed.connect(toggle_ritual_panel)
+	ritual_panel.visible = false
+	update_ritual_panel_ui()
+
+
+func create_ritual_button(button_position: Vector2) -> Button:
+
+	var button: Button = Button.new()
+	button.position = button_position
+	button.size = Vector2(315.0, 90.0)
+	button.add_theme_font_size_override("font_size", 16)
+	apply_button_style(button, Color(0.68, 0.14, 0.2, 1.0))
+	ritual_panel.add_child(button)
+	return button
+
+
+func toggle_ritual_panel() -> void:
+
+	if ritual_panel == null:
+		return
+
+
+	if upgrade_panel != null and upgrade_panel.visible:
+		ritual_panel.visible = false
+		return
+
+
+	if factory_panel != null:
+		factory_panel.visible = false
+
+
+	if doctrine_panel != null:
+		doctrine_panel.visible = false
+
+
+	ritual_panel.visible = not ritual_panel.visible
+	update_ritual_panel_ui()
+
+
+func update_ritual_panel_ui() -> void:
+
+	if ritual_panel == null:
+		return
+
+
+	ritual_nav_button.text = tr("RITUAL_NAV")
+	var title: Label = ritual_panel.get_node_or_null("RitualTitle") as Label
+	var close_button: Button = ritual_panel.get_node_or_null(
+		"RitualCloseButton"
+	) as Button
+
+
+	if title != null:
+		title.text = tr("RITUAL_TITLE")
+
+
+	if close_button != null:
+		close_button.text = tr("FACTORY_CLOSE")
+
+
+	ritual_status_label.text = tr("RITUAL_STATUS") % [
+		blood,
+		souls,
+		ghosts.size(),
+		tr("COMMON_YES") if blood_fervor_active else tr("COMMON_NO")
+	]
+	var sacrifice_cost: int = get_blood_sacrifice_cost()
+	var extraction_cost: int = 2 + blood_extraction_level
+	var infusion_cost: int = 2 + blood_infusion_level
+	var focus_cost: int = 2 + soul_focus_level
+	var anchor_cost: int = 2 + soul_anchor_level
+	ritual_sacrifice_button.text = tr("RITUAL_SACRIFICE") % sacrifice_cost
+	ritual_extraction_button.text = tr("RITUAL_EXTRACTION") % [
+		blood_extraction_level,
+		extraction_cost
+	]
+	ritual_infusion_button.text = tr("RITUAL_INFUSION") % [
+		blood_infusion_level,
+		infusion_cost
+	]
+	ritual_ghost_button.text = tr("RITUAL_GHOST") % ghost_cost
+	ritual_soul_focus_button.text = tr("RITUAL_SOUL_FOCUS") % [
+		soul_focus_level,
+		focus_cost
+	]
+	ritual_soul_anchor_button.text = tr("RITUAL_SOUL_ANCHOR") % [
+		soul_anchor_level,
+		anchor_cost
+	]
+	ritual_sacrifice_button.disabled = (
+		run_finished or blood_fervor_active or blood < sacrifice_cost
+	)
+	ritual_extraction_button.disabled = (
+		blood_extraction_level >= 2 or blood < extraction_cost
+	)
+	ritual_infusion_button.disabled = (
+		blood_infusion_level >= 2 or blood < infusion_cost
+	)
+	ritual_ghost_button.disabled = (
+		run_finished
+		or souls < ghost_cost
+		or get_available_production_capacity() <= 0
+	)
+	ritual_soul_focus_button.disabled = (
+		soul_focus_level >= 2 or souls < focus_cost
+	)
+	ritual_soul_anchor_button.disabled = (
+		soul_anchor_level >= 2 or souls < anchor_cost
 	)
 
 
@@ -6661,6 +7504,10 @@ func update_metrics_ui() -> void:
 		+ str(total_zombies_created)
 		+ "\n" + tr("METRICS_ZOMBIES_LOST") + "              "
 		+ str(total_zombies_lost)
+		+ "\n" + tr("METRICS_GHOSTS_BUILT") + "             "
+		+ str(total_ghosts_created)
+		+ "\n" + tr("METRICS_GHOSTS_LOST") + "               "
+		+ str(total_ghosts_lost)
 		+ "\n" + tr("METRICS_ARMY_ACTIVE") + "                "
 		+ str(get_total_undead_count())
 	)
@@ -6840,6 +7687,8 @@ func update_debug_ui() -> void:
 		+ str(skeletons.size())
 		+ "\nZombies: "
 		+ str(zombies.size())
+		+ "\nGhosts: "
+		+ str(ghosts.size())
 		+ "\nArmy: "
 		+ str(get_total_undead_count())
 		+ "\nCorpses: "
@@ -6848,6 +7697,7 @@ func update_debug_ui() -> void:
 		+ str(
 			bones >= skeleton_cost
 			or flesh >= zombie_cost
+			or souls >= ghost_cost
 			or not corpses.is_empty()
 		)
 		+ "\nBoss: "
@@ -6884,7 +7734,7 @@ func update_bones_ui() -> void:
 	var skeleton_batch_cost: int = quantity * skeleton_cost
 	var zombie_batch_cost: int = quantity * zombie_cost
 	var has_batch_capacity: bool = (
-		quantity <= get_available_undead_capacity()
+		quantity <= get_available_production_capacity()
 	)
 
 
@@ -6896,7 +7746,7 @@ func update_bones_ui() -> void:
 
 
 	create_skeleton_button.text = (
-		tr("FACTORY_CREATE_SKELETON")
+		tr("PRODUCTION_QUEUE_SKELETON")
 		+ " x" + str(quantity)
 		+ "\n" + str(skeleton_batch_cost)
 		+ " " + tr("RESOURCE_BONES")
@@ -6904,7 +7754,7 @@ func update_bones_ui() -> void:
 
 
 	create_zombie_button.text = (
-		tr("FACTORY_CREATE_ZOMBIE")
+		tr("PRODUCTION_QUEUE_ZOMBIE")
 		+ " x" + str(quantity)
 		+ "\n" + str(zombie_batch_cost)
 		+ " " + tr("RESOURCE_FLESH")
@@ -6915,6 +7765,7 @@ func update_bones_ui() -> void:
 		run_finished
 		or bones < skeleton_batch_cost
 		or not has_batch_capacity
+		or skeleton_production_queue.size() >= PRODUCTION_QUEUE_MAX_ORDERS
 	)
 
 
@@ -6922,8 +7773,31 @@ func update_bones_ui() -> void:
 		run_finished
 		or flesh < zombie_batch_cost
 		or not has_batch_capacity
+		or zombie_production_queue.size() >= PRODUCTION_QUEUE_MAX_ORDERS
 	)
+
+
+	refresh_production_queue_status()
 
 
 	update_metrics_ui()
 	refresh_army_doctrine_status()
+	update_ritual_panel_ui()
+
+
+func refresh_production_queue_status() -> void:
+
+	if production_queue_label == null:
+		return
+
+
+	production_queue_label.text = tr("PRODUCTION_QUEUE_STATUS") % [
+		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
+			skeleton_production_queue
+		),
+		skeleton_assembler_timer,
+		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
+			zombie_production_queue
+		),
+		flesh_vat_timer
+	]

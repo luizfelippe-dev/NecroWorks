@@ -680,9 +680,17 @@ Automation may fill only available queue slots. Overflow Corpses remain manually
 
 Manual unit production now supports a shared typed quantity from 1 to 36. Buttons preview the total cost and execute only if the whole order can be afforded and placed. This removes repetitive clicking without making production autonomous.
 
-The current batch action is deliberately instant for the prototype. Skeleton Assembler and Flesh Vat production queues remain future systems that must introduce visible timing/capacity before Army Doctrine can automatically replenish losses.
+Manual batch orders now reserve their full cost and population, then enter separate timed machines. Skeleton Assembler produces one unit every 0.45 s; Flesh Vat produces one every 0.80 s. Each supports three pending orders and both operate in parallel. These provisional values make Skeleton replacement faster while Zombie durability carries a throughput cost.
 
-Army Doctrine Planning V1 is now playable as a configuration layer. It supports a combined maximum of 36 Undead, separate Skeleton/Zombie targets, Bones/Flesh reserves and Balanced/Skeleton-first/Zombie-first priority. The panel reports current counts and deficits, but does not yet issue production orders. This preserves attrition and player agency while the timed machine layer is still absent.
+Army Doctrine Planning V1 supports a combined maximum of 36 Undead, separate Skeleton/Zombie targets, Bones/Flesh reserves and Balanced/Skeleton-first/Zombie-first priority. The panel reports current counts and deficits, but does not yet issue production orders. Its next execution layer must enqueue through the same timed machines and expose activation/pause.
+
+## Blood and Souls
+
+Blood is a tempo resource. Blood Fervor consumes 3 Blood (2 with Crimson Assembly) to amplify all Undead damage for the current Wave. Hematic Extraction improves generation cadence; Crimson Infusion strengthens the buff.
+
+Souls are a composition/research resource. Four Souls summon a ranged Ghost. Spectral Focus increases Ghost damage, Ethereal Anchor increases durability, and Phantom Conduit improves casting cadence. Mage/Elf/Boss identities control Soul income so enemy composition affects economy.
+
+Full-run validation preserves current Bone/Flesh pacing: Balanced remains the Wave 1 recovery route, Bone Focus sustains high Skeleton turnover, and Flesh Focus supports a slower but durable Zombie army. Perfect automated play fills the army cap in both builds, so v0.3 machine/logistics sinks must address late stock saturation.
 
 ## Planned Undead roles
 
@@ -690,6 +698,7 @@ Army Doctrine Planning V1 is now playable as a configuration layer. It supports 
 Skeleton Warrior → cheap melee damage / base Bone recipe
 Skeleton Archer  → ranged Bone damage / unlockable recipe
 Zombie Tank      → durable frontline / Flesh recipe
+Ghost            → ranged magic / Soul recipe (playable V1)
 Lich             → rare caster-support / unlockable advanced recipe
 ```
 

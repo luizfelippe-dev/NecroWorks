@@ -153,7 +153,23 @@ Successful requests use the existing per-unit creation paths so HP, slots, metri
 
 `scripts/factory/army_doctrine_policy.gd` is a stateless policy boundary for composition targets, the 36-unit cap, production priority, resource reserves and live deficits. `main.gd` owns the run-scoped configuration and localized panel, and emits `army_doctrine_changed` only after a valid atomic update.
 
-The policy can answer whether a unit cost would preserve the configured reserve, but it does not create units. Automatic replenishment must consume future Skeleton Assembler/Flesh Vat queues so production has visible time, capacity and player-controlled pause behavior. `tests/factory/army_doctrine_runner.gd` protects this planning/execution boundary.
+The policy can answer whether a unit cost would preserve the configured reserve, but it does not create units. Automatic replenishment must consume the Skeleton Assembler/Flesh Vat queues so production keeps visible time, capacity and player-controlled pause behavior. `tests/factory/army_doctrine_runner.gd` protects this planning/execution boundary.
+
+# Timed Undead production
+
+`scripts/factory/undead_production_policy.gd` validates atomic orders and counts reserved units. The two runtime queues contain order dictionaries with original quantity, remaining quantity and snapshotted cost. Acceptance immediately reserves the full resource total; queued units also reserve army capacity.
+
+Skeleton Assembler and Flesh Vat advance independently at 0.45 s and 0.80 s per unit. Completion uses prepaid creation paths, preserving the existing HP, slot, metric and combat registration logic without charging twice. A full machine accepts at most three orders, and queued units keep the defeat condition recoverable. `tests/factory/undead_production_queue_runner.gd` validates the transaction and timing contract.
+
+# Blood, Souls and generic ranged Undead
+
+`scripts/economy/necromantic_resource_policy.gd` owns deterministic Blood/Soul kill rewards, sacrifice cost and Fervor scaling. `scripts/units/undead_runtime_unit.gd` is the first self-contained runtime unit record: `ghost.tscn` stores HP, damage, cooldown, speed, range, timer and formation slot on the unit instead of adding a third parallel dictionary family.
+
+The localized Ritual panel exposes Blood Fervor, two Blood upgrades, Ghost production and two Soul upgrades. Crimson Assembly and Phantom Conduit use the existing synergy registry.
+
+# Viewport policy
+
+The 1920×1080 design canvas uses `stretch/aspect="keep"`. Smaller or differently proportioned embedded windows scale/letterbox the complete canvas instead of cropping the lower production floor. `tests/visual/layout_bounds_runner.gd` protects primary lower controls inside design bounds.
 
 # Corpse tracking
 

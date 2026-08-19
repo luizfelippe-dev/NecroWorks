@@ -58,8 +58,11 @@ func run_validation() -> void:
 
 	LOCALIZATION_SERVICE.set_locale("en_US")
 	await process_frame
-	assert(TranslationServer.translate("FACTORY_CREATE_ZOMBIE") == "CREATE ZOMBIE")
-	assert(game.create_zombie_button.text.begins_with("CREATE ZOMBIE"))
+	assert(
+		TranslationServer.translate("PRODUCTION_QUEUE_ZOMBIE")
+		== "PRODUCE ZOMBIE (QUEUE)"
+	)
+	assert(game.create_zombie_button.text.begins_with("PRODUCE ZOMBIE (QUEUE)"))
 
 
 	TranslationServer.set_locale(original_locale)
