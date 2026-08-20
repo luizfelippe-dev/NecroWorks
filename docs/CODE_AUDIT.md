@@ -82,6 +82,7 @@ Corpse queue capacity, delayed settlement and directive snapshots live at `tests
 Factory currency, purchases, toggles and automatic collection live at `tests/factory/factory_automation_runner.gd`.
 Atomic manual batch costs, counts and rejection paths live at `tests/factory/batch_production_runner.gd`.
 Army Doctrine targets, deficits, reserves, priorities and localized planning UI live at `tests/factory/army_doctrine_runner.gd`.
+Army Doctrine automatic queue execution, pause/resume, reserve preservation and replacement after losses live at `tests/factory/army_doctrine_automation_runner.gd`.
 Timed Skeleton/Zombie queues, resource/capacity reservation and parallel completion live at `tests/factory/undead_production_queue_runner.gd`.
 Blood/Soul pacing, rituals, Ghost combat and rare-resource synergies live at `tests/economy/blood_soul_runner.gd`.
 Complete Bone/Flesh runs and active-Enemy cap stages live at `tests/balance/full_run_runner.gd`.

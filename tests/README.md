@@ -110,6 +110,20 @@ Godot_v4.7.1-stable_win64_console.exe `
   --script res://tests/factory/factory_automation_runner.gd
 ```
 
+## Army Doctrine automation
+
+Validates balanced/focused planning, explicit start and pause, resource reserves,
+duplicate-order prevention, timed dual-machine completion and replacement after a
+battlefield loss:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe `
+  --headless `
+  --fixed-fps 60 `
+  --path . `
+  --script res://tests/factory/army_doctrine_automation_runner.gd
+```
+
 ## Manual batch production
 
 Validates Skeleton/Zombie batch counts, total costs, emitted transaction payloads and all-or-nothing rejection for insufficient resources or army capacity:

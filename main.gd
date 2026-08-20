@@ -12,6 +12,7 @@ signal batch_production_completed(
 	total_cost: int
 )
 signal army_doctrine_changed(configuration: Dictionary)
+signal army_doctrine_automation_changed(enabled: bool)
 signal production_order_queued(
 	unit_type: String,
 	quantity: int,
@@ -1135,6 +1136,7 @@ var corpse_processor_timer: float = 0.0
 const PRODUCTION_QUEUE_MAX_ORDERS: int = 3
 const SKELETON_ASSEMBLER_BASE_SECONDS: float = 0.45
 const FLESH_VAT_BASE_SECONDS: float = 0.80
+const ARMY_DOCTRINE_SCAN_INTERVAL: float = 0.25
 
 var skeleton_assembler_timer: float = 0.0
 var flesh_vat_timer: float = 0.0
@@ -1160,6 +1162,8 @@ var doctrine_target_zombies: int = 0
 var doctrine_bones_reserve: int = 0
 var doctrine_flesh_reserve: int = 0
 var doctrine_priority: String = ARMY_DOCTRINE_POLICY.PRIORITY_BALANCED
+var army_doctrine_automation_enabled: bool = false
+var army_doctrine_automation_timer: float = 0.0
 
 var skeleton_hps: Dictionary = {}
 var skeleton_attack_timers: Dictionary = {}
@@ -1252,6 +1256,7 @@ var doctrine_target_zombies_input: SpinBox = null
 var doctrine_bones_reserve_input: SpinBox = null
 var doctrine_flesh_reserve_input: SpinBox = null
 var doctrine_priority_input: OptionButton = null
+var doctrine_automation_button: Button = null
 var ritual_nav_button: Button = null
 var ritual_panel: ColorRect = null
 var ritual_status_label: Label = null
@@ -1354,6 +1359,7 @@ func _process(delta: float) -> void:
 	update_corpse_processor(delta)
 	update_automatic_corpse_collection(delta)
 	update_undead_production_queues(delta)
+	update_army_doctrine_automation(delta)
 	refresh_production_queue_status()
 
 
@@ -3845,6 +3851,8 @@ func apply_army_doctrine_configuration(
 	army_doctrine_configured = (
 		target_skeletons > 0 or target_zombies > 0
 	)
+	if not army_doctrine_configured:
+		set_army_doctrine_automation_enabled(false)
 
 
 	if doctrine_target_skeletons_input != null:
@@ -3867,7 +3875,8 @@ func get_army_doctrine_configuration() -> Dictionary:
 		"target_zombies": doctrine_target_zombies,
 		"bones_reserve": doctrine_bones_reserve,
 		"flesh_reserve": doctrine_flesh_reserve,
-		"priority": doctrine_priority
+		"priority": doctrine_priority,
+		"automation_enabled": army_doctrine_automation_enabled
 	}
 
 
@@ -3897,6 +3906,101 @@ func doctrine_can_build_zombie() -> bool:
 		zombie_cost,
 		doctrine_flesh_reserve
 	)
+
+
+func get_army_doctrine_pending_deficits() -> Vector2i:
+
+	return ARMY_DOCTRINE_POLICY.get_deficits(
+		doctrine_target_skeletons,
+		doctrine_target_zombies,
+		skeletons.size() + UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
+			skeleton_production_queue
+		),
+		zombies.size() + UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
+			zombie_production_queue
+		)
+	)
+
+
+func set_army_doctrine_automation_enabled(enabled: bool) -> bool:
+
+	if enabled and (not army_doctrine_configured or run_finished):
+		return false
+
+
+	if army_doctrine_automation_enabled == enabled:
+		return true
+
+
+	army_doctrine_automation_enabled = enabled
+	army_doctrine_automation_timer = 0.0
+	army_doctrine_automation_changed.emit(enabled)
+	update_army_doctrine_ui()
+	return true
+
+
+func toggle_army_doctrine_automation() -> void:
+
+	set_army_doctrine_automation_enabled(
+		not army_doctrine_automation_enabled
+	)
+
+
+func update_army_doctrine_automation(delta: float) -> void:
+
+	if not army_doctrine_automation_enabled:
+		return
+
+
+	army_doctrine_automation_timer = maxf(
+		army_doctrine_automation_timer - delta,
+		0.0
+	)
+	if army_doctrine_automation_timer > 0.0:
+		return
+
+
+	army_doctrine_automation_timer = ARMY_DOCTRINE_SCAN_INTERVAL
+	execute_army_doctrine_replenishment()
+
+
+func execute_army_doctrine_replenishment() -> Vector2i:
+
+	if not army_doctrine_automation_enabled or not army_doctrine_configured:
+		return Vector2i.ZERO
+
+
+	var deficits: Vector2i = get_army_doctrine_pending_deficits()
+	var affordable_skeletons: int = 0
+	var affordable_zombies: int = 0
+	if skeleton_production_queue.size() < PRODUCTION_QUEUE_MAX_ORDERS:
+		affordable_skeletons = maxi(
+			int(floor(float(bones - doctrine_bones_reserve) / float(skeleton_cost))),
+			0
+		)
+	if zombie_production_queue.size() < PRODUCTION_QUEUE_MAX_ORDERS:
+		affordable_zombies = maxi(
+			int(floor(float(flesh - doctrine_flesh_reserve) / float(zombie_cost))),
+			0
+		)
+
+
+	var plan: Vector2i = ARMY_DOCTRINE_POLICY.get_replenishment_plan(
+		deficits,
+		affordable_skeletons,
+		affordable_zombies,
+		get_available_production_capacity(),
+		doctrine_priority
+	)
+	var queued: Vector2i = Vector2i.ZERO
+	if plan.x > 0 and enqueue_skeleton_production(plan.x):
+		queued.x = plan.x
+	if plan.y > 0 and enqueue_zombie_production(plan.y):
+		queued.y = plan.y
+
+
+	refresh_army_doctrine_status()
+	return queued
 
 func get_processing_yield(
 	directive: String = processing_directive
@@ -6906,6 +7010,15 @@ func create_army_doctrine_ui() -> void:
 	doctrine_panel.add_child(doctrine_validation_label)
 
 
+	doctrine_automation_button = Button.new()
+	doctrine_automation_button.name = "DoctrineAutomationButton"
+	doctrine_automation_button.position = Vector2(40.0, 525.0)
+	doctrine_automation_button.size = Vector2(260.0, 48.0)
+	doctrine_automation_button.pressed.connect(toggle_army_doctrine_automation)
+	apply_button_style(doctrine_automation_button, UI_BONE)
+	doctrine_panel.add_child(doctrine_automation_button)
+
+
 	var apply_button: Button = Button.new()
 	apply_button.name = "DoctrineApplyButton"
 	apply_button.position = Vector2(525.0, 525.0)
@@ -7061,6 +7174,17 @@ func update_army_doctrine_ui() -> void:
 		close_button.text = tr("FACTORY_CLOSE")
 
 
+	if doctrine_automation_button != null:
+		doctrine_automation_button.text = (
+			tr("DOCTRINE_AUTOMATION_PAUSE")
+			if army_doctrine_automation_enabled
+			else tr("DOCTRINE_AUTOMATION_START")
+		)
+		doctrine_automation_button.disabled = (
+			not army_doctrine_configured or run_finished
+		)
+
+
 	refresh_army_doctrine_status()
 
 
@@ -7093,7 +7217,7 @@ func refresh_army_doctrine_status() -> void:
 		return
 
 
-	var deficits: Vector2i = get_army_doctrine_deficits()
+	var deficits: Vector2i = get_army_doctrine_pending_deficits()
 	doctrine_status_label.text = (
 		tr("DOCTRINE_TARGET_STATUS") % [
 			doctrine_target_skeletons,
@@ -7107,6 +7231,11 @@ func refresh_army_doctrine_status() -> void:
 			deficits.x,
 			deficits.y
 		]
+		+ "\n" + (
+			tr("DOCTRINE_AUTOMATION_RUNNING")
+			if army_doctrine_automation_enabled
+			else tr("DOCTRINE_AUTOMATION_PAUSED")
+		)
 	)
 
 

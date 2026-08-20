@@ -166,10 +166,10 @@ Health, damage and resource changes must also remain readable without opening De
 - [x] Flesh Vat production queue
 - [x] manual bulk order with stepper/quantity control
 - [x] Army Doctrine target-composition planning model
-- [ ] automatic replenishment toward target composition
+- [x] automatic replenishment toward target composition
 - [x] priority and minimum-resource-reserve policy model
-- [ ] execute priority/reserve policy through timed production queues
-- [ ] automation pause/disable controls
+- [x] execute priority/reserve policy through timed production queues
+- [x] automation pause/disable controls
 - [ ] Blood production machine
 - [ ] Soul extraction machine
 - [ ] resource routing

@@ -378,6 +378,12 @@ Ghost is the first ranged player unit and the first unit whose complete runtime 
 
 ---
 
+## 20/08/2026 — Army Doctrine execution V1
+
+Army Doctrine now turns target composition into paid orders on the existing timed Skeleton Assembler and Flesh Vat queues. Pending units count toward the target, preventing duplicate orders. Balanced allocation shares scarce capacity, focused priorities reserve it for the chosen line first, and minimum Bones/Flesh reserves are enforced before enqueue. A localized button starts or pauses future replenishment without cancelling committed production. Persistent coverage validates the complete loss-to-replacement loop.
+
+---
+
 ## Next
 
 ### Production planning
@@ -385,8 +391,9 @@ Ghost is the first ranged player unit and the first unit whose complete runtime 
 Recommended next block:
 
 - playtest Factory Point income and upgrade timing;
-- connect Army Doctrine execution to the validated queues;
-- add explicit automation activation/pause and enforce priority plus minimum reserves.
+- playtest Army Doctrine during a complete manual run;
+- measure whether automatic replenishment makes late Waves too safe;
+- prototype the next Factory machine/routing branch.
 
 ### Enemy depth
 
@@ -394,8 +401,4 @@ Recommended next block:
 - add advanced behavior only after evidence: Mage AOE/control and Elf precision targeting;
 - improve hit/death feedback.
 
-Then:
-
-- Army Doctrine automatic execution through timed queues;
-- automation activation/pause and reserve enforcement;
-- Factory Point pacing playtest during the next full manual run.
+Then: Factory Point pacing playtest during the next full manual run.

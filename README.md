@@ -242,6 +242,6 @@ Consulte `docs/AI_HANDOFF.md` antes de continuar o desenvolvimento em outro chat
 
 Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.
 
-O painel de Doutrina do Exército permite salvar composição-alvo, reservas mínimas e prioridade de produção. Skeleton Assembler e Flesh Vat agora possuem filas temporizadas independentes: pedidos reservam recursos e vagas atomicamente, e cada máquina entrega uma unidade por ciclo.
+O painel de Doutrina do Exército permite salvar composição-alvo, reservas mínimas e prioridade de produção. A reposição pode ser iniciada ou pausada pelo jogador e usa exclusivamente as filas temporizadas independentes do Skeleton Assembler e da Flesh Vat. Pedidos reservam recursos e vagas atomicamente, e cada máquina entrega uma unidade por ciclo.
 
-Próximo foco: v0.3.0 — conectar a Doutrina às filas com controles de ativação/pausa, prioridade e reservas.
+Próximo foco: v0.3.0 — aprofundar a fábrica com máquinas de Sangue/Almas, roteamento, eficiência e sinergias próprias.

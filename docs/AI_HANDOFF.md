@@ -799,7 +799,7 @@ Próximo passo: desenhar Army Doctrine com composição-alvo e reserva mínima d
 - aplicação inválida é atômica e não altera a configuração anterior;
 - runner: `tests/factory/army_doctrine_runner.gd`.
 
-A V1 é somente planejamento. Ela não cria tropas automaticamente. Próximo passo obrigatório: filas temporizadas próprias para Skeleton Assembler e Flesh Vat, seguidas da execução da Doutrina com capacidade, reservas e controle de pausa.
+A V1 nasceu somente como planejamento e não criava tropas automaticamente. As seções seguintes registram as filas temporizadas e a execução posterior da Doutrina com capacidade, reservas e controle de pausa.
 
 ### Timed Undead Production Queues V1 — implementadas e validadas
 
@@ -813,7 +813,17 @@ A V1 é somente planejamento. Ela não cria tropas automaticamente. Próximo pas
 - `scripts/factory/undead_production_policy.gd` isola validação e contagem reservada;
 - runner: `tests/factory/undead_production_queue_runner.gd`.
 
-Próximo passo: ativar a execução opcional da Army Doctrine somente por essas filas, com liga/desliga, prioridade e reservas mínimas.
+### Army Doctrine Execution V1 — implementada e validada
+
+- botão localizado inicia ou pausa a reposição;
+- déficits descontam Skeletons/Zombies já enfileirados;
+- prioridades Balanced, Skeletons First e Zombies First distribuem capacidade escassa;
+- reservas mínimas são verificadas antes da reserva atômica do pedido;
+- produção usa somente `enqueue_skeleton_production()` e `enqueue_zombie_production()`;
+- pausar impede pedidos futuros, mas preserva ordens já pagas;
+- runner: `tests/factory/army_doctrine_automation_runner.gd`.
+
+Próximo passo: playtestar a Doutrina durante uma run manual completa e avançar para máquinas/roteamento de Blood e Souls.
 
 ### Necromantic Economy v0.2 — concluída e validada
 
@@ -831,7 +841,7 @@ Próximo passo: ativar a execução opcional da Army Doctrine somente por essas 
 - clip local de 5 s: `.godot/necroworks_v020_milestone.avi`;
 - runners novos: `blood_soul_runner.gd`, `full_run_runner.gd` e `layout_bounds_runner.gd`.
 
-O próximo trabalho pertence à v0.3.0: executar Army Doctrine pelas filas existentes com ativação/pausa, prioridades e reservas.
+O próximo trabalho da v0.3.0 é validar o ritmo da Doutrina em uma run manual e aprofundar máquinas, roteamento, eficiência e sinergias da Factory.
 
 ### Factory Automation / Army Doctrine — direção registrada
 
@@ -1023,6 +1033,6 @@ O orquestrador estável permanece em:
 main.gd
 ```
 
-Último marco publicado antes deste bloco: Army Doctrine Planning V1. O bloco local conclui filas temporizadas, Blood, Souls, Ghost, balanceamento da v0.2 e correção de viewport; deve ser publicado como um único fechamento da Necromantic Economy.
+Último marco publicado: Necromantic Economy v0.2 e correção do HUD inferior. O bloco local adiciona Army Doctrine Execution V1 sobre as filas temporizadas.
 
-Próxima conversa deve conectar a Doutrina aos métodos públicos de enqueue. Não recriar o protótipo antigo nem ligar automação aos métodos instantâneos de lote.
+Próxima conversa deve partir da automação já conectada aos métodos públicos de enqueue. Não recriar o protótipo antigo nem ligar automação aos métodos instantâneos de lote.

@@ -91,7 +91,7 @@ Processing Directive V1 is the first Factory choice that directly changes the ru
 
 A future marketing clip can communicate the loop in a few seconds: an enemy falls, its Corpse is recycled, the player changes the directive, the yield changes, and a different Undead composition becomes viable. Before this becomes Steam-facing footage, the same sequence still needs stronger animation, sound, impact feedback, and a more physical sense of factory machinery.
 
-Army Doctrine has a readable planning surface, and Skeleton Assembler/Flesh Vat now execute manual orders over visible time. The next commercially legible proof is connecting the two: a target such as `5 Zombies + 30 Skeletons` should cause machines to replace battlefield losses through real queues. This can communicate both automation spectacle and strategic intent, but only if throughput, priorities, pause controls and resource scarcity remain readable.
+Army Doctrine now connects a readable target such as `5 Zombies + 30 Skeletons` to real Skeleton Assembler/Flesh Vat queues. Losses create timed, paid replacements while priority, reserves and pause remain player-controlled. The next commercially legible proof is presentation: machine motion, production feedback and sound must make this strategic automation visible in short footage.
 
 Necromantic Economy v0.2 adds a second marketable layer: Blood sacrifice temporarily amplifies the army, while Souls become ranged Ghosts or permanent spectral upgrades. A five-second local milestone capture is generated at `.godot/necroworks_v020_milestone.avi`; future public footage should replace the temporary Ghost recolor and add spell/VFX/audio impact.
 

@@ -682,7 +682,7 @@ Manual unit production now supports a shared typed quantity from 1 to 36. Button
 
 Manual batch orders now reserve their full cost and population, then enter separate timed machines. Skeleton Assembler produces one unit every 0.45 s; Flesh Vat produces one every 0.80 s. Each supports three pending orders and both operate in parallel. These provisional values make Skeleton replacement faster while Zombie durability carries a throughput cost.
 
-Army Doctrine Planning V1 supports a combined maximum of 36 Undead, separate Skeleton/Zombie targets, Bones/Flesh reserves and Balanced/Skeleton-first/Zombie-first priority. The panel reports current counts and deficits, but does not yet issue production orders. Its next execution layer must enqueue through the same timed machines and expose activation/pause.
+Army Doctrine V1 supports a combined maximum of 36 Undead, separate Skeleton/Zombie targets, Bones/Flesh reserves and Balanced/Skeleton-first/Zombie-first priority. The player explicitly starts or pauses replenishment. Missing units are discounted by existing queued production, then paid and committed through the same timed machines used by manual orders. Balanced shares scarce population capacity between both lines; focused priorities allocate it to the selected line first.
 
 ## Blood and Souls
 

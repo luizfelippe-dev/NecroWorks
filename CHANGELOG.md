@@ -113,7 +113,7 @@
   - minimum Bones/Flesh reserves and Balanced/Skeleton-first/Zombie-first priority;
   - live current-army and composition-deficit readout;
   - isolated policy validates the 36-unit cap and reserve-safe spending;
-  - automatic replenishment remains locked until timed production queues exist;
+  - automatic execution was deferred until timed production queues existed;
   - persistent runner validates state, rejected configurations, reserves, deficits and localized UI.
 - Timed Undead Production Queues V1:
   - manual UI orders now enter independent Skeleton Assembler and Flesh Vat queues;
@@ -123,6 +123,13 @@
   - live localized queue counts and cycle timers are visible in the production panel;
   - queued production prevents false defeat while the army is being rebuilt;
   - persistent runner validates reservation, timing, parallel output, limits and localization.
+- Army Doctrine Execution V1:
+  - explicit localized start/pause control;
+  - target deficits discount units already committed to production;
+  - Balanced/Skeleton-first/Zombie-first planning allocates scarce population capacity;
+  - minimum Bones/Flesh reserves are preserved before orders enter the timed machines;
+  - pausing stops future orders without cancelling paid production;
+  - persistent runner validates planning, dual-machine timing and loss replacement.
 - Necromantic Economy v0.2 completion:
   - Blood generation, Blood Fervor sacrifice and Hematic/Crimson upgrades;
   - Crimson Assembly synergy reduces the recurring sacrifice cost;

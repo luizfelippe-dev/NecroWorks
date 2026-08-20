@@ -410,9 +410,9 @@ This instant action is temporary prototype behavior. Timed Assembler/Vat queues 
 
 ---
 
-## Army Doctrine is planning-only until production has time and capacity
+## Army Doctrine replenishes only through timed production
 
-The player can configure Skeleton/Zombie targets, minimum Bones/Flesh reserves and a production priority. The current V1 calculates deficits and validates reserve-safe spending, but never creates a unit automatically.
+The player configures Skeleton/Zombie targets, minimum Bones/Flesh reserves and a production priority, then explicitly starts or pauses replenishment. Automation discounts units already committed to queues and issues orders only through Skeleton Assembler/Flesh Vat.
 
 Reasoning:
 
@@ -421,7 +421,7 @@ Reasoning:
 - the same target can then produce different outcomes depending on upgrades and resources;
 - separating policy from execution keeps the future automation testable and pausable.
 
-Both production queues now exist. Replenishment may be activated next only through their public enqueue paths and must respect capacity, timing, reserves, army cap and an explicit pause/disable control.
+Pausing prevents new orders but does not cancel paid, committed batches. This preserves transaction clarity and prevents resource refunds or disappearing future units from becoming an exploit.
 
 ---
 
