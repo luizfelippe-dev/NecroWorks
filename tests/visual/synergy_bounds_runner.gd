@@ -23,7 +23,9 @@ func run_validation() -> void:
 		game.SYNERGY_MEAT_SHIELD_PROTOCOL,
 		game.SYNERGY_CRIMSON_ASSEMBLY,
 		game.SYNERGY_PHANTOM_CONDUIT,
-		game.SYNERGY_DARK_REFINERY
+		game.SYNERGY_DARK_REFINERY,
+		game.SYNERGY_SOUL_FOUNDRY,
+		game.SYNERGY_OSSUARY_BALLISTICS
 	]
 	for synergy_id: String in synergy_ids:
 		game.active_synergies[synergy_id] = true
@@ -31,8 +33,23 @@ func run_validation() -> void:
 	await process_frame
 
 
+	var metrics_panel: Control = game.get_node("MetricsPanel") as Control
 	var panel: Control = game.get_node("SynergyPanel") as Control
 	var label: Label = game.synergy_label
+	game.update_metrics_ui()
+	await process_frame
+	assert(
+		metrics_panel.position.y + metrics_panel.size.y
+		<= panel.position.y
+	)
+	assert(
+		game.metrics_label.size.y
+		>= game.metrics_label.get_combined_minimum_size().y
+	)
+	assert(
+		game.metrics_label.position.y + game.metrics_label.size.y
+		<= metrics_panel.position.y + metrics_panel.size.y
+	)
 	assert(label.get_line_count() == synergy_ids.size() + 1)
 	assert(label.size.y >= label.get_combined_minimum_size().y)
 	assert(label.position.y + label.size.y <= panel.position.y + panel.size.y)

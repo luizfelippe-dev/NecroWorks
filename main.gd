@@ -7039,12 +7039,12 @@ func create_synergy_hud() -> void:
 
 	synergy_label.position = Vector2(
 		1565.0,
-		320.0
+		400.0
 	)
 
 	synergy_label.size = Vector2(
 		305.0,
-		220.0
+		300.0
 	)
 
 	synergy_label.z_index = 100
@@ -7783,12 +7783,12 @@ func create_visual_shell() -> void:
 
 	create_hud_panel(
 		"MetricsPanel",
-		Rect2(1540.0, 18.0, 355.0, 280.0)
+		Rect2(1540.0, 18.0, 355.0, 360.0)
 	)
 
 	create_hud_panel(
 		"SynergyPanel",
-		Rect2(1540.0, 305.0, 355.0, 250.0)
+		Rect2(1540.0, 385.0, 355.0, 330.0)
 	)
 
 	resources_panel = create_hud_panel(
@@ -7835,7 +7835,7 @@ func create_visual_shell() -> void:
 	metrics_label = Label.new()
 	metrics_label.name = "MetricsLabel"
 	metrics_label.position = Vector2(1565.0, 35.0)
-	metrics_label.size = Vector2(305.0, 245.0)
+	metrics_label.size = Vector2(305.0, 325.0)
 	metrics_label.z_index = 100
 	metrics_label.add_theme_font_size_override("font_size", 14)
 	metrics_label.add_theme_color_override("font_color", UI_TEXT)
