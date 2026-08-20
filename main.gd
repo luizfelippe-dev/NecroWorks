@@ -25,6 +25,16 @@ signal production_unit_completed(
 	unit_type: String,
 	remaining_in_order: int
 )
+signal enemy_ability_triggered(
+	archetype_id: String,
+	ability_id: String,
+	target_count: int
+)
+signal emergency_reclamation_triggered(
+	unit_type: String,
+	resource_id: String,
+	amount: int
+)
 
 
 func _notification(what: int) -> void:
@@ -134,6 +144,9 @@ const ENEMY_WAVE_POLICY: Script = preload(
 )
 const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 	"res://scripts/game/enemy_archetype_catalog.gd"
+)
+const ENEMY_COMBAT_POLICY: Script = preload(
+	"res://scripts/game/enemy_combat_policy.gd"
 )
 const UNDEAD_RECIPE_CATALOG: Script = preload(
 	"res://scripts/game/undead_recipe_catalog.gd"
@@ -720,6 +733,7 @@ func kill_ghost(target: Node2D) -> void:
 		return
 
 
+	try_emergency_reclamation(target)
 	occupied_undead_slots.erase(int(target.get("formation_slot")))
 	ghosts.erase(target)
 	total_ghosts_lost += 1
@@ -800,6 +814,7 @@ func kill_lich(target: Node2D) -> void:
 		return
 
 
+	try_emergency_reclamation(target)
 	var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
 	if runtime != null:
 		occupied_undead_slots.erase(runtime.formation_slot)
@@ -882,6 +897,7 @@ func kill_zombie(
 	)
 
 
+	try_emergency_reclamation(target)
 	total_zombies_lost += 1
 
 
@@ -1042,6 +1058,7 @@ var enemy_speeds: Dictionary = {}
 var enemy_attack_cooldowns: Dictionary = {}
 var enemy_attack_ranges: Dictionary = {}
 var enemy_attack_timers: Dictionary = {}
+var enemy_attack_counts: Dictionary = {}
 var enemy_lane_offsets: Dictionary = {}
 var enemy_types: Dictionary = {}
 
@@ -1187,6 +1204,7 @@ const UPGRADE_CARRION_RECOVERY: String = "carrion_recovery"
 const UPGRADE_GRAVE_CONTRACT: String = "grave_contract"
 const UPGRADE_RAPID_CONJURATION: String = "rapid_conjuration"
 const UPGRADE_BOUND_SERVITUDE: String = "bound_servitude"
+const UPGRADE_EMERGENCY_RECLAMATION: String = "emergency_reclamation"
 
 const MIN_SKELETON_ATTACK_COOLDOWN: float = 0.20
 
@@ -1208,6 +1226,7 @@ var bone_harvest_chance: float = 0.0
 var reassembly_chance: float = 0.0
 var final_service_damage: int = 0
 var zombie_recovery_per_attack: int = 0
+var emergency_reclamation_available: bool = true
 
 var upgrade_counts: Dictionary = {}
 var total_upgrades_selected: int = 0
@@ -1688,7 +1707,7 @@ func _process(delta: float) -> void:
 
 
 		var closest_undead: Node2D = (
-			get_closest_undead_to_enemy(current_enemy)
+			get_enemy_combat_target(current_enemy)
 		)
 
 
@@ -1739,11 +1758,7 @@ func _process(delta: float) -> void:
 
 		elif current_attack_timer <= 0.0:
 
-			damage_undead(
-				closest_undead,
-				int(enemy_damages.get(current_enemy, enemy_damage)),
-				str(enemy_types.get(current_enemy, "ENEMY")).to_upper()
-			)
+			perform_enemy_attack(current_enemy, closest_undead)
 			enemy_attack_timers[current_enemy] = (
 				float(
 					enemy_attack_cooldowns.get(
@@ -1955,6 +1970,7 @@ func start_wave(
 ) -> void:
 
 	current_wave = wave_number
+	emergency_reclamation_available = true
 
 	enemies_total_this_wave = (
 		get_enemies_for_wave(
@@ -1973,6 +1989,7 @@ func start_wave(
 	enemy_attack_cooldowns.clear()
 	enemy_attack_ranges.clear()
 	enemy_attack_timers.clear()
+	enemy_attack_counts.clear()
 	enemy_lane_offsets.clear()
 	enemy_types.clear()
 
@@ -2188,6 +2205,7 @@ func cleanup_invalid_enemies() -> void:
 		enemy_attack_cooldowns.erase(current_enemy)
 		enemy_attack_ranges.erase(current_enemy)
 		enemy_attack_timers.erase(current_enemy)
+		enemy_attack_counts.erase(current_enemy)
 		enemy_lane_offsets.erase(current_enemy)
 		enemy_types.erase(current_enemy)
 
@@ -2386,6 +2404,7 @@ func register_enemy(new_enemy: Node2D) -> void:
 		archetype.get("attack_range", enemy_attack_range)
 	)
 	enemy_attack_timers[new_enemy] = 0.0
+	enemy_attack_counts[new_enemy] = 0
 	enemy_lane_offsets[new_enemy] = lane_offset
 	enemy_types[new_enemy] = archetype_id
 	enemies_spawned_this_wave += 1
@@ -3200,6 +3219,262 @@ func get_all_undead_units() -> Array[Node2D]:
 	return units
 
 
+func get_enemy_combat_target(source_enemy: Node2D) -> Node2D:
+
+	var archetype_id: String = str(
+		enemy_types.get(source_enemy, "human_warrior")
+	)
+	var next_attack_count: int = int(
+		enemy_attack_counts.get(source_enemy, 0)
+	) + 1
+
+
+	if (
+		archetype_id == "elf"
+		and ENEMY_COMBAT_POLICY.is_elf_precision_attack(next_attack_count)
+	):
+		return get_elf_precision_target(source_enemy)
+
+
+	return get_closest_undead_to_enemy(source_enemy)
+
+
+func get_elf_precision_target(source_enemy: Node2D) -> Node2D:
+
+	if not is_instance_valid(source_enemy):
+		return null
+
+
+	var best_target: Node2D = null
+	var best_role_priority: int = 999
+	var best_hp_ratio: float = INF
+	var best_distance: float = INF
+
+
+	for candidate: Node2D in get_all_undead_units():
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(candidate)
+		if runtime == null or runtime.current_hp <= 0:
+			continue
+
+
+		var role_priority: int = ENEMY_COMBAT_POLICY.get_elf_role_priority(
+			runtime.combat_role
+		)
+		var hp_ratio: float = (
+			float(runtime.current_hp)
+			/ float(maxi(runtime.maximum_hp, 1))
+		)
+		var distance: float = absf(
+			source_enemy.position.x - candidate.position.x
+		)
+
+
+		if (
+			role_priority < best_role_priority
+			or (
+				role_priority == best_role_priority
+				and hp_ratio < best_hp_ratio
+			)
+			or (
+				role_priority == best_role_priority
+				and is_equal_approx(hp_ratio, best_hp_ratio)
+				and distance < best_distance
+			)
+		):
+			best_target = candidate
+			best_role_priority = role_priority
+			best_hp_ratio = hp_ratio
+			best_distance = distance
+
+
+	return best_target
+
+
+func perform_enemy_attack(attacking_enemy: Node2D, target: Node2D) -> void:
+
+	if not is_instance_valid(attacking_enemy) or not is_instance_valid(target):
+		return
+
+
+	var archetype_id: String = str(
+		enemy_types.get(attacking_enemy, "human_warrior")
+	)
+	var attack_count: int = int(
+		enemy_attack_counts.get(attacking_enemy, 0)
+	) + 1
+	var base_damage: int = int(
+		enemy_damages.get(attacking_enemy, enemy_damage)
+	)
+	enemy_attack_counts[attacking_enemy] = attack_count
+
+
+	if (
+		archetype_id == "mage"
+		and ENEMY_COMBAT_POLICY.is_mage_burst_attack(attack_count)
+	):
+		perform_mage_arcane_burst(attacking_enemy, target, base_damage)
+		return
+
+
+	if (
+		archetype_id == "elf"
+		and ENEMY_COMBAT_POLICY.is_elf_precision_attack(attack_count)
+	):
+		damage_undead(
+			target,
+			ENEMY_COMBAT_POLICY.get_precision_damage(base_damage),
+			"ELF PRECISION"
+		)
+		show_enemy_ability_feedback(
+			attacking_enemy,
+			"elf",
+			"precision_shot",
+			tr("ENEMY_ABILITY_PRECISION_SHOT"),
+			1
+		)
+		return
+
+
+	damage_undead(target, base_damage, archetype_id.to_upper())
+
+
+func perform_mage_arcane_burst(
+	attacking_mage: Node2D,
+	primary_target: Node2D,
+	base_damage: int
+) -> void:
+
+	var burst_targets: Array[Node2D] = get_mage_burst_targets(primary_target)
+	var splash_damage: int = ENEMY_COMBAT_POLICY.get_splash_damage(base_damage)
+
+
+	for target_index: int in range(burst_targets.size()):
+		var burst_target: Node2D = burst_targets[target_index]
+		if not is_instance_valid(burst_target):
+			continue
+
+
+		damage_undead(
+			burst_target,
+			base_damage if target_index == 0 else splash_damage,
+			"MAGE ARCANE BURST"
+		)
+		if is_instance_valid(burst_target):
+			delay_undead_attack(
+				burst_target,
+				ENEMY_COMBAT_POLICY.MAGE_SUPPRESSION_DELAY
+			)
+
+
+	show_enemy_ability_feedback(
+		attacking_mage,
+		"mage",
+		"arcane_burst",
+		tr("ENEMY_ABILITY_ARCANE_BURST"),
+		burst_targets.size()
+	)
+
+
+func get_mage_burst_targets(primary_target: Node2D) -> Array[Node2D]:
+
+	var result: Array[Node2D] = []
+	if not is_instance_valid(primary_target):
+		return result
+
+
+	result.append(primary_target)
+	var candidates: Array[Node2D] = []
+	for candidate: Node2D in get_all_undead_units():
+		if candidate == primary_target or not is_instance_valid(candidate):
+			continue
+
+
+		if (
+			candidate.position.distance_to(primary_target.position)
+			<= ENEMY_COMBAT_POLICY.MAGE_SPLASH_RADIUS
+		):
+			candidates.append(candidate)
+
+
+	while (
+		result.size() < ENEMY_COMBAT_POLICY.MAGE_MAX_TARGETS
+		and not candidates.is_empty()
+	):
+		var closest_candidate: Node2D = candidates[0]
+		var closest_distance: float = closest_candidate.position.distance_to(
+			primary_target.position
+		)
+		for candidate: Node2D in candidates:
+			var candidate_distance: float = candidate.position.distance_to(
+				primary_target.position
+			)
+			if candidate_distance < closest_distance:
+				closest_candidate = candidate
+				closest_distance = candidate_distance
+
+
+		result.append(closest_candidate)
+		candidates.erase(closest_candidate)
+
+
+	return result
+
+
+func delay_undead_attack(target: Node2D, delay: float) -> void:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
+	if runtime == null:
+		return
+
+
+	runtime.attack_timer += maxf(delay, 0.0)
+	if skeleton_attack_timers.has(target):
+		skeleton_attack_timers[target] = runtime.attack_timer
+	if zombie_attack_timers.has(target):
+		zombie_attack_timers[target] = runtime.attack_timer
+
+
+func show_enemy_ability_feedback(
+	source_enemy: Node2D,
+	archetype_id: String,
+	ability_id: String,
+	message: String,
+	target_count: int
+) -> void:
+
+	enemy_ability_triggered.emit(archetype_id, ability_id, target_count)
+	if not is_instance_valid(source_enemy):
+		return
+
+
+	var previous_feedback: Node = source_enemy.get_node_or_null(
+		"AbilityFeedback"
+	)
+	if previous_feedback != null:
+		previous_feedback.queue_free()
+
+
+	var feedback: Label = Label.new()
+	feedback.name = "AbilityFeedback"
+	feedback.position = Vector2(-105.0, -105.0)
+	feedback.size = Vector2(210.0, 28.0)
+	feedback.text = message
+	feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	feedback.z_index = 25
+	feedback.add_theme_font_size_override("font_size", 13)
+	feedback.add_theme_color_override("font_color", Color(0.86, 0.64, 1.0))
+	feedback.add_theme_color_override("font_outline_color", Color.BLACK)
+	feedback.add_theme_constant_override("outline_size", 4)
+	source_enemy.add_child(feedback)
+
+
+	var tween: Tween = feedback.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(feedback, "position:y", -135.0, 0.65)
+	tween.tween_property(feedback, "modulate:a", 0.0, 0.65)
+	tween.chain().tween_callback(feedback.queue_free)
+
+
 func get_closest_undead_to_enemy(
 	source_enemy: Node2D = enemy
 ) -> Node2D:
@@ -3507,6 +3782,121 @@ func damage_skeleton(
 
 
 # =========================================================
+# RARE UPGRADE — EMERGENCY RECLAMATION
+# =========================================================
+
+func try_emergency_reclamation(target: Node2D) -> bool:
+
+	if (
+		get_upgrade_count(UPGRADE_EMERGENCY_RECLAMATION) <= 0
+		or not emergency_reclamation_available
+	):
+		return false
+
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
+	if runtime == null or runtime.is_temporary:
+		return false
+
+
+	var resource_id: String = ""
+	var resource_key: String = ""
+	var refund_amount: int = 0
+	var feedback_color: Color = UI_GREEN
+
+
+	match runtime.unit_type:
+		UNDEAD_RECIPE_CATALOG.SKELETON_WARRIOR:
+			resource_id = "bones"
+			resource_key = "RESOURCE_BONES"
+			refund_amount = maxi(1, int(floor(float(skeleton_cost) * 0.5)))
+			feedback_color = UI_BONE
+		UNDEAD_RECIPE_CATALOG.SKELETON_ARCHER:
+			resource_id = "bones"
+			resource_key = "RESOURCE_BONES"
+			refund_amount = maxi(
+				1,
+				int(floor(float(skeleton_archer_cost) * 0.5))
+			)
+			feedback_color = UI_BONE
+		UNDEAD_RECIPE_CATALOG.ZOMBIE_TANK:
+			resource_id = "flesh"
+			resource_key = "RESOURCE_FLESH"
+			refund_amount = maxi(1, int(floor(float(zombie_cost) * 0.5)))
+			feedback_color = UI_FLESH
+		UNDEAD_RECIPE_CATALOG.GHOST:
+			resource_id = "souls"
+			resource_key = "RESOURCE_SOULS"
+			refund_amount = maxi(1, int(floor(float(ghost_cost) * 0.5)))
+			feedback_color = Color(0.38, 0.70, 0.95, 1.0)
+		UNDEAD_RECIPE_CATALOG.LICH:
+			resource_id = "souls"
+			resource_key = "RESOURCE_SOULS"
+			refund_amount = maxi(1, int(floor(float(lich_cost) * 0.5)))
+			feedback_color = Color(0.68, 0.34, 0.94, 1.0)
+		_:
+			return false
+
+
+	match resource_id:
+		"bones":
+			bones += refund_amount
+		"flesh":
+			flesh += refund_amount
+		"souls":
+			souls += refund_amount
+		_:
+			return false
+
+
+	emergency_reclamation_available = false
+	emergency_reclamation_triggered.emit(
+		runtime.unit_type,
+		resource_id,
+		refund_amount
+	)
+	show_emergency_reclamation_feedback(
+		target.position,
+		refund_amount,
+		tr(resource_key),
+		feedback_color
+	)
+	update_bones_ui()
+	return true
+
+
+func show_emergency_reclamation_feedback(
+	world_position: Vector2,
+	amount: int,
+	resource_name: String,
+	feedback_color: Color
+) -> void:
+
+	var feedback: Label = Label.new()
+	feedback.name = "EmergencyReclamationFeedback"
+	feedback.position = world_position + Vector2(-125.0, -80.0)
+	feedback.size = Vector2(250.0, 32.0)
+	feedback.text = tr("UPGRADE_EMERGENCY_RECLAMATION_FEEDBACK") % [
+		amount,
+		resource_name,
+	]
+	feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	feedback.z_index = 360
+	feedback.add_theme_font_size_override("font_size", 15)
+	feedback.add_theme_color_override("font_color", feedback_color)
+	feedback.add_theme_color_override("font_outline_color", Color.BLACK)
+	feedback.add_theme_constant_override("outline_size", 5)
+	add_child(feedback)
+
+
+	var tween: Tween = feedback.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(feedback, "position:y", feedback.position.y - 45.0, 0.9)
+	tween.tween_property(feedback, "modulate:a", 0.0, 0.9)
+	tween.chain().tween_callback(feedback.queue_free)
+
+
+# =========================================================
 # MATAR SKELETON
 # =========================================================
 
@@ -3627,6 +4017,7 @@ func kill_skeleton(
 	)
 
 
+	try_emergency_reclamation(target)
 	total_skeletons_lost += 1
 
 
@@ -3955,6 +4346,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 	enemy_attack_cooldowns.erase(dead_enemy)
 	enemy_attack_ranges.erase(dead_enemy)
 	enemy_attack_timers.erase(dead_enemy)
+	enemy_attack_counts.erase(dead_enemy)
 	enemy_lane_offsets.erase(dead_enemy)
 	enemy_types.erase(dead_enemy)
 
@@ -5832,6 +6224,13 @@ func get_upgrade_pool() -> Array[String]:
 				pool.append(lich_upgrade)
 
 
+	if (
+		current_wave >= 8
+		and get_upgrade_count(UPGRADE_EMERGENCY_RECLAMATION) == 0
+	):
+		pool.append(UPGRADE_EMERGENCY_RECLAMATION)
+
+
 	# Upgrades com limite deixam de aparecer
 	# quando já atingiram seu teto.
 
@@ -6022,7 +6421,9 @@ func update_upgrade_ui() -> void:
 		)
 
 
-		if is_zombie_upgrade(upgrade_id):
+		if is_rare_upgrade(upgrade_id):
+			apply_button_style(button, Color(0.63, 0.30, 0.88, 1.0))
+		elif is_zombie_upgrade(upgrade_id):
 			apply_button_style(button, UI_FLESH)
 		else:
 			apply_button_style(button, UI_GREEN)
@@ -6038,6 +6439,11 @@ func is_zombie_upgrade(
 		UPGRADE_DEAD_WEIGHT,
 		UPGRADE_CARRION_RECOVERY
 	]
+
+
+func is_rare_upgrade(upgrade_id: String) -> bool:
+
+	return upgrade_id == UPGRADE_EMERGENCY_RECLAMATION
 
 
 func get_upgrade_card_text(
@@ -6438,6 +6844,11 @@ func apply_upgrade(
 			lich_summon_lifetime_bonus += 4.0
 
 
+		UPGRADE_EMERGENCY_RECLAMATION:
+
+			emergency_reclamation_available = true
+
+
 		_:
 
 			push_error(
@@ -6544,6 +6955,9 @@ func get_upgrade_name(
 		UPGRADE_BOUND_SERVITUDE:
 			return tr("UPGRADE_BOUND_SERVITUDE_NAME")
 
+		UPGRADE_EMERGENCY_RECLAMATION:
+			return tr("UPGRADE_EMERGENCY_RECLAMATION_NAME")
+
 		_:
 			return "Unknown Upgrade"
 
@@ -6628,6 +7042,9 @@ func get_upgrade_description(
 
 		UPGRADE_BOUND_SERVITUDE:
 			return tr("UPGRADE_BOUND_SERVITUDE_DESC")
+
+		UPGRADE_EMERGENCY_RECLAMATION:
+			return tr("UPGRADE_EMERGENCY_RECLAMATION_DESC")
 
 		_:
 			return "Unknown effect"
@@ -6772,6 +7189,9 @@ func get_upgrade_status(
 
 		UPGRADE_BOUND_SERVITUDE:
 			return tr("UPGRADE_BOUND_SERVITUDE_STATUS") % get_lich_summon_lifetime()
+
+		UPGRADE_EMERGENCY_RECLAMATION:
+			return tr("UPGRADE_EMERGENCY_RECLAMATION_STATUS")
 
 		_:
 			return ""

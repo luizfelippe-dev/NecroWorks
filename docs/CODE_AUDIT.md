@@ -93,7 +93,13 @@ Viewport preservation and lower-HUD bounds live at `tests/visual/layout_bounds_r
 Skeleton Archer recipe, queue, ranged formation, upgrades and Ossuary Ballistics live at `tests/units/skeleton_archer_runner.gd`.
 Lich combat, Soul production, bounded Thralls, upgrades, anti-exploit rules and Soul Foundry live at `tests/units/lich_summoning_runner.gd`.
 
-The current full headless regression contains 21 runners and passed on Godot 4.7.1. Corpse feedback cleanup now uses elapsed time rather than a frame count, removing host-FPS nondeterminism.
+The current full headless regression contains 23 runners and passed on Godot 4.7.1. Corpse feedback cleanup now uses elapsed time rather than a frame count, removing host-FPS nondeterminism.
+
+Advanced Mage/Elf cadence and targeting are isolated in `scripts/game/enemy_combat_policy.gd`; live-node orchestration remains in `main.gd`. `tests/combat/enemy_advanced_behavior_runner.gd` covers AOE cap/damage/suppression, role-based precision and localization.
+
+Emergency Reclamation currently uses a shared death-transaction helper called by four permanent unit families. `tests/upgrades/rare_upgrade_runner.gd` covers eligibility, one-time acquisition, per-Wave reset, resource-specific refund, repeat-loss blocking and temporary-unit exclusion.
+
+Both deterministic complete-run strategies still reach and defeat the Foreman after advanced enemy behavior was enabled.
 
 Before the demo, extend persistent coverage for:
 

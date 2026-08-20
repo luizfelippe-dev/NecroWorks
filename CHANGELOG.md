@@ -4,6 +4,20 @@
 
 ### Added
 
+- Advanced enemy behavior:
+  - Mage Arcane Burst every third attack hits up to three nearby Undead, deals 50% splash damage and delays their next attack by 0.30 s;
+  - Elf Precision Shot every fourth attack prioritizes vulnerable summoners/ranged units and deals 135% damage;
+  - localized in-world ability feedback and an observable gameplay signal;
+  - isolated `EnemyCombatPolicy` keeps cadence, targeting priority and multipliers testable.
+- First rare/rule-changing upgrade, Emergency Reclamation:
+  - eligible from Wave 8 and limited to one acquisition;
+  - once per Wave refunds half the production cost of the first permanent Undead lost;
+  - supports Bone, Flesh and Soul recipes;
+  - temporary Thralls cannot consume or exploit the trigger;
+  - localized card, status and resource-return feedback.
+- Metrics/Synergy HUD separation expanded and regression-tested against every metric row and all ten synergies.
+- Automated regression expanded to 23 persistent runners.
+
 - Lich Summoner V1:
   - original transparent prototype sprite and dedicated scene;
   - run-scoped blueprint purchased for 5 Factory Points;
@@ -16,7 +30,7 @@
   - persistent Lich combat, summon, anti-exploit, localization and layout validation.
 - Ossuary Ballistics, the tenth active synergy: unlocked Archer blueprint + Heavy Bones + Death March grants Skeleton Archers +80 range.
 - Runtime recipe catalog expanded with `lich` and `lich_thrall`, including summoner identity and temporary-unit ownership state.
-- Complete automated regression now covers 21 runners; visual tween cleanup uses elapsed time instead of frame count for headless stability.
+- Complete automated regression now covers 23 runners; visual tween cleanup uses elapsed time instead of frame count for headless stability.
 
 - v0.4 generic Undead runtime foundation:
   - shared `UndeadRuntimeUnit` identity and combat-state component;

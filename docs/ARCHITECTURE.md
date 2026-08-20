@@ -398,6 +398,18 @@ Lich attack timers and ability timers are separate runtime fields. Summoning che
 
 Ossuary Ballistics demonstrates recipe-aware synergy propagation: effective Archer range is computed in one helper and synchronized to current runtimes when the synergy unlocks.
 
+# Advanced Enemy combat policy
+
+`scripts/game/enemy_combat_policy.gd` contains pure cadence, role-priority and damage calculations for Mage Arcane Burst and Elf Precision Shot. `main.gd` remains responsible for selecting live nodes, applying damage and presenting feedback.
+
+Each Enemy owns an attack count beside its existing timer. The count is registered, cleared at Wave start and erased on death/cleanup. Mage attacks use the normal closest target except every third hit, when nearby targets are collected under a radius/cap. Elf attacks use normal frontline targeting except every fourth hit, when a role-first, HP-ratio-second selector searches the backline.
+
+`enemy_ability_triggered` exposes archetype, ability and target count without coupling tests or future audio/VFX to temporary Labels.
+
+# Rare upgrade trigger
+
+Emergency Reclamation is the first rule-changing rare. Eligibility begins at Wave 8 and acquisition is capped at one. Its per-Wave boolean resets in `start_wave`; actual permanent death paths call one shared refund transaction before removing the unit. Recipe identity determines Bone/Flesh/Soul refund values. Temporary runtimes return before consuming the trigger.
+
 # Persistent balance validation
 
 `tests/balance/composition_scenario_runner.gd` instantiates the real main scene and runs deterministic fixed-FPS combat scenarios. It intentionally uses runtime production, movement, targeting, damage and Wave code instead of duplicating formulas in a separate simulator.

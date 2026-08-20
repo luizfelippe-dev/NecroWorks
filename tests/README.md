@@ -241,4 +241,20 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 
 ## Complete regression
 
-The current suite contains 21 `*_runner.gd` scenarios covering balance, economy, Factory, localization, units and visual bounds. All 21 pass in Godot 4.7.1 headless at this milestone.
+The current suite contains 23 `*_runner.gd` scenarios covering balance, combat, economy, Factory, localization, units, upgrades and visual bounds. All 23 pass in Godot 4.7.1 headless at this milestone.
+
+## Advanced Enemy behavior
+
+Validates Mage third-hit AOE damage/suppression, three-target cap, Elf fourth-hit role-based precision targeting, amplified damage, gameplay signals and all locales:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/combat/enemy_advanced_behavior_runner.gd
+```
+
+## Rare upgrade foundation
+
+Validates Wave 8 eligibility, one-time selection, per-Wave Emergency Reclamation reset, Bone/Flesh refunds, repeat-loss blocking, temporary-Thrall exclusion and all locales:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/upgrades/rare_upgrade_runner.gd
+```

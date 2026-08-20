@@ -402,6 +402,16 @@ Both units received original transparent prototype sprites, dedicated scenes and
 
 ---
 
+## 20/08/2026 — Advanced enemies and first rare upgrade
+
+Mage and Elf stopped being stat-only variants. Every third Mage attack now becomes Arcane Burst, damaging up to three clustered Undead and suppressing their attack timers. Every fourth Elf attack becomes Precision Shot, selecting exposed summoners and ranged units before tanks and dealing amplified damage. Both abilities have localized world feedback and an event hook for later VFX/SFX.
+
+Emergency Reclamation establishes the rare/rule-changing upgrade path. From Wave 8 onward it may enter the upgrade roll once; after selection, the first permanent death per Wave returns half of that recipe's current production cost. Temporary Thralls are excluded.
+
+The metrics panel was enlarged and the synergy panel moved down so Lich/Thrall rows cannot overlap its title. The bounds runner now loads every metric and all ten synergies. Two focused runners raised the full regression to 23/23 passing scenarios, while Bone and Flesh full-run strategies still defeat the Foreman.
+
+---
+
 ## Next
 
 ### Production planning

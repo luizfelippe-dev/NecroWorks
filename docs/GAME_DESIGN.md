@@ -710,6 +710,21 @@ The Lich costs 8 Souls after a 5-Factory-Point blueprint. Each summon costs 1 So
 
 Skeleton Archer and Lich both use the generic Undead runtime instead of copied state families. Ossuary Ballistics connects the Archer blueprint to Heavy Bones + Death March and adds range rather than raw damage, reinforcing formation identity.
 
+## Advanced living-enemy behavior
+
+Human Warrior remains the readable baseline. Mage and Elf now create counter-pressure against dense and backline-heavy armies:
+
+- Arcane Burst occurs every third Mage attack, hits the primary target plus up to two nearby Undead for half splash damage, and delays their next attack by 0.30 seconds;
+- Precision Shot occurs every fourth Elf attack, prioritizes Lich, Ghost and Skeleton Archer roles over frontline units, then breaks ties by lowest HP ratio, and deals 135% damage.
+
+These intervals allow the player to read and anticipate pressure instead of receiving constant unavoidable special attacks. Zombies still protect against ordinary attacks, but ranged/summoner compositions need redundancy and recovery.
+
+## Rare upgrade foundation
+
+Emergency Reclamation enters the ordinary three-card roll from Wave 8 onward and can be selected once. The first permanent Undead death in each Wave refunds 50% of its current production cost, rounded down with a minimum of one. It applies to Bone, Flesh and Soul recipes but ignores temporary Thralls.
+
+The upgrade changes loss economics without preventing death. Its once-per-Wave limit preserves attrition, while recipe-aware refunds reward expensive composition choices without generating resources from free summons.
+
 ## Menus, settings and localization
 
 Required languages are PT-BR, English and Spanish. Translation keys/resources should be introduced before the UI expands into multiple Factory and meta-progression panels. Final translation and linguistic QA happen after interface copy stabilizes.

@@ -156,6 +156,14 @@ Cada Lich pode consumir 1 Soul para invocar um Servo temporário. A invocação 
 
 Balística do Ossuário completa a décima sinergia atual: o projeto do Arqueiro combinado com Heavy Bones e Death March concede +80 de alcance aos Arqueiros existentes e futuros.
 
+## Pressão inimiga avançada
+
+- Magos usam Rajada Arcana a cada terceiro ataque: até três alvos, 50% de splash e atraso de 0,30 s nos ataques atingidos.
+- Elfos usam Tiro de Precisão a cada quarto ataque: priorizam Liches, Ghosts e Arqueiros vulneráveis e causam 135% de dano.
+- ambos exibem feedback localizado sobre a unidade inimiga quando a habilidade dispara.
+
+O primeiro upgrade raro/regra-alteradora é Recuperação Emergencial. Ele começa a aparecer a partir da Wave 8 e, uma vez obtido, devolve metade do custo da primeira tropa permanente perdida em cada Wave. Servos temporários não consomem a ativação.
+
 ## Boss atual
 
 ### The Foreman
@@ -279,4 +287,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 O início da v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot agora são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-Próximo foco: playtest manual da composição Archer/Lich e início de upgrades raros ou comportamentos avançados de Mage/Elf, sem antecipar menus/saves antes de estabilizar este bloco de combate.
+Próximo foco: playtest manual da composição Archer/Lich contra Rajada Arcana e Tiro de Precisão, seguido por elite variants e expansão cuidadosa do catálogo de upgrades raros.

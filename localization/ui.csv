@@ -147,6 +147,12 @@ SYNERGY_SOUL_FOUNDRY,SOUL FOUNDRY,FUNDIÇÃO DE ALMAS,FUNDICIÓN DE ALMAS
 SYNERGY_SOUL_FOUNDRY_DESC,Grave Contract + Rapid Conjuration: summoned Thralls gain +10 HP and +2 Damage.,Contrato da Sepultura + Conjuração Rápida: Servos invocados ganham +10 PV e +2 de Dano.,Contrato de la Tumba + Conjuración Rápida: los Siervos invocados obtienen +10 PV y +2 de Daño.
 SYNERGY_OSSUARY_BALLISTICS,Ossuary Ballistics,Balística do Ossuário,Balística del Osario
 SYNERGY_OSSUARY_BALLISTICS_DESC,Heavy Bones + Death March + Archer blueprint: Skeleton Archers gain +80 range.,Ossos Pesados + Marcha da Morte + projeto do Arqueiro: Arqueiros Esqueletos ganham +80 de alcance.,Huesos Pesados + Marcha de la Muerte + plano del Arquero: los Arqueros Esqueleto obtienen +80 de alcance.
+ENEMY_ABILITY_ARCANE_BURST,ARCANE BURST,RAJADA ARCANA,RÁFAGA ARCANA
+ENEMY_ABILITY_PRECISION_SHOT,PRECISION SHOT,TIRO DE PRECISÃO,DISPARO DE PRECISIÓN
+UPGRADE_EMERGENCY_RECLAMATION_NAME,EMERGENCY RECLAMATION [RARE],RECUPERAÇÃO EMERGENCIAL [RARO],RECUPERACIÓN DE EMERGENCIA [RARO]
+UPGRADE_EMERGENCY_RECLAMATION_DESC,Once per Wave when a permanent Undead dies refund 50% of its production cost.,Uma vez por Onda quando um Morto-Vivo permanente morrer devolve 50% do custo de produção.,Una vez por Oleada cuando muere un No Muerto permanente devuelve el 50% del coste de producción.
+UPGRADE_EMERGENCY_RECLAMATION_STATUS,Available once each Wave,Disponível uma vez por Onda,Disponible una vez por Oleada
+UPGRADE_EMERGENCY_RECLAMATION_FEEDBACK,EMERGENCY RECOVERY +%d %s,RECUPERAÇÃO EMERGENCIAL +%d %s,RECUPERACIÓN DE EMERGENCIA +%d %s
 METRICS_GHOSTS_BUILT,GHOSTS BUILT,FANTASMAS CRIADOS,FANTASMAS CREADOS
 METRICS_GHOSTS_LOST,GHOSTS LOST,FANTASMAS PERDIDOS,FANTASMAS PERDIDOS
 METRICS_LICHES_BUILT,LICHES BUILT,LICHES CRIADOS,LICHES CREADOS

@@ -478,3 +478,25 @@ Summoner upgrades modify cap, cooldown and lifetime. Soul Foundry buffs future T
 Ossuary Ballistics requires the Archer blueprint, Heavy Bones and Death March, then adds 80 attack range to current and future Archers.
 
 Reason: the Archer should win through protected formation and uptime. A range reward creates composition identity and counters battlefield congestion without adding another multiplicative damage stack.
+
+---
+
+## Enemy archetypes need behavioral counters, not only stat multipliers
+
+Mage uses a predictable third-attack AOE/suppression pattern. Elf uses a predictable fourth-attack precision pattern that prioritizes summoner and ranged roles.
+
+Reasoning:
+
+- Warrior, Mage and Elf must change player decisions rather than only time-to-kill;
+- periodic specials create anticipation and readable counterplay;
+- Mage punishes excessive clustering;
+- Elf punishes an unprotected high-value backline;
+- role-based selection scales to future units without hardcoding scene names.
+
+---
+
+## Rare upgrades begin after the opening economy is established
+
+Emergency Reclamation becomes eligible at Wave 8, is acquired once and triggers once per Wave. It refunds half the current recipe cost of the first permanent casualty. Temporary summons are excluded.
+
+Reason: early Waves should teach the base loop before introducing exceptions. The effect softens one meaningful loss but preserves attrition, resource scarcity and the cost of repeated mistakes.

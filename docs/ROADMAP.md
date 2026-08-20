@@ -194,14 +194,14 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] temporary-Skeleton summon cap/cooldown/resource constraint
 - [ ] 30–40 upgrades
 - [x] 10–15 synergies — current catalog reached 10
-- [ ] rare upgrades
-- [ ] rule-changing upgrades
+- [ ] rare upgrade catalog — foundation complete with Emergency Reclamation; more content required
+- [x] first rule-changing upgrade — Emergency Reclamation
 - [x] multiple enemy archetype foundation
 - [x] Human Warrior prototype — durable frontline
 - [x] Mage prototype — fragile ranged damage
 - [x] Elf prototype — fast skirmisher
-- [ ] Mage advanced behavior — AOE/control
-- [ ] Elf advanced behavior — precision targeting
+- [x] Mage advanced behavior — Arcane Burst AOE/suppression
+- [x] Elf advanced behavior — Precision Shot backline targeting
 - [ ] elite variants
 - [ ] 2–3 bosses
 - [ ] events

@@ -1108,3 +1108,18 @@ Próximo passo: implementar Skeleton Archer como receita Bone desbloqueável e u
 - regressão completa: 21/21 runners aprovados em Godot 4.7.1 headless.
 
 Próximo passo recomendado: fazer uma run manual concentrada em Archer/Lich para avaliar pressão de Souls, cap temporário e legibilidade da retaguarda. Depois, escolher entre upgrades raros/regra-alteradora ou comportamento avançado de Mage/Elf.
+
+## Atualização v0.4 — comportamento inimigo e primeiro raro
+
+- `scripts/game/enemy_combat_policy.gd` centraliza frequências e multiplicadores dos ataques especiais;
+- Mage dispara Rajada Arcana no terceiro ataque: máximo de três alvos, splash de 50% e supressão de 0,30 s;
+- Elf dispara Tiro de Precisão no quarto ataque: prioriza Summoner, Ranged Support e Ranged Damage antes de melee/tank e causa 135% de dano;
+- os ataques especiais têm feedback localizado e emitem `enemy_ability_triggered`;
+- Recuperação Emergencial é o primeiro upgrade raro/regra-alteradora, elegível após a Wave 8;
+- o raro devolve uma vez por Wave 50% do custo da primeira unidade permanente perdida;
+- `lich_thrall` é explicitamente excluído do gatilho;
+- o HUD direito foi redistribuído para comportar todas as métricas e dez sinergias sem sobreposição;
+- `tests/combat/enemy_advanced_behavior_runner.gd` e `tests/upgrades/rare_upgrade_runner.gd` protegem o novo contrato;
+- regressão completa atual: 23/23 runners aprovados, incluindo duas runs até o Foreman.
+
+Próximo passo recomendado: run manual Archer/Lich sob pressão dos novos ataques. Se legível e balanceado, implementar elite variants antes de aumentar novamente o número de unidades.

@@ -99,6 +99,8 @@ Soul Extractor completes the short routing story: an arcane enemy dies, its dist
 
 Skeleton Archer and Lich now create a clearer marketable composition story: cheap melee production protects ranged Bone damage while an expensive Soul caster temporarily expands the line. Lich summons are visibly bounded by Souls, capacity, cap and lifetime, so the feature reads as deliberate factory strategy instead of passive infinite growth. This is strong material for a future short clip, but the public-facing capture should wait for summon VFX, readable attack feedback and a manual balance run.
 
+Arcane Burst and Precision Shot improve trailer/readability potential because enemy silhouettes now imply different threats: Mage punishes a dense factory army and Elf hunts valuable ranged production. Emergency Reclamation adds an easy-to-explain rare “save one loss” moment. Before marketing capture, the temporary text feedback should receive dedicated spell/projectile VFX and distinct audio cues.
+
 Necromantic Economy v0.2 adds a second marketable layer: Blood sacrifice temporarily amplifies the army, while Souls become ranged Ghosts or permanent spectral upgrades. A five-second local milestone capture is generated at `.godot/necroworks_v020_milestone.avi`; future public footage should replace the temporary Ghost recolor and add spell/VFX/audio impact.
 
 ---
