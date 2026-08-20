@@ -1,6 +1,6 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 19/08/2026
+**Revisado:** 20/08/2026
 
 ## Current verdict
 
@@ -63,9 +63,9 @@ Before public testing:
 
 ### P1 — Parallel unit dictionaries
 
-Skeleton and Zombie state is split across arrays and dictionaries. This is acceptable for two units but becomes fragile with Skeleton Archer, Lich or Ghost.
+Legacy Skeleton/Zombie arrays and dictionaries remain compatibility mirrors, but `UndeadRuntimeUnit` is now authoritative for identity and current combat state across Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich and Lich Thrall. Archer and Lich proved that new roles can reuse shared runtime state without adding copied HP/timer/slot families.
 
-The first third playable unit is now the refactor trigger for a generic runtime unit record or component. Do not implement Archer or Lich as another copied dictionary family.
+The next safe refactor is to migrate one legacy mirror at a time behind focused tests. Do not remove all compatibility dictionaries in one rewrite, and do not move every behavior into unit nodes while `main.gd` still owns encounter orchestration.
 
 ### P2 — Runtime-created UI
 
@@ -90,6 +90,10 @@ Timed Skeleton/Zombie queues, resource/capacity reservation and parallel complet
 Blood/Soul pacing, rituals, Ghost combat and rare-resource synergies live at `tests/economy/blood_soul_runner.gd`.
 Complete Bone/Flesh runs and active-Enemy cap stages live at `tests/balance/full_run_runner.gd`.
 Viewport preservation and lower-HUD bounds live at `tests/visual/layout_bounds_runner.gd`.
+Skeleton Archer recipe, queue, ranged formation, upgrades and Ossuary Ballistics live at `tests/units/skeleton_archer_runner.gd`.
+Lich combat, Soul production, bounded Thralls, upgrades, anti-exploit rules and Soul Foundry live at `tests/units/lich_summoning_runner.gd`.
+
+The current full headless regression contains 21 runners and passed on Godot 4.7.1. Corpse feedback cleanup now uses elapsed time rather than a frame count, removing host-FPS nondeterminism.
 
 Before the demo, extend persistent coverage for:
 

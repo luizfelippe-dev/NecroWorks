@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/units/undead_runtime_unit.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/units/lich_prototype.png" id="2_sprite"]
+
+[node name="Lich" type="Node2D"]
+script = ExtResource("1_script")
+unit_type = "lich"
+production_family = "soul"
+combat_role = "summoner"
+maximum_hp = 90
+damage = 11
+attack_cooldown = 1.6
+movement_speed = 125.0
+attack_range = 350.0
+
+[node name="UnitSprite" type="Sprite2D" parent="."]
+z_index = 10
+texture = ExtResource("2_sprite")
+scale = Vector2(0.19, 0.19)

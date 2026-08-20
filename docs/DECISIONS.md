@@ -1,6 +1,6 @@
 # NecroWorks — Decisions
 
-**Atualizado:** 19/08/2026
+**Atualizado:** 20/08/2026
 
 ---
 
@@ -454,3 +454,27 @@ Soul Extractor preserves that scarcity by accepting only Corpses tagged from Mag
 ## Preserve the full design canvas before responsive reflow
 
 The prototype uses a 1920×1080 absolute layout. `stretch/aspect="keep"` is required so embedded windows scale/letterbox the full canvas instead of clipping the lower menus. Container-based responsive reflow remains required before public testing.
+
+---
+
+## Lich summons are temporary capacity, not free permanent production
+
+The Lich is unlocked for 5 Factory Points and produced for 8 Souls. Each Thrall costs another Soul, occupies the normal army cap, uses a global cap of six, expires after 15 seconds and is gated by a 10-second cooldown.
+
+Reasoning:
+
+- a summoner must create tactical tempo without replacing the factory economy;
+- Soul consumption preserves Mage/Elf corpse-routing value;
+- shared population prevents exponential board growth;
+- duration and cooldown keep multiple Liches useful but bounded;
+- temporary deaths cannot activate Reassembly/Final Service or permanent Skeleton metrics, closing recursive value exploits.
+
+Summoner upgrades modify cap, cooldown and lifetime. Soul Foundry buffs future Thralls rather than retroactively rewriting active summons, keeping state transitions readable.
+
+---
+
+## Archer synergy improves geometry before raw DPS
+
+Ossuary Ballistics requires the Archer blueprint, Heavy Bones and Death March, then adds 80 attack range to current and future Archers.
+
+Reason: the Archer should win through protected formation and uptime. A range reward creates composition identity and counters battlefield congestion without adding another multiplicative damage stack.

@@ -392,6 +392,16 @@ Soul Extractor occupies the fifth card. Mage/Elf/Foreman Corpses retain arcane i
 
 ---
 
+## 20/08/2026 — Skeleton Archer and Lich Summoner V1
+
+The generic `UndeadRuntimeUnit` bridge now supports two genuinely different recipes without new parallel state families. Skeleton Archer uses the shared Bone assembler, a protected ranged formation and an unlockable blueprint. Lich is an 8-Soul ranged caster whose separate ability timer produces temporary Thralls under explicit Soul, population, cooldown, duration and global-cap constraints.
+
+Temporary Thralls deliberately bypass permanent Skeleton build/loss metrics, Reassembly and Final Service. Three summoner upgrades and Soul Foundry establish the first Lich build. Ossuary Ballistics connects Archer research to Heavy Bones + Death March, bringing the current catalog to ten synergies.
+
+Both units received original transparent prototype sprites, dedicated scenes and EN/PT-BR/ES interface coverage. The complete 21-runner headless regression passed. Corpse feedback cleanup validation was made time-based so results no longer depend on host frame rate.
+
+---
+
 ## Next
 
 ### Production planning
@@ -403,7 +413,8 @@ Recommended next block:
 - measure whether automatic replenishment makes late Waves too safe;
 - playtest Hematic Press cost and unlock timing;
 - run a complete manual v0.3 playtest using Doctrine and rare-resource routing;
-- begin v0.4 unit recipes only after recording economy pressure and Factory Point timing.
+- run a complete manual Archer/Lich composition and record Soul pressure, summon uptime and battlefield readability;
+- decide the first rare/rule-changing upgrade after the new composition has evidence.
 
 ### Enemy depth
 

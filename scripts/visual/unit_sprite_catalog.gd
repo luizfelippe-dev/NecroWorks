@@ -4,6 +4,9 @@ extends RefCounted
 const SKELETON: Texture2D = preload(
 	"res://assets/sprites/units/skeleton_prototype.png"
 )
+const SKELETON_ARCHER: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_archer_prototype.png"
+)
 const ZOMBIE: Texture2D = preload(
 	"res://assets/sprites/units/zombie_prototype.png"
 )
@@ -19,6 +22,9 @@ const ELF: Texture2D = preload(
 const FOREMAN: Texture2D = preload(
 	"res://assets/sprites/units/foreman_prototype.png"
 )
+const LICH: Texture2D = preload(
+	"res://assets/sprites/units/lich_prototype.png"
+)
 
 
 static func get_texture(visual_id: String) -> Texture2D:
@@ -26,6 +32,8 @@ static func get_texture(visual_id: String) -> Texture2D:
 	match visual_id:
 		"skeleton":
 			return SKELETON
+		"skeleton_archer":
+			return SKELETON_ARCHER
 		"zombie":
 			return ZOMBIE
 		"mage":
@@ -34,5 +42,7 @@ static func get_texture(visual_id: String) -> Texture2D:
 			return ELF
 		"foreman":
 			return FOREMAN
+		"lich":
+			return LICH
 		_:
 			return HUMAN_WARRIOR

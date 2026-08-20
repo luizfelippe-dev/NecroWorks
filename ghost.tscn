@@ -5,6 +5,9 @@
 
 [node name="Ghost" type="Node2D"]
 script = ExtResource("1_script")
+unit_type = "ghost"
+production_family = "soul"
+combat_role = "ranged_support"
 
 [node name="UnitSprite" type="Sprite2D" parent="."]
 z_index = 10

@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/units/undead_runtime_unit.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/units/skeleton_archer_prototype.png" id="2_sprite"]
+
+[node name="SkeletonArcher" type="Node2D"]
+script = ExtResource("1_script")
+unit_type = "skeleton_archer"
+production_family = "bone"
+combat_role = "ranged_damage"
+maximum_hp = 65
+damage = 14
+attack_cooldown = 1.1
+movement_speed = 160.0
+attack_range = 380.0
+
+[node name="UnitSprite" type="Sprite2D" parent="."]
+z_index = 10
+texture = ExtResource("2_sprite")
+scale = Vector2(0.29, 0.29)

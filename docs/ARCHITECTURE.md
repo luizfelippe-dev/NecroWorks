@@ -1,6 +1,6 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 19/08/2026
+**Atualizado:** 20/08/2026
 
 # Stack
 
@@ -163,7 +163,9 @@ Skeleton Assembler and Flesh Vat advance independently at 0.45 s and 0.80 s per 
 
 # Blood, Souls and generic ranged Undead
 
-`scripts/economy/necromantic_resource_policy.gd` owns deterministic Blood/Soul kill rewards, sacrifice cost and Fervor scaling. `scripts/units/undead_runtime_unit.gd` is the first self-contained runtime unit record: `ghost.tscn` stores HP, damage, cooldown, speed, range, timer and formation slot on the unit instead of adding a third parallel dictionary family.
+`scripts/economy/necromantic_resource_policy.gd` owns deterministic Blood/Soul kill rewards, sacrifice cost and Fervor scaling. `scripts/units/undead_runtime_unit.gd` is the shared runtime component for Skeleton Warrior, Zombie Tank and Ghost. Each unit now owns recipe identity, production family, combat role, HP, damage, cooldown, speed, range, timer and formation slot.
+
+`scripts/game/undead_recipe_catalog.gd` is the stable recipe-identity boundary. It formalizes Skeleton Warrior as the default Bone melee recipe, Zombie Tank as the default Flesh frontline recipe and Ghost as locked Soul support. Costs in this catalog describe base recipe identity; run upgrades continue to own current transactional values in `main.gd`.
 
 The localized Ritual panel exposes Blood Fervor, two Blood upgrades, Ghost production and two Soul upgrades. Crimson Assembly and Phantom Conduit use the existing synergy registry.
 
@@ -187,23 +189,18 @@ Used for:
 - recovery;
 - defeat condition.
 
-# Skeleton state
+# Physical Undead runtime state
 
 ```text
-skeletons
-skeleton_hps
-skeleton_attack_timers
-skeleton_slots
+UndeadRuntimeUnit
+├── unit_type / production_family / combat_role
+├── current_hp / maximum_hp
+├── damage / attack_cooldown / attack_timer
+├── movement_speed / attack_range
+└── formation_slot
 ```
 
-# Zombie state
-
-```text
-zombies
-zombie_hps
-zombie_attack_timers
-zombie_slots
-```
+Skeleton and Zombie arrays still identify production families for existing combat, metrics and upgrade rules. Their HP/timer/slot dictionaries are transitional mirrors used by current tests and future save migration; reads and writes pass through generic runtime helpers so the node remains synchronized.
 
 # Shared slot state
 
@@ -226,7 +223,7 @@ get_closest_undead_to_enemy()
 damage_undead()
 ```
 
-This is the beginning of the future generic unit system.
+Registration, HP mutation, attack timers and formation lookup now use this layer. New playable families must extend the runtime/catalog path instead of adding another HP/timer/slot dictionary family.
 
 # Enemy group state
 
@@ -366,33 +363,40 @@ Updates currently cover:
 - Reassembly;
 - Max HP upgrades.
 
-# Architectural risk
+# Generic runtime direction
 
-Adding a third/fourth unit type by copying Zombie functions may create excessive duplication.
-
-Likely future direction:
+The first incremental extraction is implemented:
 
 ```text
 Undead Unit
 ├── node
 ├── unit_type
-├── hp
-├── max_hp
+├── production_family / combat_role
+├── current_hp / maximum_hp
 ├── damage
 ├── cooldown
 ├── timer
 ├── speed
-├── slot
-└── tags
+└── formation_slot
 ```
 
-Possible structures:
+The chosen structure is a lightweight component plus a static recipe catalog. Behavior remains orchestrated by `main.gd` during this bridge. Skeleton Archer is the first proving case: it shares the Bone-unit array and compatibility mirrors, while its recipe identity drives ranged positioning, per-unit stats and protected formation order.
 
-- dictionary-based runtime state;
-- UnitDefinition Resource;
-- lightweight component script.
+# Skeleton Archer recipe and queue
 
-Do not decide prematurely.
+`skeleton_archer.tscn` is a dedicated visual scene backed by `UndeadRuntimeUnit`. The blueprint is run-scoped, costs three Factory Points and unlocks an eight-Bone recipe. Archer orders enter the existing Skeleton Assembler, but each order snapshots its concrete `unit_type`; mixed Warrior/Archer orders therefore preserve FIFO completion without a third machine or queue.
+
+The physical Skeleton array now represents the Bone production family. `combat_role="ranged_damage"` places Archers behind Zombies and melee Skeletons, and their target position is derived from the closest living Enemy minus the runtime attack range. Existing Bone upgrades update both current runtime instances and the base stats used by future Archers.
+
+# Lich summon policy and temporary ownership
+
+`lich.tscn` is a dedicated ranged `UndeadRuntimeUnit`. Its advanced Soul recipe is registered in `UndeadRecipeCatalog`, while `scripts/game/lich_summon_policy.gd` owns the pure cap/cooldown/lifetime/cost rules.
+
+Temporary Thralls reuse the Bone-family runtime path and formation capacity, but declare `unit_type="lich_thrall"`, `is_temporary=true`, remaining lifetime and summon source. This keeps combat/targeting generic without creating another HP/timer/slot dictionary family. Their removal bypasses permanent Skeleton metrics and death-trigger upgrades, preventing free summons from feeding Reassembly or Final Service.
+
+Lich attack timers and ability timers are separate runtime fields. Summoning checks population, global Thrall cap and Souls before spending; failed cap/resource attempts retry after one second. Upgrades are queried through policy inputs, and Soul Foundry affects only newly summoned Thralls so the result remains explicit and testable.
+
+Ossuary Ballistics demonstrates recipe-aware synergy propagation: effective Archer range is computed in one helper and synchronized to current runtimes when the synergy unlocks.
 
 # Persistent balance validation
 
@@ -402,14 +406,9 @@ Do not decide prematurely.
 
 The runner must remain outside production scene dependencies and execute only through an explicit CLI test command.
 
-# Recommended refactor trigger
+# Refactor gate reached
 
-Start a real generic Undead refactor when at least one becomes true:
-
-1. Ghost implementation requires different range/behavior.
-2. A third unit copies too much code.
-3. Upgrades need tags across multiple unit types.
-4. formation logic becomes role-driven.
+Ghost supplied the trigger and the shared runtime bridge is now active. Do not remove the compatibility mirrors until all existing balance/factory tests and the future save format read the component directly.
 
 # Data-driven future
 

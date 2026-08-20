@@ -700,13 +700,15 @@ Full-run validation preserves current Bone/Flesh pacing: Balanced remains the Wa
 
 ```text
 Skeleton Warrior → cheap melee damage / base Bone recipe
-Skeleton Archer  → ranged Bone damage / unlockable recipe
+Skeleton Archer  → ranged Bone damage / unlockable recipe (playable V1)
 Zombie Tank      → durable frontline / Flesh recipe
 Ghost            → ranged magic / Soul recipe (playable V1)
-Lich             → rare caster-support / unlockable advanced recipe
+Lich             → rare caster-support / temporary summoner (playable V1)
 ```
 
-The Lich may summon temporary Skeletons, but summoning needs a cooldown, cap or resource cost so it cannot create infinite exponential growth. Adding Archer or Lich requires the generic Undead runtime refactor first; duplicating another full family of arrays and dictionaries is not acceptable.
+The Lich costs 8 Souls after a 5-Factory-Point blueprint. Each summon costs 1 Soul, has a 10-second base cooldown, lasts 15 seconds and shares a global six-Thrall cap. Thralls occupy ordinary army capacity and therefore trade short-term tempo against permanent production. They do not trigger permanent Skeleton death upgrades or metrics. Grave Contract, Rapid Conjuration and Bound Servitude form the first summoner upgrade package; Soul Foundry improves future Thralls.
+
+Skeleton Archer and Lich both use the generic Undead runtime instead of copied state families. Ossuary Ballistics connects the Archer blueprint to Heavy Bones + Death March and adds range rather than raw damage, reinforcing formation identity.
 
 ## Menus, settings and localization
 

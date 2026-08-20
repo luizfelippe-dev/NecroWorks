@@ -1,6 +1,6 @@
 # NecroWorks — Commercial Plan
 
-**Revisado:** 19/08/2026
+**Revisado:** 20/08/2026
 
 ## Goal
 
@@ -96,6 +96,8 @@ Army Doctrine now connects a readable target such as `5 Zombies + 30 Skeletons` 
 Hematic Press adds a second concise factory decision for footage: spend Flesh on durable Zombies or visibly compress it into Blood for a Wave ritual. The current card/timer is mechanically readable; it still needs a physical machine animation and audio beat before marketing capture.
 
 Soul Extractor completes the short routing story: an arcane enemy dies, its distinct Corpse is diverted away from materials, and a timed machine produces Souls for Ghosts. The six-card Factory grid and Dark Refinery synergy now support a readable v0.3 systems clip, but visual machinery/VFX/SFX remain the presentation gate.
+
+Skeleton Archer and Lich now create a clearer marketable composition story: cheap melee production protects ranged Bone damage while an expensive Soul caster temporarily expands the line. Lich summons are visibly bounded by Souls, capacity, cap and lifetime, so the feature reads as deliberate factory strategy instead of passive infinite growth. This is strong material for a future short clip, but the public-facing capture should wait for summon VFX, readable attack feedback and a manual balance run.
 
 Necromantic Economy v0.2 adds a second marketable layer: Blood sacrifice temporarily amplifies the army, while Souls become ranged Ghosts or permanent spectral upgrades. A five-second local milestone capture is generated at `.godot/necroworks_v020_milestone.avi`; future public footage should replace the temporary Ghost recolor and add spell/VFX/audio impact.
 

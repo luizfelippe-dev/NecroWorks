@@ -125,6 +125,37 @@ Role: Tank / Frontline
 
 O Zombie ainda compartilha a cena-base do Skeleton, mas já possui sprite e identidade visual próprios em runtime.
 
+### Skeleton Archer V1
+
+```text
+HP: 65
+Damage: 14
+Attack Cooldown: 1.1 s
+Movement Speed: 160
+Attack Range: 380
+Cost: 8 Bones
+Unlock: 3 Factory Points
+Role: ranged Bone damage / retaguarda
+```
+
+O blueprint é adquirido no painel da Fábrica. Depois disso, pedidos de Arqueiro compartilham a Skeleton Assembler com Skeleton Warriors, preservando ordem, custo reservado e capacidade total do exército. A unidade usa sprite próprio e o mesmo runtime genérico, sem novos dicionários de HP/timer/slot.
+
+### Lich Summoner V1
+
+```text
+HP: 90
+Damage: 11
+Attack Cooldown: 1.6 s
+Attack Range: 350
+Cost: 8 Souls
+Unlock: 5 Factory Points
+Role: ranged caster / temporary-army support
+```
+
+Cada Lich pode consumir 1 Soul para invocar um Servo temporário. A invocação usa cooldown base de 10 s, duração de 15 s e limite global de 6 Servos; eles ocupam vagas normais do exército, mas não contam como Skeletons produzidos/perdidos nem ativam Reassembly/Final Service. Grave Contract, Rapid Conjuration e Bound Servitude especializam o summoner. Soul Foundry fortalece futuras invocações.
+
+Balística do Ossuário completa a décima sinergia atual: o projeto do Arqueiro combinado com Heavy Bones e Death March concede +80 de alcance aos Arqueiros existentes e futuros.
+
 ## Boss atual
 
 ### The Foreman
@@ -211,10 +242,12 @@ docs/                   design, arquitetura, roadmap e plano comercial
 main.tscn / main.gd      entradas estáveis para F5/F6 no Godot
 scripts/ui/              componentes reutilizáveis de interface
 scripts/game/            políticas de Waves e catálogo de inimigos
+scripts/units/           runtime compartilhado das tropas jogáveis
 scripts/economy/         regras isoladas de processamento e recursos
 scripts/factory/         políticas de produção e Doutrina do Exército
 scripts/visual/          backdrop e catálogo de sprites
 tests/factory/           validação de filas, automação, lotes e Doutrina
+tests/units/             contratos de runtime e receitas de tropas
 tests/visual/            validação persistente dos assets de unidade
 ```
 
@@ -244,4 +277,6 @@ Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.
 
 O painel de Doutrina do Exército permite salvar composição-alvo, reservas mínimas e prioridade de produção. A reposição pode ser iniciada ou pausada pelo jogador e usa exclusivamente as filas temporizadas independentes do Skeleton Assembler e da Flesh Vat. Pedidos reservam recursos e vagas atomicamente, e cada máquina entrega uma unidade por ciclo.
 
-Próximo foco: validar manualmente o fechamento mecânico da v0.3.0 e iniciar a v0.4.0 com famílias de tropas, receitas desbloqueáveis e maior diversidade de builds.
+O início da v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot agora são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
+
+Próximo foco: playtest manual da composição Archer/Lich e início de upgrades raros ou comportamentos avançados de Mage/Elf, sem antecipar menus/saves antes de estabilizar este bloco de combate.

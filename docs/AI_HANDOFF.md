@@ -1,6 +1,6 @@
 # NecroWorks — AI Handoff
 
-**Atualizado em:** 19/08/2026
+**Atualizado em:** 20/08/2026
 **Objetivo:** permitir continuar o projeto em outro chat sem perder decisões, estado técnico ou próximos passos.
 
 ---
@@ -1056,3 +1056,55 @@ main.gd
 Último marco publicado: Necromantic Economy v0.2 e correção do HUD inferior. O bloco local adiciona Army Doctrine Execution V1 sobre as filas temporizadas.
 
 Próxima conversa deve partir da automação já conectada aos métodos públicos de enqueue. Não recriar o protótipo antigo nem ligar automação aos métodos instantâneos de lote.
+
+---
+
+# 23. Atualização 20/08/2026 — início da v0.4.0
+
+A fundação genérica de tropas agora está ativa:
+
+- `scripts/units/undead_runtime_unit.gd` armazena identidade de receita, família de produção, papel de combate, HP, dano, cooldown, timer, velocidade, alcance e slot;
+- `scripts/game/undead_recipe_catalog.gd` formaliza `skeleton_warrior`, `zombie_tank` e `ghost`;
+- `skeleton.tscn` e `ghost.tscn` usam o componente compartilhado;
+- Skeletons e Zombies são configurados por receita no registro;
+- mutações de HP, timers e consultas de slot passam por helpers genéricos;
+- os dicionários antigos continuam como espelhos temporários para testes e futura migração de save;
+- `tests/units/undead_runtime_runner.gd` protege identidade, papéis, HP, slot e sincronização após dano.
+
+Validações executadas com sucesso:
+
+- runtime genérico;
+- cenários de composição da Wave 8;
+- automação da Doutrina;
+- Blood/Soul/Ghost;
+- limites do layout e das sinergias;
+- duas runs completas até The Foreman.
+
+Próximo passo: implementar Skeleton Archer como receita Bone desbloqueável e usar seu comportamento à distância para validar que nenhuma terceira família de dicionários será criada.
+
+## Skeleton Archer V1 — implementado e validado
+
+- blueprint run-scoped comprado por 3 Factory Points;
+- receita de 8 Bones, 65 HP, 14 Damage, cooldown 1,1 s, speed 160 e range 380;
+- pedidos usam a Skeleton Assembler existente e carregam `unit_type` próprio em FIFO;
+- o Arqueiro entra no mesmo array de família Bone, sem dicionários paralelos;
+- `combat_role=ranged_damage` mantém a unidade atrás de Zombies e Skeleton Warriors;
+- sprite temporário original em `assets/sprites/units/skeleton_archer_prototype.png`, com alfa real e import limitado a 512 px;
+- textos de produção/blueprint disponíveis em EN, PT-BR e ES;
+- upgrades de Bone afetam atributos atuais e futuros do Arqueiro;
+- `tests/units/skeleton_archer_runner.gd` valida o fluxo completo.
+
+## Lich Summoner V1 — implementado e validado
+
+- blueprint run-scoped comprado por 5 Factory Points;
+- receita de 8 Souls, 90 HP, 11 Damage, cooldown de ataque 1,6 s e range 350;
+- cada Lich tenta invocar um `lich_thrall` por 1 Soul, com cooldown base de 10 s;
+- limite global base de 6 Servos, duração base de 15 s e ocupação normal do cap de 36 Undead;
+- Servos não contam como Skeletons produzidos/perdidos e não ativam Reassembly nem Final Service;
+- Grave Contract aumenta o cap, Rapid Conjuration reduz cooldown e Bound Servitude aumenta duração;
+- Soul Foundry fortalece futuras invocações para 55 HP e 8 Damage;
+- Balística do Ossuário eleva o catálogo para 10 sinergias e concede +80 range aos Arqueiros;
+- `tests/units/lich_summoning_runner.gd` cobre receita, combate, custo, cap, duração, upgrades, sinergia, métricas e anti-exploit;
+- regressão completa: 21/21 runners aprovados em Godot 4.7.1 headless.
+
+Próximo passo recomendado: fazer uma run manual concentrada em Archer/Lich para avaliar pressão de Souls, cap temporário e legibilidade da retaguarda. Depois, escolher entre upgrades raros/regra-alteradora ou comportamento avançado de Mage/Elf.

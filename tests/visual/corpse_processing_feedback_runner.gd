@@ -2,7 +2,7 @@ extends SceneTree
 
 
 const MAIN_SCENE: PackedScene = preload("res://main.tscn")
-const FEEDBACK_SETTLE_FRAMES: int = 100
+const FEEDBACK_SETTLE_SECONDS: float = 1.3
 
 
 func _initialize() -> void:
@@ -50,8 +50,7 @@ func run_validation() -> void:
 	assert(game.processing_panel.modulate == Color.WHITE)
 
 
-	for _frame: int in range(FEEDBACK_SETTLE_FRAMES):
-		await process_frame
+	await create_timer(FEEDBACK_SETTLE_SECONDS).timeout
 
 
 	assert(game.get_tree().get_nodes_in_group("processing_feedback").is_empty())

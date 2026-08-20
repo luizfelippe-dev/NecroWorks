@@ -4,6 +4,37 @@
 
 ### Added
 
+- Lich Summoner V1:
+  - original transparent prototype sprite and dedicated scene;
+  - run-scoped blueprint purchased for 5 Factory Points;
+  - ranged 8-Soul caster recipe in the Ritual panel;
+  - Soul-consuming temporary Thralls with global cap, cooldown, lifetime and normal army-slot pressure;
+  - temporary units are isolated from permanent Skeleton build/loss metrics, Reassembly and Final Service;
+  - Grave Contract, Rapid Conjuration and Bound Servitude upgrades;
+  - Soul Foundry synergy buffs future Thralls;
+  - full EN/PT-BR/ES UI, metrics and run-summary coverage;
+  - persistent Lich combat, summon, anti-exploit, localization and layout validation.
+- Ossuary Ballistics, the tenth active synergy: unlocked Archer blueprint + Heavy Bones + Death March grants Skeleton Archers +80 range.
+- Runtime recipe catalog expanded with `lich` and `lich_thrall`, including summoner identity and temporary-unit ownership state.
+- Complete automated regression now covers 21 runners; visual tween cleanup uses elapsed time instead of frame count for headless stability.
+
+- v0.4 generic Undead runtime foundation:
+  - shared `UndeadRuntimeUnit` identity and combat-state component;
+  - recipe catalog for Skeleton Warrior, Zombie Tank and Ghost;
+  - Skeleton Warrior formalized as base Bone melee;
+  - Zombie Tank formalized as base Flesh frontline;
+  - compatibility mirrors preserve current combat, balance tests and future save migration;
+  - persistent runtime contract test added before Skeleton Archer development.
+- Skeleton Archer V1:
+  - original transparent prototype sprite and dedicated editable scene;
+  - unlockable blueprint purchased for 3 Factory Points;
+  - 8-Bone ranged recipe sharing the timed Skeleton Assembler queue;
+  - protected rear formation and 380-unit engagement range;
+  - runtime-owned HP, damage, cooldown, speed and slot state;
+  - Bone upgrades propagate to existing and future Archers;
+  - English, PT-BR and Spanish production/unlock text;
+  - persistent gameplay, localization, sprite and layout validation.
+
 - Resource foundation:
   - Bones;
   - Flesh;

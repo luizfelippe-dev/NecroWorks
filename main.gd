@@ -99,6 +99,7 @@ func refresh_world_localization() -> void:
 @onready var create_skeleton_button: Button = $CreateSkeletonButton
 
 var create_zombie_button: Button = null
+var create_skeleton_archer_button: Button = null
 var production_quantity_selector: SpinBox = null
 var production_queue_label: Label = null
 
@@ -113,11 +114,17 @@ var corpse_scene: PackedScene = preload(
 var skeleton_scene: PackedScene = preload(
 	"res://skeleton.tscn"
 )
+var skeleton_archer_scene: PackedScene = preload(
+	"res://skeleton_archer.tscn"
+)
 var enemy_scene: PackedScene = preload(
 	"res://enemy.tscn"
 )
 var ghost_scene: PackedScene = preload(
 	"res://ghost.tscn"
+)
+var lich_scene: PackedScene = preload(
+	"res://lich.tscn"
 )
 const UNIT_HEALTH_BAR_SCRIPT: Script = preload(
 	"res://scripts/ui/unit_health_bar.gd"
@@ -127,6 +134,12 @@ const ENEMY_WAVE_POLICY: Script = preload(
 )
 const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 	"res://scripts/game/enemy_archetype_catalog.gd"
+)
+const UNDEAD_RECIPE_CATALOG: Script = preload(
+	"res://scripts/game/undead_recipe_catalog.gd"
+)
+const LICH_SUMMON_POLICY: Script = preload(
+	"res://scripts/game/lich_summon_policy.gd"
 )
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
@@ -195,6 +208,11 @@ func get_available_production_capacity() -> int:
 func create_skeleton_batch_from_ui() -> void:
 
 	enqueue_skeleton_production(get_selected_production_quantity())
+
+
+func create_skeleton_archer_batch_from_ui() -> void:
+
+	enqueue_skeleton_archer_production(get_selected_production_quantity())
 
 
 func create_zombie_batch_from_ui() -> void:
@@ -302,6 +320,21 @@ func enqueue_skeleton_production(quantity: int) -> bool:
 	)
 
 
+func enqueue_skeleton_archer_production(quantity: int) -> bool:
+
+	if not skeleton_archer_unlocked:
+		return false
+
+
+	return enqueue_undead_production_order(
+		"skeleton_archer",
+		quantity,
+		skeleton_archer_cost,
+		bones,
+		skeleton_production_queue
+	)
+
+
 func enqueue_zombie_production(quantity: int) -> bool:
 
 	return enqueue_undead_production_order(
@@ -342,11 +375,12 @@ func enqueue_undead_production_order(
 		quantity,
 		unit_cost
 	)
+	order["unit_type"] = unit_type
 	var total_cost: int = int(order["total_cost"])
 	queue.append(order)
 
 
-	if unit_type == "skeleton":
+	if unit_type != "zombie":
 		bones -= total_cost
 
 
@@ -407,10 +441,15 @@ func update_undead_production_queue(
 
 
 	var order: Dictionary = queue[0]
+	var queued_unit_type: String = str(order.get("unit_type", unit_type))
 	var produced: bool = (
-		create_free_skeleton("SKELETON ASSEMBLER")
-		if unit_type == "skeleton"
-		else create_free_zombie("FLESH VAT")
+		create_free_zombie("FLESH VAT")
+		if queued_unit_type == "zombie"
+		else (
+			create_free_skeleton_archer("SKELETON ASSEMBLER")
+			if queued_unit_type == "skeleton_archer"
+			else create_free_skeleton("SKELETON ASSEMBLER")
+		)
 	)
 
 
@@ -420,13 +459,13 @@ func update_undead_production_queue(
 
 	var remaining: int = maxi(int(order["remaining"]) - 1, 0)
 	order["remaining"] = remaining
-	production_unit_completed.emit(unit_type, remaining)
+	production_unit_completed.emit(queued_unit_type, remaining)
 
 
 	if remaining <= 0:
 		queue.pop_front()
 		batch_production_completed.emit(
-			unit_type,
+			queued_unit_type,
 			int(order["quantity"]),
 			int(order["total_cost"])
 		)
@@ -562,19 +601,19 @@ func register_zombie(
 	)
 
 
-	zombie_hps[
-		new_zombie
-	] = zombie_max_hp
-
-
-	zombie_attack_timers[
-		new_zombie
-	] = 0.0
-
-
-	zombie_slots[
-		new_zombie
-	] = slot
+	configure_undead_runtime(
+		new_zombie,
+		UNDEAD_RECIPE_CATALOG.ZOMBIE_TANK,
+		zombie_max_hp,
+		zombie_damage,
+		zombie_attack_cooldown,
+		zombie_speed,
+		58.0,
+		slot
+	)
+	set_runtime_hp(new_zombie, zombie_max_hp, zombie_hps)
+	set_runtime_attack_timer(new_zombie, 0.0, zombie_attack_timers)
+	set_runtime_slot(new_zombie, slot, zombie_slots)
 
 
 	occupied_undead_slots[
@@ -626,14 +665,16 @@ func create_ghost() -> bool:
 
 	souls -= ghost_cost
 	add_child(new_ghost)
-	new_ghost.set("damage", 16 + soul_focus_level * 4)
-	new_ghost.set("maximum_hp", 70 + soul_anchor_level * 25)
-	new_ghost.set(
-		"attack_cooldown",
-		1.20 if has_synergy(SYNERGY_PHANTOM_CONDUIT) else 1.35
+	configure_undead_runtime(
+		new_ghost,
+		UNDEAD_RECIPE_CATALOG.GHOST,
+		70 + soul_anchor_level * 25,
+		16 + soul_focus_level * 4,
+		1.20 if has_synergy(SYNERGY_PHANTOM_CONDUIT) else 1.35,
+		150.0,
+		430.0,
+		free_slot
 	)
-	new_ghost.set("formation_slot", free_slot)
-	new_ghost.call("reset_runtime")
 	new_ghost.position = get_spawn_position(free_slot)
 	occupied_undead_slots[free_slot] = true
 	ghosts.append(new_ghost)
@@ -687,6 +728,88 @@ func kill_ghost(target: Node2D) -> void:
 	update_debug_ui()
 
 
+func create_lich() -> bool:
+
+	if (
+		run_finished
+		or not lich_unlocked
+		or souls < lich_cost
+		or get_available_production_capacity() <= 0
+	):
+		return false
+
+
+	var free_slot: int = get_free_undead_slot()
+	var lich_node: Node = lich_scene.instantiate()
+	var new_lich: Node2D = lich_node as Node2D
+	if free_slot < 0 or new_lich == null:
+		lich_node.queue_free()
+		return false
+
+
+	souls -= lich_cost
+	add_child(new_lich)
+	configure_undead_runtime(
+		new_lich,
+		UNDEAD_RECIPE_CATALOG.LICH,
+		90 + soul_anchor_level * 20,
+		11 + soul_focus_level * 3,
+		1.6,
+		125.0,
+		350.0,
+		free_slot
+	)
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(new_lich)
+	runtime.ability_timer = get_lich_summon_cooldown() * 0.5
+	new_lich.position = get_spawn_position(free_slot)
+	occupied_undead_slots[free_slot] = true
+	liches.append(new_lich)
+	ensure_unit_health_bar(
+		new_lich,
+		runtime.maximum_hp,
+		runtime.maximum_hp,
+		Color(0.66, 0.28, 0.92, 1.0),
+		UNIT_SIZE
+	)
+	total_liches_created += 1
+	update_bones_ui()
+	update_debug_ui()
+	return true
+
+
+func lich_attack_enemy(attacking_lich: Node2D) -> void:
+
+	var target_enemy: Node2D = get_closest_enemy_to_unit(attacking_lich)
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(attacking_lich)
+	if target_enemy == null or runtime == null:
+		return
+
+
+	var remaining_hp: int = apply_damage_to_enemy(
+		target_enemy,
+		get_modified_undead_damage(runtime.damage)
+	)
+	runtime.attack_timer = runtime.attack_cooldown
+	if remaining_hp <= 0:
+		kill_enemy(target_enemy)
+
+
+func kill_lich(target: Node2D) -> void:
+
+	if not liches.has(target):
+		return
+
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
+	if runtime != null:
+		occupied_undead_slots.erase(runtime.formation_slot)
+	liches.erase(target)
+	total_liches_lost += 1
+	target.queue_free()
+	update_bones_ui()
+	update_debug_ui()
+
+
 func zombie_attack_enemy(
 	attacking_zombie: Node2D
 ) -> void:
@@ -702,17 +825,20 @@ func zombie_attack_enemy(
 
 	var remaining_hp: int = apply_damage_to_enemy(
 		target_enemy,
-		get_modified_undead_damage(zombie_damage)
+		get_modified_undead_damage(
+			get_undead_runtime(attacking_zombie).damage
+		)
 	)
 
 
 	if (
 		zombie_recovery_per_attack > 0
-		and zombie_hps.has(attacking_zombie)
+		and get_undead_runtime(attacking_zombie) != null
 	):
 
-		var current_hp: int = int(
-			zombie_hps[attacking_zombie]
+		var current_hp: int = get_runtime_hp(
+			attacking_zombie,
+			zombie_hps
 		)
 
 
@@ -720,7 +846,7 @@ func zombie_attack_enemy(
 			current_hp + zombie_recovery_per_attack,
 			zombie_max_hp
 		)
-		zombie_hps[attacking_zombie] = recovered_hp
+		set_runtime_hp(attacking_zombie, recovered_hp, zombie_hps)
 		update_unit_health_bar(
 			attacking_zombie,
 			recovered_hp,
@@ -728,9 +854,11 @@ func zombie_attack_enemy(
 		)
 
 
-	zombie_attack_timers[
-		attacking_zombie
-	] = zombie_attack_cooldown
+	set_runtime_attack_timer(
+		attacking_zombie,
+		get_undead_runtime(attacking_zombie).attack_cooldown,
+		zombie_attack_timers
+	)
 
 
 	print(
@@ -757,12 +885,10 @@ func kill_zombie(
 	total_zombies_lost += 1
 
 
-	if zombie_slots.has(target):
+	var freed_slot: int = get_runtime_slot(target, zombie_slots)
 
-		var freed_slot: int = int(
-			zombie_slots[target]
-		)
 
+	if freed_slot >= 0:
 
 		occupied_undead_slots.erase(
 			freed_slot
@@ -814,6 +940,7 @@ const UNIT_SPRITE_HEIGHT: float = 96.0
 # =========================================================
 
 var skeleton_speed: float = 180.0
+var skeleton_archer_speed: float = 160.0
 var zombie_speed: float = 120.0
 var enemy_speed: float = 100.0
 
@@ -823,6 +950,7 @@ var enemy_speed: float = 100.0
 # =========================================================
 
 var skeleton_max_hp: int = 100
+var skeleton_archer_max_hp: int = 65
 var zombie_max_hp: int = 220
 
 var enemy_max_hp: int = 100
@@ -834,6 +962,7 @@ var enemy_hp: int = 100
 # =========================================================
 
 var skeleton_damage: int = 10
+var skeleton_archer_damage: int = 14
 var zombie_damage: int = 6
 var enemy_damage: int = 8
 
@@ -843,6 +972,8 @@ var enemy_damage: int = 8
 # =========================================================
 
 var skeleton_attack_cooldown: float = 0.7
+var skeleton_archer_attack_cooldown: float = 1.1
+var skeleton_archer_attack_range: float = 380.0
 var zombie_attack_cooldown: float = 1.1
 var enemy_attack_cooldown: float = 0.7
 
@@ -884,8 +1015,10 @@ var corpses_processed_by_directive: Dictionary = {
 }
 
 var skeleton_cost: int = 5
+var skeleton_archer_cost: int = 8
 var zombie_cost: int = 6
 var ghost_cost: int = 4
+var lich_cost: int = 8
 
 var blood_extraction_level: int = 0
 var blood_infusion_level: int = 0
@@ -1051,6 +1184,9 @@ const UPGRADE_ROTTEN_BULK: String = "rotten_bulk"
 const UPGRADE_GRAVE_HUNGER: String = "grave_hunger"
 const UPGRADE_DEAD_WEIGHT: String = "dead_weight"
 const UPGRADE_CARRION_RECOVERY: String = "carrion_recovery"
+const UPGRADE_GRAVE_CONTRACT: String = "grave_contract"
+const UPGRADE_RAPID_CONJURATION: String = "rapid_conjuration"
+const UPGRADE_BOUND_SERVITUDE: String = "bound_servitude"
 
 const MIN_SKELETON_ATTACK_COOLDOWN: float = 0.20
 
@@ -1094,11 +1230,14 @@ const SYNERGY_MEAT_SHIELD_PROTOCOL: String = "meat_shield_protocol"
 const SYNERGY_CRIMSON_ASSEMBLY: String = "crimson_assembly"
 const SYNERGY_PHANTOM_CONDUIT: String = "phantom_conduit"
 const SYNERGY_DARK_REFINERY: String = "dark_refinery"
+const SYNERGY_SOUL_FOUNDRY: String = "soul_foundry"
+const SYNERGY_OSSUARY_BALLISTICS: String = "ossuary_ballistics"
 
 const ASSEMBLY_LINE_CHANCE: float = 0.25
 const OVERCLOCK_DOUBLE_STRIKE_CHANCE: float = 0.20
 const SECOND_SHIFT_DAMAGE_MULTIPLIER: float = 0.50
 const MEAT_SHIELD_TIMER_REDUCTION: float = 0.12
+const OSSUARY_BALLISTICS_RANGE_BONUS: float = 80.0
 
 var active_synergies: Dictionary = {}
 var synergy_label: Label = null
@@ -1118,6 +1257,10 @@ var total_zombies_created: int = 0
 var total_zombies_lost: int = 0
 var total_ghosts_created: int = 0
 var total_ghosts_lost: int = 0
+var total_liches_created: int = 0
+var total_liches_lost: int = 0
+var total_thralls_summoned: int = 0
+var total_thralls_expired: int = 0
 var total_bones_earned: int = 0
 var total_flesh_earned: int = 0
 
@@ -1129,6 +1272,7 @@ var total_flesh_earned: int = 0
 var skeletons: Array[Node2D] = []
 var zombies: Array[Node2D] = []
 var ghosts: Array[Node2D] = []
+var liches: Array[Node2D] = []
 var corpses: Array[Button] = []
 var corpse_processing_queue: Array[Dictionary] = []
 var skeleton_production_queue: Array[Dictionary] = []
@@ -1167,6 +1311,8 @@ const FACTORY_EFFICIENCY_BASE_COST: int = 2
 const FACTORY_EFFICIENCY_MAX_LEVEL: int = 3
 const FACTORY_EFFICIENCY_FLESH_REDUCTION: int = 2
 const FACTORY_EFFICIENCY_SOUL_SECONDS_REDUCTION: float = 0.25
+const SKELETON_ARCHER_UNLOCK_COST: int = 3
+const LICH_BLUEPRINT_UNLOCK_COST: int = 5
 
 var factory_points: int = 0
 var factory_queue_upgrade_level: int = 0
@@ -1182,6 +1328,11 @@ var soul_routing_enabled: bool = false
 var soul_extraction_queue: Array[Dictionary] = []
 var soul_extractor_timer: float = 0.0
 var factory_efficiency_level: int = 0
+var skeleton_archer_unlocked: bool = false
+var lich_unlocked: bool = false
+var lich_summon_cap_bonus: int = 0
+var lich_summon_cooldown_reduction: float = 0.0
+var lich_summon_lifetime_bonus: float = 0.0
 
 var army_doctrine_configured: bool = false
 var doctrine_target_skeletons: int = 0
@@ -1276,6 +1427,8 @@ var factory_speed_upgrade_button: Button = null
 var factory_hematic_press_button: Button = null
 var factory_soul_extractor_button: Button = null
 var factory_efficiency_button: Button = null
+var factory_skeleton_archer_button: Button = null
+var factory_lich_button: Button = null
 var doctrine_nav_button: Button = null
 var doctrine_panel: ColorRect = null
 var doctrine_subtitle_label: Label = null
@@ -1294,6 +1447,7 @@ var ritual_sacrifice_button: Button = null
 var ritual_extraction_button: Button = null
 var ritual_infusion_button: Button = null
 var ritual_ghost_button: Button = null
+var ritual_lich_button: Button = null
 var ritual_soul_focus_button: Button = null
 var ritual_soul_anchor_button: Button = null
 
@@ -1355,6 +1509,9 @@ func _ready() -> void:
 
 	create_zombie_button.pressed.connect(
 		create_zombie_batch_from_ui
+	)
+	create_skeleton_archer_button.pressed.connect(
+		create_skeleton_archer_batch_from_ui
 	)
 
 
@@ -1444,11 +1601,9 @@ func _process(delta: float) -> void:
 			continue
 
 
-		var skeleton_timer: float = float(
-			skeleton_attack_timers.get(
-				current_skeleton,
-				0.0
-			)
+		var skeleton_timer: float = get_runtime_attack_timer(
+			current_skeleton,
+			skeleton_attack_timers
 		)
 
 
@@ -1458,9 +1613,11 @@ func _process(delta: float) -> void:
 		)
 
 
-		skeleton_attack_timers[
-			current_skeleton
-		] = skeleton_timer
+		set_runtime_attack_timer(
+			current_skeleton,
+			skeleton_timer,
+			skeleton_attack_timers
+		)
 
 
 	for current_zombie: Node2D in zombies:
@@ -1469,11 +1626,9 @@ func _process(delta: float) -> void:
 			continue
 
 
-		var zombie_timer: float = float(
-			zombie_attack_timers.get(
-				current_zombie,
-				0.0
-			)
+		var zombie_timer: float = get_runtime_attack_timer(
+			current_zombie,
+			zombie_attack_timers
 		)
 
 
@@ -1483,9 +1638,11 @@ func _process(delta: float) -> void:
 		)
 
 
-		zombie_attack_timers[
-			current_zombie
-		] = zombie_timer
+		set_runtime_attack_timer(
+			current_zombie,
+			zombie_timer,
+			zombie_attack_timers
+		)
 
 
 	for current_ghost: Node2D in ghosts:
@@ -1502,6 +1659,22 @@ func _process(delta: float) -> void:
 			"attack_timer",
 			maxf(float(current_ghost.get("attack_timer")) - delta, 0.0)
 		)
+
+
+	for current_lich: Node2D in liches:
+		if not is_instance_valid(current_lich):
+			continue
+
+
+		var lich_runtime: UndeadRuntimeUnit = get_undead_runtime(current_lich)
+		if lich_runtime != null:
+			lich_runtime.attack_timer = maxf(
+				lich_runtime.attack_timer - delta,
+				0.0
+			)
+
+
+	update_lich_summons(delta)
 
 
 	# =====================================================
@@ -1595,21 +1768,19 @@ func _process(delta: float) -> void:
 			continue
 
 
-		if not skeleton_slots.has(
-			current_skeleton
-		):
+		if get_runtime_slot(current_skeleton, skeleton_slots) < 0:
 			continue
 
 
-		var skeleton_slot: int = int(
-			skeleton_slots[
-				current_skeleton
-			]
+		var skeleton_slot: int = get_runtime_slot(
+			current_skeleton,
+			skeleton_slots
 		)
 
 
 		var skeleton_target: Vector2 = (
-			get_combat_target_position(
+			get_bone_unit_combat_target_position(
+				current_skeleton,
 				skeleton_slot
 			)
 		)
@@ -1627,17 +1798,15 @@ func _process(delta: float) -> void:
 			current_skeleton.position = (
 				current_skeleton.position.move_toward(
 					skeleton_target,
-					skeleton_speed * delta
+					get_undead_runtime(current_skeleton).movement_speed * delta
 				)
 			)
 
 		else:
 
-			var attack_timer: float = float(
-				skeleton_attack_timers.get(
-					current_skeleton,
-					0.0
-				)
+			var attack_timer: float = get_runtime_attack_timer(
+				current_skeleton,
+				skeleton_attack_timers
 			)
 
 
@@ -1658,16 +1827,13 @@ func _process(delta: float) -> void:
 			continue
 
 
-		if not zombie_slots.has(
-			current_zombie
-		):
+		if get_runtime_slot(current_zombie, zombie_slots) < 0:
 			continue
 
 
-		var zombie_slot: int = int(
-			zombie_slots[
-				current_zombie
-			]
+		var zombie_slot: int = get_runtime_slot(
+			current_zombie,
+			zombie_slots
 		)
 
 
@@ -1690,17 +1856,15 @@ func _process(delta: float) -> void:
 			current_zombie.position = (
 				current_zombie.position.move_toward(
 					zombie_target,
-					zombie_speed * delta
+					get_undead_runtime(current_zombie).movement_speed * delta
 				)
 			)
 
 		else:
 
-			var zombie_timer: float = float(
-				zombie_attack_timers.get(
-					current_zombie,
-					0.0
-				)
+			var zombie_timer: float = get_runtime_attack_timer(
+				current_zombie,
+				zombie_attack_timers
 			)
 
 
@@ -1745,6 +1909,40 @@ func _process(delta: float) -> void:
 			)
 		elif float(current_ghost.get("attack_timer")) <= 0.0:
 			ghost_attack_enemy(current_ghost)
+
+
+	# Liches remain behind the army and combine ranged pressure with summons.
+	for current_lich: Node2D in liches:
+		if not is_instance_valid(current_lich):
+			continue
+
+
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_lich)
+		var target_enemy: Node2D = get_closest_enemy_to_unit(current_lich)
+		if runtime == null or target_enemy == null:
+			continue
+
+
+		var compact_slot: int = get_compacted_combat_slot(runtime.formation_slot)
+		var target_position: Vector2 = Vector2(
+			clampf(
+				target_enemy.position.x - runtime.attack_range,
+				SKELETON_COMBAT_MIN_X,
+				SKELETON_COMBAT_MAX_X
+			),
+			clampf(
+				ENEMY_LANE_Y + float(compact_slot % 6 - 3) * 55.0,
+				SKELETON_COMBAT_MIN_Y,
+				SKELETON_COMBAT_MAX_Y
+			)
+		)
+		if current_lich.position.distance_to(target_position) > 8.0:
+			current_lich.position = current_lich.position.move_toward(
+				target_position,
+				runtime.movement_speed * delta
+			)
+		elif runtime.attack_timer <= 0.0:
+			lich_attack_enemy(current_lich)
 
 
 # =========================================================
@@ -2329,6 +2527,30 @@ func get_combat_target_position(
 	)
 
 
+func get_bone_unit_combat_target_position(
+	unit: Node2D,
+	slot: int
+) -> Vector2:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+	if runtime == null or runtime.combat_role != UNDEAD_RECIPE_CATALOG.ROLE_RANGED_DAMAGE:
+		return get_combat_target_position(slot)
+
+
+	var target_enemy: Node2D = get_closest_enemy_to_unit(unit)
+	if target_enemy == null:
+		return get_spawn_position(slot)
+
+
+	var formation_target: Vector2 = get_combat_target_position(slot)
+	formation_target.x = clampf(
+		target_enemy.position.x - runtime.attack_range,
+		SKELETON_COMBAT_MIN_X,
+		SKELETON_COMBAT_MAX_X
+	)
+	return formation_target
+
+
 func get_compacted_combat_slot(
 	original_slot: int
 ) -> int:
@@ -2344,29 +2566,64 @@ func get_compacted_combat_slot(
 			continue
 
 
-		if not zombie_slots.has(current_zombie):
+		var zombie_slot: int = get_runtime_slot(current_zombie, zombie_slots)
+
+
+		if zombie_slot < 0:
 			continue
 
 
-		ordered_slots.append(
-			int(zombie_slots[current_zombie])
-		)
+		ordered_slots.append(zombie_slot)
 
 
-	# Skeletons ficam atrás dos Zombies.
+	# Skeleton Warriors ficam atrás dos Zombies.
 	for current_skeleton: Node2D in skeletons:
 
 		if not is_instance_valid(current_skeleton):
 			continue
 
 
-		if not skeleton_slots.has(current_skeleton):
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_skeleton)
+		if (
+			runtime != null
+			and runtime.combat_role == UNDEAD_RECIPE_CATALOG.ROLE_RANGED_DAMAGE
+		):
 			continue
 
 
-		ordered_slots.append(
-			int(skeleton_slots[current_skeleton])
+		var skeleton_slot: int = get_runtime_slot(
+			current_skeleton,
+			skeleton_slots
 		)
+
+
+		if skeleton_slot < 0:
+			continue
+
+
+		ordered_slots.append(skeleton_slot)
+
+
+	# Bone ranged units form a protected line behind melee Skeletons.
+	for current_skeleton: Node2D in skeletons:
+		if not is_instance_valid(current_skeleton):
+			continue
+
+
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_skeleton)
+		if (
+			runtime == null
+			or runtime.combat_role != UNDEAD_RECIPE_CATALOG.ROLE_RANGED_DAMAGE
+		):
+			continue
+
+
+		var skeleton_slot: int = get_runtime_slot(
+			current_skeleton,
+			skeleton_slots
+		)
+		if skeleton_slot >= 0:
+			ordered_slots.append(skeleton_slot)
 
 
 	# Ghosts form the ranged rear line.
@@ -2377,6 +2634,16 @@ func get_compacted_combat_slot(
 
 
 		ordered_slots.append(int(current_ghost.get("formation_slot")))
+
+
+	for current_lich: Node2D in liches:
+		if not is_instance_valid(current_lich):
+			continue
+
+
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_lich)
+		if runtime != null:
+			ordered_slots.append(runtime.formation_slot)
 
 
 	for index: int in range(
@@ -2426,9 +2693,224 @@ func get_spawn_position(
 # REGISTRAR SKELETON
 # =========================================================
 
+func get_undead_runtime(unit: Node2D) -> UndeadRuntimeUnit:
+
+	return unit as UndeadRuntimeUnit
+
+
+func configure_undead_runtime(
+	unit: Node2D,
+	recipe_id: String,
+	maximum_hp: int,
+	base_damage: int,
+	attack_cooldown: float,
+	movement_speed: float,
+	attack_range: float,
+	slot: int
+) -> void:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+
+
+	if runtime == null:
+		push_error("Unidade sem UndeadRuntimeUnit: " + unit.name)
+		return
+
+
+	var recipe: Dictionary = UNDEAD_RECIPE_CATALOG.get_recipe(recipe_id)
+	runtime.configure_runtime(
+		recipe_id,
+		str(recipe.get("family", "unknown")),
+		str(recipe.get("role", "unknown")),
+		maximum_hp,
+		base_damage,
+		attack_cooldown,
+		movement_speed,
+		attack_range,
+		slot
+	)
+
+
+func get_runtime_hp(unit: Node2D, fallback_state: Dictionary) -> int:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+
+
+	if runtime != null:
+		return runtime.current_hp
+
+
+	return int(fallback_state.get(unit, 0))
+
+
+func set_runtime_hp(
+	unit: Node2D,
+	value: int,
+	fallback_state: Dictionary
+) -> void:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+
+
+	if runtime != null:
+		runtime.current_hp = value
+
+
+	# Transitional mirror retained for balance tests and save migration.
+	fallback_state[unit] = value
+
+
+func get_runtime_attack_timer(
+	unit: Node2D,
+	fallback_state: Dictionary
+) -> float:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+
+
+	if runtime != null:
+		return runtime.attack_timer
+
+
+	return float(fallback_state.get(unit, 0.0))
+
+
+func set_runtime_attack_timer(
+	unit: Node2D,
+	value: float,
+	fallback_state: Dictionary
+) -> void:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+
+
+	if runtime != null:
+		runtime.attack_timer = value
+
+
+	fallback_state[unit] = value
+
+
+func get_runtime_slot(unit: Node2D, fallback_state: Dictionary) -> int:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+
+
+	if runtime != null:
+		return runtime.formation_slot
+
+
+	return int(fallback_state.get(unit, -1))
+
+
+func set_runtime_slot(
+	unit: Node2D,
+	value: int,
+	fallback_state: Dictionary
+) -> void:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+
+
+	if runtime != null:
+		runtime.formation_slot = value
+
+
+	fallback_state[unit] = value
+
+
+func sync_physical_undead_runtime_profiles() -> void:
+
+	for current_skeleton: Node2D in skeletons:
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_skeleton)
+
+
+		if runtime == null:
+			continue
+
+
+		if runtime.is_temporary:
+			continue
+
+
+		if runtime.unit_type == UNDEAD_RECIPE_CATALOG.SKELETON_ARCHER:
+			runtime.damage = skeleton_archer_damage
+			runtime.attack_cooldown = skeleton_archer_attack_cooldown
+			runtime.movement_speed = skeleton_archer_speed
+			runtime.attack_range = get_skeleton_archer_effective_range()
+		else:
+			runtime.damage = skeleton_damage
+			runtime.attack_cooldown = skeleton_attack_cooldown
+			runtime.movement_speed = skeleton_speed
+
+
+	for current_zombie: Node2D in zombies:
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_zombie)
+
+
+		if runtime == null:
+			continue
+
+
+		runtime.damage = zombie_damage
+		runtime.attack_cooldown = zombie_attack_cooldown
+		runtime.movement_speed = zombie_speed
+
 func register_skeleton(
 	new_skeleton: Node2D,
 	slot: int
+) -> void:
+
+	register_bone_unit(
+		new_skeleton,
+		slot,
+		UNDEAD_RECIPE_CATALOG.SKELETON_WARRIOR,
+		skeleton_max_hp,
+		skeleton_damage,
+		skeleton_attack_cooldown,
+		skeleton_speed,
+		58.0
+	)
+
+
+func register_skeleton_archer(
+	new_archer: Node2D,
+	slot: int
+) -> void:
+
+	register_bone_unit(
+		new_archer,
+		slot,
+		UNDEAD_RECIPE_CATALOG.SKELETON_ARCHER,
+		skeleton_archer_max_hp,
+		skeleton_archer_damage,
+		skeleton_archer_attack_cooldown,
+		skeleton_archer_speed,
+		get_skeleton_archer_effective_range()
+	)
+
+
+func get_skeleton_archer_effective_range() -> float:
+
+	return (
+		skeleton_archer_attack_range
+		+ (
+			OSSUARY_BALLISTICS_RANGE_BONUS
+			if has_synergy(SYNERGY_OSSUARY_BALLISTICS)
+			else 0.0
+		)
+	)
+
+
+func register_bone_unit(
+	new_skeleton: Node2D,
+	slot: int,
+	recipe_id: String,
+	maximum_hp: int,
+	base_damage: int,
+	attack_cooldown: float,
+	movement_speed: float,
+	attack_range: float
 ) -> void:
 
 	skeletons.append(
@@ -2436,19 +2918,19 @@ func register_skeleton(
 	)
 
 
-	skeleton_hps[
-		new_skeleton
-	] = skeleton_max_hp
-
-
-	skeleton_attack_timers[
-		new_skeleton
-	] = 0.0
-
-
-	skeleton_slots[
-		new_skeleton
-	] = slot
+	configure_undead_runtime(
+		new_skeleton,
+		recipe_id,
+		maximum_hp,
+		base_damage,
+		attack_cooldown,
+		movement_speed,
+		attack_range,
+		slot
+	)
+	set_runtime_hp(new_skeleton, maximum_hp, skeleton_hps)
+	set_runtime_attack_timer(new_skeleton, 0.0, skeleton_attack_timers)
+	set_runtime_slot(new_skeleton, slot, skeleton_slots)
 
 
 	occupied_undead_slots[
@@ -2465,8 +2947,8 @@ func register_skeleton(
 
 	ensure_unit_health_bar(
 		new_skeleton,
-		skeleton_max_hp,
-		skeleton_max_hp,
+		maximum_hp,
+		maximum_hp,
 		UI_GREEN,
 		UNIT_SIZE
 	)
@@ -2517,7 +2999,167 @@ func get_total_undead_count() -> int:
 		skeletons.size()
 		+ zombies.size()
 		+ ghosts.size()
+		+ liches.size()
 	)
+
+
+func get_skeleton_archer_count() -> int:
+
+	var count: int = 0
+	for current_skeleton: Node2D in skeletons:
+		if not is_instance_valid(current_skeleton):
+			continue
+
+
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_skeleton)
+		if (
+			runtime != null
+			and runtime.unit_type == UNDEAD_RECIPE_CATALOG.SKELETON_ARCHER
+		):
+			count += 1
+
+
+	return count
+
+
+func get_temporary_thrall_count() -> int:
+
+	var count: int = 0
+	for current_skeleton: Node2D in skeletons:
+		if not is_instance_valid(current_skeleton):
+			continue
+
+
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_skeleton)
+		if runtime != null and runtime.is_temporary:
+			count += 1
+
+
+	return count
+
+
+func get_lich_summon_cap() -> int:
+
+	return LICH_SUMMON_POLICY.get_effective_cap(lich_summon_cap_bonus)
+
+
+func get_lich_summon_cooldown() -> float:
+
+	return LICH_SUMMON_POLICY.get_effective_cooldown(
+		lich_summon_cooldown_reduction
+	)
+
+
+func get_lich_summon_lifetime() -> float:
+
+	return LICH_SUMMON_POLICY.get_effective_lifetime(
+		lich_summon_lifetime_bonus
+	)
+
+
+func try_lich_summon(source_lich: Node2D) -> bool:
+
+	if not LICH_SUMMON_POLICY.can_summon(
+		souls,
+		get_temporary_thrall_count(),
+		get_lich_summon_cap(),
+		get_available_production_capacity()
+	):
+		return false
+
+
+	var free_slot: int = get_free_undead_slot()
+	var thrall_node: Node = skeleton_scene.instantiate()
+	var thrall: Node2D = thrall_node as Node2D
+	if free_slot < 0 or thrall == null:
+		thrall_node.queue_free()
+		return false
+
+
+	souls -= LICH_SUMMON_POLICY.BASE_SOUL_COST
+	add_child(thrall)
+	var empowered: bool = has_synergy(SYNERGY_SOUL_FOUNDRY)
+	register_bone_unit(
+		thrall,
+		free_slot,
+		UNDEAD_RECIPE_CATALOG.LICH_THRALL,
+		55 if empowered else 45,
+		8 if empowered else 6,
+		0.9,
+		190.0,
+		58.0
+	)
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(thrall)
+	runtime.configure_temporary(
+		get_lich_summon_lifetime(),
+		str(source_lich.get_instance_id())
+	)
+	var sprite: Sprite2D = thrall.get_node_or_null("UnitSprite") as Sprite2D
+	if sprite != null:
+		sprite.modulate = Color(0.72, 0.46, 0.95, 0.82)
+	total_thralls_summoned += 1
+	update_bones_ui()
+	return true
+
+
+func expire_temporary_thrall(
+	thrall: Node2D,
+	natural_expiration: bool = true
+) -> void:
+
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(thrall)
+	if runtime == null or not runtime.is_temporary:
+		return
+
+
+	occupied_undead_slots.erase(runtime.formation_slot)
+	skeleton_slots.erase(thrall)
+	skeleton_hps.erase(thrall)
+	skeleton_attack_timers.erase(thrall)
+	skeletons.erase(thrall)
+	if natural_expiration:
+		total_thralls_expired += 1
+	thrall.queue_free()
+	update_bones_ui()
+
+
+func update_lich_summons(delta: float) -> void:
+
+	for current_skeleton: Node2D in skeletons.duplicate():
+		if not is_instance_valid(current_skeleton):
+			continue
+
+
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_skeleton)
+		if runtime == null or not runtime.is_temporary:
+			continue
+
+
+		runtime.remaining_lifetime = maxf(runtime.remaining_lifetime - delta, 0.0)
+		if runtime.remaining_lifetime <= 0.0:
+			expire_temporary_thrall(current_skeleton)
+
+
+	for current_lich: Node2D in liches:
+		if not is_instance_valid(current_lich):
+			continue
+
+
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_lich)
+		if runtime == null:
+			continue
+
+
+		runtime.ability_timer = maxf(runtime.ability_timer - delta, 0.0)
+		if runtime.ability_timer > 0.0:
+			continue
+
+
+		runtime.ability_timer = (
+			get_lich_summon_cooldown()
+			if try_lich_summon(current_lich)
+			else 1.0
+		)
 
 
 func get_all_undead_units() -> Array[Node2D]:
@@ -2548,6 +3190,11 @@ func get_all_undead_units() -> Array[Node2D]:
 		if is_instance_valid(current_ghost):
 
 			units.append(current_ghost)
+
+
+	for current_lich: Node2D in liches:
+		if is_instance_valid(current_lich):
+			units.append(current_lich)
 
 
 	return units
@@ -2609,19 +3256,17 @@ func damage_undead(
 
 	if skeleton_hps.has(target):
 
-		var skeleton_hp: int = int(
-			skeleton_hps[target]
-		)
+		var skeleton_hp: int = get_runtime_hp(target, skeleton_hps)
 
 
 		skeleton_hp -= damage_amount
 
 
-		skeleton_hps[target] = skeleton_hp
+		set_runtime_hp(target, skeleton_hp, skeleton_hps)
 		update_unit_health_bar(
 			target,
 			skeleton_hp,
-			skeleton_max_hp
+			get_undead_runtime(target).maximum_hp
 		)
 
 
@@ -2644,15 +3289,13 @@ func damage_undead(
 
 	if zombie_hps.has(target):
 
-		var zombie_hp: int = int(
-			zombie_hps[target]
-		)
+		var zombie_hp: int = get_runtime_hp(target, zombie_hps)
 
 
 		zombie_hp -= damage_amount
 
 
-		zombie_hps[target] = zombie_hp
+		set_runtime_hp(target, zombie_hp, zombie_hps)
 		update_unit_health_bar(
 			target,
 			zombie_hp,
@@ -2695,6 +3338,25 @@ func damage_undead(
 			kill_ghost(target)
 
 
+		return
+
+
+	if liches.has(target):
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
+		if runtime == null:
+			return
+
+
+		runtime.current_hp -= damage_amount
+		update_unit_health_bar(
+			target,
+			runtime.current_hp,
+			runtime.maximum_hp
+		)
+		if runtime.current_hp <= 0:
+			kill_lich(target)
+
+
 func accelerate_skeleton_line_from_zombie_hit() -> void:
 
 	var accelerated_count: int = 0
@@ -2710,12 +3372,14 @@ func accelerate_skeleton_line_from_zombie_hit() -> void:
 			continue
 
 
-		var current_timer: float = float(
-			skeleton_attack_timers[current_skeleton]
+		var current_timer: float = get_runtime_attack_timer(
+			current_skeleton,
+			skeleton_attack_timers
 		)
-		skeleton_attack_timers[current_skeleton] = maxf(
-			current_timer - MEAT_SHIELD_TIMER_REDUCTION,
-			0.0
+		set_runtime_attack_timer(
+			current_skeleton,
+			maxf(current_timer - MEAT_SHIELD_TIMER_REDUCTION, 0.0),
+			skeleton_attack_timers
 		)
 		accelerated_count += 1
 
@@ -2747,7 +3411,9 @@ func attack_enemy(
 
 	var remaining_hp: int = apply_damage_to_enemy(
 		target_enemy,
-		get_modified_undead_damage(skeleton_damage)
+		get_modified_undead_damage(
+			get_undead_runtime(attacking_skeleton).damage
+		)
 	)
 
 
@@ -2765,15 +3431,19 @@ func attack_enemy(
 
 		remaining_hp = apply_damage_to_enemy(
 			target_enemy,
-			get_modified_undead_damage(skeleton_damage)
+			get_modified_undead_damage(
+				get_undead_runtime(attacking_skeleton).damage
+			)
 		)
 
 		double_strike_triggered = true
 
 
-	skeleton_attack_timers[
-		attacking_skeleton
-	] = skeleton_attack_cooldown
+	set_runtime_attack_timer(
+		attacking_skeleton,
+		get_undead_runtime(attacking_skeleton).attack_cooldown,
+		skeleton_attack_timers
+	)
 
 
 	print(
@@ -2809,23 +3479,17 @@ func damage_skeleton(
 		return
 
 
-	var current_hp: int = int(
-		skeleton_hps[
-			target
-		]
-	)
+	var current_hp: int = get_runtime_hp(target, skeleton_hps)
 
 
 	current_hp -= enemy_damage
 
 
-	skeleton_hps[
-		target
-	] = current_hp
+	set_runtime_hp(target, current_hp, skeleton_hps)
 	update_unit_health_bar(
 		target,
 		current_hp,
-		skeleton_max_hp
+		get_undead_runtime(target).maximum_hp
 	)
 
 
@@ -2850,6 +3514,12 @@ func kill_skeleton(
 	target: Node2D
 ) -> void:
 
+	var target_runtime: UndeadRuntimeUnit = get_undead_runtime(target)
+	if target_runtime != null and target_runtime.is_temporary:
+		expire_temporary_thrall(target, false)
+		return
+
+
 	# -----------------------------------------------------
 	# REASSEMBLY
 	# -----------------------------------------------------
@@ -2859,9 +3529,13 @@ func kill_skeleton(
 		and randf() < reassembly_chance
 	):
 
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
+		var unit_maximum_hp: int = (
+			runtime.maximum_hp if runtime != null else skeleton_max_hp
+		)
 		var revived_hp: int = int(
 			ceil(
-				float(skeleton_max_hp)
+				float(unit_maximum_hp)
 				* REASSEMBLY_HP_FRACTION
 			)
 		)
@@ -2870,18 +3544,16 @@ func kill_skeleton(
 			revived_hp = 1
 
 
-		skeleton_hps[
-			target
-		] = revived_hp
-
-
-		skeleton_attack_timers[
-			target
-		] = skeleton_attack_cooldown
+		set_runtime_hp(target, revived_hp, skeleton_hps)
+		set_runtime_attack_timer(
+			target,
+			skeleton_attack_cooldown,
+			skeleton_attack_timers
+		)
 		update_unit_health_bar(
 			target,
 			revived_hp,
-			skeleton_max_hp
+			unit_maximum_hp
 		)
 
 
@@ -2994,14 +3666,10 @@ func kill_skeleton(
 	# REMOVER SKELETON
 	# -----------------------------------------------------
 
-	if skeleton_slots.has(target):
+	var freed_slot: int = get_runtime_slot(target, skeleton_slots)
 
-		var freed_slot: int = int(
-			skeleton_slots[
-				target
-			]
-		)
 
+	if freed_slot >= 0:
 
 		occupied_undead_slots.erase(
 			freed_slot
@@ -4047,6 +4715,33 @@ func purchase_factory_efficiency_upgrade() -> bool:
 	return true
 
 
+func purchase_skeleton_archer_blueprint() -> bool:
+
+	if skeleton_archer_unlocked or factory_points < SKELETON_ARCHER_UNLOCK_COST:
+		return false
+
+
+	factory_points -= SKELETON_ARCHER_UNLOCK_COST
+	skeleton_archer_unlocked = true
+	check_synergy_unlocks()
+	update_factory_panel_ui()
+	update_bones_ui()
+	return true
+
+
+func purchase_lich_blueprint() -> bool:
+
+	if lich_unlocked or factory_points < LICH_BLUEPRINT_UNLOCK_COST:
+		return false
+
+
+	factory_points -= LICH_BLUEPRINT_UNLOCK_COST
+	lich_unlocked = true
+	update_factory_panel_ui()
+	update_ritual_panel_ui()
+	return true
+
+
 func activate_hematic_press_control() -> void:
 
 	if not hematic_press_unlocked:
@@ -4624,6 +5319,53 @@ func create_skeleton() -> void:
 	)
 
 
+func create_free_skeleton_archer(source: String) -> bool:
+
+	return create_skeleton_archer_internal(true, source)
+
+
+func create_skeleton_archer_internal(is_free: bool, source: String) -> bool:
+
+	if run_finished or not skeleton_archer_unlocked:
+		return false
+
+
+	var free_slot: int = get_free_undead_slot()
+	if free_slot < 0:
+		return false
+
+
+	var archer_node: Node = skeleton_archer_scene.instantiate()
+	var new_archer: Node2D = archer_node as Node2D
+	if new_archer == null:
+		archer_node.queue_free()
+		push_error("skeleton_archer.tscn precisa ter Node2D como raiz.")
+		return false
+
+
+	if not is_free:
+		if bones < skeleton_archer_cost:
+			archer_node.queue_free()
+			return false
+
+
+		bones -= skeleton_archer_cost
+
+
+	add_child(new_archer)
+	register_skeleton_archer(new_archer, free_slot)
+	total_skeletons_created += 1
+	update_bones_ui()
+	update_debug_ui()
+
+
+	if is_free:
+		print("NOVO SKELETON ARCHER CRIADO! | ORIGEM: ", source)
+
+
+	return true
+
+
 func create_free_skeleton(
 	source: String
 ) -> bool:
@@ -5080,6 +5822,16 @@ func get_upgrade_pool() -> Array[String]:
 	]
 
 
+	if lich_unlocked:
+		for lich_upgrade: String in [
+			UPGRADE_GRAVE_CONTRACT,
+			UPGRADE_RAPID_CONJURATION,
+			UPGRADE_BOUND_SERVITUDE
+		]:
+			if get_upgrade_count(lich_upgrade) < 2:
+				pool.append(lich_upgrade)
+
+
 	# Upgrades com limite deixam de aparecer
 	# quando já atingiram seu teto.
 
@@ -5480,11 +6232,16 @@ func apply_upgrade(
 
 
 			skeleton_damage = new_damage
+			skeleton_archer_damage = maxi(
+				int(ceil(float(skeleton_archer_damage) * 1.25)),
+				skeleton_archer_damage + 1
+			)
 
 
 		UPGRADE_BONE_PLATING:
 
 			skeleton_max_hp += 25
+			skeleton_archer_max_hp += 25
 
 
 			for current_skeleton: Node2D in skeletons:
@@ -5501,20 +6258,39 @@ func apply_upgrade(
 					continue
 
 
-				var current_hp: int = int(
-					skeleton_hps[
-						current_skeleton
-					]
+				var current_hp: int = get_runtime_hp(
+					current_skeleton,
+					skeleton_hps
+				)
+				var runtime: UndeadRuntimeUnit = get_undead_runtime(
+					current_skeleton
 				)
 
 
-				skeleton_hps[
-					current_skeleton
-				] = current_hp + 25
+				if runtime != null and runtime.is_temporary:
+					continue
+
+
+				if runtime != null:
+					runtime.apply_maximum_hp_increase(25)
+					current_hp = runtime.current_hp
+				else:
+					current_hp += 25
+
+
+				set_runtime_hp(
+					current_skeleton,
+					current_hp,
+					skeleton_hps
+				)
 				update_unit_health_bar(
 					current_skeleton,
-					current_hp + 25,
-					skeleton_max_hp
+					current_hp,
+					(
+						runtime.maximum_hp
+						if runtime != null
+						else skeleton_max_hp
+					)
 				)
 
 
@@ -5530,11 +6306,16 @@ func apply_upgrade(
 				* 0.85,
 				MIN_SKELETON_ATTACK_COOLDOWN
 			)
+			skeleton_archer_attack_cooldown = maxf(
+				skeleton_archer_attack_cooldown * 0.85,
+				MIN_SKELETON_ATTACK_COOLDOWN
+			)
 
 
 		UPGRADE_DEATH_MARCH:
 
 			skeleton_speed *= 1.20
+			skeleton_archer_speed *= 1.20
 
 
 		UPGRADE_MASS_PRODUCTION:
@@ -5545,6 +6326,9 @@ func apply_upgrade(
 			if skeleton_cost < 1:
 
 				skeleton_cost = 1
+
+
+			skeleton_archer_cost = maxi(skeleton_archer_cost - 1, 1)
 
 
 		UPGRADE_HEAVY_BONES:
@@ -5566,10 +6350,15 @@ func apply_upgrade(
 
 
 			skeleton_damage = heavy_damage
+			skeleton_archer_damage = maxi(
+				int(ceil(float(skeleton_archer_damage) * 1.50)),
+				skeleton_archer_damage + 1
+			)
 
 			# -20% attack speed equivale a
 			# aumentar o intervalo entre ataques em 25%.
 			skeleton_attack_cooldown *= 1.25
+			skeleton_archer_attack_cooldown *= 1.25
 
 
 		UPGRADE_BONE_HARVEST:
@@ -5634,6 +6423,21 @@ func apply_upgrade(
 			)
 
 
+		UPGRADE_GRAVE_CONTRACT:
+
+			lich_summon_cap_bonus += 2
+
+
+		UPGRADE_RAPID_CONJURATION:
+
+			lich_summon_cooldown_reduction += 1.5
+
+
+		UPGRADE_BOUND_SERVITUDE:
+
+			lich_summon_lifetime_bonus += 4.0
+
+
 		_:
 
 			push_error(
@@ -5642,6 +6446,7 @@ func apply_upgrade(
 			)
 
 
+	sync_physical_undead_runtime_profiles()
 	update_bones_ui()
 	update_debug_ui()
 
@@ -5663,13 +6468,21 @@ func increase_zombie_max_hp(
 			continue
 
 
-		zombie_hps[current_zombie] = (
-			int(zombie_hps[current_zombie])
-			+ amount
-		)
+		var current_hp: int = get_runtime_hp(current_zombie, zombie_hps)
+		var runtime: UndeadRuntimeUnit = get_undead_runtime(current_zombie)
+
+
+		if runtime != null:
+			runtime.apply_maximum_hp_increase(amount)
+			current_hp = runtime.current_hp
+		else:
+			current_hp += amount
+
+
+		set_runtime_hp(current_zombie, current_hp, zombie_hps)
 		update_unit_health_bar(
 			current_zombie,
-			int(zombie_hps[current_zombie]),
+			current_hp,
 			zombie_max_hp
 		)
 
@@ -5721,6 +6534,15 @@ func get_upgrade_name(
 
 		UPGRADE_CARRION_RECOVERY:
 			return "Carrion Recovery"
+
+		UPGRADE_GRAVE_CONTRACT:
+			return tr("UPGRADE_GRAVE_CONTRACT_NAME")
+
+		UPGRADE_RAPID_CONJURATION:
+			return tr("UPGRADE_RAPID_CONJURATION_NAME")
+
+		UPGRADE_BOUND_SERVITUDE:
+			return tr("UPGRADE_BOUND_SERVITUDE_NAME")
 
 		_:
 			return "Unknown Upgrade"
@@ -5797,6 +6619,15 @@ func get_upgrade_description(
 				"Zombies recover 4 HP"
 				+ "\nafter every attack"
 			)
+
+		UPGRADE_GRAVE_CONTRACT:
+			return tr("UPGRADE_GRAVE_CONTRACT_DESC")
+
+		UPGRADE_RAPID_CONJURATION:
+			return tr("UPGRADE_RAPID_CONJURATION_DESC")
+
+		UPGRADE_BOUND_SERVITUDE:
+			return tr("UPGRADE_BOUND_SERVITUDE_DESC")
 
 		_:
 			return "Unknown effect"
@@ -5933,6 +6764,15 @@ func get_upgrade_status(
 				+ " HP"
 			)
 
+		UPGRADE_GRAVE_CONTRACT:
+			return tr("UPGRADE_GRAVE_CONTRACT_STATUS") % get_lich_summon_cap()
+
+		UPGRADE_RAPID_CONJURATION:
+			return tr("UPGRADE_RAPID_CONJURATION_STATUS") % get_lich_summon_cooldown()
+
+		UPGRADE_BOUND_SERVITUDE:
+			return tr("UPGRADE_BOUND_SERVITUDE_STATUS") % get_lich_summon_lifetime()
+
 		_:
 			return ""
 
@@ -6013,6 +6853,21 @@ func check_synergy_unlocks() -> void:
 		)
 
 
+	if (
+		get_upgrade_count(UPGRADE_GRAVE_CONTRACT) > 0
+		and get_upgrade_count(UPGRADE_RAPID_CONJURATION) > 0
+	):
+		unlock_synergy(SYNERGY_SOUL_FOUNDRY)
+
+
+	if (
+		skeleton_archer_unlocked
+		and get_upgrade_count(UPGRADE_HEAVY_BONES) > 0
+		and get_upgrade_count(UPGRADE_DEATH_MARCH) > 0
+	):
+		unlock_synergy(SYNERGY_OSSUARY_BALLISTICS)
+
+
 func check_factory_synergy_unlocks() -> void:
 
 	if hematic_press_unlocked and factory_efficiency_level >= 2:
@@ -6033,6 +6888,10 @@ func unlock_synergy(
 	active_synergies[
 		synergy_id
 	] = true
+
+
+	if synergy_id == SYNERGY_OSSUARY_BALLISTICS:
+		sync_physical_undead_runtime_profiles()
 
 
 	print("")
@@ -6098,6 +6957,12 @@ func get_synergy_name(
 		SYNERGY_DARK_REFINERY:
 			return tr("SYNERGY_DARK_REFINERY")
 
+		SYNERGY_SOUL_FOUNDRY:
+			return tr("SYNERGY_SOUL_FOUNDRY")
+
+		SYNERGY_OSSUARY_BALLISTICS:
+			return tr("SYNERGY_OSSUARY_BALLISTICS")
+
 		_:
 			return "Unknown Synergy"
 
@@ -6156,6 +7021,12 @@ func get_synergy_description(
 				+ "\nBlood production costs 2 less Flesh."
 			)
 
+		SYNERGY_SOUL_FOUNDRY:
+			return tr("SYNERGY_SOUL_FOUNDRY_DESC")
+
+		SYNERGY_OSSUARY_BALLISTICS:
+			return tr("SYNERGY_OSSUARY_BALLISTICS_DESC")
+
 		_:
 			return ""
 
@@ -6212,7 +7083,9 @@ func update_synergy_ui() -> void:
 			SYNERGY_MEAT_SHIELD_PROTOCOL,
 			SYNERGY_CRIMSON_ASSEMBLY,
 			SYNERGY_PHANTOM_CONDUIT,
-			SYNERGY_DARK_REFINERY
+			SYNERGY_DARK_REFINERY,
+			SYNERGY_SOUL_FOUNDRY,
+			SYNERGY_OSSUARY_BALLISTICS
 		]
 
 
@@ -6521,6 +7394,10 @@ func finish_run(
 		create_zombie_button.disabled = true
 
 
+	if create_skeleton_archer_button != null:
+		create_skeleton_archer_button.disabled = true
+
+
 	for directive_button_value: Variant in processing_directive_buttons.values():
 		var directive_button: Button = directive_button_value as Button
 
@@ -6610,6 +7487,14 @@ func show_run_end_screen() -> void:
 		+ str(total_ghosts_created)
 		+ "\nGhosts Lost: "
 		+ str(total_ghosts_lost)
+		+ "\nLiches Built: "
+		+ str(total_liches_created)
+		+ "\nLiches Lost: "
+		+ str(total_liches_lost)
+		+ "\nThralls Summoned: "
+		+ str(total_thralls_summoned)
+		+ "\nThralls Expired: "
+		+ str(total_thralls_expired)
 		+ "\n\nECONOMY"
 		+ "\nBones Earned: "
 		+ str(total_bones_earned)
@@ -6691,7 +7576,9 @@ func get_run_synergy_summary() -> String:
 		SYNERGY_MEAT_SHIELD_PROTOCOL,
 		SYNERGY_CRIMSON_ASSEMBLY,
 		SYNERGY_PHANTOM_CONDUIT,
-		SYNERGY_DARK_REFINERY
+		SYNERGY_DARK_REFINERY,
+		SYNERGY_SOUL_FOUNDRY,
+		SYNERGY_OSSUARY_BALLISTICS
 	]
 
 
@@ -6846,6 +7733,12 @@ func create_zombie_ui() -> void:
 	add_child(
 		create_zombie_button
 	)
+
+
+	create_skeleton_archer_button = Button.new()
+	create_skeleton_archer_button.name = "CreateSkeletonArcherButton"
+	create_skeleton_archer_button.text = "SKELETON ARCHER LOCKED"
+	add_child(create_skeleton_archer_button)
 
 
 	production_quantity_selector = SpinBox.new()
@@ -7017,8 +7910,8 @@ func create_factory_panel_ui() -> void:
 
 	var close_button: Button = Button.new()
 	close_button.name = "FactoryCloseButton"
-	close_button.position = Vector2(740.0, 525.0)
-	close_button.size = Vector2(120.0, 48.0)
+	close_button.position = Vector2(770.0, 22.0)
+	close_button.size = Vector2(90.0, 45.0)
 	apply_button_style(close_button, UI_FLESH)
 	close_button.pressed.connect(toggle_factory_panel)
 	factory_panel.add_child(close_button)
@@ -7082,6 +7975,28 @@ func create_factory_panel_ui() -> void:
 	factory_efficiency_button.pressed.connect(
 		purchase_factory_efficiency_upgrade
 	)
+
+
+	factory_skeleton_archer_button = Button.new()
+	factory_skeleton_archer_button.name = "FactorySkeletonArcherButton"
+	factory_skeleton_archer_button.position = Vector2(40.0, 510.0)
+	factory_skeleton_archer_button.size = Vector2(330.0, 62.0)
+	factory_skeleton_archer_button.add_theme_font_size_override("font_size", 14)
+	apply_button_style(factory_skeleton_archer_button, UI_BONE)
+	factory_skeleton_archer_button.pressed.connect(
+		purchase_skeleton_archer_blueprint
+	)
+	factory_panel.add_child(factory_skeleton_archer_button)
+
+
+	factory_lich_button = Button.new()
+	factory_lich_button.name = "FactoryLichButton"
+	factory_lich_button.position = Vector2(390.0, 510.0)
+	factory_lich_button.size = Vector2(330.0, 62.0)
+	factory_lich_button.add_theme_font_size_override("font_size", 13)
+	apply_button_style(factory_lich_button, Color(0.62, 0.22, 0.82, 1.0))
+	factory_lich_button.pressed.connect(purchase_lich_blueprint)
+	factory_panel.add_child(factory_lich_button)
 
 
 	factory_panel.visible = false
@@ -7160,6 +8075,8 @@ func update_factory_panel_ui() -> void:
 	update_factory_hematic_press_button()
 	update_factory_soul_extractor_button()
 	update_factory_efficiency_button()
+	update_factory_skeleton_archer_button()
+	update_factory_lich_button()
 
 
 func update_factory_auto_collection_button() -> void:
@@ -7333,6 +8250,59 @@ func update_factory_efficiency_button() -> void:
 		)
 	)
 	factory_efficiency_button.disabled = at_max or factory_points < cost
+
+
+func update_factory_skeleton_archer_button() -> void:
+
+	if factory_skeleton_archer_button == null:
+		return
+
+
+	if skeleton_archer_unlocked:
+		factory_skeleton_archer_button.text = (
+			tr("FACTORY_ARCHER_BLUEPRINT")
+			+ "  |  " + tr("FACTORY_ARCHER_UNLOCKED")
+		)
+		factory_skeleton_archer_button.disabled = true
+		return
+
+
+	factory_skeleton_archer_button.text = (
+		tr("FACTORY_ARCHER_BLUEPRINT")
+		+ "  |  " + tr("FACTORY_ARCHER_UNLOCK")
+		+ "  |  " + tr("FACTORY_COST") + ": "
+		+ str(SKELETON_ARCHER_UNLOCK_COST) + " "
+		+ tr("FACTORY_POINTS")
+	)
+	factory_skeleton_archer_button.disabled = (
+		run_finished or factory_points < SKELETON_ARCHER_UNLOCK_COST
+	)
+
+
+func update_factory_lich_button() -> void:
+
+	if factory_lich_button == null:
+		return
+
+
+	if lich_unlocked:
+		factory_lich_button.text = (
+			tr("FACTORY_LICH_BLUEPRINT")
+			+ "\n" + tr("FACTORY_LICH_UNLOCKED")
+		)
+		factory_lich_button.disabled = true
+		return
+
+
+	factory_lich_button.text = (
+		tr("FACTORY_LICH_BLUEPRINT")
+		+ "\n" + tr("FACTORY_LICH_UNLOCK")
+		+ "  |  " + tr("FACTORY_COST") + ": "
+		+ str(LICH_BLUEPRINT_UNLOCK_COST)
+	)
+	factory_lich_button.disabled = (
+		run_finished or factory_points < LICH_BLUEPRINT_UNLOCK_COST
+	)
 
 
 func create_army_doctrine_ui() -> void:
@@ -7700,8 +8670,15 @@ func create_ritual_panel_ui() -> void:
 	ritual_extraction_button = create_ritual_button(Vector2(415.0, 205.0))
 	ritual_infusion_button = create_ritual_button(Vector2(70.0, 325.0))
 	ritual_ghost_button = create_ritual_button(Vector2(415.0, 325.0))
-	ritual_soul_focus_button = create_ritual_button(Vector2(70.0, 435.0))
-	ritual_soul_anchor_button = create_ritual_button(Vector2(415.0, 435.0))
+	ritual_soul_focus_button = create_ritual_button(Vector2(55.0, 435.0))
+	ritual_lich_button = create_ritual_button(Vector2(295.0, 435.0))
+	ritual_soul_anchor_button = create_ritual_button(Vector2(535.0, 435.0))
+	ritual_soul_focus_button.size = Vector2(210.0, 90.0)
+	ritual_lich_button.size = Vector2(210.0, 90.0)
+	ritual_soul_anchor_button.size = Vector2(210.0, 90.0)
+	ritual_soul_focus_button.add_theme_font_size_override("font_size", 13)
+	ritual_lich_button.add_theme_font_size_override("font_size", 13)
+	ritual_soul_anchor_button.add_theme_font_size_override("font_size", 13)
 	ritual_sacrifice_button.pressed.connect(
 		func() -> void:
 			activate_blood_fervor()
@@ -7725,6 +8702,11 @@ func create_ritual_panel_ui() -> void:
 	ritual_soul_focus_button.pressed.connect(
 		func() -> void:
 			purchase_soul_focus_upgrade()
+			update_ritual_panel_ui()
+	)
+	ritual_lich_button.pressed.connect(
+		func() -> void:
+			create_lich()
 			update_ritual_panel_ui()
 	)
 	ritual_soul_anchor_button.pressed.connect(
@@ -7801,6 +8783,8 @@ func update_ritual_panel_ui() -> void:
 		blood,
 		souls,
 		ghosts.size(),
+		liches.size(),
+		get_temporary_thrall_count(),
 		tr("COMMON_YES") if blood_fervor_active else tr("COMMON_NO")
 	]
 	var sacrifice_cost: int = get_blood_sacrifice_cost()
@@ -7818,6 +8802,16 @@ func update_ritual_panel_ui() -> void:
 		infusion_cost
 	]
 	ritual_ghost_button.text = tr("RITUAL_GHOST") % ghost_cost
+	ritual_lich_button.text = (
+		tr("RITUAL_LICH") % [
+			lich_cost,
+			get_lich_summon_cap(),
+			get_lich_summon_cooldown(),
+			LICH_SUMMON_POLICY.BASE_SOUL_COST
+		]
+		if lich_unlocked
+		else tr("RITUAL_LICH_LOCKED")
+	)
 	ritual_soul_focus_button.text = tr("RITUAL_SOUL_FOCUS") % [
 		soul_focus_level,
 		focus_cost
@@ -7838,6 +8832,12 @@ func update_ritual_panel_ui() -> void:
 	ritual_ghost_button.disabled = (
 		run_finished
 		or souls < ghost_cost
+		or get_available_production_capacity() <= 0
+	)
+	ritual_lich_button.disabled = (
+		run_finished
+		or not lich_unlocked
+		or souls < lich_cost
 		or get_available_production_capacity() <= 0
 	)
 	ritual_soul_focus_button.disabled = (
@@ -8055,6 +9055,12 @@ func update_metrics_ui() -> void:
 		+ str(total_ghosts_created)
 		+ "\n" + tr("METRICS_GHOSTS_LOST") + "               "
 		+ str(total_ghosts_lost)
+		+ "\n" + tr("METRICS_LICHES_BUILT") + "               "
+		+ str(total_liches_created)
+		+ "\n" + tr("METRICS_LICHES_LOST") + "                 "
+		+ str(total_liches_lost)
+		+ "\n" + tr("METRICS_THRALLS_ACTIVE") + "              "
+		+ str(get_temporary_thrall_count())
 		+ "\n" + tr("METRICS_ARMY_ACTIVE") + "                "
 		+ str(get_total_undead_count())
 	)
@@ -8120,40 +9126,47 @@ func configure_primary_hud_layout() -> void:
 
 
 	create_skeleton_button.position = Vector2(
-		400.0,
+		390.0,
 		930.0
 	)
 
 	create_skeleton_button.size = Vector2(
-		290.0,
+		205.0,
 		62.0
 	)
 	create_skeleton_button.z_index = 100
 
 	create_skeleton_button.add_theme_font_size_override(
 		"font_size",
-		14
+		12
 	)
 
 
 	create_zombie_button.position = Vector2(
-		735.0,
+		835.0,
 		930.0
 	)
 
 	create_zombie_button.size = Vector2(
-		290.0,
+		205.0,
 		62.0
 	)
 	create_zombie_button.z_index = 100
 
 	create_zombie_button.add_theme_font_size_override(
 		"font_size",
-		14
+		12
 	)
 
 
+	create_skeleton_archer_button.position = Vector2(612.0, 930.0)
+	create_skeleton_archer_button.size = Vector2(205.0, 62.0)
+	create_skeleton_archer_button.z_index = 100
+	create_skeleton_archer_button.add_theme_font_size_override("font_size", 12)
+
+
 	apply_button_style(create_skeleton_button, UI_BONE)
+	apply_button_style(create_skeleton_archer_button, Color(0.72, 0.82, 0.58, 1.0))
 	apply_button_style(create_zombie_button, UI_FLESH)
 
 
@@ -8232,10 +9245,16 @@ func update_debug_ui() -> void:
 		+ enemy_text
 		+ "\nSkeletons: "
 		+ str(skeletons.size())
+		+ "\nArchers: "
+		+ str(get_skeleton_archer_count())
 		+ "\nZombies: "
 		+ str(zombies.size())
 		+ "\nGhosts: "
 		+ str(ghosts.size())
+		+ "\nLiches: "
+		+ str(liches.size())
+		+ "\nThralls: "
+		+ str(get_temporary_thrall_count())
 		+ "\nArmy: "
 		+ str(get_total_undead_count())
 		+ "\nCorpses: "
@@ -8279,6 +9298,7 @@ func update_bones_ui() -> void:
 
 	var quantity: int = get_selected_production_quantity()
 	var skeleton_batch_cost: int = quantity * skeleton_cost
+	var archer_batch_cost: int = quantity * skeleton_archer_cost
 	var zombie_batch_cost: int = quantity * zombie_cost
 	var has_batch_capacity: bool = (
 		quantity <= get_available_production_capacity()
@@ -8308,6 +9328,18 @@ func update_bones_ui() -> void:
 	)
 
 
+	create_skeleton_archer_button.text = (
+		(
+			tr("PRODUCTION_QUEUE_ARCHER")
+			if skeleton_archer_unlocked
+			else tr("PRODUCTION_ARCHER_LOCKED")
+		)
+		+ " x" + str(quantity)
+		+ "\n" + str(archer_batch_cost)
+		+ " " + tr("RESOURCE_BONES")
+	)
+
+
 	create_skeleton_button.disabled = (
 		run_finished
 		or bones < skeleton_batch_cost
@@ -8321,6 +9353,15 @@ func update_bones_ui() -> void:
 		or flesh < zombie_batch_cost
 		or not has_batch_capacity
 		or zombie_production_queue.size() >= PRODUCTION_QUEUE_MAX_ORDERS
+	)
+
+
+	create_skeleton_archer_button.disabled = (
+		run_finished
+		or not skeleton_archer_unlocked
+		or bones < archer_batch_cost
+		or not has_batch_capacity
+		or skeleton_production_queue.size() >= PRODUCTION_QUEUE_MAX_ORDERS
 	)
 
 

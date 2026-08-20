@@ -24,6 +24,7 @@ func run_validation() -> void:
 		game.get_node("ProductionPanel") as Control,
 		game.get_node("ProcessingPanel") as Control,
 		game.create_skeleton_button,
+		game.create_skeleton_archer_button,
 		game.create_zombie_button,
 		game.production_quantity_selector,
 		game.production_queue_label,

@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 19/08/2026
+**Atualizado:** 20/08/2026
 
 ---
 
@@ -14,10 +14,10 @@
 6. Add manual bulk production orders with a controller-friendly quantity stepper. **Completed.**
 7. Prototype Army Doctrine planning: target composition, priority and reserves. **Completed; automatic execution waits for production queues.**
 8. Implement timed Skeleton Assembler and Flesh Vat queues. **Completed as V1.**
-9. Connect controlled Army Doctrine replenishment with activation/pause, priority and reserve enforcement.
-10. Extract generic Undead runtime state before implementing a third playable unit.
-11. Add Skeleton Archer first; use it to validate ranged player-unit architecture.
-12. Add Lich only after Souls/advanced recipe costs and summon limits are defined.
+9. Connect controlled Army Doctrine replenishment with activation/pause, priority and reserve enforcement. **Completed.**
+10. Extract generic Undead runtime state before implementing a third playable unit. **Completed with a compatibility bridge.**
+11. Add Skeleton Archer first; use it to validate ranged player-unit architecture. **Completed as V1.**
+12. Add Lich only after Souls/advanced recipe costs and summon limits are defined. **Completed as V1.**
 13. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice.
 14. Complete PT-BR, English and Spanish coverage after interface text stabilizes.
 
@@ -186,14 +186,14 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 
 # v0.4.0 — Build Diversity & Content
 
-- [ ] generic Undead runtime record/component before the third player unit family
-- [ ] Skeleton Warrior formalized as the base Bone melee recipe
-- [ ] Skeleton Archer ranged recipe and unlock
-- [ ] Zombie Tank formalized as the Flesh frontline recipe
-- [ ] Lich caster/summoner recipe and unlock
-- [ ] temporary-Skeleton summon cap/cooldown/resource constraint
+- [x] generic Undead runtime record/component before the third player unit family
+- [x] Skeleton Warrior formalized as the base Bone melee recipe
+- [x] Skeleton Archer ranged recipe and unlock
+- [x] Zombie Tank formalized as the Flesh frontline recipe
+- [x] Lich caster/summoner recipe and unlock
+- [x] temporary-Skeleton summon cap/cooldown/resource constraint
 - [ ] 30–40 upgrades
-- [ ] 10–15 synergies
+- [x] 10–15 synergies — current catalog reached 10
 - [ ] rare upgrades
 - [ ] rule-changing upgrades
 - [x] multiple enemy archetype foundation

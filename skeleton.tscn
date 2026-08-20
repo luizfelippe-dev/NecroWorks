@@ -1,8 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://x2jlhh16abtt"]
+[gd_scene load_steps=3 format=3 uid="uid://x2jlhh16abtt"]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/units/skeleton_prototype.png" id="1_sprite"]
+[ext_resource type="Script" path="res://scripts/units/undead_runtime_unit.gd" id="2_script"]
 
 [node name="Skeleton" type="Node2D" unique_id=602521724]
+script = ExtResource("2_script")
+unit_type = "skeleton_warrior"
+production_family = "bone"
+combat_role = "melee_damage"
+maximum_hp = 100
+damage = 10
+attack_cooldown = 0.7
+movement_speed = 180.0
+attack_range = 58.0
 
 [node name="UnitSprite" type="Sprite2D" parent="."]
 z_index = 10

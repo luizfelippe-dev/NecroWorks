@@ -4,11 +4,13 @@ extends SceneTree
 const MAIN_SCENE: PackedScene = preload("res://main.tscn")
 const VISUAL_IDS: Array[String] = [
 	"skeleton",
+	"skeleton_archer",
 	"zombie",
 	"human_warrior",
 	"mage",
 	"elf",
-	"foreman"
+	"foreman",
+	"lich"
 ]
 
 

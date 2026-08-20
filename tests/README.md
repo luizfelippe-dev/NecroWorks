@@ -214,3 +214,31 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 ```
 
 The five-second local milestone clip is reproducible with `tests/visual/milestone_capture_runner.gd` and Godot's `--write-movie` option.
+
+## Generic Undead runtime
+
+Validates recipe identity, combat roles, component-owned HP and formation state for Skeleton Warrior and Zombie Tank, including compatibility mirrors and live damage:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/units/undead_runtime_runner.gd
+```
+
+## Skeleton Archer
+
+Validates the Factory Point blueprint, locked/unlocked production, atomic Bone reservation, Skeleton Assembler completion, ranged recipe identity, rear target position, live damage, Bone Plating compatibility, Ossuary Ballistics range propagation and all three locales:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/units/skeleton_archer_runner.gd
+```
+
+## Lich summoning
+
+Validates blueprint purchase, Soul recipe, ranged combat, separate ability cooldown, Soul spending, global Thrall cap, army capacity, temporary lifetime, permanent-metric/death-upgrade isolation, three Lich upgrades, Soul Foundry and all three locales:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/units/lich_summoning_runner.gd
+```
+
+## Complete regression
+
+The current suite contains 21 `*_runner.gd` scenarios covering balance, economy, Factory, localization, units and visual bounds. All 21 pass in Godot 4.7.1 headless at this milestone.
