@@ -170,15 +170,17 @@ Health, damage and resource changes must also remain readable without opening De
 - [x] priority and minimum-resource-reserve policy model
 - [x] execute priority/reserve policy through timed production queues
 - [x] automation pause/disable controls
-- [ ] Blood production machine
-- [ ] Soul extraction machine
-- [ ] resource routing
-- [ ] efficiency
-- [ ] factory synergies
+- [x] Blood production machine
+- [x] Soul extraction machine
+- [x] resource routing
+- [x] efficiency
+- [x] factory synergies
 
 ### Gate
 
 NecroWorks must feel like a necromantic factory, not only an autobattler.
+
+**Mechanical gate completed:** Corpses and rare resources now move through visible timed queues, Army Doctrine maintains target composition, and six Factory cards provide collection, throughput, conversion, routing and efficiency decisions. Manual balance/presentation validation remains before the milestone tag.
 
 ---
 

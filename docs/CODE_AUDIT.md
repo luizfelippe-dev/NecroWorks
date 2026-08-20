@@ -83,6 +83,9 @@ Factory currency, purchases, toggles and automatic collection live at `tests/fac
 Atomic manual batch costs, counts and rejection paths live at `tests/factory/batch_production_runner.gd`.
 Army Doctrine targets, deficits, reserves, priorities and localized planning UI live at `tests/factory/army_doctrine_runner.gd`.
 Army Doctrine automatic queue execution, pause/resume, reserve preservation and replacement after losses live at `tests/factory/army_doctrine_automation_runner.gd`.
+Hematic Press unlock, Flesh reservation, timed Blood output and localized Factory UI live at `tests/factory/hematic_press_runner.gd`.
+Arcane Corpse routing, Soul extraction, efficiency scaling and Dark Refinery live at `tests/factory/rare_resource_routing_runner.gd`.
+Maximum active-synergy text containment lives at `tests/visual/synergy_bounds_runner.gd`.
 Timed Skeleton/Zombie queues, resource/capacity reservation and parallel completion live at `tests/factory/undead_production_queue_runner.gd`.
 Blood/Soul pacing, rituals, Ghost combat and rare-resource synergies live at `tests/economy/blood_soul_runner.gd`.
 Complete Bone/Flesh runs and active-Enemy cap stages live at `tests/balance/full_run_runner.gd`.

@@ -384,6 +384,14 @@ Army Doctrine now turns target composition into paid orders on the existing time
 
 ---
 
+## 20/08/2026 — Hematic Press V1
+
+Factory Control now uses a 3×2 machine grid. Hematic Press creates the first explicit resource-conversion line: a 3-Factory-Point unlock, followed by timed 12-Flesh-to-1-Blood orders in a three-unit queue. Flesh is reserved immediately, progress remains visible, and produced Blood feeds the existing Ritual economy and metrics. The cost intentionally competes with two base Zombies per Blood.
+
+Soul Extractor occupies the fifth card. Mage/Elf/Foreman Corpses retain arcane identity and can be diverted from material recovery into a separate timed Soul queue. The sixth card adds three Industrial Efficiency levels across both rare-resource lines. Efficiency II plus Hematic Press unlocks Dark Refinery. The right HUD synergy frame was expanded and validated against the complete eight-synergy list.
+
+---
+
 ## Next
 
 ### Production planning
@@ -393,7 +401,9 @@ Recommended next block:
 - playtest Factory Point income and upgrade timing;
 - playtest Army Doctrine during a complete manual run;
 - measure whether automatic replenishment makes late Waves too safe;
-- prototype the next Factory machine/routing branch.
+- playtest Hematic Press cost and unlock timing;
+- run a complete manual v0.3 playtest using Doctrine and rare-resource routing;
+- begin v0.4 unit recipes only after recording economy pressure and Factory Point timing.
 
 ### Enemy depth
 

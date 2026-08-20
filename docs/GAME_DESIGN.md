@@ -688,7 +688,11 @@ Army Doctrine V1 supports a combined maximum of 36 Undead, separate Skeleton/Zom
 
 Blood is a tempo resource. Blood Fervor consumes 3 Blood (2 with Crimson Assembly) to amplify all Undead damage for the current Wave. Hematic Extraction improves generation cadence; Crimson Infusion strengthens the buff.
 
+Hematic Press V1 adds a costly alternate source: unlocking costs 3 Factory Points and each queued cycle converts 12 Flesh into 1 Blood over 2 seconds. The intent is not passive income; the player sacrifices three-dimensional Flesh value—Zombie bodies, reserves and future automation—to accelerate Ritual timing.
+
 Souls are a composition/research resource. Four Souls summon a ranged Ghost. Spectral Focus increases Ghost damage, Ethereal Anchor increases durability, and Phantom Conduit improves casting cadence. Mage/Elf/Boss identities control Soul income so enemy composition affects economy.
+
+Soul Extractor V1 turns those identities into visible routing. After a 4-Point unlock, arcane routing sends Mage/Elf Corpses to a separate 2.5-second queue for Souls; common Corpses and arcane routing when paused continue through material recovery. The player therefore gives up immediate army resources to accelerate Ghost/research access. Industrial Efficiency has three levels, reducing Hematic cost by 2 Flesh and Soul cycle time by 0.25 s per level. Hematic Press plus Efficiency II unlocks Dark Refinery for an additional 2-Flesh discount.
 
 Full-run validation preserves current Bone/Flesh pacing: Balanced remains the Wave 1 recovery route, Bone Focus sustains high Skeleton turnover, and Flesh Focus supports a slower but durable Zombie army. Perfect automated play fills the army cap in both builds, so v0.3 machine/logistics sinks must address late stock saturation.
 

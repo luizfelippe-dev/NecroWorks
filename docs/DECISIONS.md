@@ -445,6 +445,10 @@ Blood arrives from Elites/Bosses and paced normal kills. Souls arrive primarily 
 
 Automated full runs showed the initial rare-resource rates were excessive. Normal Blood was reduced to one per eight kills before upgrades, Mage/Elf Soul drops were throttled, and Ghost cost became four Souls. These remain playtest values.
 
+The Hematic Press adds an explicit industrial exception for Blood: after a 3-Factory-Point unlock, 12 Flesh can be committed to produce 1 Blood over 2 seconds. This does not silently modify Corpse yields; it creates a visible trade-off between Zombie production and Ritual tempo. Souls remain identity-bound until the Soul Extractor can preserve magical-enemy scarcity.
+
+Soul Extractor preserves that scarcity by accepting only Corpses tagged from Mage, Elf or Foreman deaths. Routing is explicit and reversible: an arcane Corpse becomes either its normal Bone/Flesh material yield or timed Souls, never both. The unlock costs 4 Factory Points, the queue holds three Corpses, and efficiency reduces time without increasing Soul yield.
+
 ---
 
 ## Preserve the full design canvas before responsive reflow

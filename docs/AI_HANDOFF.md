@@ -843,6 +843,26 @@ Próximo passo: playtestar a Doutrina durante uma run manual completa e avançar
 
 O próximo trabalho da v0.3.0 é validar o ritmo da Doutrina em uma run manual e aprofundar máquinas, roteamento, eficiência e sinergias da Factory.
 
+### Rare-resource Factory V1 — implementada localmente
+
+- painel Factory reorganizado em grade 3×2;
+- desbloqueio custa 3 Pontos de Fábrica;
+- cada ordem reserva 12 Flesh e produz 1 Blood após 2 s;
+- fila suporta 3 unidades e mostra timer ao vivo;
+- Blood produzido atualiza recursos e métrica total;
+- runner: `tests/factory/hematic_press_runner.gd`.
+
+- Soul Extractor custa 4 Pontos de Fábrica;
+- Mage/Elf/Foreman geram cadáveres arcanos elegíveis;
+- rota arcana envia esses cadáveres para uma fila separada de 3 slots;
+- processamento material e extração de Soul são mutuamente exclusivos;
+- Eficiência Industrial possui 3 níveis e melhora as duas máquinas raras;
+- Hematic Press + Eficiência II libera Refinaria Sombria;
+- painel de sinergias comporta as 8 sinergias atuais;
+- runners: `rare_resource_routing_runner.gd` e `synergy_bounds_runner.gd`.
+
+Próximo passo recomendado: run manual completa da v0.3 e, se o ritmo estiver saudável, iniciar receitas/unidades da v0.4.
+
 ### Factory Automation / Army Doctrine — direção registrada
 
 O usuário quer reduzir cliques repetitivos sem remover estratégia. Direção preferida:

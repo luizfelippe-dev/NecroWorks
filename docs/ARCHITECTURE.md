@@ -167,6 +167,10 @@ Skeleton Assembler and Flesh Vat advance independently at 0.45 s and 0.80 s per 
 
 The localized Ritual panel exposes Blood Fervor, two Blood upgrades, Ghost production and two Soul upgrades. Crimson Assembly and Phantom Conduit use the existing synergy registry.
 
+The Hematic Press is the first rare-resource Factory machine. Unlock state, a three-unit integer queue and a single cycle timer remain run-scoped in `main.gd`. Flesh is reserved when an order enters the machine; completion adds Blood and updates the same lifetime-earned metric used by combat rewards. `tests/factory/hematic_press_runner.gd` protects the timed conversion contract.
+
+Soul Extractor operates as a second independent queue. Corpse metadata snapshots enemy archetype and arcane yield at death. `enqueue_corpse_for_selected_route()` is the single routing boundary used by manual clicks and Automated Retrieval: eligible Mage/Elf/Foreman Corpses enter Soul extraction when arcane routing is active; all others retain material processing. A Corpse remains in the shared world list until either queue completes, while `is_corpse_queued()` prevents double ownership. Industrial Efficiency modifies costs/cycles through getters rather than mutating queue entries. `tests/factory/rare_resource_routing_runner.gd` validates the contract.
+
 # Viewport policy
 
 The 1920×1080 design canvas uses `stretch/aspect="keep"`. Smaller or differently proportioned embedded windows scale/letterbox the complete canvas instead of cropping the lower production floor. `tests/visual/layout_bounds_runner.gd` protects primary lower controls inside design bounds.

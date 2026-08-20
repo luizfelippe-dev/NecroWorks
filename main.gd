@@ -13,6 +13,9 @@ signal batch_production_completed(
 )
 signal army_doctrine_changed(configuration: Dictionary)
 signal army_doctrine_automation_changed(enabled: bool)
+signal hematic_press_order_queued(queued_units: int)
+signal hematic_press_completed(remaining_units: int)
+signal soul_extractor_completed(souls_gained: int, remaining_corpses: int)
 signal production_order_queued(
 	unit_type: String,
 	quantity: int,
@@ -74,11 +77,15 @@ func refresh_world_localization() -> void:
 
 	for corpse: Button in corpses:
 		if is_instance_valid(corpse):
-			corpse.text = (
-				tr("CORPSE_QUEUED")
-				if is_corpse_queued(corpse)
-				else tr("CORPSE_LABEL")
-			)
+			var route: String = str(corpse.get_meta("processing_route", ""))
+			if route == "soul":
+				corpse.text = tr("CORPSE_SOUL_QUEUED")
+			elif is_corpse_queued(corpse):
+				corpse.text = tr("CORPSE_QUEUED")
+			elif get_corpse_soul_value(corpse) > 0:
+				corpse.text = tr("CORPSE_ARCANE")
+			else:
+				corpse.text = tr("CORPSE_LABEL")
 
 
 # =========================================================
@@ -1086,6 +1093,7 @@ const SYNERGY_OVERCLOCKED_OSSUARY: String = "overclocked_ossuary"
 const SYNERGY_MEAT_SHIELD_PROTOCOL: String = "meat_shield_protocol"
 const SYNERGY_CRIMSON_ASSEMBLY: String = "crimson_assembly"
 const SYNERGY_PHANTOM_CONDUIT: String = "phantom_conduit"
+const SYNERGY_DARK_REFINERY: String = "dark_refinery"
 
 const ASSEMBLY_LINE_CHANCE: float = 0.25
 const OVERCLOCK_DOUBLE_STRIKE_CHANCE: float = 0.20
@@ -1148,6 +1156,17 @@ const FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL: int = 3
 const FACTORY_AUTO_COLLECTION_SCAN_INTERVAL: float = 0.25
 const FACTORY_QUEUE_CAPACITY_PER_LEVEL: int = 2
 const FACTORY_PROCESSING_SECONDS_REDUCTION: float = 0.10
+const HEMATIC_PRESS_UNLOCK_COST: int = 3
+const HEMATIC_PRESS_FLESH_COST: int = 12
+const HEMATIC_PRESS_CYCLE_SECONDS: float = 2.0
+const HEMATIC_PRESS_QUEUE_CAPACITY: int = 3
+const SOUL_EXTRACTOR_UNLOCK_COST: int = 4
+const SOUL_EXTRACTOR_BASE_SECONDS: float = 2.5
+const SOUL_EXTRACTOR_QUEUE_CAPACITY: int = 3
+const FACTORY_EFFICIENCY_BASE_COST: int = 2
+const FACTORY_EFFICIENCY_MAX_LEVEL: int = 3
+const FACTORY_EFFICIENCY_FLESH_REDUCTION: int = 2
+const FACTORY_EFFICIENCY_SOUL_SECONDS_REDUCTION: float = 0.25
 
 var factory_points: int = 0
 var factory_queue_upgrade_level: int = 0
@@ -1155,6 +1174,14 @@ var factory_speed_upgrade_level: int = 0
 var automatic_corpse_collection_unlocked: bool = false
 var automatic_corpse_collection_enabled: bool = false
 var automatic_corpse_collection_timer: float = 0.0
+var hematic_press_unlocked: bool = false
+var hematic_press_queue: int = 0
+var hematic_press_timer: float = 0.0
+var soul_extractor_unlocked: bool = false
+var soul_routing_enabled: bool = false
+var soul_extraction_queue: Array[Dictionary] = []
+var soul_extractor_timer: float = 0.0
+var factory_efficiency_level: int = 0
 
 var army_doctrine_configured: bool = false
 var doctrine_target_skeletons: int = 0
@@ -1246,6 +1273,9 @@ var factory_points_label: Label = null
 var factory_auto_collection_button: Button = null
 var factory_queue_upgrade_button: Button = null
 var factory_speed_upgrade_button: Button = null
+var factory_hematic_press_button: Button = null
+var factory_soul_extractor_button: Button = null
+var factory_efficiency_button: Button = null
 var doctrine_nav_button: Button = null
 var doctrine_panel: ColorRect = null
 var doctrine_subtitle_label: Label = null
@@ -1359,6 +1389,8 @@ func _process(delta: float) -> void:
 	update_corpse_processor(delta)
 	update_automatic_corpse_collection(delta)
 	update_undead_production_queues(delta)
+	update_hematic_press(delta)
+	update_soul_extractor(delta)
 	update_army_doctrine_automation(delta)
 	refresh_production_queue_status()
 
@@ -3268,7 +3300,10 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 
 	spawn_corpse(
-		death_position
+		death_position,
+		defeated_archetype,
+		defeated_elite,
+		defeated_boss
 	)
 	apply_necromantic_kill_rewards(
 		defeated_archetype,
@@ -3531,7 +3566,10 @@ func boss_special_attack() -> void:
 # =========================================================
 
 func spawn_corpse(
-	spawn_position: Vector2
+	spawn_position: Vector2,
+	source_archetype: String = "human_warrior",
+	source_elite: bool = false,
+	source_boss: bool = false
 ) -> void:
 
 	var corpse_node: Node = (
@@ -3563,7 +3601,19 @@ func spawn_corpse(
 	corpses.append(
 		corpse
 	)
-	corpse.text = tr("CORPSE_LABEL")
+	var soul_value: int = (
+		2
+		if source_boss
+		else (1 if source_archetype in ["mage", "elf"] else 0)
+	)
+	corpse.set_meta("source_archetype", source_archetype)
+	corpse.set_meta("source_elite", source_elite)
+	corpse.set_meta("source_boss", source_boss)
+	corpse.set_meta("soul_value", soul_value)
+	corpse.set_meta("processing_route", "")
+	corpse.text = (
+		tr("CORPSE_ARCANE") if soul_value > 0 else tr("CORPSE_LABEL")
+	)
 
 
 	corpse.position = (
@@ -3575,7 +3625,7 @@ func spawn_corpse(
 
 		func() -> void:
 
-			enqueue_corpse_for_processing(
+			enqueue_corpse_for_selected_route(
 				corpse
 			)
 	)
@@ -3611,6 +3661,7 @@ func enqueue_corpse_for_processing(corpse: Button) -> bool:
 		}
 	)
 	corpse.disabled = true
+	corpse.set_meta("processing_route", "material")
 	corpse.text = tr("CORPSE_QUEUED")
 
 
@@ -3659,6 +3710,9 @@ func update_corpse_processor(delta: float) -> void:
 func is_corpse_queued(corpse: Button) -> bool:
 
 	for queue_entry: Dictionary in corpse_processing_queue:
+		if queue_entry.get("corpse") == corpse:
+			return true
+	for queue_entry: Dictionary in soul_extraction_queue:
 		if queue_entry.get("corpse") == corpse:
 			return true
 
@@ -3713,11 +3767,13 @@ func update_automatic_corpse_collection(delta: float) -> void:
 
 
 	for corpse: Button in corpses:
-		if corpse_processing_queue.size() >= corpse_processor_capacity:
-			break
+		if not is_instance_valid(corpse) or is_corpse_queued(corpse):
+			continue
 
 
-		if is_instance_valid(corpse) and not is_corpse_queued(corpse):
+		if soul_routing_enabled and get_corpse_soul_value(corpse) > 0:
+			enqueue_corpse_for_soul_extraction(corpse)
+		elif corpse_processing_queue.size() < corpse_processor_capacity:
 			enqueue_corpse_for_processing(corpse)
 
 
@@ -3808,6 +3864,223 @@ func purchase_factory_speed_upgrade() -> bool:
 	update_metrics_ui()
 	update_factory_panel_ui()
 	return true
+
+
+func purchase_hematic_press() -> bool:
+
+	if hematic_press_unlocked:
+		return false
+
+
+	if factory_points < HEMATIC_PRESS_UNLOCK_COST:
+		return false
+
+
+	factory_points -= HEMATIC_PRESS_UNLOCK_COST
+	hematic_press_unlocked = true
+	check_factory_synergy_unlocks()
+	update_factory_panel_ui()
+	return true
+
+
+func get_hematic_press_flesh_cost() -> int:
+
+	return maxi(
+		HEMATIC_PRESS_FLESH_COST
+		- factory_efficiency_level * FACTORY_EFFICIENCY_FLESH_REDUCTION
+		- (2 if has_synergy(SYNERGY_DARK_REFINERY) else 0),
+		4
+	)
+
+
+func enqueue_hematic_press() -> bool:
+
+	var flesh_cost: int = get_hematic_press_flesh_cost()
+
+	if (
+		run_finished
+		or not hematic_press_unlocked
+		or hematic_press_queue >= HEMATIC_PRESS_QUEUE_CAPACITY
+		or flesh < flesh_cost
+	):
+		return false
+
+
+	flesh -= flesh_cost
+	hematic_press_queue += 1
+	if hematic_press_timer <= 0.0:
+		hematic_press_timer = HEMATIC_PRESS_CYCLE_SECONDS
+	hematic_press_order_queued.emit(hematic_press_queue)
+	update_bones_ui()
+	return true
+
+
+func purchase_soul_extractor() -> bool:
+
+	if soul_extractor_unlocked or factory_points < SOUL_EXTRACTOR_UNLOCK_COST:
+		return false
+
+
+	factory_points -= SOUL_EXTRACTOR_UNLOCK_COST
+	soul_extractor_unlocked = true
+	update_factory_panel_ui()
+	return true
+
+
+func toggle_soul_extractor_control() -> void:
+
+	if not soul_extractor_unlocked:
+		purchase_soul_extractor()
+		return
+
+
+	soul_routing_enabled = not soul_routing_enabled
+	update_factory_panel_ui()
+
+
+func get_soul_extractor_cycle_seconds() -> float:
+
+	return maxf(
+		SOUL_EXTRACTOR_BASE_SECONDS
+		- factory_efficiency_level
+		* FACTORY_EFFICIENCY_SOUL_SECONDS_REDUCTION,
+		1.0
+	)
+
+
+func get_corpse_soul_value(corpse: Button) -> int:
+
+	if not is_instance_valid(corpse):
+		return 0
+
+
+	return maxi(int(corpse.get_meta("soul_value", 0)), 0)
+
+
+func enqueue_corpse_for_soul_extraction(corpse: Button) -> bool:
+
+	if (
+		run_finished
+		or not soul_extractor_unlocked
+		or not is_instance_valid(corpse)
+		or get_corpse_soul_value(corpse) <= 0
+		or is_corpse_queued(corpse)
+		or soul_extraction_queue.size() >= SOUL_EXTRACTOR_QUEUE_CAPACITY
+	):
+		return false
+
+
+	soul_extraction_queue.append({
+		"corpse": corpse,
+		"souls": get_corpse_soul_value(corpse)
+	})
+	corpse.disabled = true
+	corpse.set_meta("processing_route", "soul")
+	corpse.text = tr("CORPSE_SOUL_QUEUED")
+	if soul_extraction_queue.size() == 1:
+		soul_extractor_timer = get_soul_extractor_cycle_seconds()
+	update_factory_panel_ui()
+	return true
+
+
+func enqueue_corpse_for_selected_route(corpse: Button) -> bool:
+
+	if soul_routing_enabled and get_corpse_soul_value(corpse) > 0:
+		return enqueue_corpse_for_soul_extraction(corpse)
+
+
+	return enqueue_corpse_for_processing(corpse)
+
+
+func update_soul_extractor(delta: float) -> void:
+
+	for index: int in range(soul_extraction_queue.size() - 1, -1, -1):
+		if not is_instance_valid(soul_extraction_queue[index].get("corpse")):
+			soul_extraction_queue.remove_at(index)
+
+
+	if soul_extraction_queue.is_empty():
+		soul_extractor_timer = 0.0
+		return
+
+
+	soul_extractor_timer = maxf(soul_extractor_timer - delta, 0.0)
+	if factory_panel != null and factory_panel.visible:
+		update_factory_soul_extractor_button()
+	if soul_extractor_timer > 0.0:
+		return
+
+
+	var entry: Dictionary = soul_extraction_queue.pop_front()
+	var corpse: Button = entry.get("corpse") as Button
+	var souls_gained: int = maxi(int(entry.get("souls", 0)), 0)
+	if is_instance_valid(corpse):
+		corpses.erase(corpse)
+		corpse.queue_free()
+		total_corpses_processed += 1
+		souls += souls_gained
+		total_souls_earned += souls_gained
+		soul_extractor_completed.emit(souls_gained, soul_extraction_queue.size())
+	soul_extractor_timer = (
+		get_soul_extractor_cycle_seconds()
+		if not soul_extraction_queue.is_empty()
+		else 0.0
+	)
+	update_bones_ui()
+
+
+func purchase_factory_efficiency_upgrade() -> bool:
+
+	if factory_efficiency_level >= FACTORY_EFFICIENCY_MAX_LEVEL:
+		return false
+
+
+	var cost: int = FACTORY_EFFICIENCY_BASE_COST + factory_efficiency_level
+	if factory_points < cost:
+		return false
+
+
+	factory_points -= cost
+	factory_efficiency_level += 1
+	check_factory_synergy_unlocks()
+	update_factory_panel_ui()
+	return true
+
+
+func activate_hematic_press_control() -> void:
+
+	if not hematic_press_unlocked:
+		purchase_hematic_press()
+		return
+
+
+	enqueue_hematic_press()
+
+
+func update_hematic_press(delta: float) -> void:
+
+	if not hematic_press_unlocked or hematic_press_queue <= 0:
+		hematic_press_timer = 0.0
+		return
+
+
+	hematic_press_timer = maxf(hematic_press_timer - delta, 0.0)
+	if factory_panel != null and factory_panel.visible:
+		update_factory_hematic_press_button()
+	if hematic_press_timer > 0.0:
+		return
+
+
+	hematic_press_queue -= 1
+	blood += 1
+	total_blood_earned += 1
+	hematic_press_completed.emit(hematic_press_queue)
+	hematic_press_timer = (
+		HEMATIC_PRESS_CYCLE_SECONDS
+		if hematic_press_queue > 0
+		else 0.0
+	)
+	update_bones_ui()
 
 
 func award_factory_points_for_wave(wave_number: int) -> int:
@@ -5740,6 +6013,12 @@ func check_synergy_unlocks() -> void:
 		)
 
 
+func check_factory_synergy_unlocks() -> void:
+
+	if hematic_press_unlocked and factory_efficiency_level >= 2:
+		unlock_synergy(SYNERGY_DARK_REFINERY)
+
+
 func unlock_synergy(
 	synergy_id: String
 ) -> void:
@@ -5816,6 +6095,9 @@ func get_synergy_name(
 		SYNERGY_PHANTOM_CONDUIT:
 			return tr("SYNERGY_PHANTOM_CONDUIT")
 
+		SYNERGY_DARK_REFINERY:
+			return tr("SYNERGY_DARK_REFINERY")
+
 		_:
 			return "Unknown Synergy"
 
@@ -5868,6 +6150,12 @@ func get_synergy_description(
 				+ "\nGhost attack cooldown is reduced."
 			)
 
+		SYNERGY_DARK_REFINERY:
+			return (
+				"Hematic Press + Industrial Efficiency II"
+				+ "\nBlood production costs 2 less Flesh."
+			)
+
 		_:
 			return ""
 
@@ -5885,7 +6173,7 @@ func create_synergy_hud() -> void:
 
 	synergy_label.size = Vector2(
 		305.0,
-		125.0
+		220.0
 	)
 
 	synergy_label.z_index = 100
@@ -5923,7 +6211,8 @@ func update_synergy_ui() -> void:
 			SYNERGY_OVERCLOCKED_OSSUARY,
 			SYNERGY_MEAT_SHIELD_PROTOCOL,
 			SYNERGY_CRIMSON_ASSEMBLY,
-			SYNERGY_PHANTOM_CONDUIT
+			SYNERGY_PHANTOM_CONDUIT,
+			SYNERGY_DARK_REFINERY
 		]
 
 
@@ -6401,7 +6690,8 @@ func get_run_synergy_summary() -> String:
 		SYNERGY_OVERCLOCKED_OSSUARY,
 		SYNERGY_MEAT_SHIELD_PROTOCOL,
 		SYNERGY_CRIMSON_ASSEMBLY,
-		SYNERGY_PHANTOM_CONDUIT
+		SYNERGY_PHANTOM_CONDUIT,
+		SYNERGY_DARK_REFINERY
 	]
 
 
@@ -6605,7 +6895,7 @@ func create_visual_shell() -> void:
 
 	create_hud_panel(
 		"SynergyPanel",
-		Rect2(1540.0, 305.0, 355.0, 155.0)
+		Rect2(1540.0, 305.0, 355.0, 250.0)
 	)
 
 	resources_panel = create_hud_panel(
@@ -6736,7 +7026,7 @@ func create_factory_panel_ui() -> void:
 
 	factory_auto_collection_button = create_factory_upgrade_button(
 		"FactoryAutoCollectionButton",
-		Vector2(40.0, 140.0),
+		Vector2(40.0, 130.0),
 		UI_GREEN
 	)
 	factory_auto_collection_button.pressed.connect(
@@ -6746,7 +7036,7 @@ func create_factory_panel_ui() -> void:
 
 	factory_queue_upgrade_button = create_factory_upgrade_button(
 		"FactoryQueueUpgradeButton",
-		Vector2(320.0, 140.0),
+		Vector2(320.0, 130.0),
 		UI_BONE
 	)
 	factory_queue_upgrade_button.pressed.connect(
@@ -6756,11 +7046,41 @@ func create_factory_panel_ui() -> void:
 
 	factory_speed_upgrade_button = create_factory_upgrade_button(
 		"FactorySpeedUpgradeButton",
-		Vector2(600.0, 140.0),
+		Vector2(600.0, 130.0),
 		Color(0.35, 0.62, 0.82, 1.0)
 	)
 	factory_speed_upgrade_button.pressed.connect(
 		purchase_factory_speed_upgrade
+	)
+
+
+	factory_hematic_press_button = create_factory_upgrade_button(
+		"FactoryHematicPressButton",
+		Vector2(40.0, 320.0),
+		Color(0.68, 0.08, 0.14, 1.0)
+	)
+	factory_hematic_press_button.pressed.connect(
+		activate_hematic_press_control
+	)
+
+
+	factory_soul_extractor_button = create_factory_upgrade_button(
+		"FactorySoulExtractorButton",
+		Vector2(320.0, 320.0),
+		Color(0.48, 0.22, 0.72, 1.0)
+	)
+	factory_soul_extractor_button.pressed.connect(
+		toggle_soul_extractor_control
+	)
+
+
+	factory_efficiency_button = create_factory_upgrade_button(
+		"FactoryEfficiencyButton",
+		Vector2(600.0, 320.0),
+		Color(0.72, 0.55, 0.18, 1.0)
+	)
+	factory_efficiency_button.pressed.connect(
+		purchase_factory_efficiency_upgrade
 	)
 
 
@@ -6777,9 +7097,9 @@ func create_factory_upgrade_button(
 	var button: Button = Button.new()
 	button.name = button_name
 	button.position = button_position
-	button.size = Vector2(260.0, 330.0)
+	button.size = Vector2(260.0, 170.0)
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	button.add_theme_font_size_override("font_size", 17)
+	button.add_theme_font_size_override("font_size", 13)
 	apply_button_style(button, accent_color)
 	factory_panel.add_child(button)
 	return button
@@ -6837,6 +7157,9 @@ func update_factory_panel_ui() -> void:
 	update_factory_auto_collection_button()
 	update_factory_queue_upgrade_button()
 	update_factory_speed_upgrade_button()
+	update_factory_hematic_press_button()
+	update_factory_soul_extractor_button()
+	update_factory_efficiency_button()
 
 
 func update_factory_auto_collection_button() -> void:
@@ -6915,6 +7238,101 @@ func update_factory_speed_upgrade_button() -> void:
 		+ (tr("FACTORY_MAX_LEVEL") if at_max else tr("FACTORY_COST") + ": " + str(cost))
 	)
 	factory_speed_upgrade_button.disabled = at_max or factory_points < cost
+
+
+func update_factory_hematic_press_button() -> void:
+
+	if factory_hematic_press_button == null:
+		return
+
+
+	if not hematic_press_unlocked:
+		factory_hematic_press_button.text = (
+			tr("FACTORY_HEMATIC_PRESS")
+			+ "\n" + tr("FACTORY_HEMATIC_UNLOCK")
+			+ "\n" + tr("FACTORY_COST") + ": "
+			+ str(HEMATIC_PRESS_UNLOCK_COST) + " "
+			+ tr("FACTORY_POINTS")
+		)
+		factory_hematic_press_button.disabled = (
+			factory_points < HEMATIC_PRESS_UNLOCK_COST
+		)
+		return
+
+
+	factory_hematic_press_button.text = (
+		tr("FACTORY_HEMATIC_PRESS")
+		+ "\n" + tr("FACTORY_HEMATIC_QUEUE") + ": "
+		+ str(hematic_press_queue) + " / "
+		+ str(HEMATIC_PRESS_QUEUE_CAPACITY)
+		+ "  |  " + ("%0.1f" % hematic_press_timer) + "s"
+		+ "\n" + tr("FACTORY_HEMATIC_PRODUCE")
+		+ "\n" + str(get_hematic_press_flesh_cost()) + " "
+		+ tr("RESOURCE_FLESH")
+	)
+	factory_hematic_press_button.disabled = (
+		run_finished
+		or hematic_press_queue >= HEMATIC_PRESS_QUEUE_CAPACITY
+		or flesh < get_hematic_press_flesh_cost()
+	)
+
+
+func update_factory_soul_extractor_button() -> void:
+
+	if factory_soul_extractor_button == null:
+		return
+
+
+	if not soul_extractor_unlocked:
+		factory_soul_extractor_button.text = (
+			tr("FACTORY_SOUL_EXTRACTOR")
+			+ "\n" + tr("FACTORY_SOUL_UNLOCK")
+			+ "\n" + tr("FACTORY_COST") + ": "
+			+ str(SOUL_EXTRACTOR_UNLOCK_COST) + " "
+			+ tr("FACTORY_POINTS")
+		)
+		factory_soul_extractor_button.disabled = (
+			factory_points < SOUL_EXTRACTOR_UNLOCK_COST
+		)
+		return
+
+
+	factory_soul_extractor_button.text = (
+		tr("FACTORY_SOUL_EXTRACTOR")
+		+ "\n" + (
+			tr("FACTORY_SOUL_ROUTING_ON")
+			if soul_routing_enabled
+			else tr("FACTORY_SOUL_ROUTING_OFF")
+		)
+		+ "\n" + tr("FACTORY_HEMATIC_QUEUE") + ": "
+		+ str(soul_extraction_queue.size()) + " / "
+		+ str(SOUL_EXTRACTOR_QUEUE_CAPACITY)
+		+ "  |  " + ("%0.1f" % soul_extractor_timer) + "s"
+	)
+	factory_soul_extractor_button.disabled = run_finished
+
+
+func update_factory_efficiency_button() -> void:
+
+	if factory_efficiency_button == null:
+		return
+
+
+	var at_max: bool = factory_efficiency_level >= FACTORY_EFFICIENCY_MAX_LEVEL
+	var cost: int = FACTORY_EFFICIENCY_BASE_COST + factory_efficiency_level
+	factory_efficiency_button.text = (
+		tr("FACTORY_EFFICIENCY")
+		+ "\n" + tr("FACTORY_LEVEL") + ": "
+		+ str(factory_efficiency_level) + " / "
+		+ str(FACTORY_EFFICIENCY_MAX_LEVEL)
+		+ "\n" + tr("FACTORY_EFFICIENCY_EFFECT")
+		+ "\n" + (
+			tr("FACTORY_MAX_LEVEL")
+			if at_max
+			else tr("FACTORY_COST") + ": " + str(cost)
+		)
+	)
+	factory_efficiency_button.disabled = at_max or factory_points < cost
 
 
 func create_army_doctrine_ui() -> void:

@@ -130,6 +130,22 @@
   - minimum Bones/Flesh reserves are preserved before orders enter the timed machines;
   - pausing stops future orders without cancelling paid production;
   - persistent runner validates planning, dual-machine timing and loss replacement.
+- Hematic Press V1:
+  - rare-resource Factory card in a readable 3×2 control grid;
+  - unlock costs 3 Factory Points;
+  - each timed order converts 12 Flesh into 1 Blood over 2 seconds;
+  - three-unit queue reserves Flesh immediately and exposes live progress;
+  - persistent runner validates unlock, costs, queue timing, signals and localization.
+- Soul Extractor and rare-resource routing V1:
+  - Mage, Elf and Foreman deaths preserve arcane identity on their Corpses;
+  - a 4-Factory-Point unlock enables a reversible arcane routing mode;
+  - eligible Corpses can enter a separate three-slot timed Soul queue instead of material processing;
+  - common Corpses continue toward the selected Bone/Flesh directive;
+  - automatic collection respects the selected route and never double-queues a Corpse.
+- Industrial Efficiency and Dark Refinery:
+  - three upgrade levels reduce Hematic Flesh cost and Soul extraction time;
+  - Hematic Press plus Efficiency II unlocks Dark Refinery;
+  - Dark Refinery reduces Blood production by another 2 Flesh.
 - Necromantic Economy v0.2 completion:
   - Blood generation, Blood Fervor sacrifice and Hematic/Crimson upgrades;
   - Crimson Assembly synergy reduces the recurring sacrifice cost;
@@ -188,6 +204,7 @@ Zombie Cost: 6 Flesh
 
 ### Fixed
 
+- Active Synergies panel now contains all eight current entries without text escaping its frame; a persistent bounds runner protects the maximum list.
 - Lower Factory HUD no longer extends below the usable embedded-game viewport:
   - Resources, production and Corpse-processing panels use a compact 170 px shell;
   - production controls, queue status and processing directives remain fully visible;

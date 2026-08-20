@@ -244,4 +244,4 @@ Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.
 
 O painel de Doutrina do Exército permite salvar composição-alvo, reservas mínimas e prioridade de produção. A reposição pode ser iniciada ou pausada pelo jogador e usa exclusivamente as filas temporizadas independentes do Skeleton Assembler e da Flesh Vat. Pedidos reservam recursos e vagas atomicamente, e cada máquina entrega uma unidade por ciclo.
 
-Próximo foco: v0.3.0 — aprofundar a fábrica com máquinas de Sangue/Almas, roteamento, eficiência e sinergias próprias.
+Próximo foco: validar manualmente o fechamento mecânico da v0.3.0 e iniciar a v0.4.0 com famílias de tropas, receitas desbloqueáveis e maior diversidade de builds.

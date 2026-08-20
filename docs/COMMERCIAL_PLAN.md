@@ -93,6 +93,10 @@ A future marketing clip can communicate the loop in a few seconds: an enemy fall
 
 Army Doctrine now connects a readable target such as `5 Zombies + 30 Skeletons` to real Skeleton Assembler/Flesh Vat queues. Losses create timed, paid replacements while priority, reserves and pause remain player-controlled. The next commercially legible proof is presentation: machine motion, production feedback and sound must make this strategic automation visible in short footage.
 
+Hematic Press adds a second concise factory decision for footage: spend Flesh on durable Zombies or visibly compress it into Blood for a Wave ritual. The current card/timer is mechanically readable; it still needs a physical machine animation and audio beat before marketing capture.
+
+Soul Extractor completes the short routing story: an arcane enemy dies, its distinct Corpse is diverted away from materials, and a timed machine produces Souls for Ghosts. The six-card Factory grid and Dark Refinery synergy now support a readable v0.3 systems clip, but visual machinery/VFX/SFX remain the presentation gate.
+
 Necromantic Economy v0.2 adds a second marketable layer: Blood sacrifice temporarily amplifies the army, while Souls become ranged Ghosts or permanent spectral upgrades. A five-second local milestone capture is generated at `.godot/necroworks_v020_milestone.avi`; future public footage should replace the temporary Ghost recolor and add spell/VFX/audio impact.
 
 ---

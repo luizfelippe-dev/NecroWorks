@@ -168,6 +168,32 @@ Validates rare-resource rewards, Blood Fervor, Blood/Soul upgrades, both new syn
 Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/economy/blood_soul_runner.gd
 ```
 
+## Hematic Press
+
+Validates Factory Point unlock, immediate Flesh reservation, three-unit queue,
+two-second Blood cycles, completion signals, metrics and localized Factory UI:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/factory/hematic_press_runner.gd
+```
+
+## Rare-resource routing
+
+Validates arcane Corpse identity, mutually exclusive material/Soul routing,
+Soul Extractor timing, Industrial Efficiency and Dark Refinery:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/factory/rare_resource_routing_runner.gd
+```
+
+## Synergy panel bounds
+
+Validates that the complete current synergy catalog remains inside the right HUD frame:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/visual/synergy_bounds_runner.gd
+```
+
 ## Complete v0.2 balance gate
 
 Runs real Bone/Skeleton and Flesh/Zombie strategies from Wave 1 through the Foreman, validating active-Enemy cap stages and distinct build outcomes:
