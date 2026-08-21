@@ -112,7 +112,15 @@ Before the demo, extend persistent coverage for:
 - synergy unlocks;
 - defeat recovery;
 - wave progression;
-- save compatibility.
+- save migration from future schema versions.
+
+### P1 — Persistence boundary (foundation completed)
+
+The application now separates disk I/O from gameplay state: `RunSaveStore` owns validated versioned JSON, while `main.gd` produces and restores a documented checkpoint dictionary. Corrupt, absent and incompatible saves fail closed and disable Continue instead of partially mutating a run.
+
+The current checkpoint is Wave-granular rather than frame-perfect. Active enemies, Corpse queues and fractional machine timers restart at the saved Wave boundary. This is intentional for V1, but the policy must be surfaced to playtesters and revisited before Steam cloud-save integration.
+
+Settings and application-shell navigation now have persistent automated coverage. The full headless regression is 26/26 on Godot 4.7.1.
 
 ### P2 — Prototype unit scenes
 

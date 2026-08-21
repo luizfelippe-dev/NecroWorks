@@ -370,3 +370,9 @@ A feature should justify itself by improving at least one:
 - quality.
 
 Otherwise postpone/cut.
+
+## Vertical-slice usability milestone — 21/08/2026
+
+The project now opens through a localized Main Menu and includes Pause, persistent Options and Continue. This removes a major prototype-only first impression and establishes the storage boundary required for later Steam Cloud work.
+
+This is necessary but not yet sufficient for a public demo. The next commercial-impact priorities remain a full manual UX pass, stronger combat VFX/SFX/animation, a second encounter climax, onboarding/lore delivery and representative store-quality footage.

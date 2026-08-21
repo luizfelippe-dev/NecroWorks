@@ -1137,3 +1137,18 @@ Próximo passo recomendado: run manual Archer/Lich sob pressão dos novos ataque
 - regressão atual: 24/24 runners aprovados; as duas runs determinísticas ainda vencem o Foreman.
 
 Próximo passo recomendado: uma run manual com Arqueiros/Liches nas Waves 10/15. Depois, priorizar segundo Boss ou evento de decisão antes de criar outra unidade.
+
+## Atualização 21/08/2026 — shell, opções e Continue V1
+
+- `app.tscn` é agora a cena de F5 e mantém `main.tscn` como gameplay instanciável e cena direta de F6;
+- Menu Principal: Nova Partida, Continuar, Opções e Sair;
+- `Esc` abre Pausa com Continuar, Opções, Salvar/voltar e Reiniciar;
+- `SettingsStore` persiste idioma, volume geral e tela cheia em ConfigFile;
+- `RunSaveStore` persiste JSON versionado e rejeita saves ausentes, corrompidos ou incompatíveis;
+- checkpoints automáticos ocorrem entre Waves; Salvar e Voltar cria um snapshot manual;
+- restauração cobre Wave, recursos, exército permanente, upgrades, Fábrica e Doutrina;
+- interface do shell possui textos EN/PT-BR/ES;
+- runners novos: `tests/core/persistence_runner.gd` e `tests/core/game_shell_runner.gd`;
+- regressão completa: 26/26 runners aprovados em Godot 4.7.1 headless.
+
+Limite conhecido: o save V1 reinicia a Wave registrada; inimigos ativos, Corpses/filas e frações de timers não são uma restauração frame a frame. Próximo passo recomendado: run manual do fluxo F5 completo e, depois, segundo Boss/evento de decisão.

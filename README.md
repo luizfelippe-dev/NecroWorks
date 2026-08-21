@@ -26,6 +26,10 @@ Enemy
 
 ## Estado atual
 
+Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de entrada com Nova Partida, Continuar, Opções e Sair. `F6` sobre `main.tscn` permanece disponível para testar diretamente o gameplay.
+
+O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistidos em `user://necroworks_settings.cfg`; o checkpoint versionado de partida usa `user://necroworks_run.json` e restaura onda, recursos, exército, upgrades, Fábrica e Doutrina.
+
 ### `v0.1.0 — First Run`
 
 Funcionalmente completo e validado:

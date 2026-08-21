@@ -747,3 +747,5 @@ The vertical slice requires:
 - Options for audio, display, language and accessibility basics;
 - remappable controls where practical;
 - persistent settings and versioned save data.
+
+V1 status: Main Menu, Pause, Continue/New Run, language, master volume, fullscreen and versioned run checkpoints are implemented. Continue resumes from a recorded Wave with permanent strategic state; it does not promise a frame-perfect mid-combat resume.

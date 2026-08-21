@@ -474,3 +474,13 @@ Potential future optimization:
 - batching visuals.
 
 Not required yet.
+
+# Application shell and persistence
+
+`app.tscn` is the F5 application entry point. It owns `GameShell`, the Main Menu, Pause and Options overlays, and instantiates `main.tscn` as the gameplay child. Keeping `main.tscn` independent preserves direct F6 iteration and all gameplay runners.
+
+`SettingsStore` sanitizes and persists locale, master volume and fullscreen mode in a versioned ConfigFile. `RunSaveStore` validates schema version 1 JSON before exposing a Continue checkpoint. `main.gd` owns serialization of run-scoped gameplay state because it remains the authoritative orchestrator; the shell owns disk I/O and lifecycle navigation.
+
+Automatic checkpoints are requested after an upgrade is committed and before the next Wave starts. Save-and-return also snapshots the current run. Loading restarts the recorded Wave with the saved permanent army and economy instead of attempting a fragile frame-perfect combat restore.
+
+`tests/core/persistence_runner.gd` validates sanitation, JSON round-trip and gameplay restore. `tests/core/game_shell_runner.gd` protects navigation, pause behavior and localized menu copy. The complete regression contains 26 runners.

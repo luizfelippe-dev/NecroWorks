@@ -241,7 +241,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 
 ## Complete regression
 
-The current suite contains 24 `*_runner.gd` scenarios covering balance, combat, economy, Factory, localization, units, upgrades and visual bounds. All 24 pass in Godot 4.7.1 headless at this milestone.
+At the Elite milestone, the suite contained 24 `*_runner.gd` scenarios covering balance, combat, economy, Factory, localization, units, upgrades and visual bounds. Its current total is recorded at the end of this document.
 
 ## Advanced Enemy behavior
 
@@ -266,3 +266,14 @@ Validates Wave 8 eligibility, one-time selection, per-Wave Emergency Reclamation
 ```powershell
 Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/upgrades/rare_upgrade_runner.gd
 ```
+
+## Application shell and persistence
+
+Validates settings sanitation, checkpoint round-trip/restore, localized Main/Pause/Options navigation and pause state:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/core/persistence_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/core/game_shell_runner.gd
+```
+
+The current suite contains 26 `*_runner.gd` scenarios. All 26 pass in Godot 4.7.1 headless at this milestone.

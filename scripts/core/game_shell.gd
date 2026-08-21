@@ -1,0 +1,311 @@
+extends Node
+
+
+const GAME_SCENE: PackedScene = preload("res://main.tscn")
+const ACCENT: Color = Color("55d83e")
+const PANEL: Color = Color(0.018, 0.024, 0.022, 0.98)
+const BORDER: Color = Color(0.32, 0.31, 0.25, 1.0)
+
+var current_game: Node = null
+var settings: Dictionary = {}
+var options_return_to_pause: bool = false
+
+var ui_layer: CanvasLayer
+var main_menu: Control
+var pause_menu: Control
+var options_menu: Control
+var continue_button: Button
+var title_label: Label
+var subtitle_label: Label
+var pause_title: Label
+var options_title: Label
+var language_label: Label
+var volume_label: Label
+var fullscreen_check: CheckButton
+var language_option: OptionButton
+var volume_slider: HSlider
+var options_apply_button: Button
+var options_back_button: Button
+var localized_buttons: Dictionary = {}
+
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	settings = SettingsStore.apply_settings(SettingsStore.load_settings())
+	build_interface()
+	refresh_localized_text()
+	show_main_menu()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		refresh_localized_text()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	get_viewport().set_input_as_handled()
+	if options_menu.visible:
+		close_options()
+	elif current_game != null:
+		if get_tree().paused:
+			resume_game()
+		else:
+			pause_game()
+
+
+func build_interface() -> void:
+	ui_layer = CanvasLayer.new()
+	ui_layer.layer = 100
+	ui_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(ui_layer)
+
+	main_menu = create_screen("MainMenu", Color(0.002, 0.006, 0.005, 1.0))
+	var main_box := create_center_panel(main_menu, Vector2(620.0, 650.0))
+	title_label = create_label(42, ACCENT)
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	main_box.add_child(title_label)
+	subtitle_label = create_label(17, Color(0.78, 0.77, 0.67))
+	subtitle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	main_box.add_child(subtitle_label)
+	main_box.add_child(create_separator())
+	add_localized_button(main_box, "MENU_NEW_RUN", start_new_run)
+	continue_button = add_localized_button(main_box, "MENU_CONTINUE", continue_run)
+	add_localized_button(main_box, "MENU_OPTIONS", open_options_from_main)
+	add_localized_button(main_box, "MENU_QUIT", quit_game)
+
+	pause_menu = create_screen("PauseMenu", Color(0.0, 0.0, 0.0, 0.72))
+	var pause_box := create_center_panel(pause_menu, Vector2(500.0, 500.0))
+	pause_title = create_label(34, ACCENT)
+	pause_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pause_box.add_child(pause_title)
+	pause_box.add_child(create_separator())
+	add_localized_button(pause_box, "PAUSE_RESUME", resume_game)
+	add_localized_button(pause_box, "MENU_OPTIONS", open_options_from_pause)
+	add_localized_button(pause_box, "PAUSE_SAVE_MENU", save_and_return_to_menu)
+	add_localized_button(pause_box, "PAUSE_RESTART", restart_game)
+
+	options_menu = create_screen("OptionsMenu", Color(0.0, 0.0, 0.0, 0.84))
+	var options_box := create_center_panel(options_menu, Vector2(640.0, 610.0))
+	options_title = create_label(34, ACCENT)
+	options_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	options_box.add_child(options_title)
+	options_box.add_child(create_separator())
+	language_label = create_label(18)
+	options_box.add_child(language_label)
+	language_option = OptionButton.new()
+	language_option.custom_minimum_size = Vector2(0.0, 48.0)
+	language_option.add_item("English", 0)
+	language_option.add_item("Português (Brasil)", 1)
+	language_option.add_item("Español", 2)
+	options_box.add_child(language_option)
+	volume_label = create_label(18)
+	options_box.add_child(volume_label)
+	volume_slider = HSlider.new()
+	volume_slider.min_value = 0.0
+	volume_slider.max_value = 1.0
+	volume_slider.step = 0.05
+	volume_slider.custom_minimum_size = Vector2(0.0, 44.0)
+	options_box.add_child(volume_slider)
+	fullscreen_check = CheckButton.new()
+	fullscreen_check.custom_minimum_size = Vector2(0.0, 48.0)
+	options_box.add_child(fullscreen_check)
+	options_box.add_child(create_separator())
+	options_apply_button = add_localized_button(options_box, "OPTIONS_APPLY", apply_options)
+	options_back_button = add_localized_button(options_box, "OPTIONS_BACK", close_options)
+
+	pause_menu.visible = false
+	options_menu.visible = false
+
+
+func create_screen(screen_name: String, color: Color) -> Control:
+	var screen := ColorRect.new()
+	screen.name = screen_name
+	screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	screen.color = color
+	screen.mouse_filter = Control.MOUSE_FILTER_STOP
+	ui_layer.add_child(screen)
+	return screen
+
+
+func create_center_panel(parent: Control, minimum_size: Vector2) -> VBoxContainer:
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	parent.add_child(center)
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = minimum_size
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = PANEL
+	panel_style.border_color = BORDER
+	panel_style.set_border_width_all(3)
+	panel_style.set_corner_radius_all(5)
+	panel_style.content_margin_left = 48.0
+	panel_style.content_margin_right = 48.0
+	panel_style.content_margin_top = 42.0
+	panel_style.content_margin_bottom = 42.0
+	panel.add_theme_stylebox_override("panel", panel_style)
+	center.add_child(panel)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 18)
+	panel.add_child(box)
+	return box
+
+
+func create_label(font_size: int, color: Color = Color(0.9, 0.9, 0.84)) -> Label:
+	var label := Label.new()
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", color)
+	return label
+
+
+func create_separator() -> HSeparator:
+	var separator := HSeparator.new()
+	separator.custom_minimum_size.y = 12.0
+	return separator
+
+
+func add_localized_button(
+	parent: VBoxContainer,
+	translation_key: String,
+	callback: Callable
+) -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(0.0, 56.0)
+	button.add_theme_font_size_override("font_size", 18)
+	button.pressed.connect(callback)
+	parent.add_child(button)
+	localized_buttons[button] = translation_key
+	return button
+
+
+func refresh_localized_text() -> void:
+	if title_label == null:
+		return
+	title_label.text = tr("GAME_TITLE")
+	subtitle_label.text = tr("GAME_TAGLINE")
+	pause_title.text = tr("PAUSE_TITLE")
+	options_title.text = tr("OPTIONS_TITLE")
+	language_label.text = tr("OPTIONS_LANGUAGE")
+	volume_label.text = tr("OPTIONS_MASTER_VOLUME")
+	fullscreen_check.text = tr("OPTIONS_FULLSCREEN")
+	for button_value: Variant in localized_buttons:
+		var button: Button = button_value as Button
+		if is_instance_valid(button):
+			button.text = tr(str(localized_buttons[button_value]))
+
+
+func show_main_menu() -> void:
+	get_tree().paused = false
+	main_menu.visible = true
+	pause_menu.visible = false
+	options_menu.visible = false
+	continue_button.disabled = not RunSaveStore.has_checkpoint()
+
+
+func start_new_run() -> void:
+	RunSaveStore.delete_checkpoint()
+	start_game({})
+
+
+func continue_run() -> void:
+	var checkpoint: Dictionary = RunSaveStore.load_checkpoint()
+	if checkpoint.is_empty():
+		show_main_menu()
+		return
+	start_game(checkpoint)
+
+
+func start_game(checkpoint: Dictionary) -> void:
+	get_tree().paused = false
+	if is_instance_valid(current_game):
+		current_game.queue_free()
+	current_game = GAME_SCENE.instantiate()
+	add_child(current_game)
+	move_child(current_game, 0)
+	current_game.run_checkpoint_requested.connect(save_checkpoint)
+	current_game.run_completed.connect(on_run_completed)
+	main_menu.visible = false
+	pause_menu.visible = false
+	options_menu.visible = false
+	if not checkpoint.is_empty():
+		current_game.restore_checkpoint_state(checkpoint)
+
+
+func save_checkpoint(state: Dictionary) -> void:
+	RunSaveStore.save_checkpoint(state)
+
+
+func on_run_completed(_victory: bool) -> void:
+	RunSaveStore.delete_checkpoint()
+
+
+func pause_game() -> void:
+	if current_game == null:
+		return
+	get_tree().paused = true
+	pause_menu.visible = true
+
+
+func resume_game() -> void:
+	pause_menu.visible = false
+	options_menu.visible = false
+	get_tree().paused = false
+
+
+func save_and_return_to_menu() -> void:
+	if is_instance_valid(current_game):
+		save_checkpoint(current_game.build_checkpoint_state())
+		current_game.queue_free()
+	current_game = null
+	show_main_menu()
+
+
+func restart_game() -> void:
+	RunSaveStore.delete_checkpoint()
+	start_game({})
+
+
+func open_options_from_main() -> void:
+	options_return_to_pause = false
+	open_options()
+
+
+func open_options_from_pause() -> void:
+	options_return_to_pause = true
+	open_options()
+
+
+func open_options() -> void:
+	main_menu.visible = false
+	pause_menu.visible = false
+	options_menu.visible = true
+	var locale: String = LocalizationService.normalize_locale(str(settings.locale))
+	language_option.select({"en": 0, "pt_BR": 1, "es": 2}.get(locale, 0))
+	volume_slider.value = float(settings.master_volume)
+	fullscreen_check.button_pressed = bool(settings.fullscreen)
+
+
+func apply_options() -> void:
+	var locales: PackedStringArray = ["en", "pt_BR", "es"]
+	settings = {
+		"locale": locales[language_option.selected],
+		"master_volume": volume_slider.value,
+		"fullscreen": fullscreen_check.button_pressed,
+	}
+	settings = SettingsStore.apply_settings(settings)
+	SettingsStore.save_settings(settings)
+	refresh_localized_text()
+
+
+func close_options() -> void:
+	options_menu.visible = false
+	if options_return_to_pause and current_game != null:
+		pause_menu.visible = true
+	else:
+		main_menu.visible = true
+
+
+func quit_game() -> void:
+	get_tree().quit()

@@ -35,6 +35,8 @@ signal emergency_reclamation_triggered(
 	resource_id: String,
 	amount: int
 )
+signal run_checkpoint_requested(state: Dictionary)
+signal run_completed(victory: bool)
 
 
 func _notification(what: int) -> void:
@@ -667,8 +669,16 @@ func register_zombie(
 
 
 func create_ghost() -> bool:
+	return create_ghost_internal(false)
 
-	if run_finished or souls < ghost_cost:
+
+func create_free_ghost() -> bool:
+	return create_ghost_internal(true)
+
+
+func create_ghost_internal(is_free: bool) -> bool:
+
+	if run_finished or (not is_free and souls < ghost_cost):
 		return false
 
 
@@ -686,7 +696,8 @@ func create_ghost() -> bool:
 		return false
 
 
-	souls -= ghost_cost
+	if not is_free:
+		souls -= ghost_cost
 	add_child(new_ghost)
 	configure_undead_runtime(
 		new_ghost,
@@ -753,11 +764,19 @@ func kill_ghost(target: Node2D) -> void:
 
 
 func create_lich() -> bool:
+	return create_lich_internal(false)
+
+
+func create_free_lich() -> bool:
+	return create_lich_internal(true)
+
+
+func create_lich_internal(is_free: bool) -> bool:
 
 	if (
 		run_finished
 		or not lich_unlocked
-		or souls < lich_cost
+		or (not is_free and souls < lich_cost)
 		or get_available_production_capacity() <= 0
 	):
 		return false
@@ -771,7 +790,8 @@ func create_lich() -> bool:
 		return false
 
 
-	souls -= lich_cost
+	if not is_free:
+		souls -= lich_cost
 	add_child(new_lich)
 	configure_undead_runtime(
 		new_lich,
@@ -6725,6 +6745,7 @@ func select_upgrade(
 	wave_transition_in_progress = false
 
 	current_wave += 1
+	run_checkpoint_requested.emit(build_checkpoint_state())
 
 
 	start_wave(
@@ -7965,6 +7986,7 @@ func finish_run(
 
 
 	show_run_end_screen()
+	run_completed.emit(victory)
 
 
 func show_run_end_screen() -> void:
@@ -8150,6 +8172,199 @@ func restart_run() -> void:
 
 
 	get_tree().reload_current_scene()
+
+
+func build_checkpoint_state() -> Dictionary:
+	var army: Dictionary = {
+		UNDEAD_RECIPE_CATALOG.SKELETON_WARRIOR: 0,
+		UNDEAD_RECIPE_CATALOG.SKELETON_ARCHER: 0,
+		UNDEAD_RECIPE_CATALOG.ZOMBIE_TANK: 0,
+		UNDEAD_RECIPE_CATALOG.GHOST: 0,
+		UNDEAD_RECIPE_CATALOG.LICH: 0,
+	}
+	for unit_group: Array in [skeletons, zombies, ghosts, liches]:
+		for unit: Node2D in unit_group:
+			if not is_instance_valid(unit):
+				continue
+			var runtime: UndeadRuntimeUnit = get_undead_runtime(unit)
+			if runtime != null and not runtime.is_temporary:
+				army[runtime.unit_type] = int(army.get(runtime.unit_type, 0)) + 1
+
+	return {
+		"wave": current_wave,
+		"resources": {
+			"bones": bones,
+			"flesh": flesh,
+			"blood": blood,
+			"souls": souls,
+		},
+		"army": army,
+		"upgrades": upgrade_counts.duplicate(true),
+		"processing_directive": processing_directive,
+		"rituals": {
+			"blood_extraction_level": blood_extraction_level,
+			"blood_infusion_level": blood_infusion_level,
+			"soul_focus_level": soul_focus_level,
+			"soul_anchor_level": soul_anchor_level,
+		},
+		"metrics": {
+			"enemies_killed": total_enemies_killed,
+			"corpses_processed": total_corpses_processed,
+			"skeletons_created": total_skeletons_created,
+			"skeletons_lost": total_skeletons_lost,
+			"skeletons_revived": total_skeletons_revived,
+			"zombies_created": total_zombies_created,
+			"zombies_lost": total_zombies_lost,
+			"ghosts_created": total_ghosts_created,
+			"ghosts_lost": total_ghosts_lost,
+			"liches_created": total_liches_created,
+			"liches_lost": total_liches_lost,
+			"thralls_summoned": total_thralls_summoned,
+			"thralls_expired": total_thralls_expired,
+			"bones_earned": total_bones_earned,
+			"flesh_earned": total_flesh_earned,
+			"blood_earned": total_blood_earned,
+			"souls_earned": total_souls_earned,
+			"upgrades_selected": total_upgrades_selected,
+		},
+		"production": {
+			"skeleton_queue": skeleton_production_queue.duplicate(true),
+			"zombie_queue": zombie_production_queue.duplicate(true),
+			"hematic_press_queue": hematic_press_queue,
+		},
+		"factory": {
+			"points": factory_points,
+			"queue_level": factory_queue_upgrade_level,
+			"speed_level": factory_speed_upgrade_level,
+			"auto_collection_unlocked": automatic_corpse_collection_unlocked,
+			"auto_collection_enabled": automatic_corpse_collection_enabled,
+			"hematic_press_unlocked": hematic_press_unlocked,
+			"soul_extractor_unlocked": soul_extractor_unlocked,
+			"soul_routing_enabled": soul_routing_enabled,
+			"efficiency_level": factory_efficiency_level,
+			"archer_unlocked": skeleton_archer_unlocked,
+			"lich_unlocked": lich_unlocked,
+		},
+		"doctrine": get_army_doctrine_configuration(),
+	}
+
+
+func restore_checkpoint_state(state: Dictionary) -> bool:
+	var saved_wave: int = int(state.get("wave", 0))
+	if saved_wave < 1:
+		return false
+
+	for enemy: Node2D in enemies:
+		if is_instance_valid(enemy):
+			enemy.queue_free()
+	for unit_group: Array in [skeletons, zombies, ghosts, liches]:
+		for unit: Node2D in unit_group:
+			if is_instance_valid(unit):
+				unit.queue_free()
+	skeletons.clear()
+	zombies.clear()
+	ghosts.clear()
+	liches.clear()
+	occupied_undead_slots.clear()
+
+	upgrade_counts.clear()
+	var saved_upgrades: Dictionary = state.get("upgrades", {}) as Dictionary
+	for upgrade_id_value: Variant in saved_upgrades:
+		var upgrade_id: String = str(upgrade_id_value)
+		var count: int = maxi(int(saved_upgrades[upgrade_id_value]), 0)
+		for repeat_index: int in range(count):
+			apply_upgrade(upgrade_id)
+		upgrade_counts[upgrade_id] = count
+	check_synergy_unlocks()
+
+	var factory: Dictionary = state.get("factory", {}) as Dictionary
+	factory_points = maxi(int(factory.get("points", 0)), 0)
+	factory_queue_upgrade_level = maxi(int(factory.get("queue_level", 0)), 0)
+	factory_speed_upgrade_level = maxi(int(factory.get("speed_level", 0)), 0)
+	automatic_corpse_collection_unlocked = bool(factory.get("auto_collection_unlocked", false))
+	automatic_corpse_collection_enabled = bool(factory.get("auto_collection_enabled", false))
+	hematic_press_unlocked = bool(factory.get("hematic_press_unlocked", false))
+	soul_extractor_unlocked = bool(factory.get("soul_extractor_unlocked", false))
+	soul_routing_enabled = bool(factory.get("soul_routing_enabled", false))
+	factory_efficiency_level = maxi(int(factory.get("efficiency_level", 0)), 0)
+	skeleton_archer_unlocked = bool(factory.get("archer_unlocked", false))
+	lich_unlocked = bool(factory.get("lich_unlocked", false))
+
+	var rituals: Dictionary = state.get("rituals", {}) as Dictionary
+	blood_extraction_level = maxi(int(rituals.get("blood_extraction_level", 0)), 0)
+	blood_infusion_level = maxi(int(rituals.get("blood_infusion_level", 0)), 0)
+	soul_focus_level = maxi(int(rituals.get("soul_focus_level", 0)), 0)
+	soul_anchor_level = maxi(int(rituals.get("soul_anchor_level", 0)), 0)
+	check_synergy_unlocks()
+
+	var army: Dictionary = state.get("army", {}) as Dictionary
+	for index: int in range(maxi(int(army.get(UNDEAD_RECIPE_CATALOG.SKELETON_WARRIOR, 0)), 0)):
+		create_free_skeleton("CHECKPOINT")
+	for index: int in range(maxi(int(army.get(UNDEAD_RECIPE_CATALOG.SKELETON_ARCHER, 0)), 0)):
+		create_free_skeleton_archer("CHECKPOINT")
+	for index: int in range(maxi(int(army.get(UNDEAD_RECIPE_CATALOG.ZOMBIE_TANK, 0)), 0)):
+		create_free_zombie("CHECKPOINT")
+	for index: int in range(maxi(int(army.get(UNDEAD_RECIPE_CATALOG.GHOST, 0)), 0)):
+		create_free_ghost()
+	for index: int in range(maxi(int(army.get(UNDEAD_RECIPE_CATALOG.LICH, 0)), 0)):
+		create_free_lich()
+
+	var resources: Dictionary = state.get("resources", {}) as Dictionary
+	bones = maxi(int(resources.get("bones", 0)), 0)
+	flesh = maxi(int(resources.get("flesh", 0)), 0)
+	blood = maxi(int(resources.get("blood", 0)), 0)
+	souls = maxi(int(resources.get("souls", 0)), 0)
+	processing_directive = str(state.get("processing_directive", PROCESSING_BALANCED))
+	if not PROCESSING_DIRECTIVE_POLICY.is_valid(processing_directive):
+		processing_directive = PROCESSING_BALANCED
+
+	var production: Dictionary = state.get("production", {}) as Dictionary
+	skeleton_production_queue.assign(
+		production.get("skeleton_queue", []) as Array
+	)
+	zombie_production_queue.assign(
+		production.get("zombie_queue", []) as Array
+	)
+	hematic_press_queue = maxi(int(production.get("hematic_press_queue", 0)), 0)
+
+	var metrics: Dictionary = state.get("metrics", {}) as Dictionary
+	total_enemies_killed = maxi(int(metrics.get("enemies_killed", 0)), 0)
+	total_corpses_processed = maxi(int(metrics.get("corpses_processed", 0)), 0)
+	total_skeletons_created = maxi(int(metrics.get("skeletons_created", 0)), 0)
+	total_skeletons_lost = maxi(int(metrics.get("skeletons_lost", 0)), 0)
+	total_skeletons_revived = maxi(int(metrics.get("skeletons_revived", 0)), 0)
+	total_zombies_created = maxi(int(metrics.get("zombies_created", 0)), 0)
+	total_zombies_lost = maxi(int(metrics.get("zombies_lost", 0)), 0)
+	total_ghosts_created = maxi(int(metrics.get("ghosts_created", 0)), 0)
+	total_ghosts_lost = maxi(int(metrics.get("ghosts_lost", 0)), 0)
+	total_liches_created = maxi(int(metrics.get("liches_created", 0)), 0)
+	total_liches_lost = maxi(int(metrics.get("liches_lost", 0)), 0)
+	total_thralls_summoned = maxi(int(metrics.get("thralls_summoned", 0)), 0)
+	total_thralls_expired = maxi(int(metrics.get("thralls_expired", 0)), 0)
+	total_bones_earned = maxi(int(metrics.get("bones_earned", 0)), 0)
+	total_flesh_earned = maxi(int(metrics.get("flesh_earned", 0)), 0)
+	total_blood_earned = maxi(int(metrics.get("blood_earned", 0)), 0)
+	total_souls_earned = maxi(int(metrics.get("souls_earned", 0)), 0)
+	total_upgrades_selected = maxi(int(metrics.get("upgrades_selected", 0)), 0)
+
+	var doctrine: Dictionary = state.get("doctrine", {}) as Dictionary
+	apply_army_doctrine_configuration(
+		int(doctrine.get("target_skeletons", 0)),
+		int(doctrine.get("target_zombies", 0)),
+		int(doctrine.get("bones_reserve", 0)),
+		int(doctrine.get("flesh_reserve", 0)),
+		str(doctrine.get("priority", ARMY_DOCTRINE_POLICY.PRIORITY_BALANCED))
+	)
+	set_army_doctrine_automation_enabled(
+		bool(doctrine.get("automation_enabled", false))
+	)
+
+	run_finished = false
+	start_wave(saved_wave)
+	update_bones_ui()
+	update_debug_ui()
+	update_factory_panel_ui()
+	return true
 
 
 # =========================================================

@@ -18,8 +18,8 @@
 10. Extract generic Undead runtime state before implementing a third playable unit. **Completed with a compatibility bridge.**
 11. Add Skeleton Archer first; use it to validate ranged player-unit architecture. **Completed as V1.**
 12. Add Lich only after Souls/advanced recipe costs and summon limits are defined. **Completed as V1.**
-13. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice.
-14. Complete PT-BR, English and Spanish coverage after interface text stabilizes.
+13. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice. **Completed as V1.**
+14. Complete PT-BR, English and Spanish coverage after interface text stabilizes. **Menu flow complete; gameplay copy still requires a final audit.**
 
 This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 
@@ -214,7 +214,8 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 
 # v0.5.0 — Meta Progression
 
-- [ ] save
+- [x] versioned between-Wave run checkpoint and Continue flow V1
+- [ ] save migration beyond schema version 1
 - [ ] unlocks
 - [ ] unit recipe unlocks
 - [ ] Factory technology unlocks

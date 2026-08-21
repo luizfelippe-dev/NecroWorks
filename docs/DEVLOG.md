@@ -441,3 +441,13 @@ Recommended next block:
 - improve hit/death feedback.
 
 Then: Factory Point pacing playtest during the next full manual run.
+
+---
+
+## 21/08/2026 — Application shell and persistence V1
+
+F5 now enters a dedicated application shell instead of launching combat immediately. Main Menu, Pause and Options form the first complete player-facing navigation loop, while direct F6 gameplay remains available for rapid development.
+
+Locale, master volume and fullscreen preferences persist through a sanitized ConfigFile. A versioned JSON checkpoint supports Continue and restores Wave, resources, permanent army composition, upgrades, Factory progression and Army Doctrine. Checkpoints are emitted between Waves and may also be created from Pause.
+
+Two new runners validate persistence and shell navigation. The complete 26-runner regression passed, including both deterministic Foreman victories.

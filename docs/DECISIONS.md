@@ -514,3 +514,17 @@ Reasoning:
 - per-instance Elite flags support concurrent mixed archetypes safely;
 - predictable cadence preserves counterplay;
 - excluding Bosses prevents accidental stacking of encounter rule sets.
+
+---
+
+## Separate the application shell from the gameplay scene
+
+F5 launches `app.tscn`; F6 may still launch `main.tscn` directly. The shell owns menus, pause state, settings and file I/O. Gameplay owns the serializable run state and emits checkpoint requests.
+
+Reasoning:
+
+- preserves the stable scene contract used by every combat/economy runner;
+- avoids coupling menu lifecycle to the large gameplay orchestrator;
+- allows corrupt or incompatible saves to fail before gameplay is mutated;
+- makes future Steam/platform integration replace the storage boundary without rewriting combat;
+- Wave-granular checkpoints are more deterministic than attempting frame-perfect restoration during the prototype.
