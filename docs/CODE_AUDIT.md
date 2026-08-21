@@ -1,6 +1,6 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 20/08/2026
+**Revisado:** 21/08/2026
 
 ## Current verdict
 
@@ -100,6 +100,10 @@ Advanced Mage/Elf cadence and targeting are isolated in `scripts/game/enemy_comb
 Emergency Reclamation currently uses a shared death-transaction helper called by four permanent unit families. `tests/upgrades/rare_upgrade_runner.gd` covers eligibility, one-time acquisition, per-Wave reset, resource-specific refund, repeat-loss blocking and temporary-unit exclusion.
 
 Both deterministic complete-run strategies still reach and defeat the Foreman after advanced enemy behavior was enabled.
+
+Elite identity is now snapshotted per Enemy in `enemy_elite_flags`, cleared through every existing lifecycle path and consumed only through `EnemyCombatPolicy`/the central incoming-damage boundary. This avoids deriving live instance behavior from mutable Wave globals.
+
+`tests/combat/enemy_elite_variant_runner.gd` validates all three traits and Boss exclusion remains protected by `is_elite_wave`. The complete headless regression now contains 24 runners; Bone and Flesh strategies still defeat the Foreman with Elite variants active.
 
 Before the demo, extend persistent coverage for:
 

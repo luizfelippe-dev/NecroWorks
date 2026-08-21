@@ -149,6 +149,12 @@ SYNERGY_OSSUARY_BALLISTICS,Ossuary Ballistics,Balística do Ossuário,Balística
 SYNERGY_OSSUARY_BALLISTICS_DESC,Heavy Bones + Death March + Archer blueprint: Skeleton Archers gain +80 range.,Ossos Pesados + Marcha da Morte + projeto do Arqueiro: Arqueiros Esqueletos ganham +80 de alcance.,Huesos Pesados + Marcha de la Muerte + plano del Arquero: los Arqueros Esqueleto obtienen +80 de alcance.
 ENEMY_ABILITY_ARCANE_BURST,ARCANE BURST,RAJADA ARCANA,RÁFAGA ARCANA
 ENEMY_ABILITY_PRECISION_SHOT,PRECISION SHOT,TIRO DE PRECISÃO,DISPARO DE PRECISIÓN
+ENEMY_ABILITY_ELITE_ARCANE_BURST,OVERCHARGED BURST,RAJADA SOBRECARREGADA,RÁFAGA SOBRECARGADA
+ENEMY_ABILITY_ELITE_PRECISION_SHOT,DEADEYE SHOT,DISPARO OLHO DA MORTE,DISPARO OJO MORTAL
+ENEMY_ELITE_NAME,ELITE %s,%s ELITE,%s DE ÉLITE
+ENEMY_ELITE_TRAIT_BULWARK,BULWARK,BALUARTE,BALUARTE
+ENEMY_ELITE_TRAIT_OVERCHARGED,OVERCHARGED,SOBRECARREGADO,SOBRECARGADO
+ENEMY_ELITE_TRAIT_DEADEYE,DEADEYE,OLHO DA MORTE,OJO MORTAL
 UPGRADE_EMERGENCY_RECLAMATION_NAME,EMERGENCY RECLAMATION [RARE],RECUPERAÇÃO EMERGENCIAL [RARO],RECUPERACIÓN DE EMERGENCIA [RARO]
 UPGRADE_EMERGENCY_RECLAMATION_DESC,Once per Wave when a permanent Undead dies refund 50% of its production cost.,Uma vez por Onda quando um Morto-Vivo permanente morrer devolve 50% do custo de produção.,Una vez por Oleada cuando muere un No Muerto permanente devuelve el 50% del coste de producción.
 UPGRADE_EMERGENCY_RECLAMATION_STATUS,Available once each Wave,Disponível uma vez por Onda,Disponible una vez por Oleada

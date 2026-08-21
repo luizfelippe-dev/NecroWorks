@@ -164,6 +164,16 @@ Balística do Ossuário completa a décima sinergia atual: o projeto do Arqueiro
 
 O primeiro upgrade raro/regra-alteradora é Recuperação Emergencial. Ele começa a aparecer a partir da Wave 8 e, uma vez obtido, devolve metade do custo da primeira tropa permanente perdida em cada Wave. Servos temporários não consomem a ativação.
 
+### Variantes Elite
+
+Nas Waves 5, 10 e 15, o bônus genérico de HP/dano agora é acompanhado por um traço próprio:
+
+- Guerreiro Elite — Baluarte: reduz em 20% o dano recebido;
+- Mago Elite — Sobrecarregado: Rajada a cada 2 ataques, 65% de splash e 0,45 s de supressão;
+- Elfo Elite — Olho da Morte: Precisão a cada 3 ataques e 150% de dano.
+
+Nome e traço aparecem sobre cada Elite em EN, PT-BR e ES. The Foreman continua sendo Boss e não recebe esses modificadores.
+
 ## Boss atual
 
 ### The Foreman
@@ -287,4 +297,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 O início da v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot agora são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-Próximo foco: playtest manual da composição Archer/Lich contra Rajada Arcana e Tiro de Precisão, seguido por elite variants e expansão cuidadosa do catálogo de upgrades raros.
+Próximo foco: playtest manual da composição Archer/Lich contra as variantes Elite, seguido por um segundo Boss ou pelo primeiro evento de decisão da run.

@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 20/08/2026
+**Atualizado:** 21/08/2026
 
 ---
 
@@ -202,7 +202,7 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] Elf prototype — fast skirmisher
 - [x] Mage advanced behavior — Arcane Burst AOE/suppression
 - [x] Elf advanced behavior — Precision Shot backline targeting
-- [ ] elite variants
+- [x] archetype-specific elite variants — Bulwark, Overcharged and Deadeye
 - [ ] 2–3 bosses
 - [ ] events
 - [ ] Boss Corpse choices

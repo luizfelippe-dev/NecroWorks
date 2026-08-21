@@ -1,6 +1,6 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 20/08/2026
+**Atualizado:** 21/08/2026
 
 # Stack
 
@@ -409,6 +409,14 @@ Each Enemy owns an attack count beside its existing timer. The count is register
 # Rare upgrade trigger
 
 Emergency Reclamation is the first rule-changing rare. Eligibility begins at Wave 8 and acquisition is capped at one. Its per-Wave boolean resets in `start_wave`; actual permanent death paths call one shared refund transaction before removing the unit. Recipe identity determines Bone/Flesh/Soul refund values. Temporary runtimes return before consuming the trigger.
+
+# Elite variant state
+
+`enemy_elite_flags` stores Elite identity per Enemy rather than deriving combat effects repeatedly from `current_wave`. Registration snapshots the flag; cleanup, death and Wave reset erase it with the other Enemy dictionaries.
+
+`EnemyCombatPolicy` accepts the flag for cadence, splash, suppression, precision damage and Warrior mitigation. `apply_damage_to_enemy` is the single incoming-damage boundary for Bulwark. Mage/Elf attack selection reads the same snapshot, so concurrent enemies cannot inherit another instance's trait.
+
+Presentation remains decoupled: identity and trait labels are created on the Enemy node, translation refresh updates both, and ability feedback uses the existing observable signal. Boss Wave 20 is excluded by `is_elite_wave`.
 
 # Persistent balance validation
 

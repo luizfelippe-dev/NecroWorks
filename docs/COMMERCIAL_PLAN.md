@@ -1,6 +1,6 @@
 # NecroWorks — Commercial Plan
 
-**Revisado:** 20/08/2026
+**Revisado:** 21/08/2026
 
 ## Goal
 
@@ -100,6 +100,8 @@ Soul Extractor completes the short routing story: an arcane enemy dies, its dist
 Skeleton Archer and Lich now create a clearer marketable composition story: cheap melee production protects ranged Bone damage while an expensive Soul caster temporarily expands the line. Lich summons are visibly bounded by Souls, capacity, cap and lifetime, so the feature reads as deliberate factory strategy instead of passive infinite growth. This is strong material for a future short clip, but the public-facing capture should wait for summon VFX, readable attack feedback and a manual balance run.
 
 Arcane Burst and Precision Shot improve trailer/readability potential because enemy silhouettes now imply different threats: Mage punishes a dense factory army and Elf hunts valuable ranged production. Emergency Reclamation adds an easy-to-explain rare “save one loss” moment. Before marketing capture, the temporary text feedback should receive dedicated spell/projectile VFX and distinct audio cues.
+
+Elite trait labels make Waves 5/10/15 easier to communicate in footage: Bulwark, Overcharged and Deadeye are short, distinct threats built from already learned enemies. Dedicated outline/VFX variants are still required before store-page capture; labels alone are a prototype readability solution.
 
 Necromantic Economy v0.2 adds a second marketable layer: Blood sacrifice temporarily amplifies the army, while Souls become ranged Ghosts or permanent spectral upgrades. A five-second local milestone capture is generated at `.godot/necroworks_v020_milestone.avi`; future public footage should replace the temporary Ghost recolor and add spell/VFX/audio impact.
 

@@ -4,6 +4,15 @@
 
 ### Added
 
+- Archetype-specific Elite variants on Waves 5/10/15:
+  - Elite Warrior Bulwark reduces incoming damage by 20%;
+  - Elite Mage Overcharged casts every second attack with 65% splash and 0.45 s suppression;
+  - Elite Elf Deadeye uses precision every third attack for 150% damage;
+  - localized Elite name, persistent trait label and stronger ability feedback;
+  - Elite state is stored per Enemy and cleaned with its runtime dictionaries;
+  - The Foreman remains outside the Elite rules.
+- Persistent Elite variant validation; complete regression expanded to 24 runners.
+
 - Advanced enemy behavior:
   - Mage Arcane Burst every third attack hits up to three nearby Undead, deals 50% splash damage and delays their next attack by 0.30 s;
   - Elf Precision Shot every fourth attack prioritizes vulnerable summoners/ranged units and deals 135% damage;

@@ -412,6 +412,14 @@ The metrics panel was enlarged and the synergy panel moved down so Lich/Thrall r
 
 ---
 
+## 21/08/2026 — Elite variants
+
+Elite Waves now amplify archetype identity rather than only HP, damage and color. Warrior becomes Bulwark with 20% damage mitigation. Overcharged Mage casts its stronger Burst every second attack, and Deadeye Elf executes stronger Precision every third attack. Trait labels are visible and localized before engagement; The Foreman remains outside this ruleset.
+
+Elite state is stored per Enemy and routed through the existing combat policy. A dedicated runner validates mitigation, cadence, splash, suppression, target selection, damage and translations. The full regression reached 24/24 passes, and both automated economy strategies still completed Wave 20.
+
+---
+
 ## Next
 
 ### Production planning

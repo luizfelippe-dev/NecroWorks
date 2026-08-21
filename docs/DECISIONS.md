@@ -1,6 +1,6 @@
 # NecroWorks — Decisions
 
-**Atualizado:** 20/08/2026
+**Atualizado:** 21/08/2026
 
 ---
 
@@ -500,3 +500,17 @@ Reasoning:
 Emergency Reclamation becomes eligible at Wave 8, is acquired once and triggers once per Wave. It refunds half the current recipe cost of the first permanent casualty. Temporary summons are excluded.
 
 Reason: early Waves should teach the base loop before introducing exceptions. The effect softens one meaningful loss but preserves attrition, resource scarcity and the cost of repeated mistakes.
+
+---
+
+## Elite variants intensify the archetype's existing counter-role
+
+Elite Warrior mitigates damage; Elite Mage accelerates and strengthens AOE/suppression; Elite Elf accelerates and strengthens precision targeting. Bosses remain a separate ruleset.
+
+Reasoning:
+
+- an Elite should be identifiable before its first attack;
+- variants should deepen learned behavior instead of introducing unrelated mechanics;
+- per-instance Elite flags support concurrent mixed archetypes safely;
+- predictable cadence preserves counterplay;
+- excluding Bosses prevents accidental stacking of encounter rule sets.

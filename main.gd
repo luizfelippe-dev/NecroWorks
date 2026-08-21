@@ -81,6 +81,16 @@ func refresh_world_localization() -> void:
 
 		if identity_label != null:
 			identity_label.text = get_enemy_display_name(
+				str(enemy_types.get(current_enemy, "human_warrior")),
+				bool(enemy_elite_flags.get(current_enemy, false))
+			)
+
+
+		var trait_label: Label = current_enemy.get_node_or_null(
+			"EliteTraitLabel"
+		) as Label
+		if trait_label != null:
+			trait_label.text = get_enemy_elite_trait_name(
 				str(enemy_types.get(current_enemy, "human_warrior"))
 			)
 
@@ -1061,6 +1071,7 @@ var enemy_attack_timers: Dictionary = {}
 var enemy_attack_counts: Dictionary = {}
 var enemy_lane_offsets: Dictionary = {}
 var enemy_types: Dictionary = {}
+var enemy_elite_flags: Dictionary = {}
 
 const RIGHT_HUD_COMBAT_SAFE_X: float = 1450.0
 const ENEMY_SPAWN_POSITION: Vector2 = Vector2(
@@ -1992,6 +2003,7 @@ func start_wave(
 	enemy_attack_counts.clear()
 	enemy_lane_offsets.clear()
 	enemy_types.clear()
+	enemy_elite_flags.clear()
 
 	boss_active = is_boss_wave(
 		current_wave
@@ -2208,6 +2220,7 @@ func cleanup_invalid_enemies() -> void:
 		enemy_attack_counts.erase(current_enemy)
 		enemy_lane_offsets.erase(current_enemy)
 		enemy_types.erase(current_enemy)
+		enemy_elite_flags.erase(current_enemy)
 
 
 	enemies = valid_enemies
@@ -2289,8 +2302,13 @@ func apply_damage_to_enemy(
 		return 0
 
 
+	var effective_damage: int = ENEMY_COMBAT_POLICY.get_incoming_damage(
+		str(enemy_types.get(target_enemy, "human_warrior")),
+		bool(enemy_elite_flags.get(target_enemy, false)),
+		damage_amount
+	)
 	var remaining_hp: int = int(enemy_hps[target_enemy])
-	remaining_hp -= damage_amount
+	remaining_hp -= effective_damage
 	enemy_hps[target_enemy] = remaining_hp
 
 
@@ -2345,7 +2363,11 @@ func register_enemy(new_enemy: Node2D) -> void:
 		BOSS_WAVE
 	)
 	var archetype_id: String = str(archetype.get("id", "human_warrior"))
-	var display_name: String = get_enemy_display_name(archetype_id)
+	var elite_variant: bool = is_elite_wave(current_wave)
+	var display_name: String = get_enemy_display_name(
+		archetype_id,
+		elite_variant
+	)
 	var maximum_hp: int = maxi(
 		1,
 		int(
@@ -2374,7 +2396,7 @@ func register_enemy(new_enemy: Node2D) -> void:
 	) as Color
 
 
-	if is_elite_wave(current_wave):
+	if elite_variant:
 		visual_color = visual_color.lerp(
 			ELITE_ENEMY_COLOR,
 			0.45
@@ -2407,6 +2429,7 @@ func register_enemy(new_enemy: Node2D) -> void:
 	enemy_attack_counts[new_enemy] = 0
 	enemy_lane_offsets[new_enemy] = lane_offset
 	enemy_types[new_enemy] = archetype_id
+	enemy_elite_flags[new_enemy] = elite_variant
 	enemies_spawned_this_wave += 1
 
 
@@ -2419,6 +2442,12 @@ func register_enemy(new_enemy: Node2D) -> void:
 	ensure_enemy_identity_label(
 		new_enemy,
 		display_name,
+		visual_color
+	)
+	ensure_enemy_elite_trait_label(
+		new_enemy,
+		archetype_id,
+		elite_variant,
 		visual_color
 	)
 	refresh_primary_enemy()
@@ -3227,11 +3256,17 @@ func get_enemy_combat_target(source_enemy: Node2D) -> Node2D:
 	var next_attack_count: int = int(
 		enemy_attack_counts.get(source_enemy, 0)
 	) + 1
+	var elite_variant: bool = bool(
+		enemy_elite_flags.get(source_enemy, false)
+	)
 
 
 	if (
 		archetype_id == "elf"
-		and ENEMY_COMBAT_POLICY.is_elf_precision_attack(next_attack_count)
+		and ENEMY_COMBAT_POLICY.is_elf_precision_attack(
+			next_attack_count,
+			elite_variant
+		)
 	):
 		return get_elf_precision_target(source_enemy)
 
@@ -3305,31 +3340,52 @@ func perform_enemy_attack(attacking_enemy: Node2D, target: Node2D) -> void:
 	var base_damage: int = int(
 		enemy_damages.get(attacking_enemy, enemy_damage)
 	)
+	var elite_variant: bool = bool(
+		enemy_elite_flags.get(attacking_enemy, false)
+	)
 	enemy_attack_counts[attacking_enemy] = attack_count
 
 
 	if (
 		archetype_id == "mage"
-		and ENEMY_COMBAT_POLICY.is_mage_burst_attack(attack_count)
+		and ENEMY_COMBAT_POLICY.is_mage_burst_attack(
+			attack_count,
+			elite_variant
+		)
 	):
-		perform_mage_arcane_burst(attacking_enemy, target, base_damage)
+		perform_mage_arcane_burst(
+			attacking_enemy,
+			target,
+			base_damage,
+			elite_variant
+		)
 		return
 
 
 	if (
 		archetype_id == "elf"
-		and ENEMY_COMBAT_POLICY.is_elf_precision_attack(attack_count)
+		and ENEMY_COMBAT_POLICY.is_elf_precision_attack(
+			attack_count,
+			elite_variant
+		)
 	):
 		damage_undead(
 			target,
-			ENEMY_COMBAT_POLICY.get_precision_damage(base_damage),
+			ENEMY_COMBAT_POLICY.get_precision_damage(
+				base_damage,
+				elite_variant
+			),
 			"ELF PRECISION"
 		)
 		show_enemy_ability_feedback(
 			attacking_enemy,
 			"elf",
 			"precision_shot",
-			tr("ENEMY_ABILITY_PRECISION_SHOT"),
+			tr(
+				"ENEMY_ABILITY_ELITE_PRECISION_SHOT"
+				if elite_variant
+				else "ENEMY_ABILITY_PRECISION_SHOT"
+			),
 			1
 		)
 		return
@@ -3341,11 +3397,15 @@ func perform_enemy_attack(attacking_enemy: Node2D, target: Node2D) -> void:
 func perform_mage_arcane_burst(
 	attacking_mage: Node2D,
 	primary_target: Node2D,
-	base_damage: int
+	base_damage: int,
+	elite_variant: bool = false
 ) -> void:
 
 	var burst_targets: Array[Node2D] = get_mage_burst_targets(primary_target)
-	var splash_damage: int = ENEMY_COMBAT_POLICY.get_splash_damage(base_damage)
+	var splash_damage: int = ENEMY_COMBAT_POLICY.get_splash_damage(
+		base_damage,
+		elite_variant
+	)
 
 
 	for target_index: int in range(burst_targets.size()):
@@ -3362,7 +3422,7 @@ func perform_mage_arcane_burst(
 		if is_instance_valid(burst_target):
 			delay_undead_attack(
 				burst_target,
-				ENEMY_COMBAT_POLICY.MAGE_SUPPRESSION_DELAY
+				ENEMY_COMBAT_POLICY.get_mage_suppression_delay(elite_variant)
 			)
 
 
@@ -3370,7 +3430,11 @@ func perform_mage_arcane_burst(
 		attacking_mage,
 		"mage",
 		"arcane_burst",
-		tr("ENEMY_ABILITY_ARCANE_BURST"),
+		tr(
+			"ENEMY_ABILITY_ELITE_ARCANE_BURST"
+			if elite_variant
+			else "ENEMY_ABILITY_ARCANE_BURST"
+		),
 		burst_targets.size()
 	)
 
@@ -3456,7 +3520,7 @@ func show_enemy_ability_feedback(
 
 	var feedback: Label = Label.new()
 	feedback.name = "AbilityFeedback"
-	feedback.position = Vector2(-105.0, -105.0)
+	feedback.position = Vector2(-105.0, -132.0)
 	feedback.size = Vector2(210.0, 28.0)
 	feedback.text = message
 	feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -3470,7 +3534,7 @@ func show_enemy_ability_feedback(
 
 	var tween: Tween = feedback.create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(feedback, "position:y", -135.0, 0.65)
+	tween.tween_property(feedback, "position:y", -162.0, 0.65)
 	tween.tween_property(feedback, "modulate:a", 0.0, 0.65)
 	tween.chain().tween_callback(feedback.queue_free)
 
@@ -4315,7 +4379,9 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 
 	var defeated_boss: bool = boss_active
-	var defeated_elite: bool = is_elite_wave(current_wave)
+	var defeated_elite: bool = bool(
+		enemy_elite_flags.get(target_enemy, is_elite_wave(current_wave))
+	)
 	var defeated_archetype: String = str(
 		enemy_types.get(target_enemy, "human_warrior")
 	)
@@ -4349,6 +4415,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 	enemy_attack_counts.erase(dead_enemy)
 	enemy_lane_offsets.erase(dead_enemy)
 	enemy_types.erase(dead_enemy)
+	enemy_elite_flags.erase(dead_enemy)
 
 
 	if dead_enemy == enemy:
@@ -5390,19 +5457,43 @@ func get_processing_directive_name(
 			)
 
 
-func get_enemy_display_name(archetype_id: String) -> String:
+func get_enemy_display_name(
+	archetype_id: String,
+	elite_variant: bool = false
+) -> String:
+
+	var base_name: String = ""
+	match archetype_id:
+		"human_warrior":
+			base_name = tr("ENEMY_HUMAN_WARRIOR")
+		"mage":
+			base_name = tr("ENEMY_MAGE")
+		"elf":
+			base_name = tr("ENEMY_ELF_SKIRMISHER")
+		"foreman":
+			base_name = tr("ENEMY_THE_FOREMAN")
+		_:
+			base_name = archetype_id.replace("_", " ").to_upper()
+
+
+	return (
+		tr("ENEMY_ELITE_NAME") % base_name
+		if elite_variant
+		else base_name
+	)
+
+
+func get_enemy_elite_trait_name(archetype_id: String) -> String:
 
 	match archetype_id:
 		"human_warrior":
-			return tr("ENEMY_HUMAN_WARRIOR")
+			return tr("ENEMY_ELITE_TRAIT_BULWARK")
 		"mage":
-			return tr("ENEMY_MAGE")
+			return tr("ENEMY_ELITE_TRAIT_OVERCHARGED")
 		"elf":
-			return tr("ENEMY_ELF_SKIRMISHER")
-		"foreman":
-			return tr("ENEMY_THE_FOREMAN")
+			return tr("ENEMY_ELITE_TRAIT_DEADEYE")
 		_:
-			return archetype_id.replace("_", " ").to_upper()
+			return ""
 
 
 func set_processing_directive(directive: String) -> void:
@@ -6067,6 +6158,34 @@ func ensure_enemy_identity_label(
 	identity_label.text = display_name
 	identity_label.add_theme_color_override("font_color", accent_color.lightened(0.30))
 	identity_label.add_theme_color_override("font_outline_color", Color(0.03, 0.03, 0.04, 0.95))
+
+
+func ensure_enemy_elite_trait_label(
+	target_enemy: Node2D,
+	archetype_id: String,
+	elite_variant: bool,
+	accent_color: Color
+) -> void:
+
+	if not elite_variant or not is_instance_valid(target_enemy):
+		return
+
+
+	var trait_label: Label = Label.new()
+	trait_label.name = "EliteTraitLabel"
+	trait_label.position = Vector2(-90.0, -104.0)
+	trait_label.size = Vector2(180.0, 18.0)
+	trait_label.text = get_enemy_elite_trait_name(archetype_id)
+	trait_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	trait_label.z_index = 25
+	trait_label.add_theme_font_size_override("font_size", 10)
+	trait_label.add_theme_color_override(
+		"font_color",
+		accent_color.lightened(0.48)
+	)
+	trait_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	trait_label.add_theme_constant_override("outline_size", 3)
+	target_enemy.add_child(trait_label)
 
 
 
@@ -8127,7 +8246,10 @@ func update_wave_ui() -> void:
 		+ " / "
 		+ str(get_max_simultaneous_enemies())
 		+ "\n" + tr("WAVE_PRIMARY") + ": "
-		+ get_enemy_display_name(str(enemy_types.get(enemy, "human_warrior")))
+		+ get_enemy_display_name(
+			str(enemy_types.get(enemy, "human_warrior")),
+			bool(enemy_elite_flags.get(enemy, false))
+		)
 		+ " | " + tr("STAT_HP") + ": "
 		+ str(int(enemy_max_hps.get(enemy, enemy_max_hp)))
 		+ " | " + tr("STAT_DAMAGE") + ": "

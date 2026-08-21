@@ -1,6 +1,6 @@
 # NecroWorks — AI Handoff
 
-**Atualizado em:** 20/08/2026
+**Atualizado em:** 21/08/2026
 **Objetivo:** permitir continuar o projeto em outro chat sem perder decisões, estado técnico ou próximos passos.
 
 ---
@@ -1123,3 +1123,17 @@ Próximo passo recomendado: fazer uma run manual concentrada em Archer/Lich para
 - regressão completa atual: 23/23 runners aprovados, incluindo duas runs até o Foreman.
 
 Próximo passo recomendado: run manual Archer/Lich sob pressão dos novos ataques. Se legível e balanceado, implementar elite variants antes de aumentar novamente o número de unidades.
+
+## Atualização 21/08/2026 — variantes Elite concluídas
+
+- Waves 5/10/15 continuam com 5 inimigos reforçados, mas agora cada arquétipo possui um traço;
+- Guerreiro Elite / Baluarte recebe 20% menos dano;
+- Mago Elite / Sobrecarregado usa Rajada a cada 2 ataques, 65% de splash e 0,45 s de supressão;
+- Elfo Elite / Olho da Morte usa Precisão a cada 3 ataques e causa 150% de dano;
+- `enemy_elite_flags` preserva o estado por instância e é limpo junto dos demais dicionários;
+- identidade e traço aparecem sobre o inimigo com tradução EN/PT-BR/ES;
+- The Foreman é explicitamente excluído pela regra de Wave Elite;
+- `tests/combat/enemy_elite_variant_runner.gd` cobre mitigação, cadência, dano, alvo, labels e localização;
+- regressão atual: 24/24 runners aprovados; as duas runs determinísticas ainda vencem o Foreman.
+
+Próximo passo recomendado: uma run manual com Arqueiros/Liches nas Waves 10/15. Depois, priorizar segundo Boss ou evento de decisão antes de criar outra unidade.

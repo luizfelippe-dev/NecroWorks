@@ -725,6 +725,16 @@ Emergency Reclamation enters the ordinary three-card roll from Wave 8 onward and
 
 The upgrade changes loss economics without preventing death. Its once-per-Wave limit preserves attrition, while recipe-aware refunds reward expensive composition choices without generating resources from free summons.
 
+## Elite variants
+
+Elite Waves retain their five-enemy structure on Waves 5, 10 and 15, but archetypes now intensify their existing counter-role:
+
+- Bulwark Warrior takes 20% less incoming damage, extending frontline obstruction;
+- Overcharged Mage casts Arcane Burst every second attack with 65% splash and 0.45-second suppression;
+- Deadeye Elf casts Precision Shot every third attack for 150% damage.
+
+The Elite trait is visible above the unit before combat contact. The intent is preparation and composition pressure, not surprise one-shots. The Foreman is a separate Boss ruleset and never inherits Elite modifiers.
+
 ## Menus, settings and localization
 
 Required languages are PT-BR, English and Spanish. Translation keys/resources should be introduced before the UI expands into multiple Factory and meta-progression panels. Final translation and linguistic QA happen after interface copy stabilizes.
