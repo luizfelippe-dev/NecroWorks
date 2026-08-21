@@ -126,6 +126,12 @@ Settings and application-shell navigation now have persistent automated coverage
 
 The former `reload_current_scene()` restart path was unsafe once gameplay became a child of `app.tscn`: it could reload the shell instead of restarting combat. Gameplay now emits lifecycle requests when hosted and retains direct-scene fallbacks for F6. End-screen controls and the complete two-column summary are localized in all three supported languages and covered by navigation/localization assertions.
 
+### Narrative events — first safe vertical slice
+
+Event definitions are data-only and reward application remains at one validated orchestration boundary. Event IDs and selected choices are persisted instead of translated display strings, keeping saves locale-independent. Invalid or repeated choices cannot grant resources. The first catalog intentionally uses opportunity-cost rewards rather than permanent penalties until manual playtests establish how much interruption and variance the 20-Wave run supports.
+
+Persistent coverage increases to 27 runners with the event scenario; both Bone and Flesh balance runs still defeat the Foreman.
+
 ### P2 — Prototype unit scenes
 
 Square placeholders are gone and all current combatants have temporary sprites. Zombie still reuses the Skeleton scene structurally, and none of the units have animation state machines, hit feedback or audio identity. Each commercial unit eventually needs a dedicated presentation scene even if combat data remains shared.

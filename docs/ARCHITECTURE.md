@@ -486,3 +486,11 @@ Automatic checkpoints are requested after an upgrade is committed and before the
 `tests/core/persistence_runner.gd` validates sanitation, JSON round-trip and gameplay restore. `tests/core/game_shell_runner.gd` protects navigation, pause behavior and localized menu copy. The complete regression contains 26 runners.
 
 The shell also owns the localized prologue before a New Run. End-of-run presentation remains inside `main.gd`, but emits `restart_requested` and `return_to_menu_requested` when hosted by the shell. Direct F6 execution retains safe fallbacks to scene reload/application entry, so gameplay never assumes that a parent shell exists.
+
+# Narrative event pipeline
+
+`scripts/game/narrative_event_catalog.gd` is a pure catalog mapping trigger Waves to event IDs, localized presentation keys, valid choice IDs and deterministic reward dictionaries. `main.gd` owns the live decision panel and applies rewards only after validating that the selected choice belongs to the active event.
+
+Upgrade selection increments the next Wave first. Waves 7 and 13 then pause at an event decision; choosing a route records the event exactly once, emits the normal checkpoint and starts combat. Checkpoint state includes resolved choices and a pending event ID, allowing Save/Continue to restore a decision without silently granting or skipping rewards.
+
+`tests/events/narrative_event_runner.gd` protects triggers, invalid-choice rejection, rewards, bounds, localization and pending-event restore. Full-run strategies resolve events through different economic routes.

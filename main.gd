@@ -69,6 +69,7 @@ func refresh_localized_ui() -> void:
 	refresh_world_localization()
 	update_factory_panel_ui()
 	update_army_doctrine_ui()
+	refresh_narrative_event_ui()
 	if run_end_panel != null and run_end_panel.visible:
 		show_run_end_screen()
 
@@ -169,6 +170,9 @@ const UNDEAD_RECIPE_CATALOG: Script = preload(
 )
 const LICH_SUMMON_POLICY: Script = preload(
 	"res://scripts/game/lich_summon_policy.gd"
+)
+const NARRATIVE_EVENT_CATALOG: Script = preload(
+	"res://scripts/game/narrative_event_catalog.gd"
 )
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
@@ -1220,6 +1224,19 @@ var return_to_menu_button: Button = null
 
 
 # =========================================================
+# NARRATIVE EVENTS
+# =========================================================
+
+var event_decision_in_progress: bool = false
+var current_narrative_event_id: String = ""
+var narrative_event_choices: Dictionary = {}
+var narrative_event_panel: ColorRect = null
+var narrative_event_title_label: Label = null
+var narrative_event_body_label: Label = null
+var narrative_event_buttons: Array[Button] = []
+
+
+# =========================================================
 # UPGRADES
 # =========================================================
 
@@ -1530,6 +1547,7 @@ func _ready() -> void:
 	create_debug_hud()
 	create_wave_hud()
 	create_upgrade_ui()
+	create_narrative_event_ui()
 	create_synergy_hud()
 	create_run_end_ui()
 	create_factory_panel_ui()
@@ -6338,6 +6356,143 @@ func create_upgrade_button(
 	)
 
 
+func create_narrative_event_ui() -> void:
+	narrative_event_panel = ColorRect.new()
+	narrative_event_panel.name = "NarrativeEventPanel"
+	narrative_event_panel.position = Vector2(460.0, 245.0)
+	narrative_event_panel.size = Vector2(1000.0, 590.0)
+	narrative_event_panel.color = Color(0.018, 0.024, 0.022, 0.992)
+	narrative_event_panel.z_index = 720
+	narrative_event_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(narrative_event_panel)
+
+	narrative_event_title_label = Label.new()
+	narrative_event_title_label.name = "NarrativeEventTitle"
+	narrative_event_title_label.position = Vector2(60.0, 38.0)
+	narrative_event_title_label.size = Vector2(880.0, 55.0)
+	narrative_event_title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	narrative_event_title_label.add_theme_font_size_override("font_size", 29)
+	narrative_event_title_label.add_theme_color_override("font_color", UI_GREEN)
+	narrative_event_panel.add_child(narrative_event_title_label)
+
+	narrative_event_body_label = Label.new()
+	narrative_event_body_label.name = "NarrativeEventBody"
+	narrative_event_body_label.position = Vector2(90.0, 120.0)
+	narrative_event_body_label.size = Vector2(820.0, 190.0)
+	narrative_event_body_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	narrative_event_body_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	narrative_event_body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	narrative_event_body_label.add_theme_font_size_override("font_size", 20)
+	narrative_event_body_label.add_theme_color_override("font_color", UI_TEXT)
+	narrative_event_panel.add_child(narrative_event_body_label)
+
+	for index: int in range(2):
+		var choice_button := Button.new()
+		choice_button.name = "NarrativeChoice" + str(index + 1)
+		choice_button.position = Vector2(80.0 + float(index) * 440.0, 350.0)
+		choice_button.size = Vector2(400.0, 145.0)
+		choice_button.add_theme_font_size_override("font_size", 18)
+		choice_button.pressed.connect(select_narrative_event_choice_by_index.bind(index))
+		apply_button_style(choice_button, UI_BONE if index == 0 else UI_FLESH)
+		narrative_event_panel.add_child(choice_button)
+		narrative_event_buttons.append(choice_button)
+
+	narrative_event_panel.visible = false
+
+
+func show_narrative_event(event_id: String) -> bool:
+	var event: Dictionary = NARRATIVE_EVENT_CATALOG.get_event(event_id)
+	if event.is_empty() or narrative_event_choices.has(event_id):
+		return false
+
+	current_narrative_event_id = event_id
+	event_decision_in_progress = true
+	if factory_panel != null:
+		factory_panel.visible = false
+	if doctrine_panel != null:
+		doctrine_panel.visible = false
+	if ritual_panel != null:
+		ritual_panel.visible = false
+	narrative_event_panel.visible = true
+	refresh_narrative_event_ui()
+	return true
+
+
+func refresh_narrative_event_ui() -> void:
+	if narrative_event_panel == null or current_narrative_event_id.is_empty():
+		return
+	var event: Dictionary = NARRATIVE_EVENT_CATALOG.get_event(
+		current_narrative_event_id
+	)
+	if event.is_empty():
+		return
+	narrative_event_title_label.text = tr(str(event.get("title_key", "")))
+	narrative_event_body_label.text = tr(str(event.get("body_key", "")))
+	var choice_ids: Array = event.get("choices", []) as Array
+	for index: int in range(narrative_event_buttons.size()):
+		var button: Button = narrative_event_buttons[index]
+		button.visible = index < choice_ids.size()
+		if button.visible:
+			var choice: Dictionary = NARRATIVE_EVENT_CATALOG.get_choice(
+				str(choice_ids[index])
+			)
+			button.text = tr(str(choice.get("label_key", "")))
+
+
+func select_narrative_event_choice_by_index(index: int) -> void:
+	if not event_decision_in_progress:
+		return
+	var event: Dictionary = NARRATIVE_EVENT_CATALOG.get_event(
+		current_narrative_event_id
+	)
+	var choice_ids: Array = event.get("choices", []) as Array
+	if index < 0 or index >= choice_ids.size():
+		return
+	select_narrative_event_choice(str(choice_ids[index]))
+
+
+func select_narrative_event_choice(choice_id: String) -> bool:
+	if (
+		not event_decision_in_progress
+		or not NARRATIVE_EVENT_CATALOG.is_choice_for_event(
+			current_narrative_event_id,
+			choice_id
+		)
+	):
+		return false
+
+	var choice: Dictionary = NARRATIVE_EVENT_CATALOG.get_choice(choice_id)
+	var rewards: Dictionary = choice.get("rewards", {}) as Dictionary
+	var bones_reward: int = maxi(int(rewards.get("bones", 0)), 0)
+	var flesh_reward: int = maxi(int(rewards.get("flesh", 0)), 0)
+	var blood_reward: int = maxi(int(rewards.get("blood", 0)), 0)
+	var souls_reward: int = maxi(int(rewards.get("souls", 0)), 0)
+	bones += bones_reward
+	flesh += flesh_reward
+	blood += blood_reward
+	souls += souls_reward
+	factory_points += maxi(int(rewards.get("factory_points", 0)), 0)
+	total_bones_earned += bones_reward
+	total_flesh_earned += flesh_reward
+	total_blood_earned += blood_reward
+	total_souls_earned += souls_reward
+	narrative_event_choices[current_narrative_event_id] = choice_id
+
+	event_decision_in_progress = false
+	current_narrative_event_id = ""
+	narrative_event_panel.visible = false
+	update_bones_ui()
+	update_metrics_ui()
+	update_factory_panel_ui()
+	continue_wave_after_transition()
+	return true
+
+
+func continue_wave_after_transition() -> void:
+	run_checkpoint_requested.emit(build_checkpoint_state())
+	start_wave(current_wave)
+
+
 func get_upgrade_pool() -> Array[String]:
 
 	var pool: Array[String] = [
@@ -6523,9 +6678,10 @@ func update_upgrade_ui() -> void:
 	if upgrade_title_label != null:
 
 		upgrade_title_label.text = (
-			"WAVE "
+			tr("HUD_WAVE") + " "
 			+ str(current_wave)
-			+ " COMPLETE — SELECT AN UPGRADE"
+			+ " " + tr("WAVE_COMPLETE")
+			+ " — " + tr("WAVE_SELECT_UPGRADE")
 		)
 
 
@@ -6607,7 +6763,7 @@ func get_upgrade_card_text(
 		+ get_upgrade_status(
 			upgrade_id
 		)
-		+ "\nTaken: "
+		+ "\n" + tr("UPGRADE_TAKEN") + ": "
 		+ str(
 			get_upgrade_count(
 				upgrade_id
@@ -6750,12 +6906,12 @@ func select_upgrade(
 	wave_transition_in_progress = false
 
 	current_wave += 1
-	run_checkpoint_requested.emit(build_checkpoint_state())
-
-
-	start_wave(
+	var event_id: String = NARRATIVE_EVENT_CATALOG.get_event_id_for_wave(
 		current_wave
 	)
+	if not event_id.is_empty() and show_narrative_event(event_id):
+		return
+	continue_wave_after_transition()
 
 
 func apply_upgrade(
@@ -8215,6 +8371,10 @@ func build_checkpoint_state() -> Dictionary:
 		},
 		"army": army,
 		"upgrades": upgrade_counts.duplicate(true),
+		"narrative": {
+			"choices": narrative_event_choices.duplicate(true),
+			"pending_event": current_narrative_event_id,
+		},
 		"processing_directive": processing_directive,
 		"rituals": {
 			"blood_extraction_level": blood_extraction_level,
@@ -8281,6 +8441,10 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	ghosts.clear()
 	liches.clear()
 	occupied_undead_slots.clear()
+	var narrative: Dictionary = state.get("narrative", {}) as Dictionary
+	narrative_event_choices = (
+		narrative.get("choices", {}) as Dictionary
+	).duplicate(true)
 
 	upgrade_counts.clear()
 	var saved_upgrades: Dictionary = state.get("upgrades", {}) as Dictionary
@@ -8375,7 +8539,12 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	)
 
 	run_finished = false
-	start_wave(saved_wave)
+	var pending_event: String = str(narrative.get("pending_event", ""))
+	if not pending_event.is_empty():
+		current_wave = saved_wave
+		show_narrative_event(pending_event)
+	else:
+		start_wave(saved_wave)
 	update_bones_ui()
 	update_debug_ui()
 	update_factory_panel_ui()
@@ -8452,6 +8621,14 @@ func update_wave_ui() -> void:
 	elif is_elite_wave(current_wave):
 
 		wave_title += " - " + tr("WAVE_ELITE")
+
+
+	if event_decision_in_progress:
+		wave_label.text = (
+			wave_title
+			+ "\n" + tr("EVENT_DECISION_PENDING")
+		)
+		return
 
 
 	if wave_transition_in_progress:

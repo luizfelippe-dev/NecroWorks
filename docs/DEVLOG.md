@@ -459,3 +459,11 @@ Two new runners validate persistence and shell navigation. The complete 26-runne
 New Run now opens a localized prologue connecting the living kingdoms, the siege, the forbidden reanimation factory and the Foreman. The full Run Summary was migrated from hardcoded English to translation keys for EN/PT-BR/ES.
 
 Restart and Return to Main Menu now use explicit gameplay-to-shell signals. Direct F6 execution keeps standalone fallbacks, while F5 no longer risks reloading the wrong scene at the end of a run. Navigation and localization runners cover the new contract.
+
+---
+
+## 21/08/2026 — First between-Wave narrative events
+
+The Unregistered Grave Shipment interrupts the transition to Wave 7 and asks Production to choose 18 Bones or 8 Flesh plus 1 Blood. The Bound Arcanist appears before Wave 13 and offers 4 Souls or 2 Factory Points. Both incidents are localized in EN/PT-BR/ES.
+
+Choices are validated against a pure catalog, recorded once and persisted in checkpoints—including a pending decision. The upgrade panel heading and acquisition count were also migrated to translation keys. A dedicated event runner raises the suite to 27 scenarios, while Bone and Flesh full runs still defeat the Foreman.

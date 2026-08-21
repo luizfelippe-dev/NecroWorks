@@ -32,6 +32,8 @@ O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistid
 
 Nova Partida apresenta o primeiro prólogo narrativo localizado. A tela final também está integralmente localizada e oferece Reiniciar ou Voltar ao Menu Principal sem romper o shell da aplicação.
 
+As transições para as Waves 7 e 13 apresentam os primeiros incidentes narrativos: uma carga clandestina de restos e um Arcanista capturado. Cada evento oferece duas rotas econômicas exclusivas; a decisão é localizada e preservada no checkpoint.
+
 ### `v0.1.0 — First Run`
 
 Funcionalmente completo e validado:

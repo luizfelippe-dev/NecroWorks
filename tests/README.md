@@ -276,6 +276,16 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/core/game_shell_runner.gd
 ```
 
-The current suite contains 26 `*_runner.gd` scenarios. All 26 pass in Godot 4.7.1 headless at this milestone.
+Before the narrative-event slice, the suite contained 26 `*_runner.gd` scenarios and all passed in Godot 4.7.1 headless.
 
 The shell runner also covers the localized prologue and verifies that hosted gameplay exposes Restart/Return lifecycle connections. The localization runner validates the translated two-column Run Summary and its final navigation buttons.
+
+## Narrative events
+
+Validates Wave triggers, catalog ownership, invalid choices, economic rewards, UI bounds, EN/PT-BR/ES text and pending-event checkpoint restore:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/events/narrative_event_runner.gd
+```
+
+The current suite contains 27 `*_runner.gd` scenarios. All 27 pass in Godot 4.7.1 headless at this milestone.

@@ -755,3 +755,10 @@ V1 status: Main Menu, Pause, Continue/New Run, language, master volume, fullscre
 The first mandatory narrative beat is intentionally brief and occurs only after choosing New Run. It establishes three facts before Wave 1: the living kingdoms are besieging the last industrial city; NecroWorks is a forbidden defense factory; and the Foreman anchors the opposing production line.
 
 Future lore should arrive through optional discoveries and decision events between Waves. It must explain factions and deepen the human/elf/mage conflict without repeatedly pausing the autobattler loop.
+
+### First incidents
+
+- Before Wave 7 — Unregistered Grave Shipment: choose Bone preservation or Flesh/Blood rendering.
+- Before Wave 13 — The Bound Arcanist: choose immediate Soul extraction or seize Factory tooling.
+
+These are opportunity-cost decisions. They introduce the event cadence and connect fiction to the economy without adding irreversible punishment before enough manual playtest evidence exists. Later events may add faction consequences and risk/reward outcomes.

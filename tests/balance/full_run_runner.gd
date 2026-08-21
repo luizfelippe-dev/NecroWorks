@@ -67,6 +67,15 @@ func run_strategy(strategy: String) -> Dictionary:
 				game.select_upgrade_by_index(0)
 
 
+		if game.event_decision_in_progress:
+			var event_choice_index: int = 0
+			if game.current_narrative_event_id == "grave_shipment":
+				event_choice_index = 0 if strategy == "bone" else 1
+			elif game.current_narrative_event_id == "bound_arcanist":
+				event_choice_index = 1 if strategy == "bone" else 0
+			game.select_narrative_event_choice_by_index(event_choice_index)
+
+
 		var available_capacity: int = game.get_available_production_capacity()
 
 

@@ -378,3 +378,5 @@ The project now opens through a localized Main Menu and includes Pause, persiste
 This is necessary but not yet sufficient for a public demo. The next commercial-impact priorities remain a full manual UX pass, stronger combat VFX/SFX/animation, a second encounter climax, onboarding/lore delivery and representative store-quality footage.
 
 The first localized prologue and fully localized Run Summary now give public captures a beginning and ending instead of showing only a mechanical sandbox. Before store use, replace the text-only prologue presentation with final key art/audio and validate that returning players can reach gameplay quickly.
+
+Two localized between-Wave incidents now provide the first trailer-readable narrative decisions and demonstrate that the Bone/Flesh/Soul/Factory economy supports authored choices. This improves pitch clarity, but a commercial demo still needs a broader event catalog with stronger visual presentation and at least one decision whose consequence changes a later encounter.

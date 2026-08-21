@@ -534,3 +534,15 @@ Reasoning:
 New Run opens a short localized prologue rather than dropping the player directly into Wave 1. It establishes the living kingdoms as invaders, NecroWorks as a forbidden industrial defense system and the Foreman as the run's approaching target.
 
 Reasoning: the premise now frames Corpse recycling as an authored world and creates anticipation without interrupting combat. Longer lore remains reserved for optional in-run discoveries so repeat runs are not slowed by mandatory exposition.
+
+## Put narrative decisions between Waves and after upgrades
+
+The first events trigger before Waves 7 and 13 only after the previous Wave's upgrade is committed. Combat never pauses mid-attack and each event offers two mutually exclusive economic routes.
+
+Reasoning:
+
+- the player already expects a planning pause at this boundary;
+- choices connect lore directly to Bones/Flesh/Blood/Souls/Factory Points;
+- event IDs and rewards remain deterministic for save compatibility and balance tests;
+- two incidents are enough to validate pacing before building a large content catalog;
+- rewards use opportunity cost rather than surprise punishment during the first implementation.

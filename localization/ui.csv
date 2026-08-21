@@ -18,6 +18,15 @@ OPTIONS_BACK,BACK,VOLTAR,VOLVER
 PROLOGUE_TITLE,THE LAST PRODUCTION LINE,A ÚLTIMA LINHA DE PRODUÇÃO,LA ÚLTIMA LÍNEA DE PRODUCCIÓN
 PROLOGUE_BODY,The living kingdoms outlawed necromancy and then built their wars upon endless graves. Beneath the last industrial city NecroWorks awakens: a forbidden factory ordered to recycle the invaders into the army that will break the siege. Every corpse is raw material. Every Wave brings the Foreman closer.,Os reinos dos vivos proibiram a necromancia e depois construíram suas guerras sobre sepulturas sem fim. Sob a última cidade industrial a NecroWorks desperta: uma fábrica proibida encarregada de reciclar os invasores no exército que romperá o cerco. Cada cadáver é matéria-prima. Cada Onda aproxima o Encarregado.,Los reinos de los vivos prohibieron la necromancia y después construyeron sus guerras sobre tumbas sin fin. Bajo la última ciudad industrial NecroWorks despierta: una fábrica prohibida encargada de reciclar a los invasores en el ejército que romperá el asedio. Cada cadáver es materia prima. Cada Oleada acerca al Capataz.
 PROLOGUE_BEGIN,BEGIN THE SHIFT,INICIAR O TURNO,INICIAR EL TURNO
+EVENT_GRAVE_TITLE,UNREGISTERED GRAVE SHIPMENT,CARGA DE SEPULTURA NÃO REGISTRADA,CARGAMENTO DE TUMBA NO REGISTRADO
+EVENT_GRAVE_BODY,A sealed freight car reaches the lower intake without a living crew. The remains are old but usable. Production can preserve the skeletons or render everything through the Flesh line.,Um vagão lacrado chega à entrada inferior sem tripulação viva. Os restos são antigos mas ainda servem. A produção pode preservar os esqueletos ou processar tudo pela linha de Carne.,Un vagón sellado llega a la entrada inferior sin tripulación viva. Los restos son antiguos pero aún sirven. Producción puede preservar los esqueletos o procesarlo todo por la línea de Carne.
+EVENT_GRAVE_BONES,STRIP THE BONES — +18 BONES,EXTRAIR OS OSSOS — +18 OSSOS,EXTRAER LOS HUESOS — +18 HUESOS
+EVENT_GRAVE_FLESH,RENDER THE REMAINS — +8 FLESH / +1 BLOOD,PROCESSAR OS RESTOS — +8 CARNE / +1 SANGUE,PROCESAR LOS RESTOS — +8 CARNE / +1 SANGRE
+EVENT_ARCANIST_TITLE,THE BOUND ARCANIST,O ARCANISTA APRISIONADO,EL ARCANISTA CAUTIVO
+EVENT_ARCANIST_BODY,An enemy Mage survives the conveyor restraints and offers the codes to a field workshop. The extractor can drain the prisoner now or Production can seize the tools that maintained the living war machine.,Um Mago inimigo sobrevive às contenções da esteira e oferece os códigos de uma oficina de campanha. O extrator pode drenar o prisioneiro agora ou a Produção pode tomar as ferramentas que mantinham a máquina de guerra dos vivos.,Un Mago enemigo sobrevive a las sujeciones de la cinta y ofrece los códigos de un taller de campaña. El extractor puede drenar al prisionero ahora o Producción puede tomar las herramientas que mantenían la máquina de guerra de los vivos.
+EVENT_ARCANIST_SOULS,DRAIN THE PRISONER — +4 SOULS,DRENAR O PRISIONEIRO — +4 ALMAS,DRENAR AL PRISIONERO — +4 ALMAS
+EVENT_ARCANIST_TOOLS,SEIZE THE WORKSHOP — +2 FACTORY POINTS,TOMAR A OFICINA — +2 PONTOS DE FÁBRICA,TOMAR EL TALLER — +2 PUNTOS DE FÁBRICA
+EVENT_DECISION_PENDING,INCIDENT REPORT — DECISION REQUIRED,RELATÓRIO DE INCIDENTE — DECISÃO NECESSÁRIA,INFORME DE INCIDENTE — DECISIÓN NECESARIA
 RUN_TARGET_ACHIEVED,PRODUCTION TARGET ACHIEVED,META DE PRODUÇÃO ATINGIDA,OBJETIVO DE PRODUCCIÓN ALCANZADO
 RUN_FOREMAN_TERMINATED,THE FOREMAN HAS BEEN TERMINATED,O ENCARREGADO FOI ELIMINADO,EL CAPATAZ HA SIDO ELIMINADO
 RUN_OPERATION_TERMINATED,OPERATION TERMINATED,OPERAÇÃO ENCERRADA,OPERACIÓN TERMINADA
@@ -76,6 +85,7 @@ WAVE_ACTIVE,Active,Ativos,Activos
 WAVE_PRIMARY,Primary,Principal,Principal
 WAVE_COMPLETE,COMPLETE,CONCLUÍDA,COMPLETADA
 WAVE_SELECT_UPGRADE,SELECT AN UPGRADE,SELECIONE UM APRIMORAMENTO,SELECCIONA UNA MEJORA
+UPGRADE_TAKEN,TAKEN,ESCOLHIDO,SELECCIONADO
 RUN_COMPLETE,RUN COMPLETE,PARTIDA CONCLUÍDA,PARTIDA COMPLETADA
 RUN_VICTORY,VICTORY,VITÓRIA,VICTORIA
 RUN_DEFEAT,DEFEAT,DERROTA,DERROTA

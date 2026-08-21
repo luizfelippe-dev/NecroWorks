@@ -204,11 +204,13 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] Elf advanced behavior — Precision Shot backline targeting
 - [x] archetype-specific elite variants — Bulwark, Overcharged and Deadeye
 - [ ] 2–3 bosses
-- [ ] events
+- [x] narrative event system and first two between-Wave incidents
+- [ ] expand event catalog with risk/reward and faction consequences
 - [ ] Boss Corpse choices
 - [ ] recipes/fusions
 - [x] localized narrative intro prototype
-- [ ] in-run narrative discoveries/events
+- [x] first localized in-run narrative decisions on Waves 7 and 13
+- [ ] optional discoveries and larger event catalog
 - [ ] first complete lore pass
 
 ---

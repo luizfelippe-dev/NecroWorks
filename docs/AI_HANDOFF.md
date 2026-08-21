@@ -1163,3 +1163,17 @@ Limite conhecido: o save V1 reinicia a Wave registrada; inimigos ativos, Corpses
 - runners de shell e localização verificam prólogo, conexões de lifecycle, resumo e botões finais.
 
 Próximo passo recomendado: run manual completa por F5. Depois disso, implementar o primeiro evento narrativo entre Waves ou um segundo Boss sem adicionar uma nova família de tropas.
+
+## Atualização 21/08/2026 — eventos narrativos V1
+
+- novo catálogo puro em `scripts/game/narrative_event_catalog.gd`;
+- antes da Wave 7: Carga de Sepultura Não Registrada — +18 Bones ou +8 Flesh/+1 Blood;
+- antes da Wave 13: Arcanista Aprisionado — +4 Souls ou +2 Factory Points;
+- textos e botões em EN/PT-BR/ES;
+- escolha inválida ou repetida não concede recompensa;
+- decisões resolvidas e pendentes entram no checkpoint;
+- título/cartões de upgrade receberam mais cobertura de localização;
+- `tests/events/narrative_event_runner.gd` cobre catálogo, UI, recompensas, bounds, idiomas e restore;
+- as estratégias Bone e Flesh continuam vencendo The Foreman com rotas diferentes.
+
+Próximo passo recomendado: playtest manual do ritmo dos incidentes. Se a pausa estiver boa, criar um terceiro evento com consequência futura ou iniciar o segundo Boss.
