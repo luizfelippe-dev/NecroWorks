@@ -1152,3 +1152,14 @@ Próximo passo recomendado: uma run manual com Arqueiros/Liches nas Waves 10/15.
 - regressão completa: 26/26 runners aprovados em Godot 4.7.1 headless.
 
 Limite conhecido: o save V1 reinicia a Wave registrada; inimigos ativos, Corpses/filas e frações de timers não são uma restauração frame a frame. Próximo passo recomendado: run manual do fluxo F5 completo e, depois, segundo Boss/evento de decisão.
+
+## Atualização 21/08/2026 — prólogo e encerramento localizado
+
+- Nova Partida abre um prólogo curto em EN/PT-BR/ES antes da Wave 1;
+- o texto introduz os reinos vivos, o cerco, a fábrica proibida e o Encarregado;
+- toda a tela final deixou de usar texto inglês hardcoded;
+- Reiniciar e Voltar ao Menu usam sinais quando `main.tscn` está dentro do shell;
+- F6 conserva fallbacks independentes para reload/entrada da aplicação;
+- runners de shell e localização verificam prólogo, conexões de lifecycle, resumo e botões finais.
+
+Próximo passo recomendado: run manual completa por F5. Depois disso, implementar o primeiro evento narrativo entre Waves ou um segundo Boss sem adicionar uma nova família de tropas.

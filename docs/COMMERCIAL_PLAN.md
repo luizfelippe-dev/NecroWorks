@@ -376,3 +376,5 @@ Otherwise postpone/cut.
 The project now opens through a localized Main Menu and includes Pause, persistent Options and Continue. This removes a major prototype-only first impression and establishes the storage boundary required for later Steam Cloud work.
 
 This is necessary but not yet sufficient for a public demo. The next commercial-impact priorities remain a full manual UX pass, stronger combat VFX/SFX/animation, a second encounter climax, onboarding/lore delivery and representative store-quality footage.
+
+The first localized prologue and fully localized Run Summary now give public captures a beginning and ending instead of showing only a mechanical sandbox. Before store use, replace the text-only prologue presentation with final key art/audio and validate that returning players can reach gameplay quickly.

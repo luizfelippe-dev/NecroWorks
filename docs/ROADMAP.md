@@ -207,7 +207,8 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [ ] events
 - [ ] Boss Corpse choices
 - [ ] recipes/fusions
-- [ ] narrative delivery prototype: intro + in-run discoveries
+- [x] localized narrative intro prototype
+- [ ] in-run narrative discoveries/events
 - [ ] first complete lore pass
 
 ---

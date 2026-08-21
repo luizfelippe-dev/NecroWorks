@@ -37,6 +37,8 @@ signal emergency_reclamation_triggered(
 )
 signal run_checkpoint_requested(state: Dictionary)
 signal run_completed(victory: bool)
+signal restart_requested
+signal return_to_menu_requested
 
 
 func _notification(what: int) -> void:
@@ -67,6 +69,8 @@ func refresh_localized_ui() -> void:
 	refresh_world_localization()
 	update_factory_panel_ui()
 	update_army_doctrine_ui()
+	if run_end_panel != null and run_end_panel.visible:
+		show_run_end_screen()
 
 
 func refresh_world_localization() -> void:
@@ -1212,6 +1216,7 @@ var run_end_title_label: Label = null
 var run_end_summary_label: Label = null
 var run_end_build_label: Label = null
 var restart_run_button: Button = null
+var return_to_menu_button: Button = null
 
 
 # =========================================================
@@ -7903,7 +7908,7 @@ func create_run_end_ui() -> void:
 	restart_run_button.name = "RestartRunButton"
 
 	restart_run_button.position = Vector2(
-		760.0,
+		535.0,
 		850.0
 	)
 
@@ -7912,9 +7917,7 @@ func create_run_end_ui() -> void:
 		90.0
 	)
 
-	restart_run_button.text = (
-		"RESTART RUN"
-	)
+	restart_run_button.text = tr("RUN_RESTART")
 
 	restart_run_button.pressed.connect(
 		restart_run
@@ -7924,6 +7927,14 @@ func create_run_end_ui() -> void:
 	run_end_panel.add_child(
 		restart_run_button
 	)
+
+	return_to_menu_button = Button.new()
+	return_to_menu_button.name = "ReturnToMenuButton"
+	return_to_menu_button.position = Vector2(985.0, 850.0)
+	return_to_menu_button.size = Vector2(400.0, 90.0)
+	return_to_menu_button.text = tr("RUN_RETURN_MENU")
+	return_to_menu_button.pressed.connect(return_to_main_menu)
+	run_end_panel.add_child(return_to_menu_button)
 
 
 	run_end_panel.visible = false
@@ -8010,123 +8021,117 @@ func show_run_end_screen() -> void:
 	if run_won:
 
 		run_end_title_label.text = (
-			"PRODUCTION TARGET ACHIEVED"
-			+ "\nTHE FOREMAN HAS BEEN TERMINATED"
+			tr("RUN_TARGET_ACHIEVED")
+			+ "\n" + tr("RUN_FOREMAN_TERMINATED")
 		)
 
 	else:
 
 		run_end_title_label.text = (
-			"OPERATION TERMINATED"
-			+ "\nPRODUCTION LINE COLLAPSED"
+			tr("RUN_OPERATION_TERMINATED")
+			+ "\n" + tr("RUN_LINE_COLLAPSED")
 		)
 
 
 	run_end_summary_label.text = (
-		"RUN STATISTICS"
-		+ "\n\nPROGRESS"
-		+ "\nWave Reached: "
+		tr("RUN_STATISTICS")
+		+ "\n\n" + tr("RUN_PROGRESS")
+		+ "\n" + tr("RUN_WAVE_REACHED") + ": "
 		+ str(current_wave)
-		+ "\nEnemies Killed: "
+		+ "\n" + tr("METRICS_ENEMIES_KILLED") + ": "
 		+ str(total_enemies_killed)
-		+ "\nCorpses Processed: "
+		+ "\n" + tr("METRICS_CORPSES_PROCESSED") + ": "
 		+ str(total_corpses_processed)
-		+ "\nCorpses Remaining: "
+		+ "\n" + tr("RUN_CORPSES_REMAINING") + ": "
 		+ str(corpses.size())
-		+ "\n\nUNDEAD PRODUCTION"
-		+ "\nSkeletons Built: "
+		+ "\n\n" + tr("RUN_UNDEAD_PRODUCTION")
+		+ "\n" + tr("METRICS_SKELETONS_BUILT") + ": "
 		+ str(total_skeletons_created)
-		+ "\nSkeletons Lost: "
+		+ "\n" + tr("METRICS_SKELETONS_LOST") + ": "
 		+ str(total_skeletons_lost)
-		+ "\nSkeletons Revived: "
+		+ "\n" + tr("RUN_SKELETONS_REVIVED") + ": "
 		+ str(total_skeletons_revived)
-		+ "\nZombies Built: "
+		+ "\n" + tr("METRICS_ZOMBIES_BUILT") + ": "
 		+ str(total_zombies_created)
-		+ "\nZombies Lost: "
+		+ "\n" + tr("METRICS_ZOMBIES_LOST") + ": "
 		+ str(total_zombies_lost)
-		+ "\nGhosts Built: "
+		+ "\n" + tr("METRICS_GHOSTS_BUILT") + ": "
 		+ str(total_ghosts_created)
-		+ "\nGhosts Lost: "
+		+ "\n" + tr("METRICS_GHOSTS_LOST") + ": "
 		+ str(total_ghosts_lost)
-		+ "\nLiches Built: "
+		+ "\n" + tr("METRICS_LICHES_BUILT") + ": "
 		+ str(total_liches_created)
-		+ "\nLiches Lost: "
+		+ "\n" + tr("METRICS_LICHES_LOST") + ": "
 		+ str(total_liches_lost)
-		+ "\nThralls Summoned: "
+		+ "\n" + tr("RUN_THRALLS_SUMMONED") + ": "
 		+ str(total_thralls_summoned)
-		+ "\nThralls Expired: "
+		+ "\n" + tr("RUN_THRALLS_EXPIRED") + ": "
 		+ str(total_thralls_expired)
-		+ "\n\nECONOMY"
-		+ "\nBones Earned: "
+		+ "\n\n" + tr("RUN_ECONOMY")
+		+ "\n" + tr("RESOURCE_BONES") + " " + tr("RUN_EARNED") + ": "
 		+ str(total_bones_earned)
-		+ "\nFlesh Earned: "
+		+ "\n" + tr("RESOURCE_FLESH") + " " + tr("RUN_EARNED") + ": "
 		+ str(total_flesh_earned)
-		+ "\nBlood Earned: "
+		+ "\n" + tr("RESOURCE_BLOOD") + " " + tr("RUN_EARNED") + ": "
 		+ str(total_blood_earned)
-		+ "\nSouls Earned: "
+		+ "\n" + tr("RESOURCE_SOULS") + " " + tr("RUN_EARNED") + ": "
 		+ str(total_souls_earned)
-		+ "\nBones Remaining: "
+		+ "\n" + tr("RESOURCE_BONES") + " " + tr("RUN_REMAINING") + ": "
 		+ str(bones)
-		+ "\nFlesh Remaining: "
+		+ "\n" + tr("RESOURCE_FLESH") + " " + tr("RUN_REMAINING") + ": "
 		+ str(flesh)
-		+ "\nBlood Remaining: "
+		+ "\n" + tr("RESOURCE_BLOOD") + " " + tr("RUN_REMAINING") + ": "
 		+ str(blood)
-		+ "\nSouls Remaining: "
+		+ "\n" + tr("RESOURCE_SOULS") + " " + tr("RUN_REMAINING") + ": "
 		+ str(souls)
 	)
 
 
 	run_end_build_label.text = (
-		"BUILD SUMMARY"
-		+ "\n\nArmy Remaining: "
+		tr("RUN_BUILD_SUMMARY")
+		+ "\n\n" + tr("RUN_ARMY_REMAINING") + ": "
 		+ str(get_total_undead_count())
-		+ "\nUpgrades Selected: "
+		+ "\n" + tr("RUN_UPGRADES_SELECTED") + ": "
 		+ str(total_upgrades_selected)
-		+ "\nSynergies Unlocked: "
+		+ "\n" + tr("RUN_SYNERGIES_UNLOCKED") + ": "
 		+ str(active_synergies.size())
-		+ "\n\nPROCESSING ROUTES"
-		+ "\nBalanced: "
+		+ "\n\n" + tr("RUN_PROCESSING_ROUTES")
+		+ "\n" + tr("PROCESSING_BALANCED") + ": "
 		+ str(int(corpses_processed_by_directive[PROCESSING_BALANCED]))
-		+ "\nBone Focus: "
+		+ "\n" + tr("PROCESSING_BONE_FOCUS") + ": "
 		+ str(int(corpses_processed_by_directive[PROCESSING_BONE_FOCUS]))
-		+ "\nFlesh Focus: "
+		+ "\n" + tr("PROCESSING_FLESH_FOCUS") + ": "
 		+ str(int(corpses_processed_by_directive[PROCESSING_FLESH_FOCUS]))
 		+ "\n\n"
 		+ get_run_synergy_summary()
-		+ "\n\nOPERATION STATUS"
+		+ "\n\n" + tr("RUN_OPERATION_STATUS")
 		+ "\n"
 		+ get_run_result_message()
 	)
 
 
 	run_end_panel.visible = true
+	restart_run_button.text = tr("RUN_RESTART")
+	return_to_menu_button.text = tr("RUN_RETURN_MENU")
 
 
 func get_run_result_message() -> String:
 
 	if run_won:
-
-		return (
-			"Result: Production target achieved."
-		)
+		return tr("RUN_RESULT_VICTORY")
 
 
-	return (
-		"Result: No Undead, no Corpses, "
-		+ "and insufficient resources to rebuild."
-	)
+	return tr("RUN_RESULT_DEFEAT")
 
 
 func get_run_synergy_summary() -> String:
 
 	if active_synergies.is_empty():
 
-		return "Active Synergies: None"
+		return tr("SYNERGIES_ACTIVE") + ": " + tr("COMMON_NONE")
 
 
-	var result: String = (
-		"Active Synergies:"
-	)
+	var result: String = tr("SYNERGIES_ACTIVE") + ":"
 
 
 	var synergy_order: Array[String] = [
@@ -8171,7 +8176,17 @@ func restart_run() -> void:
 	print("==============================")
 
 
+	if not restart_requested.get_connections().is_empty():
+		restart_requested.emit()
+		return
 	get_tree().reload_current_scene()
+
+
+func return_to_main_menu() -> void:
+	if not return_to_menu_requested.get_connections().is_empty():
+		return_to_menu_requested.emit()
+		return
+	get_tree().change_scene_to_file("res://app.tscn")
 
 
 func build_checkpoint_state() -> Dictionary:

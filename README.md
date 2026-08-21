@@ -30,6 +30,8 @@ Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de en
 
 O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistidos em `user://necroworks_settings.cfg`; o checkpoint versionado de partida usa `user://necroworks_run.json` e restaura onda, recursos, exército, upgrades, Fábrica e Doutrina.
 
+Nova Partida apresenta o primeiro prólogo narrativo localizado. A tela final também está integralmente localizada e oferece Reiniciar ou Voltar ao Menu Principal sem romper o shell da aplicação.
+
 ### `v0.1.0 — First Run`
 
 Funcionalmente completo e validado:

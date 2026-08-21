@@ -12,11 +12,14 @@ var options_return_to_pause: bool = false
 
 var ui_layer: CanvasLayer
 var main_menu: Control
+var prologue_menu: Control
 var pause_menu: Control
 var options_menu: Control
 var continue_button: Button
 var title_label: Label
 var subtitle_label: Label
+var prologue_title: Label
+var prologue_body: Label
 var pause_title: Label
 var options_title: Label
 var language_label: Label
@@ -48,6 +51,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 	if options_menu.visible:
 		close_options()
+	elif prologue_menu.visible:
+		show_main_menu()
 	elif current_game != null:
 		if get_tree().paused:
 			resume_game()
@@ -75,6 +80,23 @@ func build_interface() -> void:
 	continue_button = add_localized_button(main_box, "MENU_CONTINUE", continue_run)
 	add_localized_button(main_box, "MENU_OPTIONS", open_options_from_main)
 	add_localized_button(main_box, "MENU_QUIT", quit_game)
+
+	prologue_menu = create_screen("PrologueMenu", Color(0.002, 0.006, 0.005, 1.0))
+	var prologue_box := create_center_panel(prologue_menu, Vector2(880.0, 660.0))
+	prologue_title = create_label(34, ACCENT)
+	prologue_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	prologue_box.add_child(prologue_title)
+	prologue_box.add_child(create_separator())
+	prologue_body = create_label(20)
+	prologue_body.custom_minimum_size = Vector2(0.0, 330.0)
+	prologue_body.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	prologue_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	prologue_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prologue_body.add_theme_constant_override("line_spacing", 8)
+	prologue_box.add_child(prologue_body)
+	prologue_box.add_child(create_separator())
+	add_localized_button(prologue_box, "PROLOGUE_BEGIN", confirm_new_run)
+	add_localized_button(prologue_box, "OPTIONS_BACK", show_main_menu)
 
 	pause_menu = create_screen("PauseMenu", Color(0.0, 0.0, 0.0, 0.72))
 	var pause_box := create_center_panel(pause_menu, Vector2(500.0, 500.0))
@@ -116,6 +138,7 @@ func build_interface() -> void:
 	options_apply_button = add_localized_button(options_box, "OPTIONS_APPLY", apply_options)
 	options_back_button = add_localized_button(options_box, "OPTIONS_BACK", close_options)
 
+	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
 
@@ -185,6 +208,8 @@ func refresh_localized_text() -> void:
 		return
 	title_label.text = tr("GAME_TITLE")
 	subtitle_label.text = tr("GAME_TAGLINE")
+	prologue_title.text = tr("PROLOGUE_TITLE")
+	prologue_body.text = tr("PROLOGUE_BODY")
 	pause_title.text = tr("PAUSE_TITLE")
 	options_title.text = tr("OPTIONS_TITLE")
 	language_label.text = tr("OPTIONS_LANGUAGE")
@@ -199,12 +224,18 @@ func refresh_localized_text() -> void:
 func show_main_menu() -> void:
 	get_tree().paused = false
 	main_menu.visible = true
+	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
 	continue_button.disabled = not RunSaveStore.has_checkpoint()
 
 
 func start_new_run() -> void:
+	main_menu.visible = false
+	prologue_menu.visible = true
+
+
+func confirm_new_run() -> void:
 	RunSaveStore.delete_checkpoint()
 	start_game({})
 
@@ -226,7 +257,10 @@ func start_game(checkpoint: Dictionary) -> void:
 	move_child(current_game, 0)
 	current_game.run_checkpoint_requested.connect(save_checkpoint)
 	current_game.run_completed.connect(on_run_completed)
+	current_game.restart_requested.connect(restart_game)
+	current_game.return_to_menu_requested.connect(return_to_menu)
 	main_menu.visible = false
+	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
 	if not checkpoint.is_empty():
@@ -262,6 +296,13 @@ func save_and_return_to_menu() -> void:
 	show_main_menu()
 
 
+func return_to_menu() -> void:
+	if is_instance_valid(current_game):
+		current_game.queue_free()
+	current_game = null
+	show_main_menu()
+
+
 func restart_game() -> void:
 	RunSaveStore.delete_checkpoint()
 	start_game({})
@@ -279,6 +320,7 @@ func open_options_from_pause() -> void:
 
 func open_options() -> void:
 	main_menu.visible = false
+	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = true
 	var locale: String = LocalizationService.normalize_locale(str(settings.locale))

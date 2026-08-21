@@ -69,9 +69,18 @@ func run_validation() -> void:
 	game.set_processing_directive_locked(false)
 	game.set_processing_directive(game.PROCESSING_BALANCED)
 	game.finish_run(true)
-	assert("Balanced: 1" in game.run_end_build_label.text)
-	assert("Bone Focus: 1" in game.run_end_build_label.text)
-	assert("Flesh Focus: 1" in game.run_end_build_label.text)
+	assert(
+		TranslationServer.translate("PROCESSING_BALANCED") + ": 1"
+		in game.run_end_build_label.text
+	)
+	assert(
+		TranslationServer.translate("PROCESSING_BONE_FOCUS") + ": 1"
+		in game.run_end_build_label.text
+	)
+	assert(
+		TranslationServer.translate("PROCESSING_FLESH_FOCUS") + ": 1"
+		in game.run_end_build_label.text
+	)
 	for directive_button_value: Variant in game.processing_directive_buttons.values():
 		var directive_button: Button = directive_button_value as Button
 		assert(directive_button != null and directive_button.disabled)

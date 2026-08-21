@@ -16,15 +16,23 @@ func run_validation() -> void:
 	assert(shell.main_menu.visible)
 	assert(not shell.pause_menu.visible)
 	assert(shell.title_label.text == "NECROWORKS")
+	shell.start_new_run()
+	assert(shell.prologue_menu.visible)
+	assert(not shell.main_menu.visible)
+	shell.show_main_menu()
 
 	LocalizationService.set_locale("pt-BR")
 	await process_frame
 	assert(shell.pause_title.text == "PRODUÇÃO PAUSADA")
 	assert(shell.options_apply_button.text == "APLICAR")
+	assert(shell.prologue_title.text == "A ÚLTIMA LINHA DE PRODUÇÃO")
+	assert(shell.prologue_body.text.contains("Cada cadáver é matéria-prima"))
 
 	shell.start_game({})
 	await process_frame
 	assert(shell.current_game != null)
+	assert(not shell.current_game.restart_requested.get_connections().is_empty())
+	assert(not shell.current_game.return_to_menu_requested.get_connections().is_empty())
 	assert(not shell.main_menu.visible)
 	shell.pause_game()
 	assert(paused)

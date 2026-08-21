@@ -40,6 +40,14 @@ func run_validation() -> void:
 	)
 	game.spawn_corpse(Vector2(800.0, 520.0))
 	assert(game.corpses.back().text == "CADÁVER")
+	game.run_won = true
+	game.show_run_end_screen()
+	assert(game.run_end_title_label.text.contains("META DE PRODUÇÃO ATINGIDA"))
+	assert(game.run_end_summary_label.text.contains("ESTATÍSTICAS DA PARTIDA"))
+	assert(game.run_end_build_label.text.contains("RESUMO DA BUILD"))
+	assert(game.restart_run_button.text == "REINICIAR PARTIDA")
+	assert(game.return_to_menu_button.text == "VOLTAR AO MENU PRINCIPAL")
+	game.run_end_panel.visible = false
 
 
 	LOCALIZATION_SERVICE.set_locale("es_MX")

@@ -451,3 +451,11 @@ F5 now enters a dedicated application shell instead of launching combat immediat
 Locale, master volume and fullscreen preferences persist through a sanitized ConfigFile. A versioned JSON checkpoint supports Continue and restores Wave, resources, permanent army composition, upgrades, Factory progression and Army Doctrine. Checkpoints are emitted between Waves and may also be created from Pause.
 
 Two new runners validate persistence and shell navigation. The complete 26-runner regression passed, including both deterministic Foreman victories.
+
+---
+
+## 21/08/2026 — Narrative entry and lifecycle polish
+
+New Run now opens a localized prologue connecting the living kingdoms, the siege, the forbidden reanimation factory and the Foreman. The full Run Summary was migrated from hardcoded English to translation keys for EN/PT-BR/ES.
+
+Restart and Return to Main Menu now use explicit gameplay-to-shell signals. Direct F6 execution keeps standalone fallbacks, while F5 no longer risks reloading the wrong scene at the end of a run. Navigation and localization runners cover the new contract.

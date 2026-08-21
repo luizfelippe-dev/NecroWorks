@@ -277,3 +277,5 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 ```
 
 The current suite contains 26 `*_runner.gd` scenarios. All 26 pass in Godot 4.7.1 headless at this milestone.
+
+The shell runner also covers the localized prologue and verifies that hosted gameplay exposes Restart/Return lifecycle connections. The localization runner validates the translated two-column Run Summary and its final navigation buttons.

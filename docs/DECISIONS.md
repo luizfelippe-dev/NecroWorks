@@ -528,3 +528,9 @@ Reasoning:
 - allows corrupt or incompatible saves to fail before gameplay is mutated;
 - makes future Steam/platform integration replace the storage boundary without rewriting combat;
 - Wave-granular checkpoints are more deterministic than attempting frame-perfect restoration during the prototype.
+
+## Establish lore before the first combat frame
+
+New Run opens a short localized prologue rather than dropping the player directly into Wave 1. It establishes the living kingdoms as invaders, NecroWorks as a forbidden industrial defense system and the Foreman as the run's approaching target.
+
+Reasoning: the premise now frames Corpse recycling as an authored world and creates anticipation without interrupting combat. Longer lore remains reserved for optional in-run discoveries so repeat runs are not slowed by mandatory exposition.

@@ -749,3 +749,9 @@ The vertical slice requires:
 - persistent settings and versioned save data.
 
 V1 status: Main Menu, Pause, Continue/New Run, language, master volume, fullscreen and versioned run checkpoints are implemented. Continue resumes from a recorded Wave with permanent strategic state; it does not promise a frame-perfect mid-combat resume.
+
+## Narrative delivery V1
+
+The first mandatory narrative beat is intentionally brief and occurs only after choosing New Run. It establishes three facts before Wave 1: the living kingdoms are besieging the last industrial city; NecroWorks is a forbidden defense factory; and the Foreman anchors the opposing production line.
+
+Future lore should arrive through optional discoveries and decision events between Waves. It must explain factions and deepen the human/elf/mage conflict without repeatedly pausing the autobattler loop.

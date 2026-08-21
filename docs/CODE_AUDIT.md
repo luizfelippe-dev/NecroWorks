@@ -122,6 +122,10 @@ The current checkpoint is Wave-granular rather than frame-perfect. Active enemie
 
 Settings and application-shell navigation now have persistent automated coverage. The full headless regression is 26/26 on Godot 4.7.1.
 
+### P1 — Application lifecycle (closed for V1)
+
+The former `reload_current_scene()` restart path was unsafe once gameplay became a child of `app.tscn`: it could reload the shell instead of restarting combat. Gameplay now emits lifecycle requests when hosted and retains direct-scene fallbacks for F6. End-screen controls and the complete two-column summary are localized in all three supported languages and covered by navigation/localization assertions.
+
 ### P2 — Prototype unit scenes
 
 Square placeholders are gone and all current combatants have temporary sprites. Zombie still reuses the Skeleton scene structurally, and none of the units have animation state machines, hit feedback or audio identity. Each commercial unit eventually needs a dedicated presentation scene even if combat data remains shared.
