@@ -32,7 +32,22 @@ O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistid
 
 Nova Partida apresenta o primeiro prólogo narrativo localizado. A tela final também está integralmente localizada e oferece Reiniciar ou Voltar ao Menu Principal sem romper o shell da aplicação.
 
-As transições para as Waves 7 e 13 apresentam os primeiros incidentes narrativos: uma carga clandestina de restos e um Arcanista capturado. Cada evento oferece duas rotas econômicas exclusivas; a decisão é localizada e preservada no checkpoint.
+Cinco incidentes narrativos aparecem entre as ondas 4 e 16. As escolhas incluem rotas econômicas, risco permanente e aproveitamento dos restos dos chefes intermediários. Decisões e modificadores são localizados e preservados no checkpoint.
+
+### `v0.4.0 — Build Diversity & Content`
+
+Milestone completo e validado:
+
+- 30 upgrades, incluindo três raros que alteram regras de recompensa e recuperação;
+- 10 sinergias;
+- seis identidades de tropa entre unidades permanentes e Servos temporários;
+- Elites nas ondas 5, 9, 14 e 18;
+- Marechal da Sepultura na onda 10, Auditor Arcano na onda 15 e Capataz na onda 20;
+- cinco eventos narrativos com escolhas persistentes;
+- duas decisões de Cadáver de Chefe;
+- Liga de Ossuário e Formação Vinculada no painel de Fusões;
+- primeira lore completa com facções, chefes e linha narrativa da run;
+- traduções EN, PT-BR e ES para todo o conteúdo novo.
 
 ### `v0.1.0 — First Run`
 
@@ -174,19 +189,23 @@ O primeiro upgrade raro/regra-alteradora é Recuperação Emergencial. Ele come�
 
 ### Variantes Elite
 
-Nas Waves 5, 10 e 15, o bônus genérico de HP/dano agora é acompanhado por um traço próprio:
+Nas Waves 5, 9, 14 e 18, o bônus de HP/dano é acompanhado por um traço próprio:
 
 - Guerreiro Elite — Baluarte: reduz em 20% o dano recebido;
 - Mago Elite — Sobrecarregado: Rajada a cada 2 ataques, 65% de splash e 0,45 s de supressão;
 - Elfo Elite — Olho da Morte: Precisão a cada 3 ataques e 150% de dano.
 
-Nome e traço aparecem sobre cada Elite em EN, PT-BR e ES. The Foreman continua sendo Boss e não recebe esses modificadores.
+Nome e traço aparecem sobre cada Elite em EN, PT-BR e ES. Ondas de chefe não recebem esses modificadores.
 
-## Boss atual
+## Chefes atuais
 
-### The Foreman
+- **Onda 10 — Marechal da Sepultura:** 1050 PV, 18 de dano e golpe especial em até três alvos.
+- **Onda 15 — Auditor Arcano:** 1650 PV, 24 de dano e descarga especial em até quatro alvos.
+- **Onda 20 — Capataz:** 2200 PV, 28 de dano e Industrial Crush em até seis alvos.
 
-Wave 20.
+Os dois primeiros liberam escolhas exclusivas sobre seus restos. Derrotar o Capataz encerra a run com vitória.
+
+### Capataz
 
 ```text
 HP: 2200
@@ -201,31 +220,11 @@ Derrotá-lo encerra a run com Victory.
 
 ## Upgrades atuais
 
-1. Sharpened Bones
-2. Bone Plating
-3. Efficient Recycling
-4. Rapid Assault
-5. Death March
-6. Mass Production
-7. Heavy Bones
-8. Bone Harvest
-9. Reassembly
-10. Final Service
-11. Rotten Bulk
-12. Grave Hunger
-13. Dead Weight
-14. Carrion Recovery
+O catálogo possui 30 opções distribuídas entre Esqueletos, Arqueiros, Zumbis, Fantasmas, Liches, economia e produção. Recuperação Emergencial, Dízimo Carmesim e Patente Proibida formam o primeiro conjunto raro. Upgrades comuns têm limite de acúmulo e os especializados só entram no pool quando sua unidade ou momento de run é relevante.
 
-Os quatro últimos upgrades formam a primeira identidade própria de Flesh/Zombie:
-mais resistência, dano, uma opção de tank pesado com trade-off de velocidade e recuperação de HP ao atacar.
+## Sinergias atuais
 
-## Synergies atuais
-
-- Recycling Plant
-- Second Shift
-- Bone Assembly Line
-- Overclocked Ossuary
-- Meat Shield Protocol
+O catálogo possui 10 sinergias cobrindo processamento, Esqueletos, Zumbis, Blood, Souls, Arqueiros, Liches e Fábrica. O painel lateral usa área própria e permanece dentro do viewport mesmo com todas ativas.
 
 ## Direção visual oficial
 
@@ -297,12 +296,12 @@ implementar
 → próxima funcionalidade
 ```
 
-Consulte `docs/AI_HANDOFF.md` antes de continuar o desenvolvimento em outro chat.
+Consulte `docs/PROJECT_STATE.md` para o estado técnico consolidado e `docs/LORE.md` para a base narrativa.
 
 Auditoria técnica e próximos refactors: `docs/CODE_AUDIT.md`.
 
 O painel de Doutrina do Exército permite salvar composição-alvo, reservas mínimas e prioridade de produção. A reposição pode ser iniciada ou pausada pelo jogador e usa exclusivamente as filas temporizadas independentes do Skeleton Assembler e da Flesh Vat. Pedidos reservam recursos e vagas atomicamente, e cada máquina entrega uma unidade por ciclo.
 
-O início da v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot agora são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
+A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-Próximo foco: playtest manual da composição Archer/Lich contra as variantes Elite, seguido por um segundo Boss ou pelo primeiro evento de decisão da run.
+Próximo foco: v0.5.0, com desbloqueios, Codex, histórico de runs e progressão permanente baseada em novas possibilidades.

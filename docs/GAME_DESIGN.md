@@ -511,7 +511,7 @@ Target structure:
 - readable Corpse Processor, Bone Storage, Flesh Vat and Skeleton Assembler machinery;
 - persistent lower navigation for Factory and meta/system panels.
 
-The user owns the conceptual reference image and authorizes close adaptation.
+The conceptual reference image belongs to the project and defines the intended presentation.
 
 ---
 
@@ -727,7 +727,7 @@ The upgrade changes loss economics without preventing death. Its once-per-Wave l
 
 ## Elite variants
 
-Elite Waves retain their five-enemy structure on Waves 5, 10 and 15, but archetypes now intensify their existing counter-role:
+Elite Waves retain their five-enemy structure on Waves 5, 9, 14 and 18, but archetypes intensify their existing counter-role:
 
 - Bulwark Warrior takes 20% less incoming damage, extending frontline obstruction;
 - Overcharged Mage casts Arcane Burst every second attack with 65% splash and 0.45-second suppression;
@@ -756,9 +756,42 @@ The first mandatory narrative beat is intentionally brief and occurs only after 
 
 Future lore should arrive through optional discoveries and decision events between Waves. It must explain factions and deepen the human/elf/mage conflict without repeatedly pausing the autobattler loop.
 
-### First incidents
+### Initial incidents
 
 - Before Wave 7 — Unregistered Grave Shipment: choose Bone preservation or Flesh/Blood rendering.
 - Before Wave 13 — The Bound Arcanist: choose immediate Soul extraction or seize Factory tooling.
 
-These are opportunity-cost decisions. They introduce the event cadence and connect fiction to the economy without adding irreversible punishment before enough manual playtest evidence exists. Later events may add faction consequences and risk/reward outcomes.
+These two incidents established the cadence. The v0.4 catalog below expands it with faction pressure, Boss remains and choice-dependent discoveries.
+
+## v0.4 encounter cadence
+
+The 20-Wave run alternates normal escalation, Elites, narrative decisions and Bosses:
+
+```text
+W4 event → W5 Elite → W7 event → W9 Elite → W10 Boss
+→ W11 Boss Corpse choice → W13 event → W14 Elite → W15 Boss
+→ W16 Boss Corpse choice → W18 Elite → W20 final Boss
+```
+
+This cadence creates a meaningful interruption every two or three Waves without pausing combat mid-action.
+
+## Boss roles
+
+- Grave Marshal tests early single-target damage and limited AOE durability.
+- Arcane Auditor tests mid-run army breadth with a stronger four-target special.
+- Foreman tests the completed build with six-target Industrial Crush and ends the run.
+
+Boss remains carry forward into the build: Marshal armor can reinforce Zombies; the Auditor core can reinforce Ghosts. Alternative routes convert each remain into economic acceleration.
+
+## Fusion design
+
+Fusions are cross-resource decisions, not a replacement for normal production:
+
+- Ossuary Alloy converts 12 Bones and 6 Flesh into 2 Factory Points;
+- Soulbound Muster converts 2 Blood and 3 Souls into one Ghost.
+
+Their costs intentionally compete with base units, rituals and Factory unlocks. They are always manually triggered and never included in Doctrine automation.
+
+## Narrative foundation
+
+The complete first lore pass is maintained in `LORE.md`. In-run writing follows three rules: short decisions, explicit mechanical consequences and corporate-horror language. Longer history belongs in optional discoveries and the future Codex.

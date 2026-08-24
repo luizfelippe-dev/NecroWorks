@@ -15,6 +15,17 @@ func run_validation() -> void:
 	var original_locale: String = TranslationServer.get_locale()
 	assert(EVENT_CATALOG.get_event_id_for_wave(7) == EVENT_CATALOG.GRAVE_SHIPMENT)
 	assert(EVENT_CATALOG.get_event_id_for_wave(13) == EVENT_CATALOG.BOUND_ARCANIST)
+	assert(EVENT_CATALOG.get_event_id_for_wave(4) == EVENT_CATALOG.SABOTEUR_OFFER)
+	assert(EVENT_CATALOG.get_event_id_for_wave(11) == EVENT_CATALOG.MARSHAL_REMAINS)
+	assert(EVENT_CATALOG.get_event_id_for_wave(16) == EVENT_CATALOG.AUDITOR_CORE)
+	assert(EVENT_CATALOG.EVENT_DATA.size() == 5)
+	var discovery_ids: Dictionary = {}
+	for choice_id_value: Variant in EVENT_CATALOG.CHOICE_DATA:
+		var choice_data: Dictionary = EVENT_CATALOG.get_choice(str(choice_id_value))
+		var discovery_id: String = str(choice_data.get("discovery_id", ""))
+		assert(not discovery_id.is_empty())
+		discovery_ids[discovery_id] = true
+	assert(discovery_ids.size() == 10)
 	assert(EVENT_CATALOG.get_event_id_for_wave(8).is_empty())
 	assert(EVENT_CATALOG.is_choice_for_event(
 		EVENT_CATALOG.GRAVE_SHIPMENT,
@@ -48,6 +59,7 @@ func run_validation() -> void:
 	assert(game.current_wave == 7)
 	assert(game.wave_in_progress)
 	assert(game.narrative_event_choices[EVENT_CATALOG.GRAVE_SHIPMENT] == EVENT_CATALOG.GRAVE_BONES)
+	assert(game.lore_discoveries.has("grave_manifest"))
 
 	var checkpoint: Dictionary = game.build_checkpoint_state()
 	checkpoint.wave = 13
@@ -67,6 +79,39 @@ func run_validation() -> void:
 	assert(restored_game.souls == souls_before + 4)
 	assert(restored_game.current_wave == 13)
 	assert(restored_game.wave_in_progress)
+
+	# Risk/reward consequence and both Boss Corpse branches remain permanent.
+	restored_game.event_decision_in_progress = false
+	restored_game.current_narrative_event_id = ""
+	assert(restored_game.show_narrative_event(EVENT_CATALOG.SABOTEUR_OFFER))
+	assert(restored_game.select_narrative_event_choice(EVENT_CATALOG.BUY_SILENCE))
+	assert(restored_game.faction_pressure.iron_concord == 1)
+	assert(restored_game.get_faction_damage_bonus("human_warrior") == 2)
+	assert(restored_game.get_faction_damage_bonus("mage") == 0)
+	restored_game.event_decision_in_progress = false
+	restored_game.current_narrative_event_id = ""
+	assert(restored_game.show_narrative_event(EVENT_CATALOG.MARSHAL_REMAINS))
+	assert(restored_game.select_narrative_event_choice(EVENT_CATALOG.PLATE_ZOMBIES))
+	assert(restored_game.event_zombie_hp_bonus == 40)
+	restored_game.event_decision_in_progress = false
+	restored_game.current_narrative_event_id = ""
+	assert(restored_game.show_narrative_event(EVENT_CATALOG.AUDITOR_CORE))
+	assert(restored_game.select_narrative_event_choice(EVENT_CATALOG.BIND_RESONANCE))
+	assert(restored_game.event_ghost_damage_bonus == 4)
+	var consequence_checkpoint: Dictionary = restored_game.build_checkpoint_state()
+	assert(consequence_checkpoint.run_modifiers.faction_pressure.iron_concord == 1)
+	assert(consequence_checkpoint.run_modifiers.event_zombie_hp_bonus == 40)
+	assert(consequence_checkpoint.run_modifiers.event_ghost_damage_bonus == 4)
+	assert(consequence_checkpoint.narrative.discoveries.size() == 5)
+
+	for locale: String in ["en", "pt_BR", "es"]:
+		TranslationServer.set_locale(locale)
+		for key: String in [
+			"EVENT_SABOTEUR_TITLE", "EVENT_MARSHAL_TITLE",
+			"EVENT_AUDITOR_TITLE", "EVENT_MARSHAL_PLATE",
+			"EVENT_AUDITOR_BIND"
+		]:
+			assert(TranslationServer.translate(key) != key)
 
 	TranslationServer.set_locale(original_locale)
 	print("NARRATIVE EVENT DECISION VALIDATION: PASS")

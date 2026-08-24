@@ -73,6 +73,12 @@ func run_strategy(strategy: String) -> Dictionary:
 				event_choice_index = 0 if strategy == "bone" else 1
 			elif game.current_narrative_event_id == "bound_arcanist":
 				event_choice_index = 1 if strategy == "bone" else 0
+			elif game.current_narrative_event_id == "saboteur_offer":
+				event_choice_index = 0 if strategy == "bone" else 1
+			elif game.current_narrative_event_id == "marshal_remains":
+				event_choice_index = 1 if strategy == "bone" else 0
+			elif game.current_narrative_event_id == "auditor_core":
+				event_choice_index = 1 if strategy == "bone" else 0
 			game.select_narrative_event_choice_by_index(event_choice_index)
 
 

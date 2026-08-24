@@ -213,8 +213,112 @@ UPGRADE_EMERGENCY_RECLAMATION_NAME,EMERGENCY RECLAMATION [RARE],RECUPERAÇÃO EM
 UPGRADE_EMERGENCY_RECLAMATION_DESC,Once per Wave when a permanent Undead dies refund 50% of its production cost.,Uma vez por Onda quando um Morto-Vivo permanente morrer devolve 50% do custo de produção.,Una vez por Oleada cuando muere un No Muerto permanente devuelve el 50% del coste de producción.
 UPGRADE_EMERGENCY_RECLAMATION_STATUS,Available once each Wave,Disponível uma vez por Onda,Disponible una vez por Oleada
 UPGRADE_EMERGENCY_RECLAMATION_FEEDBACK,EMERGENCY RECOVERY +%d %s,RECUPERAÇÃO EMERGENCIAL +%d %s,RECUPERACIÓN DE EMERGENCIA +%d %s
+UPGRADE_FLETCHERS_MARK_NAME,Fletcher's Mark,Marca do Flecheiro,Marca del Flechero
+UPGRADE_FLETCHERS_MARK_DESC,Skeleton Archer Damage +4,Dano do Arqueiro Esqueleto +4,Daño del Arquero Esqueleto +4
+UPGRADE_HOLLOW_SHAFTS_NAME,Hollow Shafts,Hastes Ocas,Vástagos Huecos
+UPGRADE_HOLLOW_SHAFTS_DESC,Skeleton Archer attack cooldown -0.10s,Cooldown de ataque do Arqueiro -0.10s,Recarga de ataque del Arquero -0.10s
+UPGRADE_OSSUARY_SCOPE_NAME,Ossuary Scope,Mira do Ossuário,Mira del Osario
+UPGRADE_OSSUARY_SCOPE_DESC,Skeleton Archer range +45,Alcance do Arqueiro Esqueleto +45,Alcance del Arquero Esqueleto +45
+UPGRADE_STITCHED_HIDE_NAME,Stitched Hide,Couro Costurado,Piel Cosida
+UPGRADE_STITCHED_HIDE_DESC,Zombie Max HP +30,PV Máximo do Zumbi +30,PV Máximo del Zombi +30
+UPGRADE_SEPTIC_STRIKES_NAME,Septic Strikes,Golpes Sépticos,Golpes Sépticos
+UPGRADE_SEPTIC_STRIKES_DESC,Zombie Damage +2,Dano do Zumbi +2,Daño del Zombi +2
+UPGRADE_GRAVE_MOMENTUM_NAME,Grave Momentum,Impulso da Sepultura,Impulso de la Tumba
+UPGRADE_GRAVE_MOMENTUM_DESC,Zombie attack cooldown -0.08s,Cooldown de ataque do Zumbi -0.08s,Recarga de ataque del Zombi -0.08s
+UPGRADE_SPECTRAL_VOLTAGE_NAME,Spectral Voltage,Voltagem Espectral,Voltaje Espectral
+UPGRADE_SPECTRAL_VOLTAGE_DESC,Ghost Damage +4,Dano do Fantasma +4,Daño del Fantasma +4
+UPGRADE_PHASE_CYCLE_NAME,Phase Cycle,Ciclo de Fase,Ciclo de Fase
+UPGRADE_PHASE_CYCLE_DESC,Ghost attack cooldown -0.10s,Cooldown de ataque do Fantasma -0.10s,Recarga de ataque del Fantasma -0.10s
+UPGRADE_FLESH_PRESERVATION_NAME,Flesh Preservation,Preservação de Carne,Conservación de Carne
+UPGRADE_FLESH_PRESERVATION_DESC,Every processed Corpse yields +1 Flesh,Cada Cadáver processado rende +1 Carne,Cada Cadáver procesado rinde +1 Carne
+UPGRADE_SOUL_SIPHON_NAME,Soul Siphon,Sifão de Almas,Sifón de Almas
+UPGRADE_SOUL_SIPHON_DESC,Arcane kills yield +1 Soul,Abates arcanos rendem +1 Alma,Las bajas arcanas rinden +1 Alma
+UPGRADE_CRIMSON_TITHE_NAME,CRIMSON TITHE [RARE],DÍZIMO CARMESIM [RARO],DIEZMO CARMESÍ [RARO]
+UPGRADE_CRIMSON_TITHE_DESC,Every fifth enemy kill yields +1 Blood,Cada quinto inimigo derrotado rende +1 Sangue,Cada quinto enemigo derrotado rinde +1 Sangre
+UPGRADE_FORBIDDEN_PATENT_NAME,FORBIDDEN PATENT [RARE],PATENTE PROIBIDA [RARO],PATENTE PROHIBIDA [RARO]
+UPGRADE_FORBIDDEN_PATENT_DESC,Every completed Wave yields +1 Factory Point,Cada Onda concluída rende +1 Ponto de Fábrica,Cada Oleada completada rinde +1 Punto de Fábrica
+UPGRADE_CURRENT_ARCHER_DAMAGE,Current Archer Damage: %d,Dano atual do Arqueiro: %d,Daño actual del Arquero: %d
+UPGRADE_CURRENT_ARCHER_COOLDOWN,Current Archer Cooldown: %.2fs,Cooldown atual do Arqueiro: %.2fs,Recarga actual del Arquero: %.2fs
+UPGRADE_CURRENT_ARCHER_RANGE,Current Archer Range: %d,Alcance atual do Arqueiro: %d,Alcance actual del Arquero: %d
+UPGRADE_CURRENT_ZOMBIE_HP,Current Zombie Max HP: %d,PV Máximo atual do Zumbi: %d,PV Máximo actual del Zombi: %d
+UPGRADE_CURRENT_ZOMBIE_DAMAGE,Current Zombie Damage: %d,Dano atual do Zumbi: %d,Daño actual del Zombi: %d
+UPGRADE_CURRENT_ZOMBIE_COOLDOWN,Current Zombie Cooldown: %.2fs,Cooldown atual do Zumbi: %.2fs,Recarga actual del Zombi: %.2fs
+UPGRADE_CURRENT_GHOST_BONUS_DAMAGE,Current Ghost bonus Damage: %d,Bônus de Dano atual do Fantasma: %d,Bono de Daño actual del Fantasma: %d
+UPGRADE_CURRENT_GHOST_REDUCTION,Current Ghost cooldown reduction: %.2fs,Redução atual de cooldown do Fantasma: %.2fs,Reducción actual de recarga del Fantasma: %.2fs
+UPGRADE_CURRENT_FLESH_YIELD,Current Flesh per Corpse: %d,Carne atual por Cadáver: %d,Carne actual por Cadáver: %d
+UPGRADE_CURRENT_SOUL_BONUS,Current arcane Soul bonus: %d,Bônus atual de Alma arcana: %d,Bono actual de Alma arcana: %d
+UPGRADE_CRIMSON_TITHE_STATUS,Active every five kills,Ativo a cada cinco abates,Activo cada cinco bajas
+UPGRADE_FORBIDDEN_PATENT_STATUS,Active on every Wave completion,Ativa ao concluir cada Onda,Activa al completar cada Oleada
+UPGRADE_SHARPENED_BONES_NAME,Sharpened Bones,Ossos Afiados,Huesos Afilados
+UPGRADE_SHARPENED_BONES_DESC,Skeleton Damage +25%,Dano dos Esqueletos +25%,Daño de los Esqueletos +25%
+UPGRADE_BONE_PLATING_NAME,Bone Plating,Blindagem Óssea,Blindaje Óseo
+UPGRADE_BONE_PLATING_DESC,Skeleton Max HP +25\nExisting Skeletons gain +25 HP,PV Máximo dos Esqueletos +25\nEsqueletos existentes ganham +25 PV,PV Máximo de los Esqueletos +25\nLos Esqueletos existentes ganan +25 PV
+UPGRADE_EFFICIENT_RECYCLING_NAME,Efficient Recycling,Reciclagem Eficiente,Reciclaje Eficiente
+UPGRADE_EFFICIENT_RECYCLING_DESC,Corpses generate +2 Bones,Cadáveres geram +2 Ossos,Los Cadáveres generan +2 Huesos
+UPGRADE_RAPID_ASSAULT_NAME,Rapid Assault,Ataque Rápido,Asalto Rápido
+UPGRADE_RAPID_ASSAULT_DESC,Skeleton Attack Speed +15%,Velocidade de Ataque dos Esqueletos +15%,Velocidad de Ataque de los Esqueletos +15%
+UPGRADE_DEATH_MARCH_NAME,Death March,Marcha da Morte,Marcha de la Muerte
+UPGRADE_DEATH_MARCH_DESC,Skeleton Movement Speed +20%,Velocidade de Movimento dos Esqueletos +20%,Velocidad de Movimiento de los Esqueletos +20%
+UPGRADE_MASS_PRODUCTION_NAME,Mass Production,Produção em Massa,Producción en Masa
+UPGRADE_MASS_PRODUCTION_DESC,Skeleton cost -1 Bone,Custo do Esqueleto -1 Osso,Coste del Esqueleto -1 Hueso
+UPGRADE_HEAVY_BONES_NAME,Heavy Bones,Ossos Pesados,Huesos Pesados
+UPGRADE_HEAVY_BONES_DESC,Skeleton Damage +50%\nAttack Speed -20%,Dano dos Esqueletos +50%\nVelocidade de Ataque -20%,Daño de los Esqueletos +50%\nVelocidad de Ataque -20%
+UPGRADE_BONE_HARVEST_NAME,Bone Harvest,Colheita Óssea,Cosecha Ósea
+UPGRADE_BONE_HARVEST_DESC,+20% chance when processing a Corpse\nto gain +5 bonus Bones,+20% de chance ao processar um Cadáver\nde ganhar +5 Ossos extras,+20% de probabilidad al procesar un Cadáver\nde obtener +5 Huesos extra
+UPGRADE_REASSEMBLY_NAME,Reassembly,Remontagem,Reensamblaje
+UPGRADE_REASSEMBLY_DESC,+15% chance for a dead Skeleton\nto revive with 50% HP,+15% de chance de um Esqueleto morto\nreviver com 50% dos PV,+15% de probabilidad de que un Esqueleto muerto\nreviva con 50% de PV
+UPGRADE_FINAL_SERVICE_NAME,Final Service,Serviço Final,Servicio Final
+UPGRADE_FINAL_SERVICE_DESC,When a Skeleton dies\ndeal +20 damage to the Enemy,Quando um Esqueleto morre\ncausa +20 de dano ao Inimigo,Cuando un Esqueleto muere\ncausa +20 de daño al Enemigo
+UPGRADE_ROTTEN_BULK_NAME,Rotten Bulk,Massa Putrefata,Masa Putrefacta
+UPGRADE_ROTTEN_BULK_DESC,Zombie Max HP +40\nExisting Zombies gain +40 HP,PV Máximo dos Zumbis +40\nZumbis existentes ganham +40 PV,PV Máximo de los Zombis +40\nLos Zombis existentes ganan +40 PV
+UPGRADE_GRAVE_HUNGER_NAME,Grave Hunger,Fome da Sepultura,Hambre de la Tumba
+UPGRADE_GRAVE_HUNGER_DESC,Zombie Damage +20%,Dano dos Zumbis +20%,Daño de los Zombis +20%
+UPGRADE_DEAD_WEIGHT_NAME,Dead Weight,Peso Morto,Peso Muerto
+UPGRADE_DEAD_WEIGHT_DESC,Zombie Max HP +70\nMovement Speed -10%,PV Máximo dos Zumbis +70\nVelocidade de Movimento -10%,PV Máximo de los Zombis +70\nVelocidad de Movimiento -10%
+UPGRADE_CARRION_RECOVERY_NAME,Carrion Recovery,Recuperação Necrófaga,Recuperación Carroñera
+UPGRADE_CARRION_RECOVERY_DESC,Zombies recover 4 HP\nafter every attack,Zumbis recuperam 4 PV\napós cada ataque,Los Zombis recuperan 4 PV\ndespués de cada ataque
+UPGRADE_CURRENT_SKELETON_DAMAGE,Current Skeleton Damage: %d,Dano atual dos Esqueletos: %d,Daño actual de los Esqueletos: %d
+UPGRADE_CURRENT_SKELETON_HP,Current Skeleton Max HP: %d,PV Máximo atual dos Esqueletos: %d,PV Máximo actual de los Esqueletos: %d
+UPGRADE_CURRENT_BONE_YIELD,Current Bones per Corpse: %d,Ossos atuais por Cadáver: %d,Huesos actuales por Cadáver: %d
+UPGRADE_CURRENT_SKELETON_COOLDOWN,Current Skeleton Cooldown: %.2fs,Cooldown atual dos Esqueletos: %.2fs,Recarga actual de los Esqueletos: %.2fs
+UPGRADE_CURRENT_SKELETON_SPEED,Current Skeleton Speed: %d,Velocidade atual dos Esqueletos: %d,Velocidad actual de los Esqueletos: %d
+UPGRADE_CURRENT_SKELETON_COST,Current Skeleton Cost: %d Bones,Custo atual do Esqueleto: %d Ossos,Coste actual del Esqueleto: %d Huesos
+UPGRADE_CURRENT_HEAVY_BONES,Damage %d | Cooldown %.2fs,Dano %d | Cooldown %.2fs,Daño %d | Recarga %.2fs
+UPGRADE_CURRENT_CHANCE,Current Chance: %d%%,Chance atual: %d%%,Probabilidad actual: %d%%
+UPGRADE_CURRENT_DEATH_DAMAGE,Current Death Damage: %d,Dano atual ao morrer: %d,Daño actual al morir: %d
+UPGRADE_CURRENT_DEAD_WEIGHT,HP %d | Speed %d,PV %d | Velocidade %d,PV %d | Velocidad %d
+UPGRADE_CURRENT_ZOMBIE_RECOVERY,Recovery per Attack: %d HP,Recuperação por Ataque: %d PV,Recuperación por Ataque: %d PV
+SYNERGY_RECYCLING_PLANT_DESC,Efficient Recycling + Bone Harvest: Bone Harvest bonus is doubled.,Reciclagem Eficiente + Colheita Óssea: o bônus da Colheita Óssea é dobrado.,Reciclaje Eficiente + Cosecha Ósea: el bono de Cosecha Ósea se duplica.
+SYNERGY_SECOND_SHIFT_DESC,Reassembly + Final Service: a successful revive also deals 50% Final Service damage.,Remontagem + Serviço Final: uma revivificação também causa 50% do dano de Serviço Final.,Reensamblaje + Servicio Final: una reanimación también causa 50% del daño de Servicio Final.
+SYNERGY_BONE_ASSEMBLY_LINE_DESC,Mass Production + Efficient Recycling: 25% chance to produce a free Skeleton when processing a Corpse.,Produção em Massa + Reciclagem Eficiente: 25% de chance de produzir um Esqueleto grátis ao processar um Cadáver.,Producción en Masa + Reciclaje Eficiente: 25% de probabilidad de producir un Esqueleto gratis al procesar un Cadáver.
+SYNERGY_OVERCLOCKED_OSSUARY_DESC,Heavy Bones + Rapid Assault: Skeleton attacks have a 20% chance to strike twice.,Ossos Pesados + Ataque Rápido: ataques de Esqueletos têm 20% de chance de atingir duas vezes.,Huesos Pesados + Asalto Rápido: los ataques de Esqueletos tienen 20% de probabilidad de golpear dos veces.
+SYNERGY_MEAT_SHIELD_PROTOCOL_DESC,Rotten Bulk + Rapid Assault: Zombie hits accelerate every Skeleton attack timer by 0.12s.,Massa Putrefata + Ataque Rápido: golpes de Zumbis aceleram em 0.12s o ataque de todos os Esqueletos.,Masa Putrefacta + Asalto Rápido: los golpes de Zombis aceleran 0.12s el ataque de todos los Esqueletos.
+SYNERGY_CRIMSON_ASSEMBLY_DESC,Hematic Extraction + Crimson Infusion: Blood Fervor costs 1 less Blood.,Extração Hemática + Infusão Carmesim: Fervor de Sangue custa 1 Sangue a menos.,Extracción Hemática + Infusión Carmesí: Fervor de Sangre cuesta 1 Sangre menos.
+SYNERGY_PHANTOM_CONDUIT_DESC,Spectral Focus + Ethereal Anchor: Ghost attack cooldown is reduced.,Foco Espectral + Âncora Etérea: o cooldown de ataque dos Fantasmas é reduzido.,Foco Espectral + Ancla Etérea: la recarga de ataque de los Fantasmas se reduce.
+SYNERGY_DARK_REFINERY_DESC,Hematic Press + Industrial Efficiency II: Blood production costs 2 less Flesh.,Prensa Hemática + Eficiência Industrial II: produzir Sangue custa 2 Carne a menos.,Prensa Hemática + Eficiencia Industrial II: producir Sangre cuesta 2 Carne menos.
 METRICS_GHOSTS_BUILT,GHOSTS BUILT,FANTASMAS CRIADOS,FANTASMAS CREADOS
 METRICS_GHOSTS_LOST,GHOSTS LOST,FANTASMAS PERDIDOS,FANTASMAS PERDIDOS
 METRICS_LICHES_BUILT,LICHES BUILT,LICHES CRIADOS,LICHES CREADOS
 METRICS_LICHES_LOST,LICHES LOST,LICHES PERDIDOS,LICHES PERDIDOS
 METRICS_THRALLS_ACTIVE,THRALLS ACTIVE,SERVOS ATIVOS,SIERVOS ACTIVOS
+ENEMY_GRAVE_MARSHAL,GRAVE MARSHAL,MARECHAL DA SEPULTURA,MARISCAL DE LA TUMBA
+ENEMY_ARCANE_AUDITOR,ARCANE AUDITOR,AUDITOR ARCANO,AUDITOR ARCANO
+EVENT_SABOTEUR_TITLE,A QUIET OFFER,UMA OFERTA SILENCIOSA,UNA OFERTA SILENCIOSA
+EVENT_SABOTEUR_BODY,A captured saboteur offers factory access codes in exchange for silence. The codes are genuine—but the Iron Concord will learn from the breach.,Um sabotador capturado oferece códigos de acesso à fábrica em troca de silêncio. Os códigos são legítimos — mas a Concordata de Ferro aprenderá com a brecha.,Un saboteador capturado ofrece códigos de acceso a la fábrica a cambio de silencio. Los códigos son auténticos; pero el Concordato de Hierro aprenderá de la brecha.
+EVENT_SABOTEUR_EXPOSE,Expose the spies: +12 Bones,Expor os espiões: +12 Ossos,Exponer a los espías: +12 Huesos
+EVENT_SABOTEUR_BRIBE,Buy their silence: +3 Factory Points; Iron Concord gains +2 Damage,Comprar o silêncio: +3 Pontos de Fábrica; Concordata de Ferro ganha +2 Dano,Comprar su silencio: +3 Puntos de Fábrica; Concordato de Hierro gana +2 Daño
+EVENT_MARSHAL_TITLE,THE MARSHAL'S REMAINS,OS RESTOS DO MARECHAL,LOS RESTOS DEL MARISCAL
+EVENT_MARSHAL_BODY,The Grave Marshal's plated corpse jams the intake. Its armor can reinforce the Zombie line or its ossified frame can feed the mills.,O cadáver blindado do Marechal da Sepultura trava a entrada. Sua armadura pode reforçar a linha de Zumbis ou sua estrutura ossificada pode alimentar os moinhos.,El cadáver blindado del Mariscal de la Tumba bloquea la entrada. Su armadura puede reforzar la línea de Zombis o su estructura osificada puede alimentar los molinos.
+EVENT_MARSHAL_PLATE,Plate the Zombies: permanent +40 Max HP,Blindar os Zumbis: +40 PV Máximo permanente,Blindar a los Zombis: +40 PV Máximo permanente
+EVENT_MARSHAL_MILL,Mill the frame: +30 Bones,Moer a estrutura: +30 Ossos,Moler la estructura: +30 Huesos
+EVENT_AUDITOR_TITLE,THE AUDITOR'S CORE,O NÚCLEO DO AUDITOR,EL NÚCLEO DEL AUDITOR
+EVENT_AUDITOR_BODY,The Arcane Auditor leaves a resonant core behind. It can be bound to the spectral line or stripped for precision instruments.,O Auditor Arcano deixa um núcleo ressonante. Ele pode ser vinculado à linha espectral ou desmontado para criar instrumentos de precisão.,El Auditor Arcano deja un núcleo resonante. Puede vincularse a la línea espectral o desmontarse para crear instrumentos de precisión.
+EVENT_AUDITOR_BIND,Bind the resonance: +2 Souls; Ghosts gain +4 Damage,Vincular a ressonância: +2 Almas; Fantasmas ganham +4 Dano,Vincular la resonancia: +2 Almas; Fantasmas ganan +4 Daño
+EVENT_AUDITOR_SALVAGE,Salvage the relay: +3 Factory Points,Desmontar o relé: +3 Pontos de Fábrica,Desmontar el relé: +3 Puntos de Fábrica
+FUSION_NAV,FUSIONS,FUSÕES,FUSIONES
+FUSION_TITLE,NECROMANTIC FUSIONS,FUSÕES NECROMÂNTICAS,FUSIONES NECROMÁNTICAS
+FUSION_STATUS,Bones: %d  |  Flesh: %d  |  Blood: %d  |  Souls: %d,Ossos: %d  |  Carne: %d  |  Sangue: %d  |  Almas: %d,Huesos: %d  |  Carne: %d  |  Sangre: %d  |  Almas: %d
+FUSION_OSSUARY_NAME,OSSUARY ALLOY,LIGA DE OSSUÁRIO,ALEACIÓN DE OSARIO
+FUSION_OSSUARY_DESC,12 Bones + 6 Flesh\n→ 2 Factory Points,12 Ossos + 6 Carne\n→ 2 Pontos de Fábrica,12 Huesos + 6 Carne\n→ 2 Puntos de Fábrica
+FUSION_SOULBOUND_NAME,SOULBOUND MUSTER,FORMAÇÃO VINCULADA,FILA VINCULADA
+FUSION_SOULBOUND_DESC,2 Blood + 3 Souls\n→ 1 Ghost without production cost,2 Sangue + 3 Almas\n→ 1 Fantasma sem custo de produção,2 Sangre + 3 Almas\n→ 1 Fantasma sin coste de producción

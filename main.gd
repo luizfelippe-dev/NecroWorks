@@ -64,6 +64,7 @@ func refresh_localized_ui() -> void:
 	update_metrics_ui()
 	refresh_army_doctrine_status()
 	update_ritual_panel_ui()
+	update_fusion_panel_ui()
 	update_wave_ui()
 	update_synergy_ui()
 	refresh_world_localization()
@@ -173,6 +174,9 @@ const LICH_SUMMON_POLICY: Script = preload(
 )
 const NARRATIVE_EVENT_CATALOG: Script = preload(
 	"res://scripts/game/narrative_event_catalog.gd"
+)
+const FUSION_RECIPE_CATALOG: Script = preload(
+	"res://scripts/game/fusion_recipe_catalog.gd"
 )
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
@@ -711,8 +715,12 @@ func create_ghost_internal(is_free: bool) -> bool:
 		new_ghost,
 		UNDEAD_RECIPE_CATALOG.GHOST,
 		70 + soul_anchor_level * 25,
-		16 + soul_focus_level * 4,
-		1.20 if has_synergy(SYNERGY_PHANTOM_CONDUIT) else 1.35,
+		16 + soul_focus_level * 4 + ghost_damage_bonus + event_ghost_damage_bonus,
+		maxf(
+			(1.20 if has_synergy(SYNERGY_PHANTOM_CONDUIT) else 1.35)
+			- ghost_cooldown_reduction,
+			0.55
+		),
 		150.0,
 		430.0,
 		free_slot
@@ -1175,7 +1183,7 @@ const ENEMY_HP_GROWTH: int = 20
 const BASE_ENEMY_DAMAGE: int = 7
 const ENEMY_DAMAGE_GROWTH: int = 1
 
-const ELITE_WAVE_INTERVAL: int = 5
+const ELITE_WAVES: PackedInt32Array = [5, 9, 14, 18]
 const ELITE_ENEMIES_PER_WAVE: int = 5
 const ELITE_HP_MULTIPLIER: float = 1.4
 const ELITE_DAMAGE_BONUS: int = 3
@@ -1186,7 +1194,7 @@ const ELITE_DAMAGE_BONUS: int = 3
 # =========================================================
 
 const BOSS_WAVE: int = 20
-const BOSS_NAME: String = "THE FOREMAN"
+const BOSS_WAVES: PackedInt32Array = [10, 15, 20]
 
 const BOSS_HP: int = 2200
 const BOSS_DAMAGE: int = 28
@@ -1203,6 +1211,36 @@ const BOSS_COLOR: Color = Color(
 	0.38,
 	1.0
 )
+
+const BOSS_PROFILES: Dictionary = {
+	10: {
+		"id": "grave_marshal",
+		"name_key": "ENEMY_GRAVE_MARSHAL",
+		"hp": 1050,
+		"damage": 18,
+		"special_interval": 5.0,
+		"special_targets": 3,
+		"special_damage": 20,
+	},
+	15: {
+		"id": "arcane_auditor",
+		"name_key": "ENEMY_ARCANE_AUDITOR",
+		"hp": 1650,
+		"damage": 24,
+		"special_interval": 4.5,
+		"special_targets": 4,
+		"special_damage": 28,
+	},
+	20: {
+		"id": "foreman",
+		"name_key": "ENEMY_THE_FOREMAN",
+		"hp": BOSS_HP,
+		"damage": BOSS_DAMAGE,
+		"special_interval": BOSS_SPECIAL_ATTACK_INTERVAL,
+		"special_targets": BOSS_SPECIAL_ATTACK_TARGETS,
+		"special_damage": BOSS_SPECIAL_ATTACK_DAMAGE,
+	},
+}
 
 var boss_active: bool = false
 var boss_special_attack_timer: float = 0.0
@@ -1230,6 +1268,7 @@ var return_to_menu_button: Button = null
 var event_decision_in_progress: bool = false
 var current_narrative_event_id: String = ""
 var narrative_event_choices: Dictionary = {}
+var lore_discoveries: Dictionary = {}
 var narrative_event_panel: ColorRect = null
 var narrative_event_title_label: Label = null
 var narrative_event_body_label: Label = null
@@ -1258,6 +1297,18 @@ const UPGRADE_GRAVE_CONTRACT: String = "grave_contract"
 const UPGRADE_RAPID_CONJURATION: String = "rapid_conjuration"
 const UPGRADE_BOUND_SERVITUDE: String = "bound_servitude"
 const UPGRADE_EMERGENCY_RECLAMATION: String = "emergency_reclamation"
+const UPGRADE_FLETCHERS_MARK: String = "fletchers_mark"
+const UPGRADE_HOLLOW_SHAFTS: String = "hollow_shafts"
+const UPGRADE_OSSUARY_SCOPE: String = "ossuary_scope"
+const UPGRADE_STITCHED_HIDE: String = "stitched_hide"
+const UPGRADE_SEPTIC_STRIKES: String = "septic_strikes"
+const UPGRADE_GRAVE_MOMENTUM: String = "grave_momentum"
+const UPGRADE_SPECTRAL_VOLTAGE: String = "spectral_voltage"
+const UPGRADE_PHASE_CYCLE: String = "phase_cycle"
+const UPGRADE_FLESH_PRESERVATION: String = "flesh_preservation"
+const UPGRADE_SOUL_SIPHON: String = "soul_siphon"
+const UPGRADE_CRIMSON_TITHE: String = "crimson_tithe"
+const UPGRADE_FORBIDDEN_PATENT: String = "forbidden_patent"
 
 const MIN_SKELETON_ATTACK_COOLDOWN: float = 0.20
 
@@ -1280,6 +1331,13 @@ var reassembly_chance: float = 0.0
 var final_service_damage: int = 0
 var zombie_recovery_per_attack: int = 0
 var emergency_reclamation_available: bool = true
+var ghost_damage_bonus: int = 0
+var ghost_cooldown_reduction: float = 0.0
+var soul_yield_bonus: int = 0
+var enemy_damage_run_bonus: int = 0
+var event_zombie_hp_bonus: int = 0
+var event_ghost_damage_bonus: int = 0
+var faction_pressure: Dictionary = {}
 
 var upgrade_counts: Dictionary = {}
 var total_upgrades_selected: int = 0
@@ -1522,6 +1580,10 @@ var ritual_ghost_button: Button = null
 var ritual_lich_button: Button = null
 var ritual_soul_focus_button: Button = null
 var ritual_soul_anchor_button: Button = null
+var fusion_nav_button: Button = null
+var fusion_panel: ColorRect = null
+var fusion_status_label: Label = null
+var fusion_recipe_buttons: Dictionary = {}
 
 const RESOURCE_FEEDBACK_TARGET: Vector2 = Vector2(185.0, 820.0)
 
@@ -1553,6 +1615,7 @@ func _ready() -> void:
 	create_factory_panel_ui()
 	create_army_doctrine_ui()
 	create_ritual_panel_ui()
+	create_fusion_panel_ui()
 
 
 	# -----------------------------------------------------
@@ -1663,8 +1726,11 @@ func _process(delta: float) -> void:
 
 			boss_special_attack()
 
-			boss_special_attack_timer = (
-				BOSS_SPECIAL_ATTACK_INTERVAL
+			boss_special_attack_timer = float(
+				get_boss_profile_for_wave(current_wave).get(
+					"special_interval",
+					BOSS_SPECIAL_ATTACK_INTERVAL
+				)
 			)
 
 
@@ -2053,12 +2119,11 @@ func start_wave(
 	)
 
 	if boss_active:
-
-		enemy_max_hp = BOSS_HP
-		enemy_damage = BOSS_DAMAGE
-
-		boss_special_attack_timer = (
-			BOSS_SPECIAL_ATTACK_INTERVAL
+		var boss_profile: Dictionary = get_boss_profile_for_wave(current_wave)
+		enemy_max_hp = int(boss_profile.get("hp", BOSS_HP))
+		enemy_damage = int(boss_profile.get("damage", BOSS_DAMAGE))
+		boss_special_attack_timer = float(
+			boss_profile.get("special_interval", BOSS_SPECIAL_ATTACK_INTERVAL)
 		)
 
 	else:
@@ -2075,6 +2140,8 @@ func start_wave(
 			)
 		)
 
+	enemy_damage += enemy_damage_run_bonus
+
 	wave_in_progress = true
 	wave_transition_in_progress = false
 	set_processing_directive_locked(true)
@@ -2086,7 +2153,7 @@ func start_wave(
 
 	if boss_active:
 		print("BOSS WAVE!")
-		print(BOSS_NAME)
+		print(get_current_boss_name())
 
 	elif is_elite_wave(current_wave):
 		print("ELITE WAVE!")
@@ -2187,20 +2254,33 @@ func is_elite_wave(
 	wave_number: int
 ) -> bool:
 
-	return (
-		wave_number > 0
-		and wave_number != BOSS_WAVE
-		and wave_number % ELITE_WAVE_INTERVAL == 0
-	)
+	return wave_number in ELITE_WAVES
 
 
 func is_boss_wave(
 	wave_number: int
 ) -> bool:
 
-	return (
-		wave_number == BOSS_WAVE
-	)
+	return wave_number in BOSS_WAVES
+
+
+func is_final_boss_wave(wave_number: int) -> bool:
+	return wave_number == BOSS_WAVE
+
+
+func get_boss_profile_for_wave(wave_number: int) -> Dictionary:
+	return (BOSS_PROFILES.get(wave_number, {}) as Dictionary).duplicate(true)
+
+
+func get_current_boss_name() -> String:
+	var profile: Dictionary = get_boss_profile_for_wave(current_wave)
+	return tr(str(profile.get("name_key", "ENEMY_THE_FOREMAN")))
+
+
+func get_faction_damage_bonus(archetype_id: String) -> int:
+	if archetype_id not in ["human_warrior", "grave_marshal"]:
+		return 0
+	return maxi(int(faction_pressure.get("iron_concord", 0)), 0) * 2
 
 
 func get_current_enemy_color() -> Color:
@@ -2232,6 +2312,8 @@ func get_enemies_remaining() -> int:
 
 
 func get_max_simultaneous_enemies() -> int:
+	if is_boss_wave(current_wave):
+		return 1
 
 	return int(
 		ENEMY_WAVE_POLICY.get_max_simultaneous_enemies(
@@ -2400,10 +2482,16 @@ func register_enemy(new_enemy: Node2D) -> void:
 
 
 	var lane_offset: float = get_free_enemy_lane_offset()
-	var archetype: Dictionary = ENEMY_ARCHETYPE_CATALOG.get_archetype(
-		current_wave,
-		enemies_spawned_this_wave,
-		BOSS_WAVE
+	var archetype: Dictionary = (
+		ENEMY_ARCHETYPE_CATALOG.get_boss_archetype(
+			str(get_boss_profile_for_wave(current_wave).get("id", "foreman"))
+		)
+		if boss_active
+		else ENEMY_ARCHETYPE_CATALOG.get_archetype(
+			current_wave,
+			enemies_spawned_this_wave,
+			BOSS_WAVE
+		)
 	)
 	var archetype_id: String = str(archetype.get("id", "human_warrior"))
 	var elite_variant: bool = is_elite_wave(current_wave)
@@ -2429,6 +2517,7 @@ func register_enemy(new_enemy: Node2D) -> void:
 			)
 		)
 	)
+	attack_damage += get_faction_damage_bonus(archetype_id)
 	var movement_speed: float = (
 		enemy_speed
 		* float(archetype.get("speed_multiplier", 1.0))
@@ -4250,6 +4339,14 @@ func apply_necromantic_kill_rewards(
 		total_enemies_killed,
 		blood_extraction_level
 	)
+	if rewards.y > 0:
+		rewards.y += soul_yield_bonus
+	if (
+		get_upgrade_count(UPGRADE_CRIMSON_TITHE) > 0
+		and total_enemies_killed > 0
+		and total_enemies_killed % 5 == 0
+	):
+		rewards.x += 1
 	blood += rewards.x
 	souls += rewards.y
 	total_blood_earned += rewards.x
@@ -4434,7 +4531,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 		print("")
 		print("##############################")
-		print(BOSS_NAME, " DEFEATED!")
+		print(get_current_boss_name(), " DEFEATED!")
 		print("##############################")
 		print("")
 
@@ -4506,7 +4603,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 	# BOSS DERROTADO = VICTORY
 	# =====================================================
 
-	if defeated_boss:
+	if defeated_boss and is_final_boss_wave(current_wave):
 
 		wave_in_progress = false
 		wave_transition_in_progress = false
@@ -4679,8 +4776,15 @@ func boss_special_attack() -> void:
 	valid_targets.shuffle()
 
 
+	var boss_profile: Dictionary = get_boss_profile_for_wave(current_wave)
+	var special_targets: int = int(
+		boss_profile.get("special_targets", BOSS_SPECIAL_ATTACK_TARGETS)
+	)
+	var special_damage: int = int(
+		boss_profile.get("special_damage", BOSS_SPECIAL_ATTACK_DAMAGE)
+	)
 	var target_count: int = min(
-		BOSS_SPECIAL_ATTACK_TARGETS,
+		special_targets,
 		valid_targets.size()
 	)
 
@@ -4692,14 +4796,14 @@ func boss_special_attack() -> void:
 	print("")
 	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	print(
-		BOSS_NAME,
+		get_current_boss_name(),
 		" USED INDUSTRIAL CRUSH!"
 	)
 	print(
 		"Targets: ",
 		target_count,
 		" | Damage: ",
-		BOSS_SPECIAL_ATTACK_DAMAGE
+		special_damage
 	)
 	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
@@ -4719,7 +4823,7 @@ func boss_special_attack() -> void:
 
 		damage_undead(
 			target,
-			BOSS_SPECIAL_ATTACK_DAMAGE,
+			special_damage,
 			"BOSS AOE"
 		)
 
@@ -5287,6 +5391,8 @@ func award_factory_points_for_wave(wave_number: int) -> int:
 
 	if is_elite_wave(wave_number):
 		points_earned += 1
+	if get_upgrade_count(UPGRADE_FORBIDDEN_PATENT) > 0:
+		points_earned += 1
 
 
 	factory_points += points_earned
@@ -5515,6 +5621,10 @@ func get_enemy_display_name(
 			base_name = tr("ENEMY_ELF_SKIRMISHER")
 		"foreman":
 			base_name = tr("ENEMY_THE_FOREMAN")
+		"grave_marshal":
+			base_name = tr("ENEMY_GRAVE_MARSHAL")
+		"arcane_auditor":
+			base_name = tr("ENEMY_ARCANE_AUDITOR")
 		_:
 			base_name = archetype_id.replace("_", " ").to_upper()
 
@@ -6413,6 +6523,10 @@ func show_narrative_event(event_id: String) -> bool:
 		doctrine_panel.visible = false
 	if ritual_panel != null:
 		ritual_panel.visible = false
+
+
+	if fusion_panel != null:
+		fusion_panel.visible = false
 	narrative_event_panel.visible = true
 	refresh_narrative_event_ui()
 	return true
@@ -6472,11 +6586,42 @@ func select_narrative_event_choice(choice_id: String) -> bool:
 	blood += blood_reward
 	souls += souls_reward
 	factory_points += maxi(int(rewards.get("factory_points", 0)), 0)
+	var zombie_hp_reward: int = maxi(int(rewards.get("zombie_hp_bonus", 0)), 0)
+	if zombie_hp_reward > 0:
+		event_zombie_hp_bonus += zombie_hp_reward
+		increase_zombie_max_hp(zombie_hp_reward)
+	var ghost_damage_reward: int = maxi(
+		int(rewards.get("ghost_damage_bonus", 0)),
+		0
+	)
+	if ghost_damage_reward > 0:
+		event_ghost_damage_bonus += ghost_damage_reward
+		for current_ghost: Node2D in ghosts:
+			var ghost_runtime: UndeadRuntimeUnit = get_undead_runtime(current_ghost)
+			if ghost_runtime != null:
+				ghost_runtime.damage += ghost_damage_reward
+	enemy_damage_run_bonus += maxi(
+		int(rewards.get("enemy_damage_bonus", 0)),
+		0
+	)
+	var pressure_rewards: Dictionary = (
+		rewards.get("faction_pressure", {}) as Dictionary
+	)
+	for faction_id_value: Variant in pressure_rewards:
+		var faction_id: String = str(faction_id_value)
+		faction_pressure[faction_id] = maxi(
+			int(faction_pressure.get(faction_id, 0))
+			+ int(pressure_rewards[faction_id_value]),
+			0
+		)
 	total_bones_earned += bones_reward
 	total_flesh_earned += flesh_reward
 	total_blood_earned += blood_reward
 	total_souls_earned += souls_reward
 	narrative_event_choices[current_narrative_event_id] = choice_id
+	var discovery_id: String = str(choice.get("discovery_id", ""))
+	if not discovery_id.is_empty():
+		lore_discoveries[discovery_id] = true
 
 	event_decision_in_progress = false
 	current_narrative_event_id = ""
@@ -6509,8 +6654,28 @@ func get_upgrade_pool() -> Array[String]:
 		UPGRADE_ROTTEN_BULK,
 		UPGRADE_GRAVE_HUNGER,
 		UPGRADE_DEAD_WEIGHT,
-		UPGRADE_CARRION_RECOVERY
+		UPGRADE_CARRION_RECOVERY,
+		UPGRADE_STITCHED_HIDE,
+		UPGRADE_SEPTIC_STRIKES,
+		UPGRADE_GRAVE_MOMENTUM,
+		UPGRADE_FLESH_PRESERVATION,
+		UPGRADE_SOUL_SIPHON
 	]
+
+
+	if skeleton_archer_unlocked:
+		pool.append_array([
+			UPGRADE_FLETCHERS_MARK,
+			UPGRADE_HOLLOW_SHAFTS,
+			UPGRADE_OSSUARY_SCOPE
+		])
+
+
+	if current_wave >= 6:
+		pool.append_array([
+			UPGRADE_SPECTRAL_VOLTAGE,
+			UPGRADE_PHASE_CYCLE
+		])
 
 
 	if lich_unlocked:
@@ -6528,6 +6693,26 @@ func get_upgrade_pool() -> Array[String]:
 		and get_upgrade_count(UPGRADE_EMERGENCY_RECLAMATION) == 0
 	):
 		pool.append(UPGRADE_EMERGENCY_RECLAMATION)
+	if current_wave >= 10 and get_upgrade_count(UPGRADE_CRIMSON_TITHE) == 0:
+		pool.append(UPGRADE_CRIMSON_TITHE)
+	if current_wave >= 12 and get_upgrade_count(UPGRADE_FORBIDDEN_PATENT) == 0:
+		pool.append(UPGRADE_FORBIDDEN_PATENT)
+
+
+	for limited_upgrade: String in [
+		UPGRADE_FLETCHERS_MARK,
+		UPGRADE_HOLLOW_SHAFTS,
+		UPGRADE_OSSUARY_SCOPE,
+		UPGRADE_STITCHED_HIDE,
+		UPGRADE_SEPTIC_STRIKES,
+		UPGRADE_GRAVE_MOMENTUM,
+		UPGRADE_SPECTRAL_VOLTAGE,
+		UPGRADE_PHASE_CYCLE,
+		UPGRADE_FLESH_PRESERVATION,
+		UPGRADE_SOUL_SIPHON
+	]:
+		if get_upgrade_count(limited_upgrade) >= 3:
+			pool.erase(limited_upgrade)
 
 
 	# Upgrades com limite deixam de aparecer
@@ -6743,7 +6928,11 @@ func is_zombie_upgrade(
 
 func is_rare_upgrade(upgrade_id: String) -> bool:
 
-	return upgrade_id == UPGRADE_EMERGENCY_RECLAMATION
+	return upgrade_id in [
+		UPGRADE_EMERGENCY_RECLAMATION,
+		UPGRADE_CRIMSON_TITHE,
+		UPGRADE_FORBIDDEN_PATENT
+	]
 
 
 func get_upgrade_card_text(
@@ -7145,9 +7334,86 @@ func apply_upgrade(
 			lich_summon_lifetime_bonus += 4.0
 
 
+		UPGRADE_FLETCHERS_MARK:
+
+			skeleton_archer_damage += 4
+
+
+		UPGRADE_HOLLOW_SHAFTS:
+
+			skeleton_archer_attack_cooldown = maxf(
+				skeleton_archer_attack_cooldown - 0.10,
+				0.45
+			)
+
+
+		UPGRADE_OSSUARY_SCOPE:
+
+			skeleton_archer_attack_range += 45.0
+
+
+		UPGRADE_STITCHED_HIDE:
+
+			increase_zombie_max_hp(30)
+
+
+		UPGRADE_SEPTIC_STRIKES:
+
+			zombie_damage += 2
+
+
+		UPGRADE_GRAVE_MOMENTUM:
+
+			zombie_attack_cooldown = maxf(
+				zombie_attack_cooldown - 0.08,
+				0.55
+			)
+
+
+		UPGRADE_SPECTRAL_VOLTAGE:
+
+			ghost_damage_bonus += 4
+			for current_ghost: Node2D in ghosts:
+				var runtime: UndeadRuntimeUnit = get_undead_runtime(current_ghost)
+				if runtime != null:
+					runtime.damage += 4
+
+
+		UPGRADE_PHASE_CYCLE:
+
+			ghost_cooldown_reduction += 0.10
+			for current_ghost: Node2D in ghosts:
+				var runtime: UndeadRuntimeUnit = get_undead_runtime(current_ghost)
+				if runtime != null:
+					runtime.attack_cooldown = maxf(
+						runtime.attack_cooldown - 0.10,
+						0.55
+					)
+
+
+		UPGRADE_FLESH_PRESERVATION:
+
+			flesh_per_corpse += 1
+
+
+		UPGRADE_SOUL_SIPHON:
+
+			soul_yield_bonus += 1
+
+
 		UPGRADE_EMERGENCY_RECLAMATION:
 
 			emergency_reclamation_available = true
+
+
+		UPGRADE_CRIMSON_TITHE:
+
+			pass
+
+
+		UPGRADE_FORBIDDEN_PATENT:
+
+			pass
 
 
 		_:
@@ -7202,50 +7468,58 @@ func increase_zombie_max_hp(
 func get_upgrade_name(
 	upgrade_id: String
 ) -> String:
+	if upgrade_id in [
+		UPGRADE_FLETCHERS_MARK, UPGRADE_HOLLOW_SHAFTS, UPGRADE_OSSUARY_SCOPE,
+		UPGRADE_STITCHED_HIDE, UPGRADE_SEPTIC_STRIKES, UPGRADE_GRAVE_MOMENTUM,
+		UPGRADE_SPECTRAL_VOLTAGE, UPGRADE_PHASE_CYCLE,
+		UPGRADE_FLESH_PRESERVATION, UPGRADE_SOUL_SIPHON,
+		UPGRADE_CRIMSON_TITHE, UPGRADE_FORBIDDEN_PATENT
+	]:
+		return tr("UPGRADE_" + upgrade_id.to_upper() + "_NAME")
 
 	match upgrade_id:
 
 		UPGRADE_SHARPENED_BONES:
-			return "Sharpened Bones"
+			return tr("UPGRADE_SHARPENED_BONES_NAME")
 
 		UPGRADE_BONE_PLATING:
-			return "Bone Plating"
+			return tr("UPGRADE_BONE_PLATING_NAME")
 
 		UPGRADE_EFFICIENT_RECYCLING:
-			return "Efficient Recycling"
+			return tr("UPGRADE_EFFICIENT_RECYCLING_NAME")
 
 		UPGRADE_RAPID_ASSAULT:
-			return "Rapid Assault"
+			return tr("UPGRADE_RAPID_ASSAULT_NAME")
 
 		UPGRADE_DEATH_MARCH:
-			return "Death March"
+			return tr("UPGRADE_DEATH_MARCH_NAME")
 
 		UPGRADE_MASS_PRODUCTION:
-			return "Mass Production"
+			return tr("UPGRADE_MASS_PRODUCTION_NAME")
 
 		UPGRADE_HEAVY_BONES:
-			return "Heavy Bones"
+			return tr("UPGRADE_HEAVY_BONES_NAME")
 
 		UPGRADE_BONE_HARVEST:
-			return "Bone Harvest"
+			return tr("UPGRADE_BONE_HARVEST_NAME")
 
 		UPGRADE_REASSEMBLY:
-			return "Reassembly"
+			return tr("UPGRADE_REASSEMBLY_NAME")
 
 		UPGRADE_FINAL_SERVICE:
-			return "Final Service"
+			return tr("UPGRADE_FINAL_SERVICE_NAME")
 
 		UPGRADE_ROTTEN_BULK:
-			return "Rotten Bulk"
+			return tr("UPGRADE_ROTTEN_BULK_NAME")
 
 		UPGRADE_GRAVE_HUNGER:
-			return "Grave Hunger"
+			return tr("UPGRADE_GRAVE_HUNGER_NAME")
 
 		UPGRADE_DEAD_WEIGHT:
-			return "Dead Weight"
+			return tr("UPGRADE_DEAD_WEIGHT_NAME")
 
 		UPGRADE_CARRION_RECOVERY:
-			return "Carrion Recovery"
+			return tr("UPGRADE_CARRION_RECOVERY_NAME")
 
 		UPGRADE_GRAVE_CONTRACT:
 			return tr("UPGRADE_GRAVE_CONTRACT_NAME")
@@ -7266,74 +7540,58 @@ func get_upgrade_name(
 func get_upgrade_description(
 	upgrade_id: String
 ) -> String:
+	if upgrade_id in [
+		UPGRADE_FLETCHERS_MARK, UPGRADE_HOLLOW_SHAFTS, UPGRADE_OSSUARY_SCOPE,
+		UPGRADE_STITCHED_HIDE, UPGRADE_SEPTIC_STRIKES, UPGRADE_GRAVE_MOMENTUM,
+		UPGRADE_SPECTRAL_VOLTAGE, UPGRADE_PHASE_CYCLE,
+		UPGRADE_FLESH_PRESERVATION, UPGRADE_SOUL_SIPHON,
+		UPGRADE_CRIMSON_TITHE, UPGRADE_FORBIDDEN_PATENT
+	]:
+		return tr("UPGRADE_" + upgrade_id.to_upper() + "_DESC")
 
 	match upgrade_id:
 
 		UPGRADE_SHARPENED_BONES:
-			return "Skeleton Damage +25%"
+			return tr("UPGRADE_SHARPENED_BONES_DESC")
 
 		UPGRADE_BONE_PLATING:
-			return (
-				"Skeleton Max HP +25"
-				+ "\nExisting Skeletons gain +25 HP"
-			)
+			return tr("UPGRADE_BONE_PLATING_DESC")
 
 		UPGRADE_EFFICIENT_RECYCLING:
-			return "Corpses generate +2 Bones"
+			return tr("UPGRADE_EFFICIENT_RECYCLING_DESC")
 
 		UPGRADE_RAPID_ASSAULT:
-			return "Skeleton Attack Speed +15%"
+			return tr("UPGRADE_RAPID_ASSAULT_DESC")
 
 		UPGRADE_DEATH_MARCH:
-			return "Skeleton Movement Speed +20%"
+			return tr("UPGRADE_DEATH_MARCH_DESC")
 
 		UPGRADE_MASS_PRODUCTION:
-			return "Skeleton cost -1 Bone"
+			return tr("UPGRADE_MASS_PRODUCTION_DESC")
 
 		UPGRADE_HEAVY_BONES:
-			return (
-				"Skeleton Damage +50%"
-				+ "\nAttack Speed -20%"
-			)
+			return tr("UPGRADE_HEAVY_BONES_DESC")
 
 		UPGRADE_BONE_HARVEST:
-			return (
-				"+20% chance when processing a Corpse"
-				+ "\nto gain +5 bonus Bones"
-			)
+			return tr("UPGRADE_BONE_HARVEST_DESC")
 
 		UPGRADE_REASSEMBLY:
-			return (
-				"+15% chance for a dead Skeleton"
-				+ "\nto revive with 50% HP"
-			)
+			return tr("UPGRADE_REASSEMBLY_DESC")
 
 		UPGRADE_FINAL_SERVICE:
-			return (
-				"When a Skeleton dies,"
-				+ "\ndeal +20 damage to the Enemy"
-			)
+			return tr("UPGRADE_FINAL_SERVICE_DESC")
 
 		UPGRADE_ROTTEN_BULK:
-			return (
-				"Zombie Max HP +40"
-				+ "\nExisting Zombies gain +40 HP"
-			)
+			return tr("UPGRADE_ROTTEN_BULK_DESC")
 
 		UPGRADE_GRAVE_HUNGER:
-			return "Zombie Damage +20%"
+			return tr("UPGRADE_GRAVE_HUNGER_DESC")
 
 		UPGRADE_DEAD_WEIGHT:
-			return (
-				"Zombie Max HP +70"
-				+ "\nMovement Speed -10%"
-			)
+			return tr("UPGRADE_DEAD_WEIGHT_DESC")
 
 		UPGRADE_CARRION_RECOVERY:
-			return (
-				"Zombies recover 4 HP"
-				+ "\nafter every attack"
-			)
+			return tr("UPGRADE_CARRION_RECOVERY_DESC")
 
 		UPGRADE_GRAVE_CONTRACT:
 			return tr("UPGRADE_GRAVE_CONTRACT_DESC")
@@ -7358,129 +7616,50 @@ func get_upgrade_status(
 	match upgrade_id:
 
 		UPGRADE_SHARPENED_BONES:
-			return (
-				"Current DMG: "
-				+ str(skeleton_damage)
-			)
+			return tr("UPGRADE_CURRENT_SKELETON_DAMAGE") % skeleton_damage
 
 		UPGRADE_BONE_PLATING:
-			return (
-				"Current Max HP: "
-				+ str(skeleton_max_hp)
-			)
+			return tr("UPGRADE_CURRENT_SKELETON_HP") % skeleton_max_hp
 
 		UPGRADE_EFFICIENT_RECYCLING:
-			return (
-				"Current Bones/Corpse: "
-				+ str(bones_per_corpse)
-			)
+			return tr("UPGRADE_CURRENT_BONE_YIELD") % bones_per_corpse
 
 		UPGRADE_RAPID_ASSAULT:
-			return (
-				"Current Cooldown: "
-				+ str(
-					snappedf(
-						skeleton_attack_cooldown,
-						0.01
-					)
-				)
-				+ "s"
-			)
+			return tr("UPGRADE_CURRENT_SKELETON_COOLDOWN") % skeleton_attack_cooldown
 
 		UPGRADE_DEATH_MARCH:
-			return (
-				"Current Move Speed: "
-				+ str(
-					int(
-						round(
-							skeleton_speed
-						)
-					)
-				)
-			)
+			return tr("UPGRADE_CURRENT_SKELETON_SPEED") % int(round(skeleton_speed))
 
 		UPGRADE_MASS_PRODUCTION:
-			return (
-				"Current Skeleton Cost: "
-				+ str(skeleton_cost)
-			)
+			return tr("UPGRADE_CURRENT_SKELETON_COST") % skeleton_cost
 
 		UPGRADE_HEAVY_BONES:
-			return (
-				"DMG "
-				+ str(skeleton_damage)
-				+ " | Cooldown "
-				+ str(
-					snappedf(
-						skeleton_attack_cooldown,
-						0.01
-					)
-				)
-				+ "s"
-			)
+			return tr("UPGRADE_CURRENT_HEAVY_BONES") % [
+				skeleton_damage, skeleton_attack_cooldown
+			]
 
 		UPGRADE_BONE_HARVEST:
-			return (
-				"Current Chance: "
-				+ str(
-					int(
-						round(
-							bone_harvest_chance
-								* 100.0
-						)
-					)
-				)
-				+ "%"
-			)
+			return tr("UPGRADE_CURRENT_CHANCE") % int(round(bone_harvest_chance * 100.0))
 
 		UPGRADE_REASSEMBLY:
-			return (
-				"Current Chance: "
-				+ str(
-					int(
-						round(
-							reassembly_chance
-								* 100.0
-						)
-					)
-				)
-				+ "%"
-			)
+			return tr("UPGRADE_CURRENT_CHANCE") % int(round(reassembly_chance * 100.0))
 
 		UPGRADE_FINAL_SERVICE:
-			return (
-				"Current Death Damage: "
-				+ str(
-					final_service_damage
-				)
-			)
+			return tr("UPGRADE_CURRENT_DEATH_DAMAGE") % final_service_damage
 
 		UPGRADE_ROTTEN_BULK:
-			return (
-				"Zombie Max HP: "
-				+ str(zombie_max_hp)
-			)
+			return tr("UPGRADE_CURRENT_ZOMBIE_HP") % zombie_max_hp
 
 		UPGRADE_GRAVE_HUNGER:
-			return (
-				"Zombie DMG: "
-				+ str(zombie_damage)
-			)
+			return tr("UPGRADE_CURRENT_ZOMBIE_DAMAGE") % zombie_damage
 
 		UPGRADE_DEAD_WEIGHT:
-			return (
-				"HP "
-				+ str(zombie_max_hp)
-				+ " | Speed "
-				+ str(int(round(zombie_speed)))
-			)
+			return tr("UPGRADE_CURRENT_DEAD_WEIGHT") % [
+				zombie_max_hp, int(round(zombie_speed))
+			]
 
 		UPGRADE_CARRION_RECOVERY:
-			return (
-				"Recovery per Attack: "
-				+ str(zombie_recovery_per_attack)
-				+ " HP"
-			)
+			return tr("UPGRADE_CURRENT_ZOMBIE_RECOVERY") % zombie_recovery_per_attack
 
 		UPGRADE_GRAVE_CONTRACT:
 			return tr("UPGRADE_GRAVE_CONTRACT_STATUS") % get_lich_summon_cap()
@@ -7493,6 +7672,42 @@ func get_upgrade_status(
 
 		UPGRADE_EMERGENCY_RECLAMATION:
 			return tr("UPGRADE_EMERGENCY_RECLAMATION_STATUS")
+
+		UPGRADE_FLETCHERS_MARK:
+			return tr("UPGRADE_CURRENT_ARCHER_DAMAGE") % skeleton_archer_damage
+
+		UPGRADE_HOLLOW_SHAFTS:
+			return tr("UPGRADE_CURRENT_ARCHER_COOLDOWN") % skeleton_archer_attack_cooldown
+
+		UPGRADE_OSSUARY_SCOPE:
+			return tr("UPGRADE_CURRENT_ARCHER_RANGE") % int(get_skeleton_archer_effective_range())
+
+		UPGRADE_STITCHED_HIDE:
+			return tr("UPGRADE_CURRENT_ZOMBIE_HP") % zombie_max_hp
+
+		UPGRADE_SEPTIC_STRIKES:
+			return tr("UPGRADE_CURRENT_ZOMBIE_DAMAGE") % zombie_damage
+
+		UPGRADE_GRAVE_MOMENTUM:
+			return tr("UPGRADE_CURRENT_ZOMBIE_COOLDOWN") % zombie_attack_cooldown
+
+		UPGRADE_SPECTRAL_VOLTAGE:
+			return tr("UPGRADE_CURRENT_GHOST_BONUS_DAMAGE") % ghost_damage_bonus
+
+		UPGRADE_PHASE_CYCLE:
+			return tr("UPGRADE_CURRENT_GHOST_REDUCTION") % ghost_cooldown_reduction
+
+		UPGRADE_FLESH_PRESERVATION:
+			return tr("UPGRADE_CURRENT_FLESH_YIELD") % flesh_per_corpse
+
+		UPGRADE_SOUL_SIPHON:
+			return tr("UPGRADE_CURRENT_SOUL_BONUS") % soul_yield_bonus
+
+		UPGRADE_CRIMSON_TITHE:
+			return tr("UPGRADE_CRIMSON_TITHE_STATUS")
+
+		UPGRADE_FORBIDDEN_PATENT:
+			return tr("UPGRADE_FORBIDDEN_PATENT_STATUS")
 
 		_:
 			return ""
@@ -7691,6 +7906,14 @@ func get_synergy_name(
 func get_synergy_description(
 	synergy_id: String
 ) -> String:
+	if active_synergies.has(synergy_id) or synergy_id in [
+		SYNERGY_RECYCLING_PLANT, SYNERGY_SECOND_SHIFT,
+		SYNERGY_BONE_ASSEMBLY_LINE, SYNERGY_OVERCLOCKED_OSSUARY,
+		SYNERGY_MEAT_SHIELD_PROTOCOL, SYNERGY_CRIMSON_ASSEMBLY,
+		SYNERGY_PHANTOM_CONDUIT, SYNERGY_DARK_REFINERY,
+		SYNERGY_SOUL_FOUNDRY, SYNERGY_OSSUARY_BALLISTICS
+	]:
+		return tr("SYNERGY_" + synergy_id.to_upper() + "_DESC")
 
 	match synergy_id:
 
@@ -8374,6 +8597,13 @@ func build_checkpoint_state() -> Dictionary:
 		"narrative": {
 			"choices": narrative_event_choices.duplicate(true),
 			"pending_event": current_narrative_event_id,
+			"discoveries": lore_discoveries.duplicate(true),
+		},
+		"run_modifiers": {
+			"enemy_damage_bonus": enemy_damage_run_bonus,
+			"event_zombie_hp_bonus": event_zombie_hp_bonus,
+			"event_ghost_damage_bonus": event_ghost_damage_bonus,
+			"faction_pressure": faction_pressure.duplicate(true),
 		},
 		"processing_directive": processing_directive,
 		"rituals": {
@@ -8445,6 +8675,9 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	narrative_event_choices = (
 		narrative.get("choices", {}) as Dictionary
 	).duplicate(true)
+	lore_discoveries = (
+		narrative.get("discoveries", {}) as Dictionary
+	).duplicate(true)
 
 	upgrade_counts.clear()
 	var saved_upgrades: Dictionary = state.get("upgrades", {}) as Dictionary
@@ -8455,6 +8688,24 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 			apply_upgrade(upgrade_id)
 		upgrade_counts[upgrade_id] = count
 	check_synergy_unlocks()
+	var run_modifiers: Dictionary = state.get("run_modifiers", {}) as Dictionary
+	enemy_damage_run_bonus = maxi(
+		int(run_modifiers.get("enemy_damage_bonus", 0)),
+		0
+	)
+	event_zombie_hp_bonus = maxi(
+		int(run_modifiers.get("event_zombie_hp_bonus", 0)),
+		0
+	)
+	event_ghost_damage_bonus = maxi(
+		int(run_modifiers.get("event_ghost_damage_bonus", 0)),
+		0
+	)
+	faction_pressure = (
+		run_modifiers.get("faction_pressure", {}) as Dictionary
+	).duplicate(true)
+	if event_zombie_hp_bonus > 0:
+		increase_zombie_max_hp(event_zombie_hp_bonus)
 
 	var factory: Dictionary = state.get("factory", {}) as Dictionary
 	factory_points = maxi(int(factory.get("points", 0)), 0)
@@ -8615,7 +8866,7 @@ func update_wave_ui() -> void:
 
 		wave_title += (
 			" - " + tr("WAVE_BOSS") + ": "
-			+ get_enemy_display_name("foreman")
+			+ get_current_boss_name()
 		)
 
 	elif is_elite_wave(current_wave):
@@ -8986,6 +9237,10 @@ func toggle_factory_panel() -> void:
 
 	if ritual_panel != null:
 		ritual_panel.visible = false
+
+
+	if fusion_panel != null:
+		fusion_panel.visible = false
 
 
 	factory_panel.visible = not factory_panel.visible
@@ -9703,6 +9958,10 @@ func toggle_ritual_panel() -> void:
 		doctrine_panel.visible = false
 
 
+	if fusion_panel != null:
+		fusion_panel.visible = false
+
+
 	ritual_panel.visible = not ritual_panel.visible
 	update_ritual_panel_ui()
 
@@ -9795,6 +10054,146 @@ func update_ritual_panel_ui() -> void:
 	ritual_soul_anchor_button.disabled = (
 		soul_anchor_level >= 2 or souls < anchor_cost
 	)
+
+
+func create_fusion_panel_ui() -> void:
+	fusion_nav_button = Button.new()
+	fusion_nav_button.position = Vector2(590.0, 770.0)
+	fusion_nav_button.size = Vector2(180.0, 52.0)
+	fusion_nav_button.z_index = 160
+	apply_button_style(fusion_nav_button, Color(0.42, 0.18, 0.62, 1.0))
+	fusion_nav_button.pressed.connect(toggle_fusion_panel)
+	add_child(fusion_nav_button)
+
+	fusion_panel = ColorRect.new()
+	fusion_panel.position = Vector2(560.0, 235.0)
+	fusion_panel.size = Vector2(800.0, 500.0)
+	fusion_panel.color = Color(0.022, 0.014, 0.035, 0.992)
+	fusion_panel.z_index = 665
+	fusion_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(fusion_panel)
+
+	var title: Label = Label.new()
+	title.name = "FusionTitle"
+	title.position = Vector2(40.0, 28.0)
+	title.size = Vector2(720.0, 45.0)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_color_override("font_color", Color(0.74, 0.42, 0.92, 1.0))
+	fusion_panel.add_child(title)
+
+	fusion_status_label = Label.new()
+	fusion_status_label.position = Vector2(70.0, 86.0)
+	fusion_status_label.size = Vector2(660.0, 54.0)
+	fusion_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	fusion_status_label.add_theme_font_size_override("font_size", 17)
+	fusion_status_label.add_theme_color_override("font_color", UI_TEXT)
+	fusion_panel.add_child(fusion_status_label)
+
+	var recipe_ids: PackedStringArray = FUSION_RECIPE_CATALOG.get_recipe_ids()
+	for index: int in range(recipe_ids.size()):
+		var recipe_id: String = recipe_ids[index]
+		var button: Button = Button.new()
+		button.position = Vector2(70.0 + index * 345.0, 165.0)
+		button.size = Vector2(315.0, 195.0)
+		button.add_theme_font_size_override("font_size", 16)
+		apply_button_style(button, Color(0.42, 0.18, 0.62, 1.0))
+		button.pressed.connect(execute_fusion_recipe.bind(recipe_id))
+		fusion_panel.add_child(button)
+		fusion_recipe_buttons[recipe_id] = button
+
+	var close_button: Button = Button.new()
+	close_button.name = "FusionCloseButton"
+	close_button.position = Vector2(245.0, 415.0)
+	close_button.size = Vector2(310.0, 46.0)
+	apply_button_style(close_button, Color(0.42, 0.18, 0.62, 1.0))
+	close_button.pressed.connect(toggle_fusion_panel)
+	fusion_panel.add_child(close_button)
+	fusion_panel.visible = false
+	update_fusion_panel_ui()
+
+
+func toggle_fusion_panel() -> void:
+	if fusion_panel == null:
+		return
+	if upgrade_panel != null and upgrade_panel.visible:
+		fusion_panel.visible = false
+		return
+	if factory_panel != null:
+		factory_panel.visible = false
+	if doctrine_panel != null:
+		doctrine_panel.visible = false
+	if ritual_panel != null:
+		ritual_panel.visible = false
+	fusion_panel.visible = not fusion_panel.visible
+	update_fusion_panel_ui()
+
+
+func can_execute_fusion_recipe(recipe_id: String) -> bool:
+	if run_finished:
+		return false
+	var recipe: Dictionary = FUSION_RECIPE_CATALOG.get_recipe(recipe_id)
+	if recipe.is_empty():
+		return false
+	var costs: Dictionary = recipe.get("costs", {}) as Dictionary
+	if (
+		bones < int(costs.get("bones", 0))
+		or flesh < int(costs.get("flesh", 0))
+		or blood < int(costs.get("blood", 0))
+		or souls < int(costs.get("souls", 0))
+	):
+		return false
+	var rewards: Dictionary = recipe.get("rewards", {}) as Dictionary
+	return (
+		int(rewards.get("free_ghost", 0)) <= 0
+		or get_available_production_capacity() > 0
+	)
+
+
+func execute_fusion_recipe(recipe_id: String) -> bool:
+	if not can_execute_fusion_recipe(recipe_id):
+		return false
+	var recipe: Dictionary = FUSION_RECIPE_CATALOG.get_recipe(recipe_id)
+	var costs: Dictionary = recipe.get("costs", {}) as Dictionary
+	var rewards: Dictionary = recipe.get("rewards", {}) as Dictionary
+	# Validate first, then mutate once: a failed summon can never consume resources.
+	if int(rewards.get("free_ghost", 0)) > 0 and not create_free_ghost():
+		return false
+	bones -= int(costs.get("bones", 0))
+	flesh -= int(costs.get("flesh", 0))
+	blood -= int(costs.get("blood", 0))
+	souls -= int(costs.get("souls", 0))
+	factory_points += int(rewards.get("factory_points", 0))
+	update_bones_ui()
+	update_metrics_ui()
+	update_factory_panel_ui()
+	update_ritual_panel_ui()
+	update_fusion_panel_ui()
+	return true
+
+
+func update_fusion_panel_ui() -> void:
+	if fusion_panel == null or fusion_nav_button == null:
+		return
+	fusion_nav_button.text = tr("FUSION_NAV")
+	var title: Label = fusion_panel.get_node_or_null("FusionTitle") as Label
+	var close_button: Button = fusion_panel.get_node_or_null(
+		"FusionCloseButton"
+	) as Button
+	if title != null:
+		title.text = tr("FUSION_TITLE")
+	if close_button != null:
+		close_button.text = tr("FACTORY_CLOSE")
+	fusion_status_label.text = tr("FUSION_STATUS") % [bones, flesh, blood, souls]
+	for recipe_id_value: Variant in fusion_recipe_buttons:
+		var recipe_id: String = str(recipe_id_value)
+		var recipe: Dictionary = FUSION_RECIPE_CATALOG.get_recipe(recipe_id)
+		var button: Button = fusion_recipe_buttons[recipe_id] as Button
+		button.text = "%s\n\n%s" % [
+			tr(str(recipe.get("name_key", ""))),
+			tr(str(recipe.get("description_key", "")))
+		]
+		button.disabled = not can_execute_fusion_recipe(recipe_id)
 
 
 func create_hud_panel(

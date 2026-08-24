@@ -1,10 +1,36 @@
 # Changelog
 
+## [0.4.0] — 24/08/2026 — Build Diversity & Content
+
+### Added
+
+- catálogo ampliado de 18 para 30 upgrades, com opções próprias para Arqueiros, Zumbis, Fantasmas e economia;
+- Dízimo Carmesim e Patente Proibida no catálogo raro, ao lado de Recuperação Emergencial;
+- Marechal da Sepultura na onda 10 e Auditor Arcano na onda 15, mantendo o Capataz na onda 20;
+- cinco eventos narrativos localizados, incluindo risco permanente e duas decisões de Cadáver de Chefe;
+- dez descobertas de lore persistentes vinculadas às rotas dos eventos;
+- painel de Fusões Necromânticas com Liga de Ossuário e Formação Vinculada;
+- primeira versão completa da lore em `docs/LORE.md`;
+- regressões dedicadas para catálogo de upgrades, progressão de chefes, eventos e fusões.
+
+### Changed
+
+- Elites redistribuídos para as ondas 5, 9, 14 e 18, evitando conflito com chefes;
+- checkpoints agora preservam os modificadores permanentes concedidos por eventos;
+- documentação consolidada em voz autoral e atualizada para o estado real da v0.4.0;
+- traduções EN, PT-BR e ES ampliadas para todo o novo conteúdo.
+
+### Balance
+
+- chefes escalam de 1050/18 para 1650/24 e 2200/28 em PV/dano;
+- duas runs determinísticas completas continuam viáveis: Bone encerra com predominância de Esqueletos e Flesh com predominância de Zumbis;
+- receitas de fusão usam custos fixos e transações atômicas para impedir consumo parcial ou criação sem vaga.
+
 ## [Unreleased] — v0.2.0 Necromantic Economy
 
 ### Added
 
-- Archetype-specific Elite variants on Waves 5/10/15:
+- Archetype-specific Elite variants, now scheduled on Waves 5/9/14/18:
   - Elite Warrior Bulwark reduces incoming damage by 20%;
   - Elite Mage Overcharged casts every second attack with 65% splash and 0.45 s suppression;
   - Elite Elf Deadeye uses precision every third attack for 150% damage;

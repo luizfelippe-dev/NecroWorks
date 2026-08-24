@@ -93,7 +93,7 @@ Viewport preservation and lower-HUD bounds live at `tests/visual/layout_bounds_r
 Skeleton Archer recipe, queue, ranged formation, upgrades and Ossuary Ballistics live at `tests/units/skeleton_archer_runner.gd`.
 Lich combat, Soul production, bounded Thralls, upgrades, anti-exploit rules and Soul Foundry live at `tests/units/lich_summoning_runner.gd`.
 
-The current full headless regression contains 23 runners and passed on Godot 4.7.1. Corpse feedback cleanup now uses elapsed time rather than a frame count, removing host-FPS nondeterminism.
+At that milestone the full headless regression contained 23 runners and passed on Godot 4.7.1. Corpse feedback cleanup uses elapsed time rather than a frame count, removing host-FPS nondeterminism.
 
 Advanced Mage/Elf cadence and targeting are isolated in `scripts/game/enemy_combat_policy.gd`; live-node orchestration remains in `main.gd`. `tests/combat/enemy_advanced_behavior_runner.gd` covers AOE cap/damage/suppression, role-based precision and localization.
 
@@ -103,7 +103,7 @@ Both deterministic complete-run strategies still reach and defeat the Foreman af
 
 Elite identity is now snapshotted per Enemy in `enemy_elite_flags`, cleared through every existing lifecycle path and consumed only through `EnemyCombatPolicy`/the central incoming-damage boundary. This avoids deriving live instance behavior from mutable Wave globals.
 
-`tests/combat/enemy_elite_variant_runner.gd` validates all three traits and Boss exclusion remains protected by `is_elite_wave`. The complete headless regression now contains 24 runners; Bone and Flesh strategies still defeat the Foreman with Elite variants active.
+`tests/combat/enemy_elite_variant_runner.gd` validates all three traits and Boss exclusion remains protected by `is_elite_wave`. The Elite milestone raised the suite to 24 runners; Bone and Flesh strategies still defeated the Foreman.
 
 Before the demo, extend persistent coverage for:
 
@@ -120,7 +120,7 @@ The application now separates disk I/O from gameplay state: `RunSaveStore` owns 
 
 The current checkpoint is Wave-granular rather than frame-perfect. Active enemies, Corpse queues and fractional machine timers restart at the saved Wave boundary. This is intentional for V1, but the policy must be surfaced to playtesters and revisited before Steam cloud-save integration.
 
-Settings and application-shell navigation now have persistent automated coverage. The full headless regression is 26/26 on Godot 4.7.1.
+Settings and application-shell navigation have persistent automated coverage. Their milestone passed 26/26 on Godot 4.7.1.
 
 ### P1 — Application lifecycle (closed for V1)
 
@@ -130,7 +130,7 @@ The former `reload_current_scene()` restart path was unsafe once gameplay became
 
 Event definitions are data-only and reward application remains at one validated orchestration boundary. Event IDs and selected choices are persisted instead of translated display strings, keeping saves locale-independent. Invalid or repeated choices cannot grant resources. The first catalog intentionally uses opportunity-cost rewards rather than permanent penalties until manual playtests establish how much interruption and variance the 20-Wave run supports.
 
-Persistent coverage increases to 27 runners with the event scenario; both Bone and Flesh balance runs still defeat the Foreman.
+The first event scenario raised persistent coverage to 27 runners; both Bone and Flesh balance runs still defeated the Foreman.
 
 ### P2 — Prototype unit scenes
 
@@ -144,4 +144,27 @@ Square placeholders are gone and all current combatants have temporary sprites. 
 - no UI text hardcoded long-term once localization work begins;
 - no instant Doctrine replenishment that bypasses visible production queues;
 - preserve the stable horizontal enemy lane until replaced by a tested combat model;
-- update `AI_HANDOFF.md`, roadmap and changelog after each stable milestone.
+- update the project-state document, roadmap and changelog after each stable milestone.
+
+### v0.4.0 closure — 24/08/2026
+
+The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.
+
+The current complete regression is 30/30 on Godot 4.7.1.
+
+Closed risks:
+
+- intermediate Bosses no longer trigger the final victory path;
+- Boss and Elite Waves cannot overlap;
+- event consequences survive checkpoint restore;
+- Fusion failure cannot consume resources;
+- the upgrade pool contains 30 unique IDs and multiple one-time rares;
+- new player-facing text exists in EN, PT-BR and ES.
+
+Remaining structural debt for v0.5+:
+
+- `main.gd` remains too large and should yield a dedicated RunDirector and UI controllers when meta progression begins;
+- upgrades still use a large match statement and should migrate to data plus focused effect handlers before the catalog expands again;
+- Boss visuals reuse prototype archetype sprites and need dedicated presentation scenes;
+- save schema migration beyond version 1 is still absent;
+- full logging is too verbose for release builds and needs a debug-channel boundary.

@@ -18,9 +18,9 @@ func run_validation() -> void:
 	root.add_child(game)
 	await process_frame
 	game.set_process(false)
-	assert(game.is_elite_wave(15))
+	assert(game.is_elite_wave(14))
 	assert(not game.is_elite_wave(game.BOSS_WAVE))
-	game.start_wave(15)
+	game.start_wave(14)
 	await process_frame
 	game.set_process(false)
 

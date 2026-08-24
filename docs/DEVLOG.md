@@ -134,7 +134,7 @@ Full run validated.
 
 ## 18/08/2026 — Visual Target Defined
 
-A dedicated AI concept image created by the user became the official visual target for NecroWorks.
+A referência conceitual dedicada tornou-se o alvo visual oficial de NecroWorks.
 
 Direction:
 
@@ -215,7 +215,7 @@ Added:
 
 ### Validation
 
-User confirmed everything functioning.
+A validação manual confirmou o funcionamento esperado.
 
 This checkpoint was superseded by the Enemy Groups milestone below.
 
@@ -424,7 +424,7 @@ Elite state is stored per Enemy and routed through the existing combat policy. A
 
 ### Production planning
 
-Recommended next block:
+At that milestone the next block was:
 
 - playtest Factory Point income and upgrade timing;
 - playtest Army Doctrine during a complete manual run;
@@ -467,3 +467,19 @@ Restart and Return to Main Menu now use explicit gameplay-to-shell signals. Dire
 The Unregistered Grave Shipment interrupts the transition to Wave 7 and asks Production to choose 18 Bones or 8 Flesh plus 1 Blood. The Bound Arcanist appears before Wave 13 and offers 4 Souls or 2 Factory Points. Both incidents are localized in EN/PT-BR/ES.
 
 Choices are validated against a pure catalog, recorded once and persisted in checkpoints—including a pending decision. The upgrade panel heading and acquisition count were also migrated to translation keys. A dedicated event runner raises the suite to 27 scenarios, while Bone and Flesh full runs still defeat the Foreman.
+
+---
+
+## 24/08/2026 — v0.4.0 Build Diversity & Content
+
+O catálogo passou de 18 para 30 upgrades. Arqueiros, Zumbis e Fantasmas ganharam linhas próprias de dano, cadência, alcance e resistência; Preservação de Carne e Sifão de Almas ampliam rotas econômicas. Dízimo Carmesim e Patente Proibida completam três escolhas raras com Recuperação Emergencial.
+
+A run agora tem três clímax: Marechal da Sepultura na onda 10, Auditor Arcano na 15 e Capataz na 20. Elites foram redistribuídos para 5, 9, 14 e 18. Os dois chefes intermediários não encerram a partida e deixam restos usados em decisões exclusivas.
+
+O catálogo narrativo chegou a cinco incidentes. Uma Oferta Silenciosa introduz risco permanente; Restos do Marechal e Núcleo do Auditor transformam chefes em escolhas de build. Todos os efeitos persistentes entram no checkpoint.
+
+Fusões Necromânticas formam uma nova área de decisão. Liga de Ossuário converte materiais comuns em Pontos de Fábrica; Formação Vinculada combina Sangue e Almas para produzir um Fantasma. Ambas validam custo e capacidade antes de alterar qualquer recurso.
+
+A primeira lore completa define Vharos, Planta N-0, Diretor, Concordata de Ferro, Colégio do Lacre, Corte Verde e os três chefes. O texto também fixa o tom de horror corporativo e as regras para eventos e futuro Codex.
+
+As runs determinísticas de Bone e Flesh seguem derrotando o Capataz. Testes dedicados cobrem 30 upgrades, três chefes, cinco eventos, persistência das consequências e fusões atômicas.

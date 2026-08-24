@@ -230,7 +230,7 @@ Blood sink → Blood generation.
 
 ## Visual target
 
-The conceptual image created by the user is the official visual target.
+The project concept image is the official visual target.
 
 It can be followed closely because it was created specifically for NecroWorks.
 
@@ -537,7 +537,7 @@ Reasoning: the premise now frames Corpse recycling as an authored world and crea
 
 ## Put narrative decisions between Waves and after upgrades
 
-The first events trigger before Waves 7 and 13 only after the previous Wave's upgrade is committed. Combat never pauses mid-attack and each event offers two mutually exclusive economic routes.
+The first events were placed before Waves 7 and 13 after the previous Wave's upgrade. The same boundary now supports all five v0.4 incidents: combat never pauses mid-attack and every event offers two mutually exclusive routes.
 
 Reasoning:
 
@@ -546,3 +546,26 @@ Reasoning:
 - event IDs and rewards remain deterministic for save compatibility and balance tests;
 - two incidents are enough to validate pacing before building a large content catalog;
 - rewards use opportunity cost rather than surprise punishment during the first implementation.
+
+## Separate Elites from Boss milestones
+
+Elite pressure occurs on Waves 5, 9, 14 and 18. Bosses occupy Waves 10, 15 and 20. No Wave combines both rule sets.
+
+Reasoning:
+
+- each special encounter keeps a readable identity;
+- pressure spikes remain distributed through the run;
+- archetype-specific Elite tests can cover Warrior, Mage and Elf together on Wave 14;
+- Boss balance is not distorted by hidden Elite modifiers.
+
+## Treat Boss remains as build decisions
+
+The Grave Marshal and Arcane Auditor leave normal clickable Corpses and also trigger exclusive decisions on the following Wave transition. Their rewards either reinforce a unit family or accelerate a different economy.
+
+Reasoning: a Boss should change the run after the health bar reaches zero. The choice connects fiction, reward and build direction without adding a separate inventory layer.
+
+## Keep fusions deterministic and atomic
+
+Fusions use fixed recipes. Every cost and army-capacity requirement is checked before resources are consumed.
+
+Reasoning: recipes create deliberate cross-resource sinks, but failed interaction must never lose materials. Fixed outputs also make balance and save compatibility easier to audit.

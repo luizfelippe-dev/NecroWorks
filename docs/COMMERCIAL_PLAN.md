@@ -101,7 +101,7 @@ Skeleton Archer and Lich now create a clearer marketable composition story: chea
 
 Arcane Burst and Precision Shot improve trailer/readability potential because enemy silhouettes now imply different threats: Mage punishes a dense factory army and Elf hunts valuable ranged production. Emergency Reclamation adds an easy-to-explain rare “save one loss” moment. Before marketing capture, the temporary text feedback should receive dedicated spell/projectile VFX and distinct audio cues.
 
-Elite trait labels make Waves 5/10/15 easier to communicate in footage: Bulwark, Overcharged and Deadeye are short, distinct threats built from already learned enemies. Dedicated outline/VFX variants are still required before store-page capture; labels alone are a prototype readability solution.
+Elite trait labels make Waves 5/9/14/18 easier to communicate in footage: Bulwark, Overcharged and Deadeye are short, distinct threats built from already learned enemies. Dedicated outline/VFX variants are still required before store-page capture; labels alone are a prototype readability solution.
 
 Necromantic Economy v0.2 adds a second marketable layer: Blood sacrifice temporarily amplifies the army, while Souls become ranged Ghosts or permanent spectral upgrades. A five-second local milestone capture is generated at `.godot/necroworks_v020_milestone.avi`; future public footage should replace the temporary Ghost recolor and add spell/VFX/audio impact.
 
@@ -379,4 +379,12 @@ This is necessary but not yet sufficient for a public demo. The next commercial-
 
 The first localized prologue and fully localized Run Summary now give public captures a beginning and ending instead of showing only a mechanical sandbox. Before store use, replace the text-only prologue presentation with final key art/audio and validate that returning players can reach gameplay quickly.
 
-Two localized between-Wave incidents now provide the first trailer-readable narrative decisions and demonstrate that the Bone/Flesh/Soul/Factory economy supports authored choices. This improves pitch clarity, but a commercial demo still needs a broader event catalog with stronger visual presentation and at least one decision whose consequence changes a later encounter.
+The first two localized incidents established trailer-readable narrative decisions and demonstrated that the Bone/Flesh/Soul/Factory economy supports authored choices. The v0.4 catalog now contains five incidents, a faction consequence and two Boss-remain decisions; stronger visual presentation remains necessary before commercial footage.
+
+## Build-diversity milestone — 24/08/2026
+
+The v0.4.0 content layer gives a future demo a clearer beginning, middle and end: four Elite pressure points, two intermediate Bosses, the final Foreman, five decisions and two visible fusion recipes. Thirty upgrades and ten synergies support repeatable build footage instead of a single solved composition.
+
+This is a strong internal-development update, not yet a Steam-ready public build. The next commercial priorities are dedicated Boss art, readable VFX/SFX, a short guided first run, external playtests and a representative 10–15 minute capture. Store claims should describe the current systems accurately and avoid promising final art or endless replayability before retention data exists.
+
+The first complete lore pass improves naming and marketing consistency. Future capsule copy, trailer narration and Steam description should reuse the Planta N-0, Director and living-coalition vocabulary rather than inventing a separate premise for promotion.

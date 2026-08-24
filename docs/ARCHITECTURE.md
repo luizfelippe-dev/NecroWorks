@@ -483,7 +483,7 @@ Not required yet.
 
 Automatic checkpoints are requested after an upgrade is committed and before the next Wave starts. Save-and-return also snapshots the current run. Loading restarts the recorded Wave with the saved permanent army and economy instead of attempting a fragile frame-perfect combat restore.
 
-`tests/core/persistence_runner.gd` validates sanitation, JSON round-trip and gameplay restore. `tests/core/game_shell_runner.gd` protects navigation, pause behavior and localized menu copy. The complete regression contains 26 runners.
+`tests/core/persistence_runner.gd` validates sanitation, JSON round-trip and gameplay restore. `tests/core/game_shell_runner.gd` protects navigation, pause behavior and localized menu copy. These were runners 25 and 26 when introduced; the current suite contains 30.
 
 The shell also owns the localized prologue before a New Run. End-of-run presentation remains inside `main.gd`, but emits `restart_requested` and `return_to_menu_requested` when hosted by the shell. Direct F6 execution retains safe fallbacks to scene reload/application entry, so gameplay never assumes that a parent shell exists.
 
@@ -491,6 +491,26 @@ The shell also owns the localized prologue before a New Run. End-of-run presenta
 
 `scripts/game/narrative_event_catalog.gd` is a pure catalog mapping trigger Waves to event IDs, localized presentation keys, valid choice IDs and deterministic reward dictionaries. `main.gd` owns the live decision panel and applies rewards only after validating that the selected choice belongs to the active event.
 
-Upgrade selection increments the next Wave first. Waves 7 and 13 then pause at an event decision; choosing a route records the event exactly once, emits the normal checkpoint and starts combat. Checkpoint state includes resolved choices and a pending event ID, allowing Save/Continue to restore a decision without silently granting or skipping rewards.
+Upgrade selection increments the next Wave first. Event Waves 4, 7, 11, 13 and 16 then pause at a decision; choosing a route records the event exactly once, emits the normal checkpoint and starts combat. Checkpoint state includes resolved choices, discoveries and a pending event ID, allowing Save/Continue to restore a decision without silently granting or skipping rewards.
 
-`tests/events/narrative_event_runner.gd` protects triggers, invalid-choice rejection, rewards, bounds, localization and pending-event restore. Full-run strategies resolve events through different economic routes.
+`tests/events/narrative_event_runner.gd` protects triggers, invalid-choice rejection, rewards, persistent consequences, bounds, localization and pending-event restore. Full-run strategies resolve events through different economic routes.
+
+# v0.4 content architecture
+
+## Upgrade catalog
+
+`main.gd` exposes 30 stable upgrade IDs. Pool construction gates specialized cards by Wave and blueprint state, caps common stacking at three and limits each rare to one acquisition. Runtime mutations still use the existing single `apply_upgrade()` boundary, while `tests/upgrades/expanded_upgrade_catalog_runner.gd` protects uniqueness, availability, representative effects, rare hooks and localization.
+
+## Three-Boss progression
+
+`BOSS_PROFILES` is the authoritative Wave-to-profile map for Waves 10, 15 and 20. Each profile supplies identity, HP, damage and special-attack parameters. `EnemyArchetypeCatalog.get_boss_archetype()` provides movement and presentation data. Intermediate Boss deaths enter the normal upgrade transition; only Wave 20 calls `finish_run(true)`.
+
+Bosses and Elites use disjoint Wave lists. This prevents accidental rule stacking and makes the encounter schedule explicit. `tests/combat/boss_progression_runner.gd` verifies identities, stat escalation, Corpse metadata, intermediate continuation and final victory.
+
+## Persistent event consequences
+
+`NarrativeEventCatalog` defines five incidents and ten choice-dependent discovery IDs. Reward dictionaries may grant resources or run modifiers. Enemy damage, Zombie HP, Ghost damage and faction pressure are snapshotted under `run_modifiers`, reapplied during restore and never stored as translated text. Iron Concord pressure grants +2 damage per level to Human Warriors and the Grave Marshal without affecting Mage or Elf families. Discovery IDs are locale-independent and persisted for the future Codex.
+
+## Fusion recipes
+
+`scripts/game/fusion_recipe_catalog.gd` owns immutable recipe IDs, costs, rewards and localization keys. `can_execute_fusion_recipe()` performs the complete preflight; `execute_fusion_recipe()` mutates state only after validation. The current recipes either grant Factory Points or create a free Ghost through the standard runtime path. `tests/economy/fusion_recipe_runner.gd` protects atomic failure, outputs, population pressure and localization.

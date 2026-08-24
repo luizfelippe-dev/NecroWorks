@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 21/08/2026
+**Atualizado:** 24/08/2026
 
 ---
 
@@ -192,9 +192,9 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] Zombie Tank formalized as the Flesh frontline recipe
 - [x] Lich caster/summoner recipe and unlock
 - [x] temporary-Skeleton summon cap/cooldown/resource constraint
-- [ ] 30–40 upgrades
+- [x] 30–40 upgrades — catálogo atual com 30 opções
 - [x] 10–15 synergies — current catalog reached 10
-- [ ] rare upgrade catalog — foundation complete with Emergency Reclamation; more content required
+- [x] rare upgrade catalog — Recuperação Emergencial, Dízimo Carmesim e Patente Proibida
 - [x] first rule-changing upgrade — Emergency Reclamation
 - [x] multiple enemy archetype foundation
 - [x] Human Warrior prototype — durable frontline
@@ -203,15 +203,19 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] Mage advanced behavior — Arcane Burst AOE/suppression
 - [x] Elf advanced behavior — Precision Shot backline targeting
 - [x] archetype-specific elite variants — Bulwark, Overcharged and Deadeye
-- [ ] 2–3 bosses
-- [x] narrative event system and first two between-Wave incidents
-- [ ] expand event catalog with risk/reward and faction consequences
-- [ ] Boss Corpse choices
-- [ ] recipes/fusions
+- [x] 3 bosses — Marechal da Sepultura, Auditor Arcano e Capataz
+- [x] narrative event system with five between-Wave incidents
+- [x] risk/reward event with persistent Iron Concord faction pressure
+- [x] Boss Corpse choices after Waves 10 and 15
+- [x] two resource recipes/fusions with atomic transactions
 - [x] localized narrative intro prototype
 - [x] first localized in-run narrative decisions on Waves 7 and 13
-- [ ] optional discoveries and larger event catalog
-- [ ] first complete lore pass
+- [x] optional discoveries and larger event catalog — each of the ten event routes unlocks a distinct discovery ID for the future Codex
+- [x] first complete lore pass — world, factions, bosses, timeline and writing rules in `LORE.md`
+
+### Gate da v0.4.0
+
+**Concluído em 24/08/2026:** o catálogo chegou a 30 upgrades e três raros; a run ganhou três encontros de chefe, cinco decisões narrativas, duas escolhas de Cadáver de Chefe e duas Fusões Necromânticas. As estratégias determinísticas de Ossos e Carne continuam derrotando o Capataz, e os novos sistemas possuem regressão headless dedicada.
 
 ---
 

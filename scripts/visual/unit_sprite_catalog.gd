@@ -42,6 +42,10 @@ static func get_texture(visual_id: String) -> Texture2D:
 			return ELF
 		"foreman":
 			return FOREMAN
+		"grave_marshal":
+			return HUMAN_WARRIOR
+		"arcane_auditor":
+			return MAGE
 		"lich":
 			return LICH
 		_:

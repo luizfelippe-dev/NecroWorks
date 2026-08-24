@@ -45,6 +45,28 @@ const FOREMAN: Dictionary = {
 	"color": Color(0.42, 0.08, 0.55, 1.0)
 }
 
+const GRAVE_MARSHAL: Dictionary = {
+	"id": "grave_marshal",
+	"display_name": "GRAVE MARSHAL",
+	"hp_multiplier": 1.00,
+	"damage_multiplier": 1.00,
+	"speed_multiplier": 0.90,
+	"cooldown": 0.85,
+	"attack_range": 145.0,
+	"color": Color(0.42, 0.28, 0.12, 1.0)
+}
+
+const ARCANE_AUDITOR: Dictionary = {
+	"id": "arcane_auditor",
+	"display_name": "ARCANE AUDITOR",
+	"hp_multiplier": 1.00,
+	"damage_multiplier": 1.00,
+	"speed_multiplier": 0.82,
+	"cooldown": 0.95,
+	"attack_range": 300.0,
+	"color": Color(0.30, 0.16, 0.62, 1.0)
+}
+
 
 static func get_archetype(
 	wave_number: int,
@@ -81,3 +103,13 @@ static func get_archetype(
 
 
 	return WARRIOR.duplicate(true)
+
+
+static func get_boss_archetype(boss_id: String) -> Dictionary:
+	match boss_id:
+		"grave_marshal":
+			return GRAVE_MARSHAL.duplicate(true)
+		"arcane_auditor":
+			return ARCANE_AUDITOR.duplicate(true)
+		_:
+			return FOREMAN.duplicate(true)

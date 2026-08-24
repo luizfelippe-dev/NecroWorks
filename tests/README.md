@@ -253,7 +253,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 
 ## Elite Enemy variants
 
-Validates Wave 15 per-instance Elite identity, Warrior Bulwark mitigation, Overcharged Mage cadence/splash/suppression, Deadeye Elf cadence/targeting/damage, visible trait labels and all locales:
+Validates Wave 14 per-instance Elite identity, Warrior Bulwark mitigation, Overcharged Mage cadence/splash/suppression, Deadeye Elf cadence/targeting/damage, visible trait labels and all locales:
 
 ```powershell
 Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/combat/enemy_elite_variant_runner.gd
@@ -282,10 +282,20 @@ The shell runner also covers the localized prologue and verifies that hosted gam
 
 ## Narrative events
 
-Validates Wave triggers, catalog ownership, invalid choices, economic rewards, UI bounds, EN/PT-BR/ES text and pending-event checkpoint restore:
+Validates five Wave triggers, catalog ownership, invalid choices, economic rewards, persistent risk/Boss consequences, UI bounds, EN/PT-BR/ES text and pending-event checkpoint restore:
 
 ```powershell
 Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/events/narrative_event_runner.gd
 ```
 
-The current suite contains 27 `*_runner.gd` scenarios. All 27 pass in Godot 4.7.1 headless at this milestone.
+## v0.4 catalog, Bosses and Fusions
+
+Validates 30 unique upgrades, all three rare hooks, three escalating Bosses, intermediate-Boss continuation, final victory and both atomic Fusion recipes:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/upgrades/expanded_upgrade_catalog_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/combat/boss_progression_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/economy/fusion_recipe_runner.gd
+```
+
+The current suite contains 30 `*_runner.gd` scenarios. All 30 passed in Godot 4.7.1 headless on 24/08/2026; the deterministic Bone and Flesh runs remain mandatory balance gates.
