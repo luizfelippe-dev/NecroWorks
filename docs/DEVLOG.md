@@ -10,9 +10,11 @@ Na sequência, movi toda a geometria determinística do exército para `CombatFo
 
 Também centralizei coleções de unidades, reservas e liberação de slots em `UndeadArmyRegistry`, mantendo as propriedades anteriores como ponte de compatibilidade.
 
-Os 30 upgrades e as dez sinergias agora possuem catálogos próprios. O controlador não monta mais pools, categorias nem chaves de tradução manualmente; ele recebe opções válidas e aplica somente os efeitos da run.
+Os 30 upgrades e as dez sinergias agora possuem catálogos próprios. O controlador não monta mais pools, categorias, requisitos de combinação nem chaves de tradução manualmente; ele recebe opções válidas e aplica somente os efeitos da run.
 
-A importação limpa, os dois pontos de entrada e os 35 runners passaram após a reorganização.
+Centralizei custos, capacidade e velocidade das máquinas em `FactoryProgressionPolicy`. A apresentação dos status de upgrade e a criação dos controles básicos de produção também saíram do controlador e agora vivem em `scripts/ui`.
+
+O controlador caiu de 10.507 para menos de 10.000 linhas nesta etapa, sem remover as pontes de compatibilidade. A importação limpa e os 38 runners passaram após a reorganização.
 
 ---
 

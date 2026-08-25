@@ -9,8 +9,10 @@
 - `CombatFormationPolicy` para a grade, spawn, compactação e limites de posicionamento;
 - `UndeadArmyRegistry` para coleções, capacidade e ocupação dos slots;
 - `UpgradeCatalog` como fonte dos 30 IDs, disponibilidade, limites e categorias;
-- `SynergyCatalog` como fonte das dez identidades e chaves de localização;
-- cenários de regressão dedicados aos novos catálogos, elevando a suíte para 35 runners.
+- `SynergyCatalog` como fonte das dez identidades, requisitos e chaves de localização;
+- `FactoryProgressionPolicy` para custos, capacidade e ciclos das máquinas;
+- `UpgradeStatusFormatter` e `ProductionControlsFactory` como limites iniciais da UI;
+- cenários de regressão dedicados às novas fronteiras, elevando a suíte para 38 runners.
 
 ### Changed
 
@@ -18,6 +20,7 @@
 - controlador principal movido para `scripts/game/main_controller.gd`;
 - F5 passa por `scenes/core/app.tscn` e F6 pode executar `scenes/world/gameplay.tscn`;
 - referências de cenas, testes e documentação atualizadas com preservação dos UIDs.
+- `MainController` reduzido para menos de dez mil linhas, mantendo as APIs públicas usadas por saves e testes.
 
 ## [0.4.0] — 24/08/2026 — Build Diversity & Content
 

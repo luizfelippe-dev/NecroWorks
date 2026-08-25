@@ -17,7 +17,9 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 - grade, spawn, compactação e posicionamento extraídos para `scripts/game/combat_formation_policy.gd`;
 - coleções e ocupação do exército extraídas para `scripts/game/undead_army_registry.gd`;
 - catálogo e disponibilidade dos 30 upgrades extraídos para `scripts/game/upgrade_catalog.gd`;
-- identidade e localização das dez sinergias extraídas para `scripts/game/synergy_catalog.gd`;
+- identidade, requisitos e localização das dez sinergias extraídas para `scripts/game/synergy_catalog.gd`;
+- custos, capacidade e ciclos da Fábrica extraídos para `scripts/factory/factory_progression_policy.gd`;
+- status de aprimoramentos e controles básicos de produção extraídos para `scripts/ui`;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;
@@ -40,19 +42,18 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 
 ### P1 — Main orchestrator size
 
-`scripts/game/main_controller.gd` owns combat, economy, waves, upgrades, synergies and most UI.
+`scripts/game/main_controller.gd` ainda coordena combate, economia e a maior parte da UI, mas não é mais fonte das Ondas, formação, registro do exército, catálogos ou fórmulas básicas da Fábrica. O arquivo caiu de 10.507 para menos de 10.000 linhas nesta consolidação.
 
 Do not split it by arbitrary line count. Extract one responsibility at a time only when it has a stable interface and a focused validation scenario.
 
-Recommended extraction order:
+Próxima ordem segura:
 
-1. data definitions for upgrades/synergies;
-2. HUD construction and updates;
-3. wave/enemy director;
-4. resource/production service;
-5. generic Undead runtime state when Ghost begins.
+1. coordenação de ataques, dano e ciclo de vida;
+2. painéis completos de HUD, Fábrica e Rituais;
+3. serviço de processamento e produção com estado próprio;
+4. remoção gradual dos espelhos legados após migração dos consumidores.
 
-The first Wave Director boundary now exists as a stateless active-Enemy policy. Continue extracting only rules with a focused interface; spawning and lifecycle still belong to the orchestrator for now.
+Cada corte deve manter uma interface pequena e um runner específico. Spawn e ciclo de vida ainda pertencem ao orquestrador nesta etapa.
 
 ### P1 — Fixed 1920×1080 layout (cropping mitigated)
 

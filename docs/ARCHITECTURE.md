@@ -56,13 +56,18 @@ scripts/
 │   └── settings_store.gd
 ├── economy/
 ├── factory/
+│   ├── factory_progression_policy.gd
+│   ├── army_doctrine_policy.gd
+│   └── undead_production_policy.gd
 ├── game/
 │   ├── enemy_archetype_catalog.gd
 │   ├── enemy_wave_policy.gd
 │   ├── main_controller.gd
 │   └── run_director.gd
 ├── ui/
+│   ├── production_controls_factory.gd
 │   ├── run_summary_formatter.gd
+│   ├── upgrade_status_formatter.gd
 │   └── unit_health_bar.gd
 ├── units/
 └── visual/
@@ -271,7 +276,9 @@ Combat-slot compaction keeps formations from leaving gaps after deaths.
 
 `scripts/game/undead_army_registry.gd` mantém as coleções de Skeletons, Zombies, Ghosts e Liches, além dos mapas de formação e da ocupação dos 36 slots. Reserva, liberação, contagem e limpeza possuem uma única implementação. `MainController` ainda expõe os nomes anteriores como propriedades delegadas para preservar os consumidores existentes.
 
-`scripts/game/upgrade_catalog.gd` é a fonte dos 30 IDs de upgrade, categorias, limites de pilha, marcos de disponibilidade e chaves de localização. `scripts/game/synergy_catalog.gd` faz o mesmo para as dez sinergias e sua ordem de apresentação. O controlador conserva aliases públicos para compatibilidade de saves/testes e permanece responsável apenas por aplicar efeitos que mutam a run.
+`scripts/game/upgrade_catalog.gd` é a fonte dos 30 IDs de upgrade, categorias, limites de pilha, marcos de disponibilidade e chaves de localização. `scripts/game/synergy_catalog.gd` concentra as dez sinergias, seus requisitos e a ordem de apresentação. `scripts/ui/upgrade_status_formatter.gd` converte o estado já calculado em texto localizado. O controlador conserva aliases públicos para compatibilidade de saves/testes e permanece responsável por aplicar os efeitos que mutam a run.
+
+`scripts/factory/factory_progression_policy.gd` concentra custos, capacidade e tempos derivados dos níveis das máquinas. `scripts/ui/production_controls_factory.gd` cria o conjunto básico de controles de produção sem conhecer a partida. Essas duas fronteiras iniciam a separação da Fábrica e da UI sem alterar os nós e métodos públicos consumidos pelos testes.
 
 # Movement
 

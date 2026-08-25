@@ -586,3 +586,14 @@ Motivos:
 `RunDirector` é dono do estado da run, mas `MainController` ainda expõe as propriedades antigas como delegações. A remoção dessas propriedades só acontecerá quando os consumidores migrarem para interfaces próprias.
 
 Motivo: uma refatoração incremental com regressões específicas é mais segura que reescrever simultaneamente combate, saves, UI e automações.
+
+## Manter regras puras fora do controlador e preservar a API pública
+
+Os requisitos de sinergia, os custos e tempos derivados da Fábrica e a formatação dos status não dependem da árvore da cena. Essas regras agora vivem em catálogos, políticas e formatadores próprios; `MainController` fornece apenas o estado necessário e aplica o resultado.
+
+Motivos:
+
+- regras puras podem ser validadas sem iniciar uma run;
+- a mesma fórmula atende gameplay e interface, evitando divergência de custo ou tempo;
+- saves e testes continuam usando os nomes públicos atuais durante a migração;
+- componentes de UI podem sair gradualmente do código sem uma reescrita arriscada da cena.

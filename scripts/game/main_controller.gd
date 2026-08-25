@@ -205,6 +205,9 @@ const ARMY_DOCTRINE_POLICY: Script = preload(
 const UNDEAD_PRODUCTION_POLICY: Script = preload(
 	"res://scripts/factory/undead_production_policy.gd"
 )
+const FACTORY_PROGRESSION_POLICY: Script = preload(
+	"res://scripts/factory/factory_progression_policy.gd"
+)
 const UNIT_SPRITE_CATALOG: Script = preload(
 	"res://scripts/visual/unit_sprite_catalog.gd"
 )
@@ -213,6 +216,12 @@ const CORPSE_PROCESSING_FEEDBACK_SCRIPT: Script = preload(
 )
 const RUN_SUMMARY_FORMATTER: Script = preload(
 	"res://scripts/ui/run_summary_formatter.gd"
+)
+const UPGRADE_STATUS_FORMATTER: Script = preload(
+	"res://scripts/ui/upgrade_status_formatter.gd"
+)
+const PRODUCTION_CONTROLS_FACTORY: Script = preload(
+	"res://scripts/ui/production_controls_factory.gd"
 )
 
 
@@ -1419,8 +1428,8 @@ var corpse_processing_queue: Array[Dictionary] = []
 var skeleton_production_queue: Array[Dictionary] = []
 var zombie_production_queue: Array[Dictionary] = []
 
-const CORPSE_PROCESSOR_BASE_CAPACITY: int = 5
-const CORPSE_PROCESSOR_BASE_SECONDS: float = 0.65
+const CORPSE_PROCESSOR_BASE_CAPACITY: int = FACTORY_PROGRESSION_POLICY.PROCESSOR_BASE_CAPACITY
+const CORPSE_PROCESSOR_BASE_SECONDS: float = FACTORY_PROGRESSION_POLICY.PROCESSOR_BASE_SECONDS
 
 var corpse_processor_capacity: int = CORPSE_PROCESSOR_BASE_CAPACITY
 var corpse_processor_seconds_per_corpse: float = CORPSE_PROCESSOR_BASE_SECONDS
@@ -1434,13 +1443,13 @@ const ARMY_DOCTRINE_SCAN_INTERVAL: float = 0.25
 var skeleton_assembler_timer: float = 0.0
 var flesh_vat_timer: float = 0.0
 
-const FACTORY_AUTO_COLLECTION_COST: int = 2
-const FACTORY_QUEUE_UPGRADE_BASE_COST: int = 1
-const FACTORY_SPEED_UPGRADE_BASE_COST: int = 1
-const FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL: int = 3
-const FACTORY_AUTO_COLLECTION_SCAN_INTERVAL: float = 0.25
-const FACTORY_QUEUE_CAPACITY_PER_LEVEL: int = 2
-const FACTORY_PROCESSING_SECONDS_REDUCTION: float = 0.10
+const FACTORY_AUTO_COLLECTION_COST: int = FACTORY_PROGRESSION_POLICY.AUTO_COLLECTION_COST
+const FACTORY_QUEUE_UPGRADE_BASE_COST: int = FACTORY_PROGRESSION_POLICY.QUEUE_UPGRADE_BASE_COST
+const FACTORY_SPEED_UPGRADE_BASE_COST: int = FACTORY_PROGRESSION_POLICY.SPEED_UPGRADE_BASE_COST
+const FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL: int = FACTORY_PROGRESSION_POLICY.PROCESSOR_UPGRADE_MAX_LEVEL
+const FACTORY_AUTO_COLLECTION_SCAN_INTERVAL: float = FACTORY_PROGRESSION_POLICY.AUTO_COLLECTION_SCAN_INTERVAL
+const FACTORY_QUEUE_CAPACITY_PER_LEVEL: int = FACTORY_PROGRESSION_POLICY.QUEUE_CAPACITY_PER_LEVEL
+const FACTORY_PROCESSING_SECONDS_REDUCTION: float = FACTORY_PROGRESSION_POLICY.PROCESSING_SECONDS_REDUCTION
 const HEMATIC_PRESS_UNLOCK_COST: int = 3
 const HEMATIC_PRESS_FLESH_COST: int = 12
 const HEMATIC_PRESS_CYCLE_SECONDS: float = 2.0
@@ -1448,10 +1457,10 @@ const HEMATIC_PRESS_QUEUE_CAPACITY: int = 3
 const SOUL_EXTRACTOR_UNLOCK_COST: int = 4
 const SOUL_EXTRACTOR_BASE_SECONDS: float = 2.5
 const SOUL_EXTRACTOR_QUEUE_CAPACITY: int = 3
-const FACTORY_EFFICIENCY_BASE_COST: int = 2
-const FACTORY_EFFICIENCY_MAX_LEVEL: int = 3
-const FACTORY_EFFICIENCY_FLESH_REDUCTION: int = 2
-const FACTORY_EFFICIENCY_SOUL_SECONDS_REDUCTION: float = 0.25
+const FACTORY_EFFICIENCY_BASE_COST: int = FACTORY_PROGRESSION_POLICY.EFFICIENCY_BASE_COST
+const FACTORY_EFFICIENCY_MAX_LEVEL: int = FACTORY_PROGRESSION_POLICY.EFFICIENCY_MAX_LEVEL
+const FACTORY_EFFICIENCY_FLESH_REDUCTION: int = FACTORY_PROGRESSION_POLICY.EFFICIENCY_FLESH_REDUCTION
+const FACTORY_EFFICIENCY_SOUL_SECONDS_REDUCTION: float = FACTORY_PROGRESSION_POLICY.EFFICIENCY_SOUL_SECONDS_REDUCTION
 const SKELETON_ARCHER_UNLOCK_COST: int = 3
 const LICH_BLUEPRINT_UNLOCK_COST: int = 5
 
@@ -4225,8 +4234,7 @@ func purchase_blood_infusion_upgrade() -> bool:
 
 func refresh_crimson_synergy() -> void:
 
-	if has_crimson_assembly_synergy():
-		unlock_synergy(SYNERGY_CRIMSON_ASSEMBLY)
+	check_synergy_unlocks()
 
 
 func purchase_soul_focus_upgrade() -> bool:
@@ -4271,8 +4279,7 @@ func purchase_soul_anchor_upgrade() -> bool:
 
 func refresh_phantom_synergy() -> void:
 
-	if soul_focus_level > 0 and soul_anchor_level > 0:
-		unlock_synergy(SYNERGY_PHANTOM_CONDUIT)
+	check_synergy_unlocks()
 
 
 func get_blood_sacrifice_cost() -> int:
@@ -4909,7 +4916,9 @@ func purchase_factory_queue_upgrade() -> bool:
 		return false
 
 
-	var cost: int = FACTORY_QUEUE_UPGRADE_BASE_COST + factory_queue_upgrade_level
+	var cost: int = FACTORY_PROGRESSION_POLICY.get_queue_upgrade_cost(
+		factory_queue_upgrade_level
+	)
 
 
 	if factory_points < cost:
@@ -4918,9 +4927,8 @@ func purchase_factory_queue_upgrade() -> bool:
 
 	factory_points -= cost
 	factory_queue_upgrade_level += 1
-	corpse_processor_capacity = (
-		CORPSE_PROCESSOR_BASE_CAPACITY
-		+ factory_queue_upgrade_level * FACTORY_QUEUE_CAPACITY_PER_LEVEL
+	corpse_processor_capacity = FACTORY_PROGRESSION_POLICY.get_processor_capacity(
+		factory_queue_upgrade_level
 	)
 	update_metrics_ui()
 	update_factory_panel_ui()
@@ -4933,7 +4941,9 @@ func purchase_factory_speed_upgrade() -> bool:
 		return false
 
 
-	var cost: int = FACTORY_SPEED_UPGRADE_BASE_COST + factory_speed_upgrade_level
+	var cost: int = FACTORY_PROGRESSION_POLICY.get_speed_upgrade_cost(
+		factory_speed_upgrade_level
+	)
 
 
 	if factory_points < cost:
@@ -4942,10 +4952,8 @@ func purchase_factory_speed_upgrade() -> bool:
 
 	factory_points -= cost
 	factory_speed_upgrade_level += 1
-	corpse_processor_seconds_per_corpse = maxf(
-		CORPSE_PROCESSOR_BASE_SECONDS
-		- factory_speed_upgrade_level * FACTORY_PROCESSING_SECONDS_REDUCTION,
-		0.1
+	corpse_processor_seconds_per_corpse = FACTORY_PROGRESSION_POLICY.get_processor_cycle_seconds(
+		factory_speed_upgrade_level
 	)
 	update_metrics_ui()
 	update_factory_panel_ui()
@@ -4971,11 +4979,10 @@ func purchase_hematic_press() -> bool:
 
 func get_hematic_press_flesh_cost() -> int:
 
-	return maxi(
-		HEMATIC_PRESS_FLESH_COST
-		- factory_efficiency_level * FACTORY_EFFICIENCY_FLESH_REDUCTION
-		- (2 if has_synergy(SYNERGY_DARK_REFINERY) else 0),
-		4
+	return FACTORY_PROGRESSION_POLICY.get_hematic_flesh_cost(
+		HEMATIC_PRESS_FLESH_COST,
+		factory_efficiency_level,
+		has_synergy(SYNERGY_DARK_REFINERY)
 	)
 
 
@@ -5026,11 +5033,9 @@ func toggle_soul_extractor_control() -> void:
 
 func get_soul_extractor_cycle_seconds() -> float:
 
-	return maxf(
-		SOUL_EXTRACTOR_BASE_SECONDS
-		- factory_efficiency_level
-		* FACTORY_EFFICIENCY_SOUL_SECONDS_REDUCTION,
-		1.0
+	return FACTORY_PROGRESSION_POLICY.get_soul_extractor_cycle_seconds(
+		SOUL_EXTRACTOR_BASE_SECONDS,
+		factory_efficiency_level
 	)
 
 
@@ -5121,7 +5126,9 @@ func purchase_factory_efficiency_upgrade() -> bool:
 		return false
 
 
-	var cost: int = FACTORY_EFFICIENCY_BASE_COST + factory_efficiency_level
+	var cost: int = FACTORY_PROGRESSION_POLICY.get_efficiency_upgrade_cost(
+		factory_efficiency_level
+	)
 	if factory_points < cost:
 		return false
 
@@ -7177,108 +7184,42 @@ func get_upgrade_description(
 	return tr(key) if not key.is_empty() else "Unknown effect"
 
 
-func get_upgrade_status(
-	upgrade_id: String
-) -> String:
+func get_upgrade_status(upgrade_id: String) -> String:
 
-	match upgrade_id:
+	return UPGRADE_STATUS_FORMATTER.format(
+		upgrade_id,
+		get_upgrade_status_state(),
+		Callable(self, "tr")
+	)
 
-		UPGRADE_SHARPENED_BONES:
-			return tr("UPGRADE_CURRENT_SKELETON_DAMAGE") % skeleton_damage
 
-		UPGRADE_BONE_PLATING:
-			return tr("UPGRADE_CURRENT_SKELETON_HP") % skeleton_max_hp
-
-		UPGRADE_EFFICIENT_RECYCLING:
-			return tr("UPGRADE_CURRENT_BONE_YIELD") % bones_per_corpse
-
-		UPGRADE_RAPID_ASSAULT:
-			return tr("UPGRADE_CURRENT_SKELETON_COOLDOWN") % skeleton_attack_cooldown
-
-		UPGRADE_DEATH_MARCH:
-			return tr("UPGRADE_CURRENT_SKELETON_SPEED") % int(round(skeleton_speed))
-
-		UPGRADE_MASS_PRODUCTION:
-			return tr("UPGRADE_CURRENT_SKELETON_COST") % skeleton_cost
-
-		UPGRADE_HEAVY_BONES:
-			return tr("UPGRADE_CURRENT_HEAVY_BONES") % [
-				skeleton_damage, skeleton_attack_cooldown
-			]
-
-		UPGRADE_BONE_HARVEST:
-			return tr("UPGRADE_CURRENT_CHANCE") % int(round(bone_harvest_chance * 100.0))
-
-		UPGRADE_REASSEMBLY:
-			return tr("UPGRADE_CURRENT_CHANCE") % int(round(reassembly_chance * 100.0))
-
-		UPGRADE_FINAL_SERVICE:
-			return tr("UPGRADE_CURRENT_DEATH_DAMAGE") % final_service_damage
-
-		UPGRADE_ROTTEN_BULK:
-			return tr("UPGRADE_CURRENT_ZOMBIE_HP") % zombie_max_hp
-
-		UPGRADE_GRAVE_HUNGER:
-			return tr("UPGRADE_CURRENT_ZOMBIE_DAMAGE") % zombie_damage
-
-		UPGRADE_DEAD_WEIGHT:
-			return tr("UPGRADE_CURRENT_DEAD_WEIGHT") % [
-				zombie_max_hp, int(round(zombie_speed))
-			]
-
-		UPGRADE_CARRION_RECOVERY:
-			return tr("UPGRADE_CURRENT_ZOMBIE_RECOVERY") % zombie_recovery_per_attack
-
-		UPGRADE_GRAVE_CONTRACT:
-			return tr("UPGRADE_GRAVE_CONTRACT_STATUS") % get_lich_summon_cap()
-
-		UPGRADE_RAPID_CONJURATION:
-			return tr("UPGRADE_RAPID_CONJURATION_STATUS") % get_lich_summon_cooldown()
-
-		UPGRADE_BOUND_SERVITUDE:
-			return tr("UPGRADE_BOUND_SERVITUDE_STATUS") % get_lich_summon_lifetime()
-
-		UPGRADE_EMERGENCY_RECLAMATION:
-			return tr("UPGRADE_EMERGENCY_RECLAMATION_STATUS")
-
-		UPGRADE_FLETCHERS_MARK:
-			return tr("UPGRADE_CURRENT_ARCHER_DAMAGE") % skeleton_archer_damage
-
-		UPGRADE_HOLLOW_SHAFTS:
-			return tr("UPGRADE_CURRENT_ARCHER_COOLDOWN") % skeleton_archer_attack_cooldown
-
-		UPGRADE_OSSUARY_SCOPE:
-			return tr("UPGRADE_CURRENT_ARCHER_RANGE") % int(get_skeleton_archer_effective_range())
-
-		UPGRADE_STITCHED_HIDE:
-			return tr("UPGRADE_CURRENT_ZOMBIE_HP") % zombie_max_hp
-
-		UPGRADE_SEPTIC_STRIKES:
-			return tr("UPGRADE_CURRENT_ZOMBIE_DAMAGE") % zombie_damage
-
-		UPGRADE_GRAVE_MOMENTUM:
-			return tr("UPGRADE_CURRENT_ZOMBIE_COOLDOWN") % zombie_attack_cooldown
-
-		UPGRADE_SPECTRAL_VOLTAGE:
-			return tr("UPGRADE_CURRENT_GHOST_BONUS_DAMAGE") % ghost_damage_bonus
-
-		UPGRADE_PHASE_CYCLE:
-			return tr("UPGRADE_CURRENT_GHOST_REDUCTION") % ghost_cooldown_reduction
-
-		UPGRADE_FLESH_PRESERVATION:
-			return tr("UPGRADE_CURRENT_FLESH_YIELD") % flesh_per_corpse
-
-		UPGRADE_SOUL_SIPHON:
-			return tr("UPGRADE_CURRENT_SOUL_BONUS") % soul_yield_bonus
-
-		UPGRADE_CRIMSON_TITHE:
-			return tr("UPGRADE_CRIMSON_TITHE_STATUS")
-
-		UPGRADE_FORBIDDEN_PATENT:
-			return tr("UPGRADE_FORBIDDEN_PATENT_STATUS")
-
-		_:
-			return ""
+func get_upgrade_status_state() -> Dictionary:
+	return {
+		"skeleton_damage": skeleton_damage,
+		"skeleton_max_hp": skeleton_max_hp,
+		"bones_per_corpse": bones_per_corpse,
+		"skeleton_attack_cooldown": skeleton_attack_cooldown,
+		"skeleton_speed": skeleton_speed,
+		"skeleton_cost": skeleton_cost,
+		"bone_harvest_chance": bone_harvest_chance,
+		"reassembly_chance": reassembly_chance,
+		"final_service_damage": final_service_damage,
+		"zombie_max_hp": zombie_max_hp,
+		"zombie_damage": zombie_damage,
+		"zombie_speed": zombie_speed,
+		"zombie_recovery_per_attack": zombie_recovery_per_attack,
+		"lich_summon_cap": get_lich_summon_cap(),
+		"lich_summon_cooldown": get_lich_summon_cooldown(),
+		"lich_summon_lifetime": get_lich_summon_lifetime(),
+		"skeleton_archer_damage": skeleton_archer_damage,
+		"skeleton_archer_attack_cooldown": skeleton_archer_attack_cooldown,
+		"skeleton_archer_effective_range": get_skeleton_archer_effective_range(),
+		"zombie_attack_cooldown": zombie_attack_cooldown,
+		"ghost_damage_bonus": ghost_damage_bonus,
+		"ghost_cooldown_reduction": ghost_cooldown_reduction,
+		"flesh_per_corpse": flesh_per_corpse,
+		"soul_yield_bonus": soul_yield_bonus,
+	}
 
 
 # =========================================================
@@ -7287,95 +7228,29 @@ func get_upgrade_status(
 
 func check_synergy_unlocks() -> void:
 
-	if (
-		get_upgrade_count(
-			UPGRADE_EFFICIENT_RECYCLING
-		) > 0
-		and get_upgrade_count(
-			UPGRADE_BONE_HARVEST
-		) > 0
+	for synergy_id: String in SYNERGY_CATALOG.get_unlockable_synergies(
+		get_synergy_evaluation_state()
 	):
-
-		unlock_synergy(
-			SYNERGY_RECYCLING_PLANT
-		)
-
-
-	if (
-		get_upgrade_count(
-			UPGRADE_REASSEMBLY
-		) > 0
-		and get_upgrade_count(
-			UPGRADE_FINAL_SERVICE
-		) > 0
-	):
-
-		unlock_synergy(
-			SYNERGY_SECOND_SHIFT
-		)
-
-
-	if (
-		get_upgrade_count(
-			UPGRADE_MASS_PRODUCTION
-		) > 0
-		and get_upgrade_count(
-			UPGRADE_EFFICIENT_RECYCLING
-		) > 0
-	):
-
-		unlock_synergy(
-			SYNERGY_BONE_ASSEMBLY_LINE
-		)
-
-
-	if (
-		get_upgrade_count(
-			UPGRADE_HEAVY_BONES
-		) > 0
-		and get_upgrade_count(
-			UPGRADE_RAPID_ASSAULT
-		) > 0
-	):
-
-		unlock_synergy(
-			SYNERGY_OVERCLOCKED_OSSUARY
-		)
-
-
-	if (
-		get_upgrade_count(
-			UPGRADE_ROTTEN_BULK
-		) > 0
-		and get_upgrade_count(
-			UPGRADE_RAPID_ASSAULT
-		) > 0
-	):
-
-		unlock_synergy(
-			SYNERGY_MEAT_SHIELD_PROTOCOL
-		)
-
-
-	if (
-		get_upgrade_count(UPGRADE_GRAVE_CONTRACT) > 0
-		and get_upgrade_count(UPGRADE_RAPID_CONJURATION) > 0
-	):
-		unlock_synergy(SYNERGY_SOUL_FOUNDRY)
-
-
-	if (
-		skeleton_archer_unlocked
-		and get_upgrade_count(UPGRADE_HEAVY_BONES) > 0
-		and get_upgrade_count(UPGRADE_DEATH_MARCH) > 0
-	):
-		unlock_synergy(SYNERGY_OSSUARY_BALLISTICS)
+		unlock_synergy(synergy_id)
 
 
 func check_factory_synergy_unlocks() -> void:
 
-	if hematic_press_unlocked and factory_efficiency_level >= 2:
-		unlock_synergy(SYNERGY_DARK_REFINERY)
+	check_synergy_unlocks()
+
+
+func get_synergy_evaluation_state() -> Dictionary:
+	return {
+		"upgrade_counts": upgrade_counts,
+		"active_synergies": active_synergies,
+		"skeleton_archer_unlocked": skeleton_archer_unlocked,
+		"blood_extraction_level": blood_extraction_level,
+		"blood_infusion_level": blood_infusion_level,
+		"soul_focus_level": soul_focus_level,
+		"soul_anchor_level": soul_anchor_level,
+		"hematic_press_unlocked": hematic_press_unlocked,
+		"factory_efficiency_level": factory_efficiency_level,
+	}
 
 
 func unlock_synergy(
@@ -7419,9 +7294,7 @@ func unlock_synergy(
 	update_debug_ui()
 
 
-func has_synergy(
-	synergy_id: String
-) -> bool:
+func has_synergy(synergy_id: String) -> bool:
 
 	return bool(
 		active_synergies.get(
@@ -7431,16 +7304,12 @@ func has_synergy(
 	)
 
 
-func get_synergy_name(
-	synergy_id: String
-) -> String:
+func get_synergy_name(synergy_id: String) -> String:
 	var key: String = SYNERGY_CATALOG.get_name_key(synergy_id)
 	return tr(key) if not key.is_empty() else "Unknown Synergy"
 
 
-func get_synergy_description(
-	synergy_id: String
-) -> String:
+func get_synergy_description(synergy_id: String) -> String:
 	var key: String = SYNERGY_CATALOG.get_description_key(synergy_id)
 	return tr(key) if not key.is_empty() else ""
 
@@ -8326,53 +8195,24 @@ func update_wave_ui() -> void:
 
 func create_zombie_ui() -> void:
 
-	create_zombie_button = Button.new()
-
-	create_zombie_button.name = "CreateZombieButton"
-
-	create_zombie_button.text = (
-		"CREATE ZOMBIE"
+	var controls: Dictionary = PRODUCTION_CONTROLS_FACTORY.create(
+		MAX_UNDEAD, UI_GREEN
 	)
-
-
-	add_child(
-		create_zombie_button
-	)
-
-
-	create_skeleton_archer_button = Button.new()
-	create_skeleton_archer_button.name = "CreateSkeletonArcherButton"
-	create_skeleton_archer_button.text = "SKELETON ARCHER LOCKED"
-	add_child(create_skeleton_archer_button)
-
-
-	production_quantity_selector = SpinBox.new()
-	production_quantity_selector.name = "ProductionQuantitySelector"
-	production_quantity_selector.min_value = 1.0
-	production_quantity_selector.max_value = float(MAX_UNDEAD)
-	production_quantity_selector.step = 1.0
-	production_quantity_selector.value = 1.0
-	production_quantity_selector.allow_greater = false
-	production_quantity_selector.allow_lesser = false
-	production_quantity_selector.update_on_text_changed = true
-	production_quantity_selector.z_index = 110
-	production_quantity_selector.add_theme_font_size_override("font_size", 16)
+	create_zombie_button = controls["zombie_button"] as Button
+	create_skeleton_archer_button = controls["archer_button"] as Button
+	production_quantity_selector = controls["quantity_selector"] as SpinBox
+	production_queue_label = controls["queue_label"] as Label
+	for control: Control in [
+		create_zombie_button,
+		create_skeleton_archer_button,
+		production_quantity_selector,
+		production_queue_label,
+	]:
+		add_child(control)
 	production_quantity_selector.value_changed.connect(
 		func(_value: float) -> void:
 			update_bones_ui()
 	)
-	add_child(production_quantity_selector)
-
-
-	production_queue_label = Label.new()
-	production_queue_label.name = "ProductionQueueLabel"
-	production_queue_label.position = Vector2(390.0, 988.0)
-	production_queue_label.size = Vector2(650.0, 18.0)
-	production_queue_label.z_index = 110
-	production_queue_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	production_queue_label.add_theme_font_size_override("font_size", 12)
-	production_queue_label.add_theme_color_override("font_color", UI_GREEN)
-	add_child(production_queue_label)
 
 
 # =========================================================
@@ -8733,7 +8573,9 @@ func update_factory_queue_upgrade_button() -> void:
 	var at_max: bool = (
 		factory_queue_upgrade_level >= FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL
 	)
-	var cost: int = FACTORY_QUEUE_UPGRADE_BASE_COST + factory_queue_upgrade_level
+	var cost: int = FACTORY_PROGRESSION_POLICY.get_queue_upgrade_cost(
+		factory_queue_upgrade_level
+	)
 	factory_queue_upgrade_button.text = (
 		tr("FACTORY_QUEUE_UPGRADE")
 		+ "\n\n" + tr("FACTORY_LEVEL") + ": "
@@ -8756,7 +8598,9 @@ func update_factory_speed_upgrade_button() -> void:
 	var at_max: bool = (
 		factory_speed_upgrade_level >= FACTORY_PROCESSOR_UPGRADE_MAX_LEVEL
 	)
-	var cost: int = FACTORY_SPEED_UPGRADE_BASE_COST + factory_speed_upgrade_level
+	var cost: int = FACTORY_PROGRESSION_POLICY.get_speed_upgrade_cost(
+		factory_speed_upgrade_level
+	)
 	factory_speed_upgrade_button.text = (
 		tr("FACTORY_SPEED_UPGRADE")
 		+ "\n\n" + tr("FACTORY_LEVEL") + ": "
@@ -8849,7 +8693,9 @@ func update_factory_efficiency_button() -> void:
 
 
 	var at_max: bool = factory_efficiency_level >= FACTORY_EFFICIENCY_MAX_LEVEL
-	var cost: int = FACTORY_EFFICIENCY_BASE_COST + factory_efficiency_level
+	var cost: int = FACTORY_PROGRESSION_POLICY.get_efficiency_upgrade_cost(
+		factory_efficiency_level
+	)
 	factory_efficiency_button.text = (
 		tr("FACTORY_EFFICIENCY")
 		+ "\n" + tr("FACTORY_LEVEL") + ": "

@@ -324,11 +324,21 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/g
 
 ## v0.4.1 Build Catalogs
 
-Valida os 30 upgrades, dez sinergias, unicidade, categorias, localização, limites e disponibilidade por Onda/desbloqueio:
+Valida os 30 upgrades, dez sinergias, unicidade, categorias, localização, limites, disponibilidade e requisitos de combinação. A apresentação de status possui cobertura independente:
 
 ```powershell
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/upgrades/upgrade_catalog_runner.gd
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/upgrades/synergy_catalog_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/upgrades/upgrade_status_formatter_runner.gd
 ```
 
-The current suite contains 35 `*_runner.gd` scenarios. All 35 passed in Godot 4.7.1 headless on 25/08/2026 after the build-catalog extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.
+## v0.4.1 Factory and UI policies
+
+Valida custos, capacidade, ciclos das máquinas e a construção independente dos controles básicos de produção:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/factory/factory_progression_policy_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/production_controls_factory_runner.gd
+```
+
+A suíte atual contém 38 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 25/08/2026; as runs determinísticas de Bone e Flesh permanecem como gates obrigatórios de balanceamento.
