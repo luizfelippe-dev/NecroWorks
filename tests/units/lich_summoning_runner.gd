@@ -1,7 +1,7 @@
 extends SceneTree
 
 
-const MAIN_SCENE: PackedScene = preload("res://main.tscn")
+const MAIN_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const RECIPE_CATALOG: Script = preload(
 	"res://scripts/game/undead_recipe_catalog.gd"
 )

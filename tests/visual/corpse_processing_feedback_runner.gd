@@ -1,7 +1,7 @@
 extends SceneTree
 
 
-const MAIN_SCENE: PackedScene = preload("res://main.tscn")
+const MAIN_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const FEEDBACK_SETTLE_SECONDS: float = 1.3
 
 

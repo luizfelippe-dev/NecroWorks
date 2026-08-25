@@ -1,7 +1,7 @@
 extends SceneTree
 
 
-const MAIN_SCENE: PackedScene = preload("res://main.tscn")
+const MAIN_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const DESIGN_SIZE: Vector2 = Vector2(1920.0, 1080.0)
 const EMBEDDED_SAFE_BOTTOM_Y: float = 1015.0
 

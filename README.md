@@ -26,7 +26,7 @@ Enemy
 
 ## Estado atual
 
-Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de entrada com Nova Partida, Continuar, Opções e Sair. `F6` sobre `main.tscn` permanece disponível para testar diretamente o gameplay.
+Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de entrada com Nova Partida, Continuar, Opções e Sair. `F6` sobre `scenes/world/gameplay.tscn` permanece disponível para testar diretamente o gameplay.
 
 O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistidos em `user://necroworks_settings.cfg`; o checkpoint versionado de partida usa `user://necroworks_run.json` e restaura onda, recursos, exército, upgrades, Fábrica e Doutrina.
 
@@ -264,19 +264,23 @@ O protótipo já substituiu os quadrados por sprites básicos de todas as unidad
 assets/reference/       concept e referências visuais
 assets/sprites/units/   sprites temporários usados pelo runtime
 docs/                   design, arquitetura, roadmap e plano comercial
-main.tscn / main.gd      entradas estáveis para F5/F6 no Godot
+scenes/core/             entrada da aplicação, menu e opções
+scenes/world/            gameplay e elementos do campo de batalha
+scenes/units/            cenas-base de aliados e inimigos
+scripts/core/            shell, localização, configurações e persistência
 scripts/ui/              componentes reutilizáveis de interface
-scripts/game/            políticas de Waves e catálogo de inimigos
+scripts/game/            controlador, RunDirector e regras da partida
 scripts/units/           runtime compartilhado das tropas jogáveis
 scripts/economy/         regras isoladas de processamento e recursos
 scripts/factory/         políticas de produção e Doutrina do Exército
 scripts/visual/          backdrop e catálogo de sprites
 tests/factory/           validação de filas, automação, lotes e Doutrina
 tests/units/             contratos de runtime e receitas de tropas
+tests/game/              ciclo e estado da partida
 tests/visual/            validação persistente dos assets de unidade
 ```
 
-O protótipo ainda mantém a orquestração principal centralizada, mas novos componentes devem ser extraídos incrementalmente quando houver uma fronteira clara e testável.
+F5 inicia `scenes/core/app.tscn`; F6 pode executar `scenes/world/gameplay.tscn` diretamente. O controlador principal permanece como coordenador de cena, enquanto regras, estado da run, persistência e formatação de interface são extraídos por contratos testáveis.
 
 ## Testes de balanceamento
 
@@ -304,4 +308,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-Próximo foco: v0.4.1, com modularização incremental de `main.gd`, identidade visual própria para chefes e Cadáveres, contrato de animações, fundo híbrido e primeiro build Windows. A meta progressão da v0.5.0 começa depois dessa consolidação.
+Próximo foco: v0.4.1, com modularização incremental de `scripts/game/main_controller.gd`, identidade visual própria para chefes e Cadáveres, contrato de animações, fundo híbrido e primeiro build Windows. A meta progressão da v0.5.0 começa depois dessa consolidação.

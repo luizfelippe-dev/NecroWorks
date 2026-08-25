@@ -1,7 +1,7 @@
 extends SceneTree
 
 
-const APP_SCENE: PackedScene = preload("res://app.tscn")
+const APP_SCENE: PackedScene = preload("res://scenes/core/app.tscn")
 
 
 func _initialize() -> void:

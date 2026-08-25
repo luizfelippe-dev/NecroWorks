@@ -1,7 +1,7 @@
 extends SceneTree
 
 
-const MAIN_SCENE: PackedScene = preload("res://main.tscn")
+const MAIN_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const SETTINGS_PATH: String = "user://necroworks_settings_test.cfg"
 const SAVE_PATH: String = "user://necroworks_run_test.json"
 

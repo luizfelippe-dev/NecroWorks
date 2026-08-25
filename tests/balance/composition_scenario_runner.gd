@@ -1,7 +1,7 @@
 extends SceneTree
 
 
-const MAIN_SCENE: PackedScene = preload("res://main.tscn")
+const MAIN_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const TEST_WAVE: int = 8
 const ARMY_SIZE: int = 8
 const SIMULATION_TIME_SCALE: float = 12.0

@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.1] — Em desenvolvimento — Consolidação Técnica
+
+### Added
+
+- `RunDirector` como fonte do estado e das transições da partida;
+- `RunSummaryFormatter` para apresentação localizada do resultado final;
+- cenário de regressão dedicado ao ciclo da run, elevando a suíte para 31 runners.
+
+### Changed
+
+- cenas organizadas em `scenes/core`, `scenes/world` e `scenes/units`;
+- controlador principal movido para `scripts/game/main_controller.gd`;
+- F5 passa por `scenes/core/app.tscn` e F6 pode executar `scenes/world/gameplay.tscn`;
+- referências de cenas, testes e documentação atualizadas com preservação dos UIDs.
+
 ## [0.4.0] — 24/08/2026 — Build Diversity & Content
 
 ### Added

@@ -54,7 +54,7 @@ Do not dilute this.
 
 ---
 
-## Centralized `main.gd`
+## Centralized `scripts/game/main_controller.gd`
 
 Accepted through early prototype.
 
@@ -356,7 +356,7 @@ Revisit only after playtests show that one route dominates or that Wave commitme
 
 ## Hybrid scene-and-code presentation
 
-Stable visual content belongs in scenes/assets; dynamic combat state and archetype selection remain in code. `skeleton.tscn` and `enemy.tscn` expose editable `Sprite2D` children, while the runtime catalog swaps Skeleton, Zombie, Warrior, Mage, Elf and Foreman textures.
+Stable visual content belongs in scenes/assets; dynamic combat state and archetype selection remain in code. `scenes/units/skeleton.tscn` and `scenes/units/enemy.tscn` expose editable `Sprite2D` children, while the runtime catalog swaps Skeleton, Zombie, Warrior, Mage, Elf and Foreman textures.
 
 The industrial background may remain procedural during prototyping. Final production can combine procedural layers, TileMaps, shaders and painted images; using code is not itself a quality problem, but hiding all stable layout/content from the editor would slow visual iteration.
 
@@ -519,7 +519,7 @@ Reasoning:
 
 ## Separate the application shell from the gameplay scene
 
-F5 launches `app.tscn`; F6 may still launch `main.tscn` directly. The shell owns menus, pause state, settings and file I/O. Gameplay owns the serializable run state and emits checkpoint requests.
+F5 launches `scenes/core/app.tscn`; F6 may still launch `scenes/world/gameplay.tscn` directly. The shell owns menus, pause state, settings and file I/O. Gameplay owns the serializable run state and emits checkpoint requests.
 
 Reasoning:
 
@@ -569,3 +569,20 @@ Reasoning: a Boss should change the run after the health bar reaches zero. The c
 Fusions use fixed recipes. Every cost and army-capacity requirement is checked before resources are consumed.
 
 Reasoning: recipes create deliberate cross-resource sinks, but failed interaction must never lose materials. Fixed outputs also make balance and save compatibility easier to audit.
+
+## Organizar cenas e scripts por domínio
+
+As cenas não permanecem mais soltas na raiz. A aplicação fica em `scenes/core`, o campo de batalha em `scenes/world`, unidades em `scenes/units` e controladores/regras em `scripts/<domínio>`.
+
+Motivos:
+
+- caminhos indicam responsabilidade e reduzem ambiguidade;
+- novos conteúdos não disputam espaço na raiz do repositório;
+- UIDs preservados mantêm referências seguras no Godot;
+- F5 e F6 continuam independentes e testáveis.
+
+## Usar compatibilidade durante a desmontagem do controlador
+
+`RunDirector` é dono do estado da run, mas `MainController` ainda expõe as propriedades antigas como delegações. A remoção dessas propriedades só acontecerá quando os consumidores migrarem para interfaces próprias.
+
+Motivo: uma refatoração incremental com regressões específicas é mais segura que reescrever simultaneamente combate, saves, UI e automações.

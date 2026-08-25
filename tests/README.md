@@ -298,4 +298,12 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/economy/fusion_recipe_runner.gd
 ```
 
-The current suite contains 30 `*_runner.gd` scenarios. All 30 passed in Godot 4.7.1 headless on 25/08/2026 after the Wave-policy extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.
+## v0.4.1 Run Director
+
+Valida início, contagem, reposição, conclusão, avanço, encerramento e restauração do estado da partida sem depender da cena:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/run_director_runner.gd
+```
+
+The current suite contains 31 `*_runner.gd` scenarios. All 31 passed in Godot 4.7.1 headless on 25/08/2026 after the scene reorganization and `RunDirector` extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.

@@ -1,7 +1,7 @@
 extends SceneTree
 
 
-const MAIN_SCENE: PackedScene = preload("res://main.tscn")
+const MAIN_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const EnemyWavePolicy: Script = preload("res://scripts/game/enemy_wave_policy.gd")
 const TIME_SCALE: float = 20.0
 const MAX_SIMULATED_SECONDS: float = 1800.0

@@ -23,7 +23,7 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 ## Como executar
 
 - `F5`: shell completo com menu, prólogo, opções, continuar e gameplay.
-- `F6` em `main.tscn`: partida direta para desenvolvimento.
+- `F6` em `scenes/world/gameplay.tscn`: partida direta para desenvolvimento.
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
@@ -70,9 +70,12 @@ As transações são atômicas: recursos nunca são consumidos quando a receita 
 
 ## Arquitetura prática
 
-`main.gd` ainda é o orquestrador do protótipo. Regras estáveis já foram extraídas para catálogos e políticas em `scripts/`:
+`scripts/game/main_controller.gd` coordena a cena jogável. O projeto agora separa cenas, estado e regras por domínio:
 
-- `scripts/game/`: ondas, arquétipos, eventos, receitas, fusões e combate;
+- `scenes/core/`: entrada da aplicação;
+- `scenes/world/`: gameplay e Cadáver;
+- `scenes/units/`: cenas-base de aliados e inimigos;
+- `scripts/game/`: controlador, `RunDirector`, ondas, arquétipos, eventos, receitas, fusões e combate;
 - `scripts/factory/`: Doutrina e produção;
 - `scripts/economy/`: recursos e diretivas de processamento;
 - `scripts/ui/`: componentes reutilizáveis de interface;
@@ -80,7 +83,7 @@ As transações são atômicas: recursos nunca são consumidos quando a receita 
 - `scripts/core/`: localização, configurações, save e shell;
 - `tests/`: regressão headless por domínio.
 
-Novas regras puras devem continuar saindo de `main.gd`. Estado de cena, coordenação de nós e apresentação podem permanecer nele até a próxima etapa de refatoração.
+`RunDirector` é a fonte do estado da Onda e do resultado da run. `RunSummaryFormatter` monta a apresentação final sem conhecer nós da cena. O controlador mantém propriedades de compatibilidade para que saves e sistemas existentes continuem funcionando durante a migração incremental.
 
 ## Critérios de estabilidade
 
@@ -94,7 +97,7 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.4.1 é uma consolidação técnica e visual. `EnemyWavePolicy` já concentra crescimento, Elites, quantidade por Onda e os três perfis de chefe; `main.gd` mantém métodos finos de compatibilidade e caiu de 10.746 para 10.668 linhas. A próxima extração move o estado e o ciclo da run para um `RunDirector`, de forma incremental e preservando F5/F6, saves e os testes existentes. O mesmo milestone define sprites próprios de chefe, famílias de Cadáver, contrato de animações, fundo híbrido e o primeiro preset de exportação Windows.
+A v0.4.1 é uma consolidação técnica e visual. `EnemyWavePolicy` concentra crescimento, Elites, quantidade por Onda e os três perfis de chefe. `RunDirector` concentra estado e transições da partida. As cenas foram movidas para `scenes/core`, `scenes/world` e `scenes/units`, com UIDs e caminhos revalidados. O próximo corte separa combate/exército e os controladores de HUD, Fábrica e Rituais. O mesmo milestone define sprites próprios de chefe, famílias de Cadáver, contrato de animações, fundo híbrido e o primeiro preset de exportação Windows.
 
 Depois disso, a v0.5.0 será dedicada à meta progressão. A prioridade é criar desbloqueios que ampliem possibilidades, um Codex de unidades, inimigos e lore, histórico de runs e migração de save além do schema 1. Nenhuma progressão permanente deve virar apenas aumento numérico por repetição.
 

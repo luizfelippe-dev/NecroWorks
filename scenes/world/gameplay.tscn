@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bvj1p07akuqgr"]
 
-[ext_resource type="Script" uid="uid://b45u88lvbum5y" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://x2jlhh16abtt" path="res://skeleton.tscn" id="2_h2yge"]
-[ext_resource type="PackedScene" uid="uid://cm4q4sl2bv5xq" path="res://enemy.tscn" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://b45u88lvbum5y" path="res://scripts/game/main_controller.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://x2jlhh16abtt" path="res://scenes/units/skeleton.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://cm4q4sl2bv5xq" path="res://scenes/units/enemy.tscn" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://b3mc2xhqnjki0" path="res://scripts/visual/industrial_backdrop.gd" id="4_backdrop"]
 
 [node name="Main" type="Node2D" unique_id=2065548651]

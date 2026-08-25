@@ -137,28 +137,31 @@ var production_queue_label: Label = null
 # =========================================================
 
 var corpse_scene: PackedScene = preload(
-	"res://corpse.tscn"
+	"res://scenes/world/corpse.tscn"
 )
 var skeleton_scene: PackedScene = preload(
-	"res://skeleton.tscn"
+	"res://scenes/units/skeleton.tscn"
 )
 var skeleton_archer_scene: PackedScene = preload(
-	"res://skeleton_archer.tscn"
+	"res://scenes/units/skeleton_archer.tscn"
 )
 var enemy_scene: PackedScene = preload(
-	"res://enemy.tscn"
+	"res://scenes/units/enemy.tscn"
 )
 var ghost_scene: PackedScene = preload(
-	"res://ghost.tscn"
+	"res://scenes/units/ghost.tscn"
 )
 var lich_scene: PackedScene = preload(
-	"res://lich.tscn"
+	"res://scenes/units/lich.tscn"
 )
 const UNIT_HEALTH_BAR_SCRIPT: Script = preload(
 	"res://scripts/ui/unit_health_bar.gd"
 )
 const ENEMY_WAVE_POLICY: Script = preload(
 	"res://scripts/game/enemy_wave_policy.gd"
+)
+const RUN_DIRECTOR_SCRIPT: Script = preload(
+	"res://scripts/game/run_director.gd"
 )
 const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 	"res://scripts/game/enemy_archetype_catalog.gd"
@@ -195,6 +198,9 @@ const UNIT_SPRITE_CATALOG: Script = preload(
 )
 const CORPSE_PROCESSING_FEEDBACK_SCRIPT: Script = preload(
 	"res://scripts/visual/corpse_processing_feedback.gd"
+)
+const RUN_SUMMARY_FORMATTER: Script = preload(
+	"res://scripts/ui/run_summary_formatter.gd"
 )
 
 
@@ -1163,15 +1169,29 @@ func _unhandled_input(
 # WAVES
 # =========================================================
 
-var current_wave: int = 1
+var run_director: RefCounted = RUN_DIRECTOR_SCRIPT.new()
 
-var enemies_total_this_wave: int = 0
-var enemies_defeated_this_wave: int = 0
-var enemies_spawned_this_wave: int = 0
-var enemy_refill_scheduled: bool = false
-
-var wave_in_progress: bool = false
-var wave_transition_in_progress: bool = false
+var current_wave: int:
+	get: return int(run_director.current_wave)
+	set(value): run_director.current_wave = value
+var enemies_total_this_wave: int:
+	get: return int(run_director.enemies_total_this_wave)
+	set(value): run_director.enemies_total_this_wave = value
+var enemies_defeated_this_wave: int:
+	get: return int(run_director.enemies_defeated_this_wave)
+	set(value): run_director.enemies_defeated_this_wave = value
+var enemies_spawned_this_wave: int:
+	get: return int(run_director.enemies_spawned_this_wave)
+	set(value): run_director.enemies_spawned_this_wave = value
+var enemy_refill_scheduled: bool:
+	get: return bool(run_director.enemy_refill_scheduled)
+	set(value): run_director.enemy_refill_scheduled = value
+var wave_in_progress: bool:
+	get: return bool(run_director.wave_in_progress)
+	set(value): run_director.wave_in_progress = value
+var wave_transition_in_progress: bool:
+	get: return bool(run_director.wave_transition_in_progress)
+	set(value): run_director.wave_transition_in_progress = value
 
 
 const BASE_ENEMIES_PER_WAVE: int = ENEMY_WAVE_POLICY.BASE_ENEMIES_PER_WAVE
@@ -1214,7 +1234,9 @@ const BOSS_COLOR: Color = Color(
 
 const BOSS_PROFILES: Dictionary = ENEMY_WAVE_POLICY.BOSS_PROFILES
 
-var boss_active: bool = false
+var boss_active: bool:
+	get: return bool(run_director.boss_active)
+	set(value): run_director.boss_active = value
 var boss_special_attack_timer: float = 0.0
 
 
@@ -1222,8 +1244,12 @@ var boss_special_attack_timer: float = 0.0
 # RUN END
 # =========================================================
 
-var run_finished: bool = false
-var run_won: bool = false
+var run_finished: bool:
+	get: return bool(run_director.run_finished)
+	set(value): run_director.run_finished = value
+var run_won: bool:
+	get: return bool(run_director.run_won)
+	set(value): run_director.run_won = value
 
 var run_end_panel: ColorRect = null
 var run_end_title_label: Label = null
@@ -2060,19 +2086,18 @@ func start_wave(
 	wave_number: int,
 	existing_enemy: Node2D = null
 ) -> void:
-
-	current_wave = wave_number
 	emergency_reclamation_available = true
 
-	enemies_total_this_wave = (
+	var wave_enemy_total: int = (
 		get_enemies_for_wave(
-			current_wave
+			wave_number
 		)
 	)
-
-	enemies_defeated_this_wave = 0
-	enemies_spawned_this_wave = 0
-	enemy_refill_scheduled = false
+	run_director.begin_wave(
+		wave_number,
+		wave_enemy_total,
+		is_boss_wave(wave_number)
+	)
 	enemies.clear()
 	enemy_hps.clear()
 	enemy_max_hps.clear()
@@ -2085,10 +2110,6 @@ func start_wave(
 	enemy_lane_offsets.clear()
 	enemy_types.clear()
 	enemy_elite_flags.clear()
-
-	boss_active = is_boss_wave(
-		current_wave
-	)
 
 	if boss_active:
 		var boss_profile: Dictionary = get_boss_profile_for_wave(current_wave)
@@ -2114,8 +2135,6 @@ func start_wave(
 
 	enemy_damage += enemy_damage_run_bonus
 
-	wave_in_progress = true
-	wave_transition_in_progress = false
 	set_processing_directive_locked(true)
 
 
@@ -2484,7 +2503,7 @@ func register_enemy(new_enemy: Node2D) -> void:
 	enemy_lane_offsets[new_enemy] = lane_offset
 	enemy_types[new_enemy] = archetype_id
 	enemy_elite_flags[new_enemy] = elite_variant
-	enemies_spawned_this_wave += 1
+	run_director.record_enemy_spawned()
 
 
 	if not is_instance_valid(enemy):
@@ -2527,11 +2546,8 @@ func fill_enemy_group() -> void:
 
 func schedule_enemy_refill() -> void:
 
-	if enemy_refill_scheduled:
+	if not run_director.schedule_enemy_refill():
 		return
-
-
-	enemy_refill_scheduled = true
 
 
 	await get_tree().create_timer(
@@ -2539,7 +2555,7 @@ func schedule_enemy_refill() -> void:
 	).timeout
 
 
-	enemy_refill_scheduled = false
+	run_director.clear_enemy_refill()
 
 
 	if wave_in_progress:
@@ -4506,7 +4522,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 	refresh_primary_enemy()
 
 
-	enemies_defeated_this_wave += 1
+	run_director.record_enemy_defeated()
 
 
 	print(
@@ -4546,8 +4562,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 		>= enemies_total_this_wave
 	):
 
-		wave_in_progress = false
-		wave_transition_in_progress = true
+		run_director.complete_wave()
 		blood_fervor_active = false
 		set_processing_directive_locked(false)
 		award_factory_points_for_wave(current_wave)
@@ -7017,9 +7032,7 @@ func select_upgrade(
 	hide_upgrade_selection()
 
 
-	wave_transition_in_progress = false
-
-	current_wave += 1
+	run_director.advance_to_next_wave()
 	var event_id: String = NARRATIVE_EVENT_CATALOG.get_event_id_for_wave(
 		current_wave
 	)
@@ -8252,12 +8265,7 @@ func finish_run(
 		return
 
 
-	run_finished = true
-	run_won = victory
-
-	boss_active = false
-	wave_in_progress = false
-	wave_transition_in_progress = false
+	run_director.finish(victory)
 
 
 	hide_upgrade_selection()
@@ -8337,80 +8345,47 @@ func show_run_end_screen() -> void:
 		)
 
 
-	run_end_summary_label.text = (
-		tr("RUN_STATISTICS")
-		+ "\n\n" + tr("RUN_PROGRESS")
-		+ "\n" + tr("RUN_WAVE_REACHED") + ": "
-		+ str(current_wave)
-		+ "\n" + tr("METRICS_ENEMIES_KILLED") + ": "
-		+ str(total_enemies_killed)
-		+ "\n" + tr("METRICS_CORPSES_PROCESSED") + ": "
-		+ str(total_corpses_processed)
-		+ "\n" + tr("RUN_CORPSES_REMAINING") + ": "
-		+ str(corpses.size())
-		+ "\n\n" + tr("RUN_UNDEAD_PRODUCTION")
-		+ "\n" + tr("METRICS_SKELETONS_BUILT") + ": "
-		+ str(total_skeletons_created)
-		+ "\n" + tr("METRICS_SKELETONS_LOST") + ": "
-		+ str(total_skeletons_lost)
-		+ "\n" + tr("RUN_SKELETONS_REVIVED") + ": "
-		+ str(total_skeletons_revived)
-		+ "\n" + tr("METRICS_ZOMBIES_BUILT") + ": "
-		+ str(total_zombies_created)
-		+ "\n" + tr("METRICS_ZOMBIES_LOST") + ": "
-		+ str(total_zombies_lost)
-		+ "\n" + tr("METRICS_GHOSTS_BUILT") + ": "
-		+ str(total_ghosts_created)
-		+ "\n" + tr("METRICS_GHOSTS_LOST") + ": "
-		+ str(total_ghosts_lost)
-		+ "\n" + tr("METRICS_LICHES_BUILT") + ": "
-		+ str(total_liches_created)
-		+ "\n" + tr("METRICS_LICHES_LOST") + ": "
-		+ str(total_liches_lost)
-		+ "\n" + tr("RUN_THRALLS_SUMMONED") + ": "
-		+ str(total_thralls_summoned)
-		+ "\n" + tr("RUN_THRALLS_EXPIRED") + ": "
-		+ str(total_thralls_expired)
-		+ "\n\n" + tr("RUN_ECONOMY")
-		+ "\n" + tr("RESOURCE_BONES") + " " + tr("RUN_EARNED") + ": "
-		+ str(total_bones_earned)
-		+ "\n" + tr("RESOURCE_FLESH") + " " + tr("RUN_EARNED") + ": "
-		+ str(total_flesh_earned)
-		+ "\n" + tr("RESOURCE_BLOOD") + " " + tr("RUN_EARNED") + ": "
-		+ str(total_blood_earned)
-		+ "\n" + tr("RESOURCE_SOULS") + " " + tr("RUN_EARNED") + ": "
-		+ str(total_souls_earned)
-		+ "\n" + tr("RESOURCE_BONES") + " " + tr("RUN_REMAINING") + ": "
-		+ str(bones)
-		+ "\n" + tr("RESOURCE_FLESH") + " " + tr("RUN_REMAINING") + ": "
-		+ str(flesh)
-		+ "\n" + tr("RESOURCE_BLOOD") + " " + tr("RUN_REMAINING") + ": "
-		+ str(blood)
-		+ "\n" + tr("RESOURCE_SOULS") + " " + tr("RUN_REMAINING") + ": "
-		+ str(souls)
+	run_end_summary_label.text = RUN_SUMMARY_FORMATTER.build_statistics(
+		Callable(self, "tr"),
+		{
+			"wave": current_wave,
+			"enemies_killed": total_enemies_killed,
+			"corpses_processed": total_corpses_processed,
+			"corpses_remaining": corpses.size(),
+			"skeletons_built": total_skeletons_created,
+			"skeletons_lost": total_skeletons_lost,
+			"skeletons_revived": total_skeletons_revived,
+			"zombies_built": total_zombies_created,
+			"zombies_lost": total_zombies_lost,
+			"ghosts_built": total_ghosts_created,
+			"ghosts_lost": total_ghosts_lost,
+			"liches_built": total_liches_created,
+			"liches_lost": total_liches_lost,
+			"thralls_summoned": total_thralls_summoned,
+			"thralls_expired": total_thralls_expired,
+			"bones_earned": total_bones_earned,
+			"flesh_earned": total_flesh_earned,
+			"blood_earned": total_blood_earned,
+			"souls_earned": total_souls_earned,
+			"bones": bones,
+			"flesh": flesh,
+			"blood": blood,
+			"souls": souls,
+		}
 	)
 
-
-	run_end_build_label.text = (
-		tr("RUN_BUILD_SUMMARY")
-		+ "\n\n" + tr("RUN_ARMY_REMAINING") + ": "
-		+ str(get_total_undead_count())
-		+ "\n" + tr("RUN_UPGRADES_SELECTED") + ": "
-		+ str(total_upgrades_selected)
-		+ "\n" + tr("RUN_SYNERGIES_UNLOCKED") + ": "
-		+ str(active_synergies.size())
-		+ "\n\n" + tr("RUN_PROCESSING_ROUTES")
-		+ "\n" + tr("PROCESSING_BALANCED") + ": "
-		+ str(int(corpses_processed_by_directive[PROCESSING_BALANCED]))
-		+ "\n" + tr("PROCESSING_BONE_FOCUS") + ": "
-		+ str(int(corpses_processed_by_directive[PROCESSING_BONE_FOCUS]))
-		+ "\n" + tr("PROCESSING_FLESH_FOCUS") + ": "
-		+ str(int(corpses_processed_by_directive[PROCESSING_FLESH_FOCUS]))
-		+ "\n\n"
-		+ get_run_synergy_summary()
-		+ "\n\n" + tr("RUN_OPERATION_STATUS")
-		+ "\n"
-		+ get_run_result_message()
+	run_end_build_label.text = RUN_SUMMARY_FORMATTER.build_build_summary(
+		Callable(self, "tr"),
+		{
+			"army_remaining": get_total_undead_count(),
+			"upgrades_selected": total_upgrades_selected,
+			"synergies_unlocked": active_synergies.size(),
+			"balanced_processed": int(corpses_processed_by_directive[PROCESSING_BALANCED]),
+			"bone_processed": int(corpses_processed_by_directive[PROCESSING_BONE_FOCUS]),
+			"flesh_processed": int(corpses_processed_by_directive[PROCESSING_FLESH_FOCUS]),
+			"synergy_summary": get_run_synergy_summary(),
+			"result_message": get_run_result_message(),
+		}
 	)
 
 
@@ -8490,7 +8465,7 @@ func return_to_main_menu() -> void:
 	if not return_to_menu_requested.get_connections().is_empty():
 		return_to_menu_requested.emit()
 		return
-	get_tree().change_scene_to_file("res://app.tscn")
+	get_tree().change_scene_to_file("res://scenes/core/app.tscn")
 
 
 func build_checkpoint_state() -> Dictionary:
@@ -8714,10 +8689,9 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 		bool(doctrine.get("automation_enabled", false))
 	)
 
-	run_finished = false
+	run_director.prepare_resume(saved_wave)
 	var pending_event: String = str(narrative.get("pending_event", ""))
 	if not pending_event.is_empty():
-		current_wave = saved_wave
 		show_narrative_event(pending_event)
 	else:
 		start_wave(saved_wave)

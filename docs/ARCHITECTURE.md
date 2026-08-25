@@ -1,6 +1,6 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 21/08/2026
+**Atualizado:** 25/08/2026
 
 # Stack
 
@@ -9,89 +9,94 @@
 - 2D
 - Git/GitHub
 
-# Current structure
+# Estrutura atual
 
-The prototype remains mostly centralized in `main.gd`.
+O projeto está organizado por domínio. `scripts/game/main_controller.gd` continua sendo o orquestrador da cena jogável, mas o estado da run pertence a `RunDirector`, as regras determinísticas ficam em políticas e catálogos, e a formatação do resumo final já saiu do controlador.
 
-This was deliberate for speed through `v0.1.0`.
-
-Current responsibilities inside `main.gd` include:
+Responsabilidades que ainda precisam ser extraídas do controlador:
 
 - Skeleton combat;
 - Zombie combat;
 - Enemy combat;
-- Boss;
-- Waves;
+- coordenação dos nós de combate;
 - Corpses;
 - Resources;
 - production;
 - upgrades;
 - synergies;
 - metrics;
-- run end;
 - runtime UI.
-
-Do not perform a big rewrite without a concrete need.
 
 Repository layout:
 
 ```text
-main.tscn
-main.gd
-skeleton.tscn
-enemy.tscn
-corpse.tscn
-
 assets/
 ├── reference/
 └── sprites/
     └── units/
 
+scenes/
+├── core/
+│   └── app.tscn
+├── units/
+│   ├── enemy.tscn
+│   ├── ghost.tscn
+│   ├── lich.tscn
+│   ├── skeleton.tscn
+│   └── skeleton_archer.tscn
+└── world/
+    ├── corpse.tscn
+    └── gameplay.tscn
+
 scripts/
 ├── core/
-│   └── localization_service.gd
+│   ├── game_shell.gd
+│   ├── localization_service.gd
+│   ├── run_save_store.gd
+│   └── settings_store.gd
 ├── economy/
-│   └── processing_directive_policy.gd
+├── factory/
 ├── game/
 │   ├── enemy_archetype_catalog.gd
-│   └── enemy_wave_policy.gd
+│   ├── enemy_wave_policy.gd
+│   ├── main_controller.gd
+│   └── run_director.gd
 ├── ui/
+│   ├── run_summary_formatter.gd
 │   └── unit_health_bar.gd
+├── units/
 └── visual/
-    ├── corpse_processing_feedback.gd
     ├── industrial_backdrop.gd
     └── unit_sprite_catalog.gd
 
 tests/
 ├── balance/
-│   └── composition_scenario_runner.gd
+├── combat/
+├── core/
 ├── economy/
-│   └── processing_directive_runner.gd
+├── events/
 ├── factory/
-│   └── corpse_processor_runner.gd
+├── game/
 ├── localization/
-│   └── localization_runner.gd
+├── units/
+├── upgrades/
 └── visual/
-    ├── corpse_processing_feedback_runner.gd
-    └── unit_sprite_runner.gd
 ```
 
-The current scene and script entry points intentionally stay at `res://`. Godot's F6 command runs the scene currently open in the editor; keeping these stable prevents stale-resource failures while the prototype is evolving.
-
-`main.gd` remains the prototype orchestrator. New isolated behavior should live in a focused component.
+F5 usa `scenes/core/app.tscn`. Para testar o gameplay diretamente com F6, a cena correta é `scenes/world/gameplay.tscn`. Os UIDs foram preservados durante a reorganização.
 
 # Scenes
 
 Known prototype scenes:
 
 ```text
-main.tscn
-skeleton.tscn
-enemy.tscn
-corpse.tscn
+scenes/world/gameplay.tscn
+scenes/units/skeleton.tscn
+scenes/units/enemy.tscn
+scenes/world/corpse.tscn
 ```
 
-`skeleton.tscn` and `enemy.tscn` now contain visible `Sprite2D` children, so their base art can be inspected in the 2D editor. Runtime archetype selection swaps textures through `scripts/visual/unit_sprite_catalog.gd`.
+`scenes/units/skeleton.tscn` and `scenes/units/enemy.tscn` now contain visible `Sprite2D` children, so their base art can be inspected in the 2D editor. Runtime archetype selection swaps textures through `scripts/visual/unit_sprite_catalog.gd`.
 
 Zombie V1 still reuses the Skeleton Node2D scene structurally, but receives its own texture and combat state at runtime. This is acceptable for the prototype.
 
@@ -125,7 +130,7 @@ Directive state lives in `processing_directive`; `processing_directive_locked` p
 
 # Localization
 
-`localization/ui.csv` is the source-of-truth catalog imported by Godot for `en`, `pt_BR` and `es`. `project.godot` registers the generated Translation resources and uses English as fallback. `scripts/core/localization_service.gd` owns locale normalization so future Options UI does not need to know regional fallback rules. Programmatic HUD text uses translation keys and `main.gd` reacts to `NOTIFICATION_TRANSLATION_CHANGED` by refreshing the migrated UI slice.
+`localization/ui.csv` is the source-of-truth catalog imported by Godot for `en`, `pt_BR` and `es`. `project.godot` registers the generated Translation resources and uses English as fallback. `scripts/core/localization_service.gd` owns locale normalization so future Options UI does not need to know regional fallback rules. Programmatic HUD text uses translation keys and `scripts/game/main_controller.gd` reacts to `NOTIFICATION_TRANSLATION_CHANGED` by refreshing the migrated UI slice.
 
 Localization is intentionally incremental: only stable interface copy is migrated. The persistent runner verifies resource registration, regional normalization and live HUD refresh in all three supported languages.
 
@@ -151,9 +156,9 @@ Successful requests use the existing per-unit creation paths so HP, slots, metri
 
 # Army Doctrine automation
 
-`scripts/factory/army_doctrine_policy.gd` is a stateless policy boundary for composition targets, the 36-unit cap, production priority, resource reserves and live deficits. `main.gd` owns the run-scoped configuration and localized panel, and emits `army_doctrine_changed` only after a valid atomic update.
+`scripts/factory/army_doctrine_policy.gd` is a stateless policy boundary for composition targets, the 36-unit cap, production priority, resource reserves and live deficits. `scripts/game/main_controller.gd` owns the run-scoped configuration and localized panel, and emits `army_doctrine_changed` only after a valid atomic update.
 
-`ArmyDoctrinePolicy.get_replenishment_plan()` converts pending deficits, affordable quantities and available population into a deterministic Skeleton/Zombie plan. `main.gd` discounts already queued units before planning, reserves resources through the public enqueue methods and exposes an explicit start/pause control. Committed orders remain in their machines when automation is paused; pausing prevents only future orders. `tests/factory/army_doctrine_runner.gd` protects configuration, while `tests/factory/army_doctrine_automation_runner.gd` validates planning, reserves, duplicate prevention, timed completion and loss replacement.
+`ArmyDoctrinePolicy.get_replenishment_plan()` converts pending deficits, affordable quantities and available population into a deterministic Skeleton/Zombie plan. `scripts/game/main_controller.gd` discounts already queued units before planning, reserves resources through the public enqueue methods and exposes an explicit start/pause control. Committed orders remain in their machines when automation is paused; pausing prevents only future orders. `tests/factory/army_doctrine_runner.gd` protects configuration, while `tests/factory/army_doctrine_automation_runner.gd` validates planning, reserves, duplicate prevention, timed completion and loss replacement.
 
 # Timed Undead production
 
@@ -165,11 +170,11 @@ Skeleton Assembler and Flesh Vat advance independently at 0.45 s and 0.80 s per 
 
 `scripts/economy/necromantic_resource_policy.gd` owns deterministic Blood/Soul kill rewards, sacrifice cost and Fervor scaling. `scripts/units/undead_runtime_unit.gd` is the shared runtime component for Skeleton Warrior, Zombie Tank and Ghost. Each unit now owns recipe identity, production family, combat role, HP, damage, cooldown, speed, range, timer and formation slot.
 
-`scripts/game/undead_recipe_catalog.gd` is the stable recipe-identity boundary. It formalizes Skeleton Warrior as the default Bone melee recipe, Zombie Tank as the default Flesh frontline recipe and Ghost as locked Soul support. Costs in this catalog describe base recipe identity; run upgrades continue to own current transactional values in `main.gd`.
+`scripts/game/undead_recipe_catalog.gd` is the stable recipe-identity boundary. It formalizes Skeleton Warrior as the default Bone melee recipe, Zombie Tank as the default Flesh frontline recipe and Ghost as locked Soul support. Costs in this catalog describe base recipe identity; run upgrades continue to own current transactional values in `scripts/game/main_controller.gd`.
 
 The localized Ritual panel exposes Blood Fervor, two Blood upgrades, Ghost production and two Soul upgrades. Crimson Assembly and Phantom Conduit use the existing synergy registry.
 
-The Hematic Press is the first rare-resource Factory machine. Unlock state, a three-unit integer queue and a single cycle timer remain run-scoped in `main.gd`. Flesh is reserved when an order enters the machine; completion adds Blood and updates the same lifetime-earned metric used by combat rewards. `tests/factory/hematic_press_runner.gd` protects the timed conversion contract.
+The Hematic Press is the first rare-resource Factory machine. Unlock state, a three-unit integer queue and a single cycle timer remain run-scoped in `scripts/game/main_controller.gd`. Flesh is reserved when an order enters the machine; completion adds Blood and updates the same lifetime-earned metric used by combat rewards. `tests/factory/hematic_press_runner.gd` protects the timed conversion contract.
 
 Soul Extractor operates as a second independent queue. Corpse metadata snapshots enemy archetype and arcane yield at death. `enqueue_corpse_for_selected_route()` is the single routing boundary used by manual clicks and Automated Retrieval: eligible Mage/Elf/Foreman Corpses enter Soul extraction when arcane routing is active; all others retain material processing. A Corpse remains in the shared world list until either queue completes, while `is_corpse_queued()` prevents double ownership. Industrial Efficiency modifies costs/cycles through getters rather than mutating queue entries. `tests/factory/rare_resource_routing_runner.gd` validates the contract.
 
@@ -340,7 +345,7 @@ This prevents dynamic synergy content from colliding with the Restart button.
 
 ## Project entry points
 
-`project.godot` and `main.tscn` must reference the same current scene UID. F5 and F6 were revalidated after synchronizing this UID; do not hand-edit only one side.
+`project.godot` and `scenes/world/gameplay.tscn` must reference the same current scene UID. F5 and F6 were revalidated after synchronizing this UID; do not hand-edit only one side.
 
 ## Unit health presentation
 
@@ -380,17 +385,17 @@ Undead Unit
 └── formation_slot
 ```
 
-The chosen structure is a lightweight component plus a static recipe catalog. Behavior remains orchestrated by `main.gd` during this bridge. Skeleton Archer is the first proving case: it shares the Bone-unit array and compatibility mirrors, while its recipe identity drives ranged positioning, per-unit stats and protected formation order.
+The chosen structure is a lightweight component plus a static recipe catalog. Behavior remains orchestrated by `scripts/game/main_controller.gd` during this bridge. Skeleton Archer is the first proving case: it shares the Bone-unit array and compatibility mirrors, while its recipe identity drives ranged positioning, per-unit stats and protected formation order.
 
 # Skeleton Archer recipe and queue
 
-`skeleton_archer.tscn` is a dedicated visual scene backed by `UndeadRuntimeUnit`. The blueprint is run-scoped, costs three Factory Points and unlocks an eight-Bone recipe. Archer orders enter the existing Skeleton Assembler, but each order snapshots its concrete `unit_type`; mixed Warrior/Archer orders therefore preserve FIFO completion without a third machine or queue.
+`scenes/units/skeleton_archer.tscn` is a dedicated visual scene backed by `UndeadRuntimeUnit`. The blueprint is run-scoped, costs three Factory Points and unlocks an eight-Bone recipe. Archer orders enter the existing Skeleton Assembler, but each order snapshots its concrete `unit_type`; mixed Warrior/Archer orders therefore preserve FIFO completion without a third machine or queue.
 
 The physical Skeleton array now represents the Bone production family. `combat_role="ranged_damage"` places Archers behind Zombies and melee Skeletons, and their target position is derived from the closest living Enemy minus the runtime attack range. Existing Bone upgrades update both current runtime instances and the base stats used by future Archers.
 
 # Lich summon policy and temporary ownership
 
-`lich.tscn` is a dedicated ranged `UndeadRuntimeUnit`. Its advanced Soul recipe is registered in `UndeadRecipeCatalog`, while `scripts/game/lich_summon_policy.gd` owns the pure cap/cooldown/lifetime/cost rules.
+`scenes/units/lich.tscn` is a dedicated ranged `UndeadRuntimeUnit`. Its advanced Soul recipe is registered in `UndeadRecipeCatalog`, while `scripts/game/lich_summon_policy.gd` owns the pure cap/cooldown/lifetime/cost rules.
 
 Temporary Thralls reuse the Bone-family runtime path and formation capacity, but declare `unit_type="lich_thrall"`, `is_temporary=true`, remaining lifetime and summon source. This keeps combat/targeting generic without creating another HP/timer/slot dictionary family. Their removal bypasses permanent Skeleton metrics and death-trigger upgrades, preventing free summons from feeding Reassembly or Final Service.
 
@@ -400,7 +405,7 @@ Ossuary Ballistics demonstrates recipe-aware synergy propagation: effective Arch
 
 # Advanced Enemy combat policy
 
-`scripts/game/enemy_combat_policy.gd` contains pure cadence, role-priority and damage calculations for Mage Arcane Burst and Elf Precision Shot. `main.gd` remains responsible for selecting live nodes, applying damage and presenting feedback.
+`scripts/game/enemy_combat_policy.gd` contains pure cadence, role-priority and damage calculations for Mage Arcane Burst and Elf Precision Shot. `scripts/game/main_controller.gd` remains responsible for selecting live nodes, applying damage and presenting feedback.
 
 Each Enemy owns an attack count beside its existing timer. The count is registered, cleared at Wave start and erased on death/cleanup. Mage attacks use the normal closest target except every third hit, when nearby targets are collected under a radius/cap. Elf attacks use normal frontline targeting except every fourth hit, when a role-first, HP-ratio-second selector searches the backline.
 
@@ -477,19 +482,19 @@ Not required yet.
 
 # Application shell and persistence
 
-`app.tscn` is the F5 application entry point. It owns `GameShell`, the Main Menu, Pause and Options overlays, and instantiates `main.tscn` as the gameplay child. Keeping `main.tscn` independent preserves direct F6 iteration and all gameplay runners.
+`scenes/core/app.tscn` is the F5 application entry point. It owns `GameShell`, the Main Menu, Pause and Options overlays, and instantiates `scenes/world/gameplay.tscn` as the gameplay child. Keeping `scenes/world/gameplay.tscn` independent preserves direct F6 iteration and all gameplay runners.
 
-`SettingsStore` sanitizes and persists locale, master volume and fullscreen mode in a versioned ConfigFile. `RunSaveStore` validates schema version 1 JSON before exposing a Continue checkpoint. `main.gd` owns serialization of run-scoped gameplay state because it remains the authoritative orchestrator; the shell owns disk I/O and lifecycle navigation.
+`SettingsStore` sanitizes and persists locale, master volume and fullscreen mode in a versioned ConfigFile. `RunSaveStore` validates schema version 1 JSON before exposing a Continue checkpoint. `scripts/game/main_controller.gd` owns serialization of run-scoped gameplay state because it remains the authoritative orchestrator; the shell owns disk I/O and lifecycle navigation.
 
 Automatic checkpoints are requested after an upgrade is committed and before the next Wave starts. Save-and-return also snapshots the current run. Loading restarts the recorded Wave with the saved permanent army and economy instead of attempting a fragile frame-perfect combat restore.
 
 `tests/core/persistence_runner.gd` validates sanitation, JSON round-trip and gameplay restore. `tests/core/game_shell_runner.gd` protects navigation, pause behavior and localized menu copy. These were runners 25 and 26 when introduced; the current suite contains 30.
 
-The shell also owns the localized prologue before a New Run. End-of-run presentation remains inside `main.gd`, but emits `restart_requested` and `return_to_menu_requested` when hosted by the shell. Direct F6 execution retains safe fallbacks to scene reload/application entry, so gameplay never assumes that a parent shell exists.
+The shell also owns the localized prologue before a New Run. End-of-run presentation remains inside `scripts/game/main_controller.gd`, but emits `restart_requested` and `return_to_menu_requested` when hosted by the shell. Direct F6 execution retains safe fallbacks to scene reload/application entry, so gameplay never assumes that a parent shell exists.
 
 # Narrative event pipeline
 
-`scripts/game/narrative_event_catalog.gd` is a pure catalog mapping trigger Waves to event IDs, localized presentation keys, valid choice IDs and deterministic reward dictionaries. `main.gd` owns the live decision panel and applies rewards only after validating that the selected choice belongs to the active event.
+`scripts/game/narrative_event_catalog.gd` is a pure catalog mapping trigger Waves to event IDs, localized presentation keys, valid choice IDs and deterministic reward dictionaries. `scripts/game/main_controller.gd` owns the live decision panel and applies rewards only after validating that the selected choice belongs to the active event.
 
 Upgrade selection increments the next Wave first. Event Waves 4, 7, 11, 13 and 16 then pause at a decision; choosing a route records the event exactly once, emits the normal checkpoint and starts combat. Checkpoint state includes resolved choices, discoveries and a pending event ID, allowing Save/Continue to restore a decision without silently granting or skipping rewards.
 
@@ -499,9 +504,9 @@ Upgrade selection increments the next Wave first. Event Waves 4, 7, 11, 13 and 1
 
 ## Upgrade catalog
 
-`main.gd` exposes 30 stable upgrade IDs. Pool construction gates specialized cards by Wave and blueprint state, caps common stacking at three and limits each rare to one acquisition. Runtime mutations still use the existing single `apply_upgrade()` boundary, while `tests/upgrades/expanded_upgrade_catalog_runner.gd` protects uniqueness, availability, representative effects, rare hooks and localization.
+`scripts/game/main_controller.gd` exposes 30 stable upgrade IDs. Pool construction gates specialized cards by Wave and blueprint state, caps common stacking at three and limits each rare to one acquisition. Runtime mutations still use the existing single `apply_upgrade()` boundary, while `tests/upgrades/expanded_upgrade_catalog_runner.gd` protects uniqueness, availability, representative effects, rare hooks and localization.
 
-`scripts/game/enemy_wave_policy.gd` is the single source of truth for regular growth, Elite scheduling and Boss profiles. `main.gd` keeps thin compatibility methods for scenes and existing callers, but no longer owns these formulas. Returned Boss profiles are defensive copies so runtime mutations cannot corrupt the catalog. Simultaneous pressure remains independent from encounter size: intermediate Boss Waves have a one-enemy total, while the pressure curve preserves its regular thresholds for callers that inspect it directly.
+`scripts/game/enemy_wave_policy.gd` is the single source of truth for regular growth, Elite scheduling and Boss profiles. `scripts/game/main_controller.gd` keeps thin compatibility methods for scenes and existing callers, but no longer owns these formulas. Returned Boss profiles are defensive copies so runtime mutations cannot corrupt the catalog. Simultaneous pressure remains independent from encounter size: intermediate Boss Waves have a one-enemy total, while the pressure curve preserves its regular thresholds for callers that inspect it directly.
 
 ## Three-Boss progression
 

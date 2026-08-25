@@ -1,17 +1,19 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 21/08/2026
+**Revisado:** 25/08/2026
 
-## Current verdict
+## Veredito atual
 
-The project is healthy for an early playable prototype and starts without parser/runtime errors.
+O projeto está saudável para um protótipo jogável e inicia sem erros de parser ou runtime.
 
-The repository now separates modular assets/components while keeping stable Godot entry points at `res://`. The largest remaining risk is responsibility concentration inside `main.gd`.
+Assets, cenas, regras, estado da run e componentes estão separados por domínio. F5 aponta para `scenes/core/app.tscn` e F6 pode executar `scenes/world/gameplay.tscn`. O maior risco restante é a concentração de combate, economia e construção de UI em `scripts/game/main_controller.gd`.
 
 ## Improvements completed
 
-- stable F5/F6 entry points explicitly preserved at the repository root;
+- entradas F5/F6 preservadas após a migração para `scenes/core` e `scenes/world`;
 - scenes grouped by domain;
+- estado e transições da partida extraídos para `scripts/game/run_director.gd`;
+- formatação do resumo final extraída para `scripts/ui/run_summary_formatter.gd`;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;
@@ -34,7 +36,7 @@ The repository now separates modular assets/components while keeping stable Godo
 
 ### P1 — Main orchestrator size
 
-`main.gd` owns combat, economy, waves, upgrades, synergies and most UI.
+`scripts/game/main_controller.gd` owns combat, economy, waves, upgrades, synergies and most UI.
 
 Do not split it by arbitrary line count. Extract one responsibility at a time only when it has a stable interface and a focused validation scenario.
 
@@ -65,7 +67,7 @@ Before public testing:
 
 Legacy Skeleton/Zombie arrays and dictionaries remain compatibility mirrors, but `UndeadRuntimeUnit` is now authoritative for identity and current combat state across Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich and Lich Thrall. Archer and Lich proved that new roles can reuse shared runtime state without adding copied HP/timer/slot families.
 
-The next safe refactor is to migrate one legacy mirror at a time behind focused tests. Do not remove all compatibility dictionaries in one rewrite, and do not move every behavior into unit nodes while `main.gd` still owns encounter orchestration.
+The next safe refactor is to migrate one legacy mirror at a time behind focused tests. Do not remove all compatibility dictionaries in one rewrite, and do not move every behavior into unit nodes while `scripts/game/main_controller.gd` still owns encounter orchestration.
 
 ### P2 — Runtime-created UI
 
@@ -95,7 +97,7 @@ Lich combat, Soul production, bounded Thralls, upgrades, anti-exploit rules and 
 
 At that milestone the full headless regression contained 23 runners and passed on Godot 4.7.1. Corpse feedback cleanup uses elapsed time rather than a frame count, removing host-FPS nondeterminism.
 
-Advanced Mage/Elf cadence and targeting are isolated in `scripts/game/enemy_combat_policy.gd`; live-node orchestration remains in `main.gd`. `tests/combat/enemy_advanced_behavior_runner.gd` covers AOE cap/damage/suppression, role-based precision and localization.
+Advanced Mage/Elf cadence and targeting are isolated in `scripts/game/enemy_combat_policy.gd`; live-node orchestration remains in `scripts/game/main_controller.gd`. `tests/combat/enemy_advanced_behavior_runner.gd` covers AOE cap/damage/suppression, role-based precision and localization.
 
 Emergency Reclamation currently uses a shared death-transaction helper called by four permanent unit families. `tests/upgrades/rare_upgrade_runner.gd` covers eligibility, one-time acquisition, per-Wave reset, resource-specific refund, repeat-loss blocking and temporary-unit exclusion.
 
@@ -116,7 +118,7 @@ Before the demo, extend persistent coverage for:
 
 ### P1 — Persistence boundary (foundation completed)
 
-The application now separates disk I/O from gameplay state: `RunSaveStore` owns validated versioned JSON, while `main.gd` produces and restores a documented checkpoint dictionary. Corrupt, absent and incompatible saves fail closed and disable Continue instead of partially mutating a run.
+The application now separates disk I/O from gameplay state: `RunSaveStore` owns validated versioned JSON, while `scripts/game/main_controller.gd` produces and restores a documented checkpoint dictionary. Corrupt, absent and incompatible saves fail closed and disable Continue instead of partially mutating a run.
 
 The current checkpoint is Wave-granular rather than frame-perfect. Active enemies, Corpse queues and fractional machine timers restart at the saved Wave boundary. This is intentional for V1, but the policy must be surfaced to playtesters and revisited before Steam cloud-save integration.
 
@@ -124,7 +126,7 @@ Settings and application-shell navigation have persistent automated coverage. Th
 
 ### P1 — Application lifecycle (closed for V1)
 
-The former `reload_current_scene()` restart path was unsafe once gameplay became a child of `app.tscn`: it could reload the shell instead of restarting combat. Gameplay now emits lifecycle requests when hosted and retains direct-scene fallbacks for F6. End-screen controls and the complete two-column summary are localized in all three supported languages and covered by navigation/localization assertions.
+The former `reload_current_scene()` restart path was unsafe once gameplay became a child of `scenes/core/app.tscn`: it could reload the shell instead of restarting combat. Gameplay now emits lifecycle requests when hosted and retains direct-scene fallbacks for F6. End-screen controls and the complete two-column summary are localized in all three supported languages and covered by navigation/localization assertions.
 
 ### Narrative events — first safe vertical slice
 
@@ -163,7 +165,7 @@ Closed risks:
 
 Remaining structural debt for v0.5+:
 
-- `main.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. O primeiro corte da v0.4.1 moveu fórmulas, agenda de Elites e perfis de chefes para `EnemyWavePolicy`, reduzindo o arquivo para 10.668 linhas. Ainda preciso extrair o estado da run, serviços de combate/exército e controladores de UI antes de ampliar a meta progressão;
+- `scripts/game/main_controller.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. Ondas, perfis de chefe, estado da run e formatação final já foram extraídos. Ainda preciso mover serviços de combate/exército e controladores de UI antes de ampliar a meta progressão;
 - upgrades still use a large match statement and should migrate to data plus focused effect handlers before the catalog expands again;
 - Boss visuals reuse prototype archetype sprites and need dedicated presentation scenes;
 - save schema migration beyond version 1 is still absent;

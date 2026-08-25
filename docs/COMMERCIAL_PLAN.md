@@ -201,7 +201,7 @@ Recommended cadence: publish only when there is a visually understandable milest
 - Blood/Souls incomplete;
 - current balance provisional;
 - content depth still limited;
-- `main.gd` prototype orchestration still needs incremental modularization.
+- `scripts/game/main_controller.gd` prototype orchestration still needs incremental modularization.
 
 These risks explain roadmap order.
 

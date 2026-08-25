@@ -225,19 +225,20 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] impedir sobreposição dos projetos de Arqueiro e Lich na Fábrica
 - [x] preservar proporção do viewport e fallback de idioma
 - [x] centralizar crescimento, Elites, calendário e perfis de chefes em `EnemyWavePolicy`
+- [x] organizar cenas e controladores por domínio preservando UIDs, F5 e F6
+- [x] extrair estado e transições da partida para `RunDirector`
+- [x] extrair a formatação do resumo final para `RunSummaryFormatter`
 - [ ] criar silhuetas e sprites próprios para os três chefes
 - [ ] definir famílias visuais de Cadáver por arquétipo e restos exclusivos de chefe
-- [ ] extrair o estado e o ciclo de Ondas, chefes e eventos para um `RunDirector`
-- [ ] extrair combate e gerenciamento do exército de `main.gd`
+- [ ] extrair combate e gerenciamento do exército de `scripts/game/main_controller.gd`
 - [ ] separar controladores de HUD, modais, Fábrica e Rituais
-- [ ] organizar cenas por domínio sem quebrar F5/F6 ou UIDs
 - [ ] definir contrato de animações: idle, movimento, ataque, impacto e morte
 - [ ] substituir o fundo procedural puro por composição híbrida de arte, parallax, luz e VFX
 - [ ] criar preset de exportação Windows e primeiro build jogável externo
 
 ### Gate
 
-Adicionar conteúdo novo somente depois que `main.gd` deixar de concentrar combate, economia, ondas e toda a interface. A refatoração será incremental e protegida pelos runners existentes; não haverá reescrita total em uma única alteração.
+Adicionar conteúdo novo somente depois que `scripts/game/main_controller.gd` deixar de concentrar combate, economia, ondas e toda a interface. A refatoração será incremental e protegida pelos runners existentes; não haverá reescrita total em uma única alteração.
 
 ---
 

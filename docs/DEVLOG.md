@@ -1,5 +1,15 @@
 # NecroWorks — Devlog
 
+## 25/08/2026 — Consolidação estrutural v0.4.1
+
+Organizei todas as cenas por domínio, movi o controlador jogável para `scripts/game` e preservei os UIDs do Godot. F5 inicia pelo shell em `scenes/core/app.tscn`; F6 executa `scenes/world/gameplay.tscn` diretamente.
+
+Extraí o estado e as transições da partida para `RunDirector` e a composição do resumo final para `RunSummaryFormatter`. Mantive propriedades de compatibilidade no controlador para não quebrar saves, cenas ou mecânicas durante a migração.
+
+A importação limpa, os dois pontos de entrada e os 31 runners passaram após a reorganização.
+
+---
+
 ## 14/08/2026 — Initial Combat
 
 Created:

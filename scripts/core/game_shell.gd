@@ -1,7 +1,7 @@
 extends Node
 
 
-const GAME_SCENE: PackedScene = preload("res://main.tscn")
+const GAME_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const ACCENT: Color = Color("55d83e")
 const PANEL: Color = Color(0.018, 0.024, 0.022, 0.98)
 const BORDER: Color = Color(0.32, 0.31, 0.25, 1.0)
