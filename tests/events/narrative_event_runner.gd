@@ -51,6 +51,18 @@ func run_validation() -> void:
 	assert(game.narrative_event_panel.position.y >= 0.0)
 	assert(game.narrative_event_panel.position.x + game.narrative_event_panel.size.x <= 1920.0)
 	assert(game.narrative_event_panel.position.y + game.narrative_event_panel.size.y <= 1080.0)
+	for choice_button: Button in game.narrative_event_buttons:
+		assert(choice_button.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART)
+		assert(choice_button.clip_text)
+		assert(choice_button.position.x >= 0.0)
+		assert(
+			choice_button.position.x + choice_button.size.x
+			<= game.narrative_event_panel.size.x
+		)
+		assert(
+			choice_button.position.y + choice_button.size.y
+			<= game.narrative_event_panel.size.y
+		)
 	var bones_before: int = game.bones
 	assert(not game.select_narrative_event_choice(EVENT_CATALOG.ARCANIST_SOULS))
 	assert(game.select_narrative_event_choice(EVENT_CATALOG.GRAVE_BONES))

@@ -18,6 +18,12 @@ O jogador assume o posto de Diretor da Linha N-0. Não há certeza de que ainda 
 
 O objetivo imediato é manter a linha ativa por vinte ondas. A pergunta maior aparece aos poucos: o Diretor está defendendo a última fábrica dos mortos ou preparando o retorno da empresa que provocou a guerra?
 
+### O Livro-Negro
+
+No centro da Planta N-0 existe um arquivo de Almas chamado Livro-Negro. Ele não guarda cadáveres: guarda decisões, rotinas e fragmentos de memória dos antigos diretores, operários e condenados que morreram durante o fechamento da fábrica.
+
+O Diretor é uma consciência formada por esses fragmentos. A princípio, acredita ser uma única pessoa. Cada descoberta de lore contradiz uma parte dessa lembrança. Essa estrutura também explica a progressão roguelite: quando uma linha de defesa fracassa, a fábrica perde tropas e produção, mas o Livro-Negro preserva conhecimento suficiente para iniciar outro turno.
+
 ## As facções vivas
 
 ### Concordata de Ferro
@@ -26,7 +32,7 @@ Uma aliança de cidades humanas que trata a NecroWorks como ameaça militar e he
 
 ### Colégio do Lacre
 
-Magos responsáveis por selar almas e impedir que a fábrica as converta em combustível. Eles não confiam completamente na Concordata: acreditam que os governantes humanos pretendem capturar a tecnologia, não destruí-la. O Auditor Arcano foi enviado para medir a atividade espectral da Planta N-0 e confiscar seu núcleo.
+Magos responsáveis por selar almas e impedir que a fábrica as converta em combustível. Eles não confiam completamente na Concordata: acreditam que os governantes humanos pretendem capturar a tecnologia, não destruí-la. O Auditor Arcano foi enviado para medir a atividade espectral da Planta N-0 e confiscar o Livro-Negro.
 
 ### Corte Verde
 
@@ -48,7 +54,17 @@ O Auditor chega na onda 15 para tomar posse das almas armazenadas. Seu núcleo c
 
 O Capataz surge na onda 20. Ele não pertence à coalizão. É o antigo supervisor da Planta N-0, preservado dentro de uma carcaça industrial e despertado pelo aumento da produção. Seu ataque Industrial Crush foi criado originalmente para controlar motins de trabalhadores vivos.
 
-Derrotá-lo não destrói a NecroWorks. Apenas remove o último protocolo capaz de impedir que o Diretor assuma controle total.
+Seu protocolo final é simples: nenhuma consciência formada pelo Livro-Negro pode controlar a fábrica. Por isso, o Capataz trata o Diretor como uma falha de segurança. Derrotá-lo não destrói a NecroWorks; remove o último sistema capaz de impedir que o Diretor assuma controle total.
+
+## Linha do tempo
+
+1. As Guerras de Cinza esvaziam cidades e campos de Vharos.
+2. A reanimação industrial surge como resposta temporária à falta de trabalhadores.
+3. A NecroWorks transforma a solução em monopólio e tenta registrar a morte como propriedade.
+4. Concordata de Ferro, Colégio do Lacre e Corte Verde formam uma coalizão instável.
+5. As fábricas são fechadas. Na Planta N-0, uma revolta termina com milhares de memórias absorvidas pelo Livro-Negro.
+6. Anos depois, a coalizão invade Mordren para destruir a planta ou tomar sua tecnologia.
+7. O protocolo de cerco desperta o Diretor e inicia a primeira run.
 
 ## Recursos e significado
 
@@ -66,10 +82,11 @@ As fusões mostram a lógica moral da planta: nenhuma fronteira entre matéria, 
 2. Um sabotador revela que agentes já alcançaram os sistemas internos.
 3. Uma carga clandestina prova que alguém alimentava a fábrica antes do despertar.
 4. O Marechal cai e seu corpo vira a primeira decisão explícita sobre restos de chefe.
-5. Um Arcanista capturado sugere que a coalizão também esconde prisioneiros e interesses próprios.
-6. O Auditor cai e deixa um núcleo que reage ao Diretor.
-7. Documentos incompletos indicam que o Capataz foi criado pela própria NecroWorks.
-8. A vitória encerra o bloqueio, mas deixa a fábrica operacional e sem supervisão.
+5. Um Arcanista capturado reconhece vozes humanas dentro do Livro-Negro.
+6. O Auditor tenta confiscar o arquivo de Almas e deixa um núcleo que reage ao Diretor.
+7. Registros incompletos revelam que o Diretor não é uma única pessoa.
+8. O Capataz desperta para eliminar a consciência considerada ilegal pela própria NecroWorks.
+9. A vitória encerra o bloqueio e abre o Livro-Negro, mas deixa para o jogador a pergunta central: libertar as Almas, destruir a planta ou reconstruir a empresa.
 
 ## Tom e regras de escrita
 
@@ -85,3 +102,4 @@ Não existe uma facção puramente correta. Os vivos têm motivos legítimos par
 - eventos que mudam reputação e rotas de chefe;
 - um Codex que reconstrói a história conforme descobertas aparecem;
 - finais diferentes para destruir, assumir ou libertar a Planta N-0.
+- desbloqueios permanentes apresentados como projetos preservados pelo Livro-Negro.

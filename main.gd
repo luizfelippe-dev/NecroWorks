@@ -6499,9 +6499,12 @@ func create_narrative_event_ui() -> void:
 	for index: int in range(2):
 		var choice_button := Button.new()
 		choice_button.name = "NarrativeChoice" + str(index + 1)
-		choice_button.position = Vector2(80.0 + float(index) * 440.0, 350.0)
-		choice_button.size = Vector2(400.0, 145.0)
-		choice_button.add_theme_font_size_override("font_size", 18)
+		choice_button.position = Vector2(60.0 + float(index) * 460.0, 350.0)
+		choice_button.size = Vector2(420.0, 145.0)
+		choice_button.add_theme_font_size_override("font_size", 16)
+		choice_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		choice_button.clip_text = true
+		choice_button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		choice_button.pressed.connect(select_narrative_event_choice_by_index.bind(index))
 		apply_button_style(choice_button, UI_BONE if index == 0 else UI_FLESH)
 		narrative_event_panel.add_child(choice_button)
@@ -9180,8 +9183,10 @@ func create_factory_panel_ui() -> void:
 	factory_skeleton_archer_button = Button.new()
 	factory_skeleton_archer_button.name = "FactorySkeletonArcherButton"
 	factory_skeleton_archer_button.position = Vector2(40.0, 510.0)
-	factory_skeleton_archer_button.size = Vector2(330.0, 62.0)
-	factory_skeleton_archer_button.add_theme_font_size_override("font_size", 14)
+	factory_skeleton_archer_button.size = Vector2(400.0, 62.0)
+	factory_skeleton_archer_button.add_theme_font_size_override("font_size", 12)
+	factory_skeleton_archer_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	factory_skeleton_archer_button.clip_text = true
 	apply_button_style(factory_skeleton_archer_button, UI_BONE)
 	factory_skeleton_archer_button.pressed.connect(
 		purchase_skeleton_archer_blueprint
@@ -9191,9 +9196,11 @@ func create_factory_panel_ui() -> void:
 
 	factory_lich_button = Button.new()
 	factory_lich_button.name = "FactoryLichButton"
-	factory_lich_button.position = Vector2(390.0, 510.0)
-	factory_lich_button.size = Vector2(330.0, 62.0)
-	factory_lich_button.add_theme_font_size_override("font_size", 13)
+	factory_lich_button.position = Vector2(460.0, 510.0)
+	factory_lich_button.size = Vector2(400.0, 62.0)
+	factory_lich_button.add_theme_font_size_override("font_size", 12)
+	factory_lich_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	factory_lich_button.clip_text = true
 	apply_button_style(factory_lich_button, Color(0.62, 0.22, 0.82, 1.0))
 	factory_lich_button.pressed.connect(purchase_lich_blueprint)
 	factory_panel.add_child(factory_lich_button)
@@ -9465,7 +9472,7 @@ func update_factory_skeleton_archer_button() -> void:
 	if skeleton_archer_unlocked:
 		factory_skeleton_archer_button.text = (
 			tr("FACTORY_ARCHER_BLUEPRINT")
-			+ "  |  " + tr("FACTORY_ARCHER_UNLOCKED")
+			+ "\n" + tr("FACTORY_ARCHER_UNLOCKED")
 		)
 		factory_skeleton_archer_button.disabled = true
 		return
@@ -9473,7 +9480,7 @@ func update_factory_skeleton_archer_button() -> void:
 
 	factory_skeleton_archer_button.text = (
 		tr("FACTORY_ARCHER_BLUEPRINT")
-		+ "  |  " + tr("FACTORY_ARCHER_UNLOCK")
+		+ "\n" + tr("FACTORY_ARCHER_UNLOCK")
 		+ "  |  " + tr("FACTORY_COST") + ": "
 		+ str(SKELETON_ARCHER_UNLOCK_COST) + " "
 		+ tr("FACTORY_POINTS")

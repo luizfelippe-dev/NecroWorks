@@ -135,6 +135,17 @@ func run_validation() -> void:
 		game.factory_lich_button.position.y + game.factory_lich_button.size.y
 		<= game.factory_panel.size.y
 	)
+	assert(game.factory_lich_button.clip_text)
+	assert(game.factory_lich_button.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART)
+	assert(
+		game.factory_skeleton_archer_button.position.x
+		+ game.factory_skeleton_archer_button.size.x
+		<= game.factory_lich_button.position.x
+	)
+	assert(
+		game.factory_lich_button.position.x + game.factory_lich_button.size.x
+		<= game.factory_panel.size.x
+	)
 	assert(
 		game.ritual_lich_button.position.y + game.ritual_lich_button.size.y
 		<= game.ritual_panel.size.y

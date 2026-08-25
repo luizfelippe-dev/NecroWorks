@@ -163,7 +163,7 @@ Closed risks:
 
 Remaining structural debt for v0.5+:
 
-- `main.gd` remains too large and should yield a dedicated RunDirector and UI controllers when meta progression begins;
+- `main.gd` reached 10,746 lines and is no longer an acceptable long-term boundary. The v0.4.1 consolidation must extract a RunDirector, combat/army services and UI controllers before meta progression expands it again;
 - upgrades still use a large match statement and should migrate to data plus focused effect handlers before the catalog expands again;
 - Boss visuals reuse prototype archetype sprites and need dedicated presentation scenes;
 - save schema migration beyond version 1 is still absent;
