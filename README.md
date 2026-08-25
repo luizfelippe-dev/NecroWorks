@@ -269,7 +269,7 @@ scenes/world/            gameplay e elementos do campo de batalha
 scenes/units/            cenas-base de aliados e inimigos
 scripts/core/            shell, localização, configurações e persistência
 scripts/ui/              componentes reutilizáveis de interface
-scripts/game/            controlador, RunDirector e regras da partida
+scripts/game/            controlador, RunDirector, formação e regras da partida
 scripts/units/           runtime compartilhado das tropas jogáveis
 scripts/economy/         regras isoladas de processamento e recursos
 scripts/factory/         políticas de produção e Doutrina do Exército

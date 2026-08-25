@@ -6,7 +6,9 @@ Organizei todas as cenas por domínio, movi o controlador jogável para `scripts
 
 Extraí o estado e as transições da partida para `RunDirector` e a composição do resumo final para `RunSummaryFormatter`. Mantive propriedades de compatibilidade no controlador para não quebrar saves, cenas ou mecânicas durante a migração.
 
-A importação limpa, os dois pontos de entrada e os 31 runners passaram após a reorganização.
+Na sequência, movi toda a geometria determinística do exército para `CombatFormationPolicy`: grade, capacidade, spawn, compactação, limites e distância ranged agora são validados sem carregar a cena.
+
+A importação limpa, os dois pontos de entrada e os 32 runners passaram após a reorganização.
 
 ---
 

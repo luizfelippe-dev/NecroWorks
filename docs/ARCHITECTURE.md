@@ -267,6 +267,8 @@ Skeleton
 
 Combat-slot compaction keeps formations from leaving gaps after deaths.
 
+`scripts/game/combat_formation_policy.gd` é a fonte da grade 6×6, limite de 36 unidades, coordenadas de spawn, prioridade vertical, compactação e limites da arena. `MainController` reúne os slots das unidades vivas na ordem Tank → melee → ranged → suporte e delega os cálculos para essa política. A separação permite testar geometria e limites sem instanciar a cena inteira.
+
 # Movement
 
 Enemy/Boss:

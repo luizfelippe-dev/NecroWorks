@@ -163,6 +163,9 @@ const ENEMY_WAVE_POLICY: Script = preload(
 const RUN_DIRECTOR_SCRIPT: Script = preload(
 	"res://scripts/game/run_director.gd"
 )
+const COMBAT_FORMATION_POLICY: Script = preload(
+	"res://scripts/game/combat_formation_policy.gd"
+)
 const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 	"res://scripts/game/enemy_archetype_catalog.gd"
 )
@@ -1124,14 +1127,14 @@ const ENEMY_SPAWN_POSITION: Vector2 = Vector2(
 # O combate acontece em uma faixa controlada da arena.
 # Isso impede Enemy/Boss e formação de "arrastarem" uns aos
 # outros infinitamente para fora da tela.
-const ENEMY_LANE_Y: float = 555.0
+const ENEMY_LANE_Y: float = COMBAT_FORMATION_POLICY.ENEMY_LANE_Y
 const ENEMY_MIN_X: float = 650.0
 const ENEMY_MAX_X: float = RIGHT_HUD_COMBAT_SAFE_X
 
-const SKELETON_COMBAT_MIN_X: float = 80.0
-const SKELETON_COMBAT_MAX_X: float = 1500.0
-const SKELETON_COMBAT_MIN_Y: float = 300.0
-const SKELETON_COMBAT_MAX_Y: float = 810.0
+const SKELETON_COMBAT_MIN_X: float = COMBAT_FORMATION_POLICY.COMBAT_MIN_X
+const SKELETON_COMBAT_MAX_X: float = COMBAT_FORMATION_POLICY.COMBAT_MAX_X
+const SKELETON_COMBAT_MIN_Y: float = COMBAT_FORMATION_POLICY.COMBAT_MIN_Y
+const SKELETON_COMBAT_MAX_Y: float = COMBAT_FORMATION_POLICY.COMBAT_MAX_Y
 
 # Dentro da mesma Wave o próximo Enemy aparece rápido.
 var enemy_spawn_delay: float = 0.5
@@ -1489,46 +1492,22 @@ var occupied_undead_slots: Dictionary = {}
 # FORMAÇÃO DE SPAWN
 # =========================================================
 
-const FORMATION_COLUMNS: int = 6
-const FORMATION_ROWS: int = 6
-
-const MAX_UNDEAD: int = (
-	FORMATION_COLUMNS
-	* FORMATION_ROWS
-)
-
-const SPAWN_SPACING: Vector2 = Vector2(
-	85.0,
-	85.0
-)
-
-const SPAWN_ORIGIN: Vector2 = Vector2(
-	250.0,
-	350.0
-)
+const FORMATION_COLUMNS: int = COMBAT_FORMATION_POLICY.FORMATION_COLUMNS
+const FORMATION_ROWS: int = COMBAT_FORMATION_POLICY.FORMATION_ROWS
+const MAX_UNDEAD: int = COMBAT_FORMATION_POLICY.MAX_UNDEAD
+const SPAWN_SPACING: Vector2 = COMBAT_FORMATION_POLICY.SPAWN_SPACING
+const SPAWN_ORIGIN: Vector2 = COMBAT_FORMATION_POLICY.SPAWN_ORIGIN
 
 
 # =========================================================
 # FORMAÇÃO DE COMBATE
 # =========================================================
 
-const COMBAT_ROWS: int = 6
-
-const COMBAT_SPACING_X: float = 85.0
-const COMBAT_SPACING_Y: float = 85.0
-
-# Primeira coluna fica 110 pixels à esquerda do Enemy.
-const COMBAT_FRONT_DISTANCE: float = 110.0
-
-# Primeiros Skeletons ocupam as linhas centrais primeiro.
-const COMBAT_ROW_ORDER: Array[int] = [
-	2,
-	3,
-	1,
-	4,
-	0,
-	5
-]
+const COMBAT_ROWS: int = COMBAT_FORMATION_POLICY.COMBAT_ROWS
+const COMBAT_SPACING_X: float = COMBAT_FORMATION_POLICY.COMBAT_SPACING_X
+const COMBAT_SPACING_Y: float = COMBAT_FORMATION_POLICY.COMBAT_SPACING_Y
+const COMBAT_FRONT_DISTANCE: float = COMBAT_FORMATION_POLICY.COMBAT_FRONT_DISTANCE
+const COMBAT_ROW_ORDER: Array[int] = COMBAT_FORMATION_POLICY.COMBAT_ROW_ORDER
 
 
 # =========================================================
@@ -2571,77 +2550,11 @@ func get_combat_target_position(
 ) -> Vector2:
 
 	if not is_instance_valid(enemy):
+		return COMBAT_FORMATION_POLICY.get_spawn_position(slot)
 
-		return get_spawn_position(
-			slot
-		)
-
-
-	# Os slots de spawn continuam persistentes, mas a formação
-	# de combate fecha as lacunas quando Skeletons morrem.
-	# Assim um Skeleton que originalmente estava numa coluna
-	# traseira pode avançar e ocupar a frente da formação.
-	var compacted_slot: int = (
-		get_compacted_combat_slot(
-			slot
-		)
-	)
-
-
-	var combat_column: int = int(
-		compacted_slot / COMBAT_ROWS
-	)
-
-
-	var slot_inside_column: int = (
-		compacted_slot % COMBAT_ROWS
-	)
-
-
-	var row_index: int = int(
-		COMBAT_ROW_ORDER[
-			slot_inside_column
-		]
-	)
-
-
-	var vertical_offset: float = (
-		(
-			float(row_index)
-			- 2.5
-		)
-		* COMBAT_SPACING_Y
-	)
-
-
-	var horizontal_offset: float = (
-		COMBAT_FRONT_DISTANCE
-		+ (
-			float(combat_column)
-			* COMBAT_SPACING_X
-		)
-	)
-
-
-	var target_x: float = clampf(
-		enemy.position.x
-		- horizontal_offset,
-		SKELETON_COMBAT_MIN_X,
-		SKELETON_COMBAT_MAX_X
-	)
-
-
-	var target_y: float = clampf(
-		ENEMY_LANE_Y
-		+ vertical_offset,
-		SKELETON_COMBAT_MIN_Y,
-		SKELETON_COMBAT_MAX_Y
-	)
-
-
-	return Vector2(
-		target_x,
-		target_y
+	return COMBAT_FORMATION_POLICY.get_combat_position(
+		enemy.position,
+		get_compacted_combat_slot(slot)
 	)
 
 
@@ -2660,13 +2573,11 @@ func get_bone_unit_combat_target_position(
 		return get_spawn_position(slot)
 
 
-	var formation_target: Vector2 = get_combat_target_position(slot)
-	formation_target.x = clampf(
-		target_enemy.position.x - runtime.attack_range,
-		SKELETON_COMBAT_MIN_X,
-		SKELETON_COMBAT_MAX_X
+	return COMBAT_FORMATION_POLICY.get_ranged_combat_position(
+		target_enemy.position,
+		runtime.attack_range,
+		get_combat_target_position(slot)
 	)
-	return formation_target
 
 
 func get_compacted_combat_slot(
@@ -2764,15 +2675,10 @@ func get_compacted_combat_slot(
 			ordered_slots.append(runtime.formation_slot)
 
 
-	for index: int in range(
-		ordered_slots.size()
-	):
-
-		if ordered_slots[index] == original_slot:
-			return index
-
-
-	return original_slot
+	return COMBAT_FORMATION_POLICY.get_compacted_slot(
+		original_slot,
+		ordered_slots
+	)
 
 
 # =========================================================
@@ -2782,29 +2688,7 @@ func get_compacted_combat_slot(
 func get_spawn_position(
 	slot: int
 ) -> Vector2:
-
-	var column: int = (
-		slot
-		% FORMATION_COLUMNS
-	)
-
-
-	var row: int = int(
-		slot
-		/ FORMATION_COLUMNS
-	)
-
-
-	return (
-		SPAWN_ORIGIN
-		+ Vector2(
-			float(column)
-			* SPAWN_SPACING.x,
-
-			float(row)
-			* SPAWN_SPACING.y
-		)
-	)
+	return COMBAT_FORMATION_POLICY.get_spawn_position(slot)
 
 
 # =========================================================

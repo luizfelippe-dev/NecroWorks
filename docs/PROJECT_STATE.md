@@ -83,7 +83,7 @@ As transações são atômicas: recursos nunca são consumidos quando a receita 
 - `scripts/core/`: localização, configurações, save e shell;
 - `tests/`: regressão headless por domínio.
 
-`RunDirector` é a fonte do estado da Onda e do resultado da run. `RunSummaryFormatter` monta a apresentação final sem conhecer nós da cena. O controlador mantém propriedades de compatibilidade para que saves e sistemas existentes continuem funcionando durante a migração incremental.
+`RunDirector` é a fonte do estado da Onda e do resultado da run. `RunSummaryFormatter` monta a apresentação final sem conhecer nós da cena. `CombatFormationPolicy` concentra a grade 6×6, spawn, compactação, limites da arena e posicionamento melee/ranged. O controlador mantém propriedades e métodos de compatibilidade para que saves, cenas e sistemas existentes continuem funcionando durante a migração incremental.
 
 ## Critérios de estabilidade
 
@@ -97,7 +97,7 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.4.1 é uma consolidação técnica e visual. `EnemyWavePolicy` concentra crescimento, Elites, quantidade por Onda e os três perfis de chefe. `RunDirector` concentra estado e transições da partida. As cenas foram movidas para `scenes/core`, `scenes/world` e `scenes/units`, com UIDs e caminhos revalidados. O próximo corte separa combate/exército e os controladores de HUD, Fábrica e Rituais. O mesmo milestone define sprites próprios de chefe, famílias de Cadáver, contrato de animações, fundo híbrido e o primeiro preset de exportação Windows.
+A v0.4.1 é uma consolidação técnica e visual. `EnemyWavePolicy` concentra progressão e chefes, `RunDirector` concentra o ciclo da partida e `CombatFormationPolicy` concentra a geometria do exército. As cenas foram movidas para `scenes/core`, `scenes/world` e `scenes/units`, com UIDs e caminhos revalidados. O próximo corte separa coordenação de ataques/dano e os controladores de HUD, Fábrica e Rituais. O mesmo milestone define sprites próprios de chefe, famílias de Cadáver, contrato de animações, fundo híbrido e o primeiro preset de exportação Windows.
 
 Depois disso, a v0.5.0 será dedicada à meta progressão. A prioridade é criar desbloqueios que ampliem possibilidades, um Codex de unidades, inimigos e lore, histórico de runs e migração de save além do schema 1. Nenhuma progressão permanente deve virar apenas aumento numérico por repetição.
 

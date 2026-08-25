@@ -306,4 +306,12 @@ Valida início, contagem, reposição, conclusão, avanço, encerramento e resta
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/run_director_runner.gd
 ```
 
-The current suite contains 31 `*_runner.gd` scenarios. All 31 passed in Godot 4.7.1 headless on 25/08/2026 after the scene reorganization and `RunDirector` extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.
+## v0.4.1 Combat Formation
+
+Valida capacidade, coordenadas da grade, compactação, limites da arena e distância ranged sem depender de nós vivos:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/combat/formation_policy_runner.gd
+```
+
+The current suite contains 32 `*_runner.gd` scenarios. All 32 passed in Godot 4.7.1 headless on 25/08/2026 after the formation-policy extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.
