@@ -94,7 +94,7 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.4.1 será uma consolidação técnica e visual. O principal débito é `main.gd`, que chegou a 10,746 linhas e ainda concentra responsabilidades demais. A extração será incremental, preservando F5/F6, saves e os testes existentes. O mesmo milestone define sprites próprios de chefe, famílias de Cadáver, contrato de animações, fundo híbrido e o primeiro preset de exportação Windows.
+A v0.4.1 é uma consolidação técnica e visual. `EnemyWavePolicy` já concentra crescimento, Elites, quantidade por Onda e os três perfis de chefe; `main.gd` mantém métodos finos de compatibilidade e caiu de 10.746 para 10.668 linhas. A próxima extração move o estado e o ciclo da run para um `RunDirector`, de forma incremental e preservando F5/F6, saves e os testes existentes. O mesmo milestone define sprites próprios de chefe, famílias de Cadáver, contrato de animações, fundo híbrido e o primeiro preset de exportação Windows.
 
 Depois disso, a v0.5.0 será dedicada à meta progressão. A prioridade é criar desbloqueios que ampliem possibilidades, um Codex de unidades, inimigos e lore, histórico de runs e migração de save além do schema 1. Nenhuma progressão permanente deve virar apenas aumento numérico por repetição.
 

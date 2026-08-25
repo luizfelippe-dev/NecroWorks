@@ -1174,27 +1174,27 @@ var wave_in_progress: bool = false
 var wave_transition_in_progress: bool = false
 
 
-const BASE_ENEMIES_PER_WAVE: int = 5
-const ENEMIES_PER_WAVE_GROWTH: int = 1
+const BASE_ENEMIES_PER_WAVE: int = ENEMY_WAVE_POLICY.BASE_ENEMIES_PER_WAVE
+const ENEMIES_PER_WAVE_GROWTH: int = ENEMY_WAVE_POLICY.ENEMIES_PER_WAVE_GROWTH
 
-const BASE_ENEMY_HP: int = 100
-const ENEMY_HP_GROWTH: int = 20
+const BASE_ENEMY_HP: int = ENEMY_WAVE_POLICY.BASE_ENEMY_HP
+const ENEMY_HP_GROWTH: int = ENEMY_WAVE_POLICY.ENEMY_HP_GROWTH
 
-const BASE_ENEMY_DAMAGE: int = 7
-const ENEMY_DAMAGE_GROWTH: int = 1
+const BASE_ENEMY_DAMAGE: int = ENEMY_WAVE_POLICY.BASE_ENEMY_DAMAGE
+const ENEMY_DAMAGE_GROWTH: int = ENEMY_WAVE_POLICY.ENEMY_DAMAGE_GROWTH
 
-const ELITE_WAVES: PackedInt32Array = [5, 9, 14, 18]
-const ELITE_ENEMIES_PER_WAVE: int = 5
-const ELITE_HP_MULTIPLIER: float = 1.4
-const ELITE_DAMAGE_BONUS: int = 3
+const ELITE_WAVES: PackedInt32Array = ENEMY_WAVE_POLICY.ELITE_WAVES
+const ELITE_ENEMIES_PER_WAVE: int = ENEMY_WAVE_POLICY.ELITE_ENEMIES_PER_WAVE
+const ELITE_HP_MULTIPLIER: float = ENEMY_WAVE_POLICY.ELITE_HP_MULTIPLIER
+const ELITE_DAMAGE_BONUS: int = ENEMY_WAVE_POLICY.ELITE_DAMAGE_BONUS
 
 
 # =========================================================
 # BOSS
 # =========================================================
 
-const BOSS_WAVE: int = 20
-const BOSS_WAVES: PackedInt32Array = [10, 15, 20]
+const BOSS_WAVE: int = ENEMY_WAVE_POLICY.FINAL_BOSS_WAVE
+const BOSS_WAVES: PackedInt32Array = ENEMY_WAVE_POLICY.BOSS_WAVES
 
 const BOSS_HP: int = 2200
 const BOSS_DAMAGE: int = 28
@@ -1212,35 +1212,7 @@ const BOSS_COLOR: Color = Color(
 	1.0
 )
 
-const BOSS_PROFILES: Dictionary = {
-	10: {
-		"id": "grave_marshal",
-		"name_key": "ENEMY_GRAVE_MARSHAL",
-		"hp": 1050,
-		"damage": 18,
-		"special_interval": 5.0,
-		"special_targets": 3,
-		"special_damage": 20,
-	},
-	15: {
-		"id": "arcane_auditor",
-		"name_key": "ENEMY_ARCANE_AUDITOR",
-		"hp": 1650,
-		"damage": 24,
-		"special_interval": 4.5,
-		"special_targets": 4,
-		"special_damage": 28,
-	},
-	20: {
-		"id": "foreman",
-		"name_key": "ENEMY_THE_FOREMAN",
-		"hp": BOSS_HP,
-		"damage": BOSS_DAMAGE,
-		"special_interval": BOSS_SPECIAL_ATTACK_INTERVAL,
-		"special_targets": BOSS_SPECIAL_ATTACK_TARGETS,
-		"special_damage": BOSS_SPECIAL_ATTACK_DAMAGE,
-	},
-}
+const BOSS_PROFILES: Dictionary = ENEMY_WAVE_POLICY.BOSS_PROFILES
 
 var boss_active: bool = false
 var boss_special_attack_timer: float = 0.0
@@ -2187,89 +2159,39 @@ func start_wave(
 func get_enemies_for_wave(
 	wave_number: int
 ) -> int:
-
-	if is_boss_wave(wave_number):
-		return 1
-
-
-	if is_elite_wave(wave_number):
-		return ELITE_ENEMIES_PER_WAVE
-
-
-	return (
-		BASE_ENEMIES_PER_WAVE
-		+ (
-			(wave_number - 1)
-			* ENEMIES_PER_WAVE_GROWTH
-		)
-	)
+	return ENEMY_WAVE_POLICY.get_enemies_for_wave(wave_number)
 
 
 func get_enemy_hp_for_wave(
 	wave_number: int
 ) -> int:
-
-	var result: int = (
-		BASE_ENEMY_HP
-		+ (
-			(wave_number - 1)
-			* ENEMY_HP_GROWTH
-		)
-	)
-
-
-	if is_elite_wave(wave_number):
-
-		result = int(
-			float(result)
-			* ELITE_HP_MULTIPLIER
-		)
-
-
-	return result
+	return ENEMY_WAVE_POLICY.get_enemy_hp_for_wave(wave_number)
 
 
 func get_enemy_damage_for_wave(
 	wave_number: int
 ) -> int:
-
-	var result: int = (
-		BASE_ENEMY_DAMAGE
-		+ (
-			(wave_number - 1)
-			* ENEMY_DAMAGE_GROWTH
-		)
-	)
-
-
-	if is_elite_wave(wave_number):
-
-		result += ELITE_DAMAGE_BONUS
-
-
-	return result
+	return ENEMY_WAVE_POLICY.get_enemy_damage_for_wave(wave_number)
 
 
 func is_elite_wave(
 	wave_number: int
 ) -> bool:
-
-	return wave_number in ELITE_WAVES
+	return ENEMY_WAVE_POLICY.is_elite_wave(wave_number)
 
 
 func is_boss_wave(
 	wave_number: int
 ) -> bool:
-
-	return wave_number in BOSS_WAVES
+	return ENEMY_WAVE_POLICY.is_boss_wave(wave_number)
 
 
 func is_final_boss_wave(wave_number: int) -> bool:
-	return wave_number == BOSS_WAVE
+	return ENEMY_WAVE_POLICY.is_final_boss_wave(wave_number)
 
 
 func get_boss_profile_for_wave(wave_number: int) -> Dictionary:
-	return (BOSS_PROFILES.get(wave_number, {}) as Dictionary).duplicate(true)
+	return ENEMY_WAVE_POLICY.get_boss_profile(wave_number)
 
 
 func get_current_boss_name() -> String:

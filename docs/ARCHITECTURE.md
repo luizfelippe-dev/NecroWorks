@@ -501,6 +501,8 @@ Upgrade selection increments the next Wave first. Event Waves 4, 7, 11, 13 and 1
 
 `main.gd` exposes 30 stable upgrade IDs. Pool construction gates specialized cards by Wave and blueprint state, caps common stacking at three and limits each rare to one acquisition. Runtime mutations still use the existing single `apply_upgrade()` boundary, while `tests/upgrades/expanded_upgrade_catalog_runner.gd` protects uniqueness, availability, representative effects, rare hooks and localization.
 
+`scripts/game/enemy_wave_policy.gd` is the single source of truth for regular growth, Elite scheduling and Boss profiles. `main.gd` keeps thin compatibility methods for scenes and existing callers, but no longer owns these formulas. Returned Boss profiles are defensive copies so runtime mutations cannot corrupt the catalog. Simultaneous pressure remains independent from encounter size: intermediate Boss Waves have a one-enemy total, while the pressure curve preserves its regular thresholds for callers that inspect it directly.
+
 ## Three-Boss progression
 
 `BOSS_PROFILES` is the authoritative Wave-to-profile map for Waves 10, 15 and 20. Each profile supplies identity, HP, damage and special-attack parameters. `EnemyArchetypeCatalog.get_boss_archetype()` provides movement and presentation data. Intermediate Boss deaths enter the normal upgrade transition; only Wave 20 calls `finish_run(true)`.

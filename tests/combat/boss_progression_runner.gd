@@ -2,6 +2,9 @@ extends SceneTree
 
 
 const MAIN_SCENE: PackedScene = preload("res://main.tscn")
+const WAVE_POLICY: Script = preload(
+	"res://scripts/game/enemy_wave_policy.gd"
+)
 
 
 func _initialize() -> void:
@@ -16,11 +19,21 @@ func run_validation() -> void:
 	game.set_process(false)
 
 	assert(game.BOSS_WAVES == PackedInt32Array([10, 15, 20]))
+	assert(WAVE_POLICY.get_enemies_for_wave(1) == 5)
+	assert(WAVE_POLICY.get_enemies_for_wave(5) == 5)
+	assert(WAVE_POLICY.get_enemies_for_wave(10) == 1)
+	assert(WAVE_POLICY.get_enemy_hp_for_wave(5) == 251)
+	assert(WAVE_POLICY.get_enemy_damage_for_wave(5) == 14)
+	assert(WAVE_POLICY.get_max_simultaneous_enemies(10) == 3)
+	assert(WAVE_POLICY.get_max_simultaneous_enemies(15) == 4)
 	assert(game.get_boss_profile_for_wave(10).id == "grave_marshal")
 	assert(game.get_boss_profile_for_wave(15).id == "arcane_auditor")
 	assert(game.get_boss_profile_for_wave(20).id == "foreman")
 	assert(game.get_boss_profile_for_wave(10).hp < game.get_boss_profile_for_wave(15).hp)
 	assert(game.get_boss_profile_for_wave(15).hp < game.get_boss_profile_for_wave(20).hp)
+	var mutable_profile: Dictionary = game.get_boss_profile_for_wave(10)
+	mutable_profile.hp = 1
+	assert(game.get_boss_profile_for_wave(10).hp == 1050)
 
 	game.start_wave(10)
 	await process_frame

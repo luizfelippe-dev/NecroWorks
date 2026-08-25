@@ -298,4 +298,4 @@ Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --scrip
 Godot_v4.7.1-stable_win64_console.exe --headless --fixed-fps 60 --path . --script res://tests/economy/fusion_recipe_runner.gd
 ```
 
-The current suite contains 30 `*_runner.gd` scenarios. All 30 passed in Godot 4.7.1 headless on 24/08/2026; the deterministic Bone and Flesh runs remain mandatory balance gates.
+The current suite contains 30 `*_runner.gd` scenarios. All 30 passed in Godot 4.7.1 headless on 25/08/2026 after the Wave-policy extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.

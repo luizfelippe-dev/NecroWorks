@@ -163,7 +163,7 @@ Closed risks:
 
 Remaining structural debt for v0.5+:
 
-- `main.gd` reached 10,746 lines and is no longer an acceptable long-term boundary. The v0.4.1 consolidation must extract a RunDirector, combat/army services and UI controllers before meta progression expands it again;
+- `main.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. O primeiro corte da v0.4.1 moveu fórmulas, agenda de Elites e perfis de chefes para `EnemyWavePolicy`, reduzindo o arquivo para 10.668 linhas. Ainda preciso extrair o estado da run, serviços de combate/exército e controladores de UI antes de ampliar a meta progressão;
 - upgrades still use a large match statement and should migrate to data plus focused effect handlers before the catalog expands again;
 - Boss visuals reuse prototype archetype sprites and need dedicated presentation scenes;
 - save schema migration beyond version 1 is still absent;

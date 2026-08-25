@@ -224,9 +224,10 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] corrigir quebra/corte de texto nas decisões narrativas
 - [x] impedir sobreposição dos projetos de Arqueiro e Lich na Fábrica
 - [x] preservar proporção do viewport e fallback de idioma
+- [x] centralizar crescimento, Elites, calendário e perfis de chefes em `EnemyWavePolicy`
 - [ ] criar silhuetas e sprites próprios para os três chefes
 - [ ] definir famílias visuais de Cadáver por arquétipo e restos exclusivos de chefe
-- [ ] extrair progressão de Ondas, chefes e eventos para um `RunDirector`
+- [ ] extrair o estado e o ciclo de Ondas, chefes e eventos para um `RunDirector`
 - [ ] extrair combate e gerenciamento do exército de `main.gd`
 - [ ] separar controladores de HUD, modais, Fábrica e Rituais
 - [ ] organizar cenas por domínio sem quebrar F5/F6 ou UIDs
