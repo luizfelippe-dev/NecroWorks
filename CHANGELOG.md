@@ -8,7 +8,9 @@
 - `RunSummaryFormatter` para apresentação localizada do resultado final;
 - `CombatFormationPolicy` para a grade, spawn, compactação e limites de posicionamento;
 - `UndeadArmyRegistry` para coleções, capacidade e ocupação dos slots;
-- cenários de regressão dedicados ao ciclo da run, formação e registro do exército, elevando a suíte para 33 runners.
+- `UpgradeCatalog` como fonte dos 30 IDs, disponibilidade, limites e categorias;
+- `SynergyCatalog` como fonte das dez identidades e chaves de localização;
+- cenários de regressão dedicados aos novos catálogos, elevando a suíte para 35 runners.
 
 ### Changed
 

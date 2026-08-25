@@ -169,6 +169,12 @@ const COMBAT_FORMATION_POLICY: Script = preload(
 const UNDEAD_ARMY_REGISTRY_SCRIPT: Script = preload(
 	"res://scripts/game/undead_army_registry.gd"
 )
+const UPGRADE_CATALOG: Script = preload(
+	"res://scripts/game/upgrade_catalog.gd"
+)
+const SYNERGY_CATALOG: Script = preload(
+	"res://scripts/game/synergy_catalog.gd"
+)
 const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 	"res://scripts/game/enemy_archetype_catalog.gd"
 )
@@ -1279,36 +1285,36 @@ var narrative_event_buttons: Array[Button] = []
 # UPGRADES
 # =========================================================
 
-const UPGRADE_SHARPENED_BONES: String = "sharpened_bones"
-const UPGRADE_BONE_PLATING: String = "bone_plating"
-const UPGRADE_EFFICIENT_RECYCLING: String = "efficient_recycling"
-const UPGRADE_RAPID_ASSAULT: String = "rapid_assault"
-const UPGRADE_DEATH_MARCH: String = "death_march"
-const UPGRADE_MASS_PRODUCTION: String = "mass_production"
-const UPGRADE_HEAVY_BONES: String = "heavy_bones"
-const UPGRADE_BONE_HARVEST: String = "bone_harvest"
-const UPGRADE_REASSEMBLY: String = "reassembly"
-const UPGRADE_FINAL_SERVICE: String = "final_service"
-const UPGRADE_ROTTEN_BULK: String = "rotten_bulk"
-const UPGRADE_GRAVE_HUNGER: String = "grave_hunger"
-const UPGRADE_DEAD_WEIGHT: String = "dead_weight"
-const UPGRADE_CARRION_RECOVERY: String = "carrion_recovery"
-const UPGRADE_GRAVE_CONTRACT: String = "grave_contract"
-const UPGRADE_RAPID_CONJURATION: String = "rapid_conjuration"
-const UPGRADE_BOUND_SERVITUDE: String = "bound_servitude"
-const UPGRADE_EMERGENCY_RECLAMATION: String = "emergency_reclamation"
-const UPGRADE_FLETCHERS_MARK: String = "fletchers_mark"
-const UPGRADE_HOLLOW_SHAFTS: String = "hollow_shafts"
-const UPGRADE_OSSUARY_SCOPE: String = "ossuary_scope"
-const UPGRADE_STITCHED_HIDE: String = "stitched_hide"
-const UPGRADE_SEPTIC_STRIKES: String = "septic_strikes"
-const UPGRADE_GRAVE_MOMENTUM: String = "grave_momentum"
-const UPGRADE_SPECTRAL_VOLTAGE: String = "spectral_voltage"
-const UPGRADE_PHASE_CYCLE: String = "phase_cycle"
-const UPGRADE_FLESH_PRESERVATION: String = "flesh_preservation"
-const UPGRADE_SOUL_SIPHON: String = "soul_siphon"
-const UPGRADE_CRIMSON_TITHE: String = "crimson_tithe"
-const UPGRADE_FORBIDDEN_PATENT: String = "forbidden_patent"
+const UPGRADE_SHARPENED_BONES: String = UPGRADE_CATALOG.SHARPENED_BONES
+const UPGRADE_BONE_PLATING: String = UPGRADE_CATALOG.BONE_PLATING
+const UPGRADE_EFFICIENT_RECYCLING: String = UPGRADE_CATALOG.EFFICIENT_RECYCLING
+const UPGRADE_RAPID_ASSAULT: String = UPGRADE_CATALOG.RAPID_ASSAULT
+const UPGRADE_DEATH_MARCH: String = UPGRADE_CATALOG.DEATH_MARCH
+const UPGRADE_MASS_PRODUCTION: String = UPGRADE_CATALOG.MASS_PRODUCTION
+const UPGRADE_HEAVY_BONES: String = UPGRADE_CATALOG.HEAVY_BONES
+const UPGRADE_BONE_HARVEST: String = UPGRADE_CATALOG.BONE_HARVEST
+const UPGRADE_REASSEMBLY: String = UPGRADE_CATALOG.REASSEMBLY
+const UPGRADE_FINAL_SERVICE: String = UPGRADE_CATALOG.FINAL_SERVICE
+const UPGRADE_ROTTEN_BULK: String = UPGRADE_CATALOG.ROTTEN_BULK
+const UPGRADE_GRAVE_HUNGER: String = UPGRADE_CATALOG.GRAVE_HUNGER
+const UPGRADE_DEAD_WEIGHT: String = UPGRADE_CATALOG.DEAD_WEIGHT
+const UPGRADE_CARRION_RECOVERY: String = UPGRADE_CATALOG.CARRION_RECOVERY
+const UPGRADE_GRAVE_CONTRACT: String = UPGRADE_CATALOG.GRAVE_CONTRACT
+const UPGRADE_RAPID_CONJURATION: String = UPGRADE_CATALOG.RAPID_CONJURATION
+const UPGRADE_BOUND_SERVITUDE: String = UPGRADE_CATALOG.BOUND_SERVITUDE
+const UPGRADE_EMERGENCY_RECLAMATION: String = UPGRADE_CATALOG.EMERGENCY_RECLAMATION
+const UPGRADE_FLETCHERS_MARK: String = UPGRADE_CATALOG.FLETCHERS_MARK
+const UPGRADE_HOLLOW_SHAFTS: String = UPGRADE_CATALOG.HOLLOW_SHAFTS
+const UPGRADE_OSSUARY_SCOPE: String = UPGRADE_CATALOG.OSSUARY_SCOPE
+const UPGRADE_STITCHED_HIDE: String = UPGRADE_CATALOG.STITCHED_HIDE
+const UPGRADE_SEPTIC_STRIKES: String = UPGRADE_CATALOG.SEPTIC_STRIKES
+const UPGRADE_GRAVE_MOMENTUM: String = UPGRADE_CATALOG.GRAVE_MOMENTUM
+const UPGRADE_SPECTRAL_VOLTAGE: String = UPGRADE_CATALOG.SPECTRAL_VOLTAGE
+const UPGRADE_PHASE_CYCLE: String = UPGRADE_CATALOG.PHASE_CYCLE
+const UPGRADE_FLESH_PRESERVATION: String = UPGRADE_CATALOG.FLESH_PRESERVATION
+const UPGRADE_SOUL_SIPHON: String = UPGRADE_CATALOG.SOUL_SIPHON
+const UPGRADE_CRIMSON_TITHE: String = UPGRADE_CATALOG.CRIMSON_TITHE
+const UPGRADE_FORBIDDEN_PATENT: String = UPGRADE_CATALOG.FORBIDDEN_PATENT
 
 const MIN_SKELETON_ATTACK_COOLDOWN: float = 0.20
 
@@ -1352,16 +1358,16 @@ var upgrade_buttons: Array[Button] = []
 # SYNERGIES
 # =========================================================
 
-const SYNERGY_RECYCLING_PLANT: String = "recycling_plant"
-const SYNERGY_SECOND_SHIFT: String = "second_shift"
-const SYNERGY_BONE_ASSEMBLY_LINE: String = "bone_assembly_line"
-const SYNERGY_OVERCLOCKED_OSSUARY: String = "overclocked_ossuary"
-const SYNERGY_MEAT_SHIELD_PROTOCOL: String = "meat_shield_protocol"
-const SYNERGY_CRIMSON_ASSEMBLY: String = "crimson_assembly"
-const SYNERGY_PHANTOM_CONDUIT: String = "phantom_conduit"
-const SYNERGY_DARK_REFINERY: String = "dark_refinery"
-const SYNERGY_SOUL_FOUNDRY: String = "soul_foundry"
-const SYNERGY_OSSUARY_BALLISTICS: String = "ossuary_ballistics"
+const SYNERGY_RECYCLING_PLANT: String = SYNERGY_CATALOG.RECYCLING_PLANT
+const SYNERGY_SECOND_SHIFT: String = SYNERGY_CATALOG.SECOND_SHIFT
+const SYNERGY_BONE_ASSEMBLY_LINE: String = SYNERGY_CATALOG.BONE_ASSEMBLY_LINE
+const SYNERGY_OVERCLOCKED_OSSUARY: String = SYNERGY_CATALOG.OVERCLOCKED_OSSUARY
+const SYNERGY_MEAT_SHIELD_PROTOCOL: String = SYNERGY_CATALOG.MEAT_SHIELD_PROTOCOL
+const SYNERGY_CRIMSON_ASSEMBLY: String = SYNERGY_CATALOG.CRIMSON_ASSEMBLY
+const SYNERGY_PHANTOM_CONDUIT: String = SYNERGY_CATALOG.PHANTOM_CONDUIT
+const SYNERGY_DARK_REFINERY: String = SYNERGY_CATALOG.DARK_REFINERY
+const SYNERGY_SOUL_FOUNDRY: String = SYNERGY_CATALOG.SOUL_FOUNDRY
+const SYNERGY_OSSUARY_BALLISTICS: String = SYNERGY_CATALOG.OSSUARY_BALLISTICS
 
 const ASSEMBLY_LINE_CHANCE: float = 0.25
 const OVERCLOCK_DOUBLE_STRIKE_CHANCE: float = 0.20
@@ -6448,123 +6454,19 @@ func continue_wave_after_transition() -> void:
 
 
 func get_upgrade_pool() -> Array[String]:
-
-	var pool: Array[String] = [
-		UPGRADE_SHARPENED_BONES,
-		UPGRADE_BONE_PLATING,
-		UPGRADE_EFFICIENT_RECYCLING,
-		UPGRADE_RAPID_ASSAULT,
-		UPGRADE_DEATH_MARCH,
-		UPGRADE_MASS_PRODUCTION,
-		UPGRADE_HEAVY_BONES,
-		UPGRADE_BONE_HARVEST,
-		UPGRADE_REASSEMBLY,
-		UPGRADE_FINAL_SERVICE,
-		UPGRADE_ROTTEN_BULK,
-		UPGRADE_GRAVE_HUNGER,
-		UPGRADE_DEAD_WEIGHT,
-		UPGRADE_CARRION_RECOVERY,
-		UPGRADE_STITCHED_HIDE,
-		UPGRADE_SEPTIC_STRIKES,
-		UPGRADE_GRAVE_MOMENTUM,
-		UPGRADE_FLESH_PRESERVATION,
-		UPGRADE_SOUL_SIPHON
-	]
-
-
-	if skeleton_archer_unlocked:
-		pool.append_array([
-			UPGRADE_FLETCHERS_MARK,
-			UPGRADE_HOLLOW_SHAFTS,
-			UPGRADE_OSSUARY_SCOPE
-		])
-
-
-	if current_wave >= 6:
-		pool.append_array([
-			UPGRADE_SPECTRAL_VOLTAGE,
-			UPGRADE_PHASE_CYCLE
-		])
-
-
-	if lich_unlocked:
-		for lich_upgrade: String in [
-			UPGRADE_GRAVE_CONTRACT,
-			UPGRADE_RAPID_CONJURATION,
-			UPGRADE_BOUND_SERVITUDE
-		]:
-			if get_upgrade_count(lich_upgrade) < 2:
-				pool.append(lich_upgrade)
-
-
-	if (
-		current_wave >= 8
-		and get_upgrade_count(UPGRADE_EMERGENCY_RECLAMATION) == 0
-	):
-		pool.append(UPGRADE_EMERGENCY_RECLAMATION)
-	if current_wave >= 10 and get_upgrade_count(UPGRADE_CRIMSON_TITHE) == 0:
-		pool.append(UPGRADE_CRIMSON_TITHE)
-	if current_wave >= 12 and get_upgrade_count(UPGRADE_FORBIDDEN_PATENT) == 0:
-		pool.append(UPGRADE_FORBIDDEN_PATENT)
-
-
-	for limited_upgrade: String in [
-		UPGRADE_FLETCHERS_MARK,
-		UPGRADE_HOLLOW_SHAFTS,
-		UPGRADE_OSSUARY_SCOPE,
-		UPGRADE_STITCHED_HIDE,
-		UPGRADE_SEPTIC_STRIKES,
-		UPGRADE_GRAVE_MOMENTUM,
-		UPGRADE_SPECTRAL_VOLTAGE,
-		UPGRADE_PHASE_CYCLE,
-		UPGRADE_FLESH_PRESERVATION,
-		UPGRADE_SOUL_SIPHON
-	]:
-		if get_upgrade_count(limited_upgrade) >= 3:
-			pool.erase(limited_upgrade)
-
-
-	# Upgrades com limite deixam de aparecer
-	# quando já atingiram seu teto.
-
-	if skeleton_cost <= 1:
-
-		pool.erase(
-			UPGRADE_MASS_PRODUCTION
-		)
-
-
-	if (
-		skeleton_attack_cooldown
-		<= MIN_SKELETON_ATTACK_COOLDOWN
-	):
-
-		pool.erase(
-			UPGRADE_RAPID_ASSAULT
-		)
-
-
-	if (
-		bone_harvest_chance
-		>= BONE_HARVEST_MAX_CHANCE
-	):
-
-		pool.erase(
-			UPGRADE_BONE_HARVEST
-		)
-
-
-	if (
-		reassembly_chance
-		>= REASSEMBLY_MAX_CHANCE
-	):
-
-		pool.erase(
-			UPGRADE_REASSEMBLY
-		)
-
-
-	return pool
+	return UPGRADE_CATALOG.get_available_pool({
+		"wave": current_wave,
+		"archer_unlocked": skeleton_archer_unlocked,
+		"lich_unlocked": lich_unlocked,
+		"counts": upgrade_counts,
+		"skeleton_cost": skeleton_cost,
+		"skeleton_cooldown": skeleton_attack_cooldown,
+		"minimum_cooldown": MIN_SKELETON_ATTACK_COOLDOWN,
+		"bone_harvest_chance": bone_harvest_chance,
+		"bone_harvest_cap": BONE_HARVEST_MAX_CHANCE,
+		"reassembly_chance": reassembly_chance,
+		"reassembly_cap": REASSEMBLY_MAX_CHANCE,
+	})
 
 
 func roll_upgrade_choices() -> void:
@@ -6726,22 +6628,11 @@ func update_upgrade_ui() -> void:
 func is_zombie_upgrade(
 	upgrade_id: String
 ) -> bool:
-
-	return upgrade_id in [
-		UPGRADE_ROTTEN_BULK,
-		UPGRADE_GRAVE_HUNGER,
-		UPGRADE_DEAD_WEIGHT,
-		UPGRADE_CARRION_RECOVERY
-	]
+	return UPGRADE_CATALOG.is_zombie_upgrade(upgrade_id)
 
 
 func is_rare_upgrade(upgrade_id: String) -> bool:
-
-	return upgrade_id in [
-		UPGRADE_EMERGENCY_RECLAMATION,
-		UPGRADE_CRIMSON_TITHE,
-		UPGRADE_FORBIDDEN_PATENT
-	]
+	return UPGRADE_CATALOG.is_rare(upgrade_id)
 
 
 func get_upgrade_card_text(
@@ -7275,145 +7166,15 @@ func increase_zombie_max_hp(
 func get_upgrade_name(
 	upgrade_id: String
 ) -> String:
-	if upgrade_id in [
-		UPGRADE_FLETCHERS_MARK, UPGRADE_HOLLOW_SHAFTS, UPGRADE_OSSUARY_SCOPE,
-		UPGRADE_STITCHED_HIDE, UPGRADE_SEPTIC_STRIKES, UPGRADE_GRAVE_MOMENTUM,
-		UPGRADE_SPECTRAL_VOLTAGE, UPGRADE_PHASE_CYCLE,
-		UPGRADE_FLESH_PRESERVATION, UPGRADE_SOUL_SIPHON,
-		UPGRADE_CRIMSON_TITHE, UPGRADE_FORBIDDEN_PATENT
-	]:
-		return tr("UPGRADE_" + upgrade_id.to_upper() + "_NAME")
-
-	match upgrade_id:
-
-		UPGRADE_SHARPENED_BONES:
-			return tr("UPGRADE_SHARPENED_BONES_NAME")
-
-		UPGRADE_BONE_PLATING:
-			return tr("UPGRADE_BONE_PLATING_NAME")
-
-		UPGRADE_EFFICIENT_RECYCLING:
-			return tr("UPGRADE_EFFICIENT_RECYCLING_NAME")
-
-		UPGRADE_RAPID_ASSAULT:
-			return tr("UPGRADE_RAPID_ASSAULT_NAME")
-
-		UPGRADE_DEATH_MARCH:
-			return tr("UPGRADE_DEATH_MARCH_NAME")
-
-		UPGRADE_MASS_PRODUCTION:
-			return tr("UPGRADE_MASS_PRODUCTION_NAME")
-
-		UPGRADE_HEAVY_BONES:
-			return tr("UPGRADE_HEAVY_BONES_NAME")
-
-		UPGRADE_BONE_HARVEST:
-			return tr("UPGRADE_BONE_HARVEST_NAME")
-
-		UPGRADE_REASSEMBLY:
-			return tr("UPGRADE_REASSEMBLY_NAME")
-
-		UPGRADE_FINAL_SERVICE:
-			return tr("UPGRADE_FINAL_SERVICE_NAME")
-
-		UPGRADE_ROTTEN_BULK:
-			return tr("UPGRADE_ROTTEN_BULK_NAME")
-
-		UPGRADE_GRAVE_HUNGER:
-			return tr("UPGRADE_GRAVE_HUNGER_NAME")
-
-		UPGRADE_DEAD_WEIGHT:
-			return tr("UPGRADE_DEAD_WEIGHT_NAME")
-
-		UPGRADE_CARRION_RECOVERY:
-			return tr("UPGRADE_CARRION_RECOVERY_NAME")
-
-		UPGRADE_GRAVE_CONTRACT:
-			return tr("UPGRADE_GRAVE_CONTRACT_NAME")
-
-		UPGRADE_RAPID_CONJURATION:
-			return tr("UPGRADE_RAPID_CONJURATION_NAME")
-
-		UPGRADE_BOUND_SERVITUDE:
-			return tr("UPGRADE_BOUND_SERVITUDE_NAME")
-
-		UPGRADE_EMERGENCY_RECLAMATION:
-			return tr("UPGRADE_EMERGENCY_RECLAMATION_NAME")
-
-		_:
-			return "Unknown Upgrade"
+	var key: String = UPGRADE_CATALOG.get_name_key(upgrade_id)
+	return tr(key) if not key.is_empty() else "Unknown Upgrade"
 
 
 func get_upgrade_description(
 	upgrade_id: String
 ) -> String:
-	if upgrade_id in [
-		UPGRADE_FLETCHERS_MARK, UPGRADE_HOLLOW_SHAFTS, UPGRADE_OSSUARY_SCOPE,
-		UPGRADE_STITCHED_HIDE, UPGRADE_SEPTIC_STRIKES, UPGRADE_GRAVE_MOMENTUM,
-		UPGRADE_SPECTRAL_VOLTAGE, UPGRADE_PHASE_CYCLE,
-		UPGRADE_FLESH_PRESERVATION, UPGRADE_SOUL_SIPHON,
-		UPGRADE_CRIMSON_TITHE, UPGRADE_FORBIDDEN_PATENT
-	]:
-		return tr("UPGRADE_" + upgrade_id.to_upper() + "_DESC")
-
-	match upgrade_id:
-
-		UPGRADE_SHARPENED_BONES:
-			return tr("UPGRADE_SHARPENED_BONES_DESC")
-
-		UPGRADE_BONE_PLATING:
-			return tr("UPGRADE_BONE_PLATING_DESC")
-
-		UPGRADE_EFFICIENT_RECYCLING:
-			return tr("UPGRADE_EFFICIENT_RECYCLING_DESC")
-
-		UPGRADE_RAPID_ASSAULT:
-			return tr("UPGRADE_RAPID_ASSAULT_DESC")
-
-		UPGRADE_DEATH_MARCH:
-			return tr("UPGRADE_DEATH_MARCH_DESC")
-
-		UPGRADE_MASS_PRODUCTION:
-			return tr("UPGRADE_MASS_PRODUCTION_DESC")
-
-		UPGRADE_HEAVY_BONES:
-			return tr("UPGRADE_HEAVY_BONES_DESC")
-
-		UPGRADE_BONE_HARVEST:
-			return tr("UPGRADE_BONE_HARVEST_DESC")
-
-		UPGRADE_REASSEMBLY:
-			return tr("UPGRADE_REASSEMBLY_DESC")
-
-		UPGRADE_FINAL_SERVICE:
-			return tr("UPGRADE_FINAL_SERVICE_DESC")
-
-		UPGRADE_ROTTEN_BULK:
-			return tr("UPGRADE_ROTTEN_BULK_DESC")
-
-		UPGRADE_GRAVE_HUNGER:
-			return tr("UPGRADE_GRAVE_HUNGER_DESC")
-
-		UPGRADE_DEAD_WEIGHT:
-			return tr("UPGRADE_DEAD_WEIGHT_DESC")
-
-		UPGRADE_CARRION_RECOVERY:
-			return tr("UPGRADE_CARRION_RECOVERY_DESC")
-
-		UPGRADE_GRAVE_CONTRACT:
-			return tr("UPGRADE_GRAVE_CONTRACT_DESC")
-
-		UPGRADE_RAPID_CONJURATION:
-			return tr("UPGRADE_RAPID_CONJURATION_DESC")
-
-		UPGRADE_BOUND_SERVITUDE:
-			return tr("UPGRADE_BOUND_SERVITUDE_DESC")
-
-		UPGRADE_EMERGENCY_RECLAMATION:
-			return tr("UPGRADE_EMERGENCY_RECLAMATION_DESC")
-
-		_:
-			return "Unknown effect"
+	var key: String = UPGRADE_CATALOG.get_description_key(upgrade_id)
+	return tr(key) if not key.is_empty() else "Unknown effect"
 
 
 func get_upgrade_status(
@@ -7673,113 +7434,15 @@ func has_synergy(
 func get_synergy_name(
 	synergy_id: String
 ) -> String:
-
-	match synergy_id:
-
-		SYNERGY_RECYCLING_PLANT:
-			return tr("SYNERGY_RECYCLING_PLANT")
-
-		SYNERGY_SECOND_SHIFT:
-			return tr("SYNERGY_SECOND_SHIFT")
-
-		SYNERGY_BONE_ASSEMBLY_LINE:
-			return tr("SYNERGY_BONE_ASSEMBLY_LINE")
-
-		SYNERGY_OVERCLOCKED_OSSUARY:
-			return tr("SYNERGY_OVERCLOCKED_OSSUARY")
-
-		SYNERGY_MEAT_SHIELD_PROTOCOL:
-			return tr("SYNERGY_MEAT_SHIELD_PROTOCOL")
-
-		SYNERGY_CRIMSON_ASSEMBLY:
-			return tr("SYNERGY_CRIMSON_ASSEMBLY")
-
-		SYNERGY_PHANTOM_CONDUIT:
-			return tr("SYNERGY_PHANTOM_CONDUIT")
-
-		SYNERGY_DARK_REFINERY:
-			return tr("SYNERGY_DARK_REFINERY")
-
-		SYNERGY_SOUL_FOUNDRY:
-			return tr("SYNERGY_SOUL_FOUNDRY")
-
-		SYNERGY_OSSUARY_BALLISTICS:
-			return tr("SYNERGY_OSSUARY_BALLISTICS")
-
-		_:
-			return "Unknown Synergy"
+	var key: String = SYNERGY_CATALOG.get_name_key(synergy_id)
+	return tr(key) if not key.is_empty() else "Unknown Synergy"
 
 
 func get_synergy_description(
 	synergy_id: String
 ) -> String:
-	if active_synergies.has(synergy_id) or synergy_id in [
-		SYNERGY_RECYCLING_PLANT, SYNERGY_SECOND_SHIFT,
-		SYNERGY_BONE_ASSEMBLY_LINE, SYNERGY_OVERCLOCKED_OSSUARY,
-		SYNERGY_MEAT_SHIELD_PROTOCOL, SYNERGY_CRIMSON_ASSEMBLY,
-		SYNERGY_PHANTOM_CONDUIT, SYNERGY_DARK_REFINERY,
-		SYNERGY_SOUL_FOUNDRY, SYNERGY_OSSUARY_BALLISTICS
-	]:
-		return tr("SYNERGY_" + synergy_id.to_upper() + "_DESC")
-
-	match synergy_id:
-
-		SYNERGY_RECYCLING_PLANT:
-			return (
-				"Efficient Recycling + Bone Harvest"
-				+ "\nBone Harvest bonus is doubled."
-			)
-
-		SYNERGY_SECOND_SHIFT:
-			return (
-				"Reassembly + Final Service"
-				+ "\nA successful revive also deals 50% Final Service damage."
-			)
-
-		SYNERGY_BONE_ASSEMBLY_LINE:
-			return (
-				"Mass Production + Efficient Recycling"
-				+ "\n25% chance to produce a free Skeleton when processing a Corpse."
-			)
-
-		SYNERGY_OVERCLOCKED_OSSUARY:
-			return (
-				"Heavy Bones + Rapid Assault"
-				+ "\nSkeleton attacks gain a 20% chance to strike twice."
-			)
-
-		SYNERGY_MEAT_SHIELD_PROTOCOL:
-			return (
-				"Rotten Bulk + Rapid Assault"
-				+ "\nZombie hits accelerate every Skeleton attack timer by 0.12s."
-			)
-
-		SYNERGY_CRIMSON_ASSEMBLY:
-			return (
-				"Hematic Extraction + Crimson Infusion"
-				+ "\nBlood Fervor costs 1 less Blood."
-			)
-
-		SYNERGY_PHANTOM_CONDUIT:
-			return (
-				"Spectral Focus + Ethereal Anchor"
-				+ "\nGhost attack cooldown is reduced."
-			)
-
-		SYNERGY_DARK_REFINERY:
-			return (
-				"Hematic Press + Industrial Efficiency II"
-				+ "\nBlood production costs 2 less Flesh."
-			)
-
-		SYNERGY_SOUL_FOUNDRY:
-			return tr("SYNERGY_SOUL_FOUNDRY_DESC")
-
-		SYNERGY_OSSUARY_BALLISTICS:
-			return tr("SYNERGY_OSSUARY_BALLISTICS_DESC")
-
-		_:
-			return ""
+	var key: String = SYNERGY_CATALOG.get_description_key(synergy_id)
+	return tr(key) if not key.is_empty() else ""
 
 
 func create_synergy_hud() -> void:
@@ -7826,18 +7489,7 @@ func update_synergy_ui() -> void:
 
 	else:
 
-		var synergy_order: Array[String] = [
-			SYNERGY_RECYCLING_PLANT,
-			SYNERGY_SECOND_SHIFT,
-			SYNERGY_BONE_ASSEMBLY_LINE,
-			SYNERGY_OVERCLOCKED_OSSUARY,
-			SYNERGY_MEAT_SHIELD_PROTOCOL,
-			SYNERGY_CRIMSON_ASSEMBLY,
-			SYNERGY_PHANTOM_CONDUIT,
-			SYNERGY_DARK_REFINERY,
-			SYNERGY_SOUL_FOUNDRY,
-			SYNERGY_OSSUARY_BALLISTICS
-		]
+		var synergy_order: Array[String] = SYNERGY_CATALOG.ALL_SYNERGIES
 
 
 		for synergy_id: String in synergy_order:
@@ -8282,18 +7934,7 @@ func get_run_synergy_summary() -> String:
 	var result: String = tr("SYNERGIES_ACTIVE") + ":"
 
 
-	var synergy_order: Array[String] = [
-		SYNERGY_RECYCLING_PLANT,
-		SYNERGY_SECOND_SHIFT,
-		SYNERGY_BONE_ASSEMBLY_LINE,
-		SYNERGY_OVERCLOCKED_OSSUARY,
-		SYNERGY_MEAT_SHIELD_PROTOCOL,
-		SYNERGY_CRIMSON_ASSEMBLY,
-		SYNERGY_PHANTOM_CONDUIT,
-		SYNERGY_DARK_REFINERY,
-		SYNERGY_SOUL_FOUNDRY,
-		SYNERGY_OSSUARY_BALLISTICS
-	]
+	var synergy_order: Array[String] = SYNERGY_CATALOG.ALL_SYNERGIES
 
 
 	for synergy_id: String in synergy_order:

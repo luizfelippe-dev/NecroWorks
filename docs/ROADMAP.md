@@ -230,6 +230,8 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] extrair a formatação do resumo final para `RunSummaryFormatter`
 - [x] extrair grade, spawn, compactação e alcance para `CombatFormationPolicy`
 - [x] centralizar coleções, capacidade e ocupação do exército em `UndeadArmyRegistry`
+- [x] extrair IDs, disponibilidade, categorias e tradução para `UpgradeCatalog`
+- [x] extrair identidade, tradução e ordem visual para `SynergyCatalog`
 - [ ] criar silhuetas e sprites próprios para os três chefes
 - [ ] definir famílias visuais de Cadáver por arquétipo e restos exclusivos de chefe
 - [ ] extrair coordenação de ataques, dano e ciclo de vida das unidades de `scripts/game/main_controller.gd`

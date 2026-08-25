@@ -10,7 +10,9 @@ Na sequência, movi toda a geometria determinística do exército para `CombatFo
 
 Também centralizei coleções de unidades, reservas e liberação de slots em `UndeadArmyRegistry`, mantendo as propriedades anteriores como ponte de compatibilidade.
 
-A importação limpa, os dois pontos de entrada e os 33 runners passaram após a reorganização.
+Os 30 upgrades e as dez sinergias agora possuem catálogos próprios. O controlador não monta mais pools, categorias nem chaves de tradução manualmente; ele recebe opções válidas e aplica somente os efeitos da run.
+
+A importação limpa, os dois pontos de entrada e os 35 runners passaram após a reorganização.
 
 ---
 

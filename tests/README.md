@@ -322,4 +322,13 @@ Valida coleções por família, capacidade total, reserva/liberação de slots, 
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/undead_army_registry_runner.gd
 ```
 
-The current suite contains 33 `*_runner.gd` scenarios. All 33 passed in Godot 4.7.1 headless on 25/08/2026 after the army-registry extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.
+## v0.4.1 Build Catalogs
+
+Valida os 30 upgrades, dez sinergias, unicidade, categorias, localização, limites e disponibilidade por Onda/desbloqueio:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/upgrades/upgrade_catalog_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/upgrades/synergy_catalog_runner.gd
+```
+
+The current suite contains 35 `*_runner.gd` scenarios. All 35 passed in Godot 4.7.1 headless on 25/08/2026 after the build-catalog extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.

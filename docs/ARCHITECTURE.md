@@ -271,6 +271,8 @@ Combat-slot compaction keeps formations from leaving gaps after deaths.
 
 `scripts/game/undead_army_registry.gd` mantém as coleções de Skeletons, Zombies, Ghosts e Liches, além dos mapas de formação e da ocupação dos 36 slots. Reserva, liberação, contagem e limpeza possuem uma única implementação. `MainController` ainda expõe os nomes anteriores como propriedades delegadas para preservar os consumidores existentes.
 
+`scripts/game/upgrade_catalog.gd` é a fonte dos 30 IDs de upgrade, categorias, limites de pilha, marcos de disponibilidade e chaves de localização. `scripts/game/synergy_catalog.gd` faz o mesmo para as dez sinergias e sua ordem de apresentação. O controlador conserva aliases públicos para compatibilidade de saves/testes e permanece responsável apenas por aplicar efeitos que mutam a run.
+
 # Movement
 
 Enemy/Boss:
