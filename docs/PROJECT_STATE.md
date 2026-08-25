@@ -83,7 +83,7 @@ As transações são atômicas: recursos nunca são consumidos quando a receita 
 - `scripts/core/`: localização, configurações, save e shell;
 - `tests/`: regressão headless por domínio.
 
-`RunDirector` é a fonte do estado da Onda e do resultado da run. `RunSummaryFormatter` monta a apresentação final sem conhecer nós da cena. `CombatFormationPolicy` concentra a grade 6×6, spawn, compactação, limites da arena e posicionamento melee/ranged. O controlador mantém propriedades e métodos de compatibilidade para que saves, cenas e sistemas existentes continuem funcionando durante a migração incremental.
+`RunDirector` é a fonte do estado da Onda e do resultado da run. `RunSummaryFormatter` monta a apresentação final sem conhecer nós da cena. `CombatFormationPolicy` concentra geometria e posicionamento; `UndeadArmyRegistry` concentra coleções, capacidade e ocupação dos slots. O controlador mantém propriedades e métodos de compatibilidade para que saves, cenas e sistemas existentes continuem funcionando durante a migração incremental.
 
 ## Critérios de estabilidade
 

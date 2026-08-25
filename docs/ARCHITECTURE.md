@@ -269,6 +269,8 @@ Combat-slot compaction keeps formations from leaving gaps after deaths.
 
 `scripts/game/combat_formation_policy.gd` é a fonte da grade 6×6, limite de 36 unidades, coordenadas de spawn, prioridade vertical, compactação e limites da arena. `MainController` reúne os slots das unidades vivas na ordem Tank → melee → ranged → suporte e delega os cálculos para essa política. A separação permite testar geometria e limites sem instanciar a cena inteira.
 
+`scripts/game/undead_army_registry.gd` mantém as coleções de Skeletons, Zombies, Ghosts e Liches, além dos mapas de formação e da ocupação dos 36 slots. Reserva, liberação, contagem e limpeza possuem uma única implementação. `MainController` ainda expõe os nomes anteriores como propriedades delegadas para preservar os consumidores existentes.
+
 # Movement
 
 Enemy/Boss:

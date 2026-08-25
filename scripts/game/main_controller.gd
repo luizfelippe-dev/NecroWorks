@@ -166,6 +166,9 @@ const RUN_DIRECTOR_SCRIPT: Script = preload(
 const COMBAT_FORMATION_POLICY: Script = preload(
 	"res://scripts/game/combat_formation_policy.gd"
 )
+const UNDEAD_ARMY_REGISTRY_SCRIPT: Script = preload(
+	"res://scripts/game/undead_army_registry.gd"
+)
 const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 	"res://scripts/game/enemy_archetype_catalog.gd"
 )
@@ -662,9 +665,7 @@ func register_zombie(
 	set_runtime_slot(new_zombie, slot, zombie_slots)
 
 
-	occupied_undead_slots[
-		slot
-	] = true
+	undead_army_registry.reserve_slot(slot)
 
 
 	new_zombie.position = (
@@ -735,7 +736,7 @@ func create_ghost_internal(is_free: bool) -> bool:
 		free_slot
 	)
 	new_ghost.position = get_spawn_position(free_slot)
-	occupied_undead_slots[free_slot] = true
+	undead_army_registry.reserve_slot(free_slot)
 	ghosts.append(new_ghost)
 	ensure_unit_health_bar(
 		new_ghost,
@@ -780,7 +781,7 @@ func kill_ghost(target: Node2D) -> void:
 
 
 	try_emergency_reclamation(target)
-	occupied_undead_slots.erase(int(target.get("formation_slot")))
+	undead_army_registry.release_slot(int(target.get("formation_slot")))
 	ghosts.erase(target)
 	total_ghosts_lost += 1
 	target.queue_free()
@@ -831,7 +832,7 @@ func create_lich_internal(is_free: bool) -> bool:
 	var runtime: UndeadRuntimeUnit = get_undead_runtime(new_lich)
 	runtime.ability_timer = get_lich_summon_cooldown() * 0.5
 	new_lich.position = get_spawn_position(free_slot)
-	occupied_undead_slots[free_slot] = true
+	undead_army_registry.reserve_slot(free_slot)
 	liches.append(new_lich)
 	ensure_unit_health_bar(
 		new_lich,
@@ -872,7 +873,7 @@ func kill_lich(target: Node2D) -> void:
 	try_emergency_reclamation(target)
 	var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
 	if runtime != null:
-		occupied_undead_slots.erase(runtime.formation_slot)
+		undead_army_registry.release_slot(runtime.formation_slot)
 	liches.erase(target)
 	total_liches_lost += 1
 	target.queue_free()
@@ -961,9 +962,7 @@ func kill_zombie(
 
 	if freed_slot >= 0:
 
-		occupied_undead_slots.erase(
-			freed_slot
-		)
+		undead_army_registry.release_slot(freed_slot)
 
 
 		zombie_slots.erase(
@@ -1400,10 +1399,15 @@ var total_flesh_earned: int = 0
 # SKELETONS
 # =========================================================
 
-var skeletons: Array[Node2D] = []
-var zombies: Array[Node2D] = []
-var ghosts: Array[Node2D] = []
-var liches: Array[Node2D] = []
+var undead_army_registry: RefCounted = UNDEAD_ARMY_REGISTRY_SCRIPT.new()
+var skeletons: Array[Node2D]:
+	get: return undead_army_registry.skeletons
+var zombies: Array[Node2D]:
+	get: return undead_army_registry.zombies
+var ghosts: Array[Node2D]:
+	get: return undead_army_registry.ghosts
+var liches: Array[Node2D]:
+	get: return undead_army_registry.liches
 var corpses: Array[Button] = []
 var corpse_processing_queue: Array[Dictionary] = []
 var skeleton_production_queue: Array[Dictionary] = []
@@ -1481,11 +1485,14 @@ var zombie_hps: Dictionary = {}
 var zombie_attack_timers: Dictionary = {}
 
 # Unit -> slot
-var skeleton_slots: Dictionary = {}
-var zombie_slots: Dictionary = {}
+var skeleton_slots: Dictionary:
+	get: return undead_army_registry.skeleton_slots
+var zombie_slots: Dictionary:
+	get: return undead_army_registry.zombie_slots
 
 # Slot -> ocupado
-var occupied_undead_slots: Dictionary = {}
+var occupied_undead_slots: Dictionary:
+	get: return undead_army_registry.occupied_slots
 
 
 # =========================================================
@@ -2935,9 +2942,7 @@ func register_bone_unit(
 	set_runtime_slot(new_skeleton, slot, skeleton_slots)
 
 
-	occupied_undead_slots[
-		slot
-	] = true
+	undead_army_registry.reserve_slot(slot)
 
 
 	new_skeleton.position = (
@@ -2976,19 +2981,7 @@ func register_bone_unit(
 # =========================================================
 
 func get_free_undead_slot() -> int:
-
-	for slot: int in range(
-		MAX_UNDEAD
-	):
-
-		if not occupied_undead_slots.has(
-			slot
-		):
-
-			return slot
-
-
-	return -1
+	return undead_army_registry.get_free_slot()
 
 
 # =========================================================
@@ -2996,13 +2989,7 @@ func get_free_undead_slot() -> int:
 # =========================================================
 
 func get_total_undead_count() -> int:
-
-	return (
-		skeletons.size()
-		+ zombies.size()
-		+ ghosts.size()
-		+ liches.size()
-	)
+	return undead_army_registry.get_total_count()
 
 
 func get_skeleton_archer_count() -> int:
@@ -3114,7 +3101,7 @@ func expire_temporary_thrall(
 		return
 
 
-	occupied_undead_slots.erase(runtime.formation_slot)
+	undead_army_registry.release_slot(runtime.formation_slot)
 	skeleton_slots.erase(thrall)
 	skeleton_hps.erase(thrall)
 	skeleton_attack_timers.erase(thrall)
@@ -4080,9 +4067,7 @@ func kill_skeleton(
 
 	if freed_slot >= 0:
 
-		occupied_undead_slots.erase(
-			freed_slot
-		)
+		undead_army_registry.release_slot(freed_slot)
 
 
 		skeleton_slots.erase(
@@ -8450,11 +8435,7 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 		for unit: Node2D in unit_group:
 			if is_instance_valid(unit):
 				unit.queue_free()
-	skeletons.clear()
-	zombies.clear()
-	ghosts.clear()
-	liches.clear()
-	occupied_undead_slots.clear()
+	undead_army_registry.clear()
 	var narrative: Dictionary = state.get("narrative", {}) as Dictionary
 	narrative_event_choices = (
 		narrative.get("choices", {}) as Dictionary

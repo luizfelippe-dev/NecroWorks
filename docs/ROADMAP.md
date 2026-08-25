@@ -229,9 +229,10 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] extrair estado e transições da partida para `RunDirector`
 - [x] extrair a formatação do resumo final para `RunSummaryFormatter`
 - [x] extrair grade, spawn, compactação e alcance para `CombatFormationPolicy`
+- [x] centralizar coleções, capacidade e ocupação do exército em `UndeadArmyRegistry`
 - [ ] criar silhuetas e sprites próprios para os três chefes
 - [ ] definir famílias visuais de Cadáver por arquétipo e restos exclusivos de chefe
-- [ ] extrair coordenação de ataques, dano e registro do exército de `scripts/game/main_controller.gd`
+- [ ] extrair coordenação de ataques, dano e ciclo de vida das unidades de `scripts/game/main_controller.gd`
 - [ ] separar controladores de HUD, modais, Fábrica e Rituais
 - [ ] definir contrato de animações: idle, movimento, ataque, impacto e morte
 - [ ] substituir o fundo procedural puro por composição híbrida de arte, parallax, luz e VFX

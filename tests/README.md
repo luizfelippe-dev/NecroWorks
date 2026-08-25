@@ -314,4 +314,12 @@ Valida capacidade, coordenadas da grade, compactação, limites da arena e dist�
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/combat/formation_policy_runner.gd
 ```
 
-The current suite contains 32 `*_runner.gd` scenarios. All 32 passed in Godot 4.7.1 headless on 25/08/2026 after the formation-policy extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.
+## v0.4.1 Undead Army Registry
+
+Valida coleções por família, capacidade total, reserva/liberação de slots, contagem e limpeza do exército:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/undead_army_registry_runner.gd
+```
+
+The current suite contains 33 `*_runner.gd` scenarios. All 33 passed in Godot 4.7.1 headless on 25/08/2026 after the army-registry extraction; the deterministic Bone and Flesh runs remain mandatory balance gates.

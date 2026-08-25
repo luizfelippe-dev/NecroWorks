@@ -8,7 +8,9 @@ Extraí o estado e as transições da partida para `RunDirector` e a composiçã
 
 Na sequência, movi toda a geometria determinística do exército para `CombatFormationPolicy`: grade, capacidade, spawn, compactação, limites e distância ranged agora são validados sem carregar a cena.
 
-A importação limpa, os dois pontos de entrada e os 32 runners passaram após a reorganização.
+Também centralizei coleções de unidades, reservas e liberação de slots em `UndeadArmyRegistry`, mantendo as propriedades anteriores como ponte de compatibilidade.
+
+A importação limpa, os dois pontos de entrada e os 33 runners passaram após a reorganização.
 
 ---
 

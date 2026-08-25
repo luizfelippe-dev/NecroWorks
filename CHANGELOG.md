@@ -7,7 +7,8 @@
 - `RunDirector` como fonte do estado e das transições da partida;
 - `RunSummaryFormatter` para apresentação localizada do resultado final;
 - `CombatFormationPolicy` para a grade, spawn, compactação e limites de posicionamento;
-- cenários de regressão dedicados ao ciclo da run e à formação, elevando a suíte para 32 runners.
+- `UndeadArmyRegistry` para coleções, capacidade e ocupação dos slots;
+- cenários de regressão dedicados ao ciclo da run, formação e registro do exército, elevando a suíte para 33 runners.
 
 ### Changed
 

@@ -15,6 +15,7 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 - estado e transições da partida extraídos para `scripts/game/run_director.gd`;
 - formatação do resumo final extraída para `scripts/ui/run_summary_formatter.gd`;
 - grade, spawn, compactação e posicionamento extraídos para `scripts/game/combat_formation_policy.gd`;
+- coleções e ocupação do exército extraídas para `scripts/game/undead_army_registry.gd`;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;
@@ -166,7 +167,7 @@ Closed risks:
 
 Remaining structural debt for v0.5+:
 
-- `scripts/game/main_controller.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. Ondas, perfis de chefe, estado da run, formação e formatação final já foram extraídos; o controlador está em 10.526 linhas. Ainda preciso mover coordenação de ataques/dano, registro do exército e controladores de UI antes de ampliar a meta progressão;
+- `scripts/game/main_controller.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. Ondas, perfis de chefe, estado da run, formação, registro do exército e formatação final já foram extraídos; o controlador está em 10.507 linhas. Ainda preciso mover coordenação de ataques/dano, ciclo de vida das unidades e controladores de UI antes de ampliar a meta progressão;
 - upgrades still use a large match statement and should migrate to data plus focused effect handlers before the catalog expands again;
 - Boss visuals reuse prototype archetype sprites and need dedicated presentation scenes;
 - save schema migration beyond version 1 is still absent;
