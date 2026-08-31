@@ -20,6 +20,10 @@ Depois da consolidação, avancei a apresentação: Marechal da Sepultura e Audi
 
 Também defini o contrato de animações com cinco estados e criei o preset Windows Desktop. A configuração de exportação passou, mas o build local aguarda os templates oficiais do Godot 4.7.1. A suíte cresceu para 41 runners.
 
+Substituí o fundo inteiramente procedural por uma composição híbrida. A ilustração concentra a fortaleza e os materiais do cenário, enquanto o código mantém apenas parallax lento, névoa, pulsos de luz e o divisor alinhado ao HUD. O campo central permaneceu escuro e livre para suportar formações grandes sem esconder barras de vida.
+
+O pacote oficial de templates foi localizado, mas possui cerca de 1,28 GB. Mantive o preset validado e documentei a instalação/exportação sem adicionar binários externos ao repositório. A suíte passa a ter 42 runners.
+
 ---
 
 ## 14/08/2026 — Initial Combat

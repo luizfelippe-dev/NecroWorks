@@ -24,6 +24,7 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 - Cadáveres visuais classificados por origem e chefe;
 - contrato de animações isolado em `scripts/visual/unit_animation_driver.gd`;
 - preset Windows versionado e validado por configuração;
+- fundo híbrido isolado em uma textura estática e um controlador procedural leve;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;
@@ -85,6 +86,8 @@ Programmatic UI enabled fast iteration but is harder to edit visually and locali
 ### P2 — Build externo aguardando templates
 
 `export_presets.cfg` está válido e aponta para `builds/windows/NecroWorks.exe`. A máquina ainda não possui os templates oficiais de exportação Godot 4.7.1; por isso o executável não foi gerado nesta revisão. Instalar `windows_release_x86_64.exe` e repetir a exportação fecha este item sem mudança de código.
+
+O pacote oficial completo foi verificado com aproximadamente 1,28 GB. O download automático não faz parte do repositório; instalação e checklist estão registrados em `docs/BUILDING.md`.
 
 ### P2 — Automated regression coverage
 

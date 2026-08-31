@@ -352,4 +352,12 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/v
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/export_preset_runner.gd
 ```
 
-A suíte atual contém 41 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026; as runs determinísticas de Bone e Flesh permanecem como gates obrigatórios de balanceamento.
+## v0.4.1 Hybrid backdrop
+
+Valida presença, resolução, cobertura, profundidade e movimento da composição industrial:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/hybrid_backdrop_runner.gd
+```
+
+A suíte atual contém 42 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026; as runs determinísticas de Bone e Flesh permanecem como gates obrigatórios de balanceamento.

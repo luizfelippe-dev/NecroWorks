@@ -110,7 +110,7 @@ Zombie V1 still reuses the Skeleton Node2D scene structurally, but receives its 
 
 Later, Zombie and each commercial unit should receive dedicated scenes with animations, effects and audio hooks.
 
-The factory background is procedural and lives in `scripts/visual/industrial_backdrop.gd`. Procedural rendering is an intentional prototype technique, not an architectural problem; static illustration layers can replace or complement it when final art direction requires richer depth.
+The factory background is hybrid. `assets/backgrounds/necroworks_factory_battlefield_v1.png` supplies the industrial fortress and combat floor; `scripts/visual/industrial_backdrop.gd` adds overscan, subtle parallax, fog bands, necromantic pulses and the production-area divider. The static layer carries detail while the procedural layer preserves motion and HUD alignment without requiring a large animation texture.
 
 Prototype sprite source PNGs remain available at full resolution, while Godot import settings cap runtime textures at 512 px. This preserves editable source quality without loading unnecessary resolution for sub-200 px battlefield rendering.
 

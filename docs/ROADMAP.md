@@ -239,7 +239,7 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [ ] extrair coordenação de ataques, dano e ciclo de vida das unidades de `scripts/game/main_controller.gd`
 - [ ] separar controladores de HUD, modais, Fábrica e Rituais
 - [x] definir contrato de animações: idle, movimento, ataque, impacto e morte
-- [ ] substituir o fundo procedural puro por composição híbrida de arte, parallax, luz e VFX
+- [x] substituir o fundo procedural puro por composição híbrida de arte, parallax, luz e VFX
 - [x] criar e validar preset de exportação Windows
 - [ ] gerar primeiro build externo após instalar os templates de exportação Godot 4.7.1
 
@@ -268,11 +268,12 @@ Conteúdo mecânico novo continua aguardando a separação de combate e economia
 
 # v0.6.0 — Vertical Slice
 
-- [ ] Main Menu
-- [ ] Pause Menu
-- [ ] Options: audio, display, language and accessibility
-- [ ] persistent settings
-- [ ] PT-BR / English / Spanish UI coverage and QA
+- [x] Main Menu V1
+- [x] Pause Menu V1
+- [x] Options V1: audio, display and language
+- [x] persistent settings V1
+- [x] PT-BR / English / Spanish automated UI coverage
+- [ ] accessibility options and final linguistic QA
 - [ ] final-ish art direction
 - [ ] UI matching official target
 - [x] basic temporary sprites for all current combatants

@@ -30,3 +30,13 @@ Este registro acompanha os assets visuais criados especificamente para o projeto
 - função: chefe final da Onda 20 e restos exclusivos.
 
 Os arquivos continuam classificados como arte de protótipo. Antes da página da Steam, cada asset precisa de revisão final de silhueta, animação, consistência de escala e inspeção de transparência.
+
+## Cenário industrial — 31/08/2026
+
+- arquivo: `assets/backgrounds/necroworks_factory_battlefield_v1.png`;
+- criação original para NecroWorks;
+- referência interna: `necrodesignv2.png`;
+- composição: fortaleza industrial distante, campo de pedra livre para combate e plataforma inferior;
+- integração: camada estática combinada com parallax, névoa, pulsos verdes e divisor procedural.
+
+O cenário foi criado sem personagens, HUD, texto ou logotipos. A região central mantém contraste reduzido para preservar nomes e barras de vida.

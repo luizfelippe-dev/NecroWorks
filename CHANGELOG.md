@@ -16,6 +16,7 @@
 - famílias visuais de Cadáver e restos exclusivos dos chefes;
 - contrato comum de animações para idle, movimento, ataque, impacto e morte;
 - preset de exportação Windows Desktop;
+- fundo híbrido com ilustração industrial, parallax sutil, névoa e iluminação procedural;
 - cenários de regressão dedicados às novas fronteiras, elevando a suíte para 41 runners.
 
 ### Changed
@@ -26,6 +27,7 @@
 - referências de cenas, testes e documentação atualizadas com preservação dos UIDs.
 - `MainController` reduzido para menos de dez mil linhas, mantendo as APIs públicas usadas por saves e testes.
 - Cadáveres deixaram de ser botões textuais puros e agora preservam a família visual do inimigo abatido.
+- o cenário procedural puro foi substituído por uma composição ilustrada sem remover as camadas dinâmicas de leitura do combate.
 
 ## [0.4.0] — 24/08/2026 — Build Diversity & Content
 

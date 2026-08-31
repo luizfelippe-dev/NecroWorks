@@ -51,6 +51,7 @@ Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint 
 - interface localizada em inglês, português do Brasil e espanhol.
 - Cadáveres visuais blindados, arcanos e ágeis, com restos próprios de chefe;
 - contrato procedural de animações e preset Windows Desktop.
+- fundo híbrido ilustrado com parallax atmosférico, névoa e luz procedural.
 
 ## Eventos da run
 
@@ -100,7 +101,7 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.4.1 é uma consolidação técnica e visual. Ondas, ciclo da partida, formação, registro do exército, catálogos, regras de sinergia e progressão básica da Fábrica já possuem limites próprios. Os três chefes e seus restos possuem identidade visual, o contrato de animações está definido e o preset Windows está pronto. O próximo corte de conteúdo é o fundo híbrido; o primeiro executável depende apenas da instalação local dos templates de exportação Godot 4.7.1. A separação de combate e painéis maiores permanece pausada por decisão de desenvolvimento.
+A v0.4.1 é uma consolidação técnica e visual. Ondas, ciclo da partida, formação, registro do exército, catálogos, regras de sinergia e progressão básica da Fábrica já possuem limites próprios. Os três chefes e seus restos possuem identidade visual, o contrato de animações está definido e o cenário agora combina ilustração, parallax e efeitos procedurais. O preset Windows está pronto; o primeiro executável depende da instalação local do pacote oficial de templates Godot 4.7.1, com aproximadamente 1,28 GB. A separação de combate e painéis maiores permanece pausada por decisão de desenvolvimento.
 
 Depois disso, a v0.5.0 será dedicada à meta progressão. A prioridade é criar desbloqueios que ampliem possibilidades, um Codex de unidades, inimigos e lore, histórico de runs e migração de save além do schema 1. Nenhuma progressão permanente deve virar apenas aumento numérico por repetição.
 
