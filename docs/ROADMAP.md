@@ -252,7 +252,7 @@ Conteúdo mecânico novo continua aguardando a separação de combate e economia
 # v0.5.0 — Meta Progression
 
 - [x] versioned between-Wave run checkpoint and Continue flow V1
-- [ ] save migration beyond schema version 1
+- [x] save migration from schema version 1 to version 2
 - [ ] unlocks
 - [ ] unit recipe unlocks
 - [ ] Factory technology unlocks

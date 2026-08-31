@@ -508,7 +508,7 @@ Not required yet.
 
 `scenes/core/app.tscn` is the F5 application entry point. It owns `GameShell`, the Main Menu, Pause and Options overlays, and instantiates `scenes/world/gameplay.tscn` as the gameplay child. Keeping `scenes/world/gameplay.tscn` independent preserves direct F6 iteration and all gameplay runners.
 
-`SettingsStore` sanitizes and persists locale, master volume and fullscreen mode in a versioned ConfigFile. `RunSaveStore` validates schema version 1 JSON before exposing a Continue checkpoint. `scripts/game/main_controller.gd` owns serialization of run-scoped gameplay state because it remains the authoritative orchestrator; the shell owns disk I/O and lifecycle navigation.
+`SettingsStore` sanitizes and persists locale, master volume and fullscreen mode in a versioned ConfigFile. `RunSaveStore` writes schema version 2 JSON with application version, checkpoint kind and timestamp. Version 1 checkpoints migrate in memory before validation, receiving safe defaults for narrative, run modifiers and rituals; unknown past or future schemas are rejected. `scripts/game/main_controller.gd` owns serialization of run-scoped gameplay state because it remains the authoritative orchestrator; the shell owns disk I/O and lifecycle navigation.
 
 Automatic checkpoints are requested after an upgrade is committed and before the next Wave starts. Save-and-return also snapshots the current run. Loading restarts the recorded Wave with the saved permanent army and economy instead of attempting a fragile frame-perfect combat restore.
 

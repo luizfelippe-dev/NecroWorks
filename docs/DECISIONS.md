@@ -614,3 +614,14 @@ Motivos:
 Idle, movimento, ataque, impacto e morte usam uma interface comum, mas não decidem dano, alvo, cooldown, recompensa ou remoção da unidade.
 
 Motivo: a arte final pode substituir o movimento procedural por spritesheets sem alterar balanceamento, saves ou testes determinísticos.
+
+## Migrar checkpoints antigos antes de validar a versão atual
+
+`RunSaveStore` grava schema v2 e aceita schema v1 por uma migração determinística em memória. A migração adiciona metadados e defaults para seções que não existiam no começo do desenvolvimento. Arquivos com versão inválida ou superior à suportada não são carregados.
+
+Motivos:
+
+- atualizações não apagam automaticamente uma run válida;
+- a migração fica separada da restauração do gameplay;
+- saves futuros não são interpretados por uma versão antiga do executável;
+- cada nova versão poderá acrescentar uma etapa pequena e testável à cadeia.

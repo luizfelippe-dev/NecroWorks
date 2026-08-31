@@ -17,6 +17,7 @@
 - contrato comum de animações para idle, movimento, ataque, impacto e morte;
 - preset de exportação Windows Desktop;
 - fundo híbrido com ilustração industrial, parallax sutil, névoa e iluminação procedural;
+- schema de checkpoint v2 com metadados e migração automática dos saves v1;
 - cenários de regressão dedicados às novas fronteiras, elevando a suíte para 41 runners.
 
 ### Changed

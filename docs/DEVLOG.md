@@ -24,6 +24,8 @@ Substituí o fundo inteiramente procedural por uma composição híbrida. A ilus
 
 O pacote oficial de templates foi localizado, mas possui cerca de 1,28 GB. Mantive o preset validado e documentei a instalação/exportação sem adicionar binários externos ao repositório. A suíte passa a ter 42 runners.
 
+Iniciei a v0.5.0 pelo save: checkpoints novos usam schema v2 e carregam metadados de versão, tipo e data. O loader migra automaticamente o schema v1, adicionando defaults das camadas narrativas, modificadores e rituais sem tocar no arquivo original. Saves desconhecidos ou criados por versões futuras são rejeitados. A cobertura sobe para 43 runners.
+
 ---
 
 ## 14/08/2026 — Initial Combat

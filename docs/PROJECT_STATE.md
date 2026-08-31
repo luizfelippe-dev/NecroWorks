@@ -27,7 +27,7 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
-Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint da run usa `user://necroworks_run.json` com schema versionado.
+Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1.
 
 ## Conteúdo atual
 

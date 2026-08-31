@@ -360,4 +360,14 @@ Valida presença, resolução, cobertura, profundidade e movimento da composiç�
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/hybrid_backdrop_runner.gd
 ```
 
-A suíte atual contém 42 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026; as runs determinísticas de Bone e Flesh permanecem como gates obrigatórios de balanceamento.
+Com o fundo híbrido, a suíte chegou a 42 cenários aprovados no Godot 4.7.1 headless em 31/08/2026; as runs determinísticas de Bone e Flesh permanecem como gates obrigatórios de balanceamento.
+
+## v0.5.0 Save migration
+
+Valida migração v1 → v2, preservação do estado, defaults novos e rejeição de schemas futuros:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/save_migration_runner.gd
+```
+
+A suíte atual contém 43 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026.
