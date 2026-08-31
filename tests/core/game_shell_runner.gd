@@ -10,12 +10,21 @@ func _initialize() -> void:
 
 func run_validation() -> void:
 	var original_locale: String = TranslationServer.get_locale()
+	TranslationServer.set_locale("en")
 	var shell: Node = APP_SCENE.instantiate()
 	root.add_child(shell)
+	await process_frame
+	LocalizationService.set_locale("en")
 	await process_frame
 	assert(shell.main_menu.visible)
 	assert(not shell.pause_menu.visible)
 	assert(shell.title_label.text == "NECROWORKS")
+	assert(shell.codex_content.text.contains("LOCKED RECORD"))
+	shell.profile.discoveries["grave_manifest"] = true
+	shell.show_codex()
+	assert(shell.codex_menu.visible)
+	assert(shell.codex_content.text.contains("THE UNREGISTERED MANIFEST"))
+	shell.show_main_menu()
 	shell.start_new_run()
 	assert(shell.prologue_menu.visible)
 	assert(not shell.main_menu.visible)

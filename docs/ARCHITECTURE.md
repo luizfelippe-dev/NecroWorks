@@ -1,6 +1,6 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 25/08/2026
+**Atualizado:** 31/08/2026
 
 # Stack
 
@@ -540,7 +540,13 @@ Bosses and Elites use disjoint Wave lists. This prevents accidental rule stackin
 
 ## Persistent event consequences
 
-`NarrativeEventCatalog` defines five incidents and ten choice-dependent discovery IDs. Reward dictionaries may grant resources or run modifiers. Enemy damage, Zombie HP, Ghost damage and faction pressure are snapshotted under `run_modifiers`, reapplied during restore and never stored as translated text. Iron Concord pressure grants +2 damage per level to Human Warriors and the Grave Marshal without affecting Mage or Elf families. Discovery IDs are locale-independent and persisted for the future Codex.
+`NarrativeEventCatalog` defines five incidents and ten choice-dependent discovery IDs. Reward dictionaries may grant resources or run modifiers. Enemy damage, Zombie HP, Ghost damage and faction pressure are snapshotted under `run_modifiers`, reapplied during restore and never stored as translated text. Iron Concord pressure grants +2 damage per level to Human Warriors and the Grave Marshal without affecting Mage or Elf families. Discovery IDs are locale-independent and persist in the Codex profile.
+
+## Perfil permanente e Codex
+
+`RunSaveStore` continua responsável apenas pelo checkpoint retomável da partida. `MetaProgressionStore` grava `user://necroworks_profile.json` com schema independente, descobertas, espaço reservado para desbloqueios e no máximo 20 resultados concluídos. Essa separação permite apagar ou substituir uma run sem perder progresso permanente.
+
+`CodexCatalog` mantém IDs estáveis e suas chaves de título/corpo. O shell decide se mostra o texto localizado ou um registro bloqueado a partir do perfil. Eventos e saves trabalham somente com IDs, portanto a troca de idioma nunca altera o dado persistido. Novos tipos de entrada devem ampliar o catálogo, sem transferir regras de gameplay para a interface.
 
 ## Fusion recipes
 

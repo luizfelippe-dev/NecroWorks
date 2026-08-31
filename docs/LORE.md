@@ -90,7 +90,7 @@ As fusões mostram a lógica moral da planta: nenhuma fronteira entre matéria, 
 
 ## Tom e regras de escrita
 
-A narrativa combina horror corporativo, necromancia industrial e humor seco. Textos devem ser curtos durante a run e mais densos no futuro Codex. A fábrica nunca se descreve como maligna; ela fala em eficiência, perdas aceitáveis, conformidade e metas de produção.
+A narrativa combina horror corporativo, necromancia industrial e humor seco. Textos devem ser curtos durante a run e mais densos no Codex. A fábrica nunca se descreve como maligna; ela fala em eficiência, perdas aceitáveis, conformidade e metas de produção.
 
 Não existe uma facção puramente correta. Os vivos têm motivos legítimos para destruir a planta, mas disputam sua tecnologia. O Diretor protege seu exército, mas transforma mortos e almas em ativos. As escolhas devem produzir vantagens tentadoras e consequências compreensíveis, sem uma resposta moral óbvia.
 
@@ -100,6 +100,6 @@ Não existe uma facção puramente correta. Os vivos têm motivos legítimos par
 - contratos assinados por pessoas que venderam os próprios restos;
 - operadores desbloqueáveis ligados às três facções;
 - eventos que mudam reputação e rotas de chefe;
-- um Codex que reconstrói a história conforme descobertas aparecem;
+- expansão do Codex que já reconstrói a história conforme descobertas aparecem;
 - finais diferentes para destruir, assumir ou libertar a Planta N-0.
 - desbloqueios permanentes apresentados como projetos preservados pelo Livro-Negro.

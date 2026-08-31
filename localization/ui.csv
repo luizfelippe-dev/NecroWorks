@@ -322,3 +322,26 @@ FUSION_OSSUARY_NAME,OSSUARY ALLOY,LIGA DE OSSUÁRIO,ALEACIÓN DE OSARIO
 FUSION_OSSUARY_DESC,12 Bones + 6 Flesh\n→ 2 Factory Points,12 Ossos + 6 Carne\n→ 2 Pontos de Fábrica,12 Huesos + 6 Carne\n→ 2 Puntos de Fábrica
 FUSION_SOULBOUND_NAME,SOULBOUND MUSTER,FORMAÇÃO VINCULADA,FILA VINCULADA
 FUSION_SOULBOUND_DESC,2 Blood + 3 Souls\n→ 1 Ghost without production cost,2 Sangue + 3 Almas\n→ 1 Fantasma sem custo de produção,2 Sangre + 3 Almas\n→ 1 Fantasma sin coste de producción
+MENU_CODEX,CODEX,CÓDICE,CÓDICE
+CODEX_TITLE,NECROWORKS ARCHIVE,ARQUIVO NECROWORKS,ARCHIVO NECROWORKS
+CODEX_LOCKED_ENTRY,LOCKED RECORD,REGISTRO BLOQUEADO,REGISTRO BLOQUEADO
+CODEX_CONCORD_SPY_RING_TITLE,THE IRON CONCORD SPY RING,A REDE DE ESPIÕES DA CONCORDATA,LA RED DE ESPÍAS DE LA CONCORDATA
+CODEX_CONCORD_SPY_RING_BODY,The Concord placed observers inside the last supply crews long before the siege.,A Concordata infiltrou observadores nas últimas equipes de suprimento muito antes do cerco.,La Concordata infiltró observadores en los últimos equipos de suministro mucho antes del asedio.
+CODEX_FACTORY_BREACH_CODES_TITLE,FACTORY BREACH CODES,CÓDIGOS DE ACESSO À FÁBRICA,CÓDIGOS DE ACCESO A LA FÁBRICA
+CODEX_FACTORY_BREACH_CODES_BODY,The stolen codes open maintenance routes but teach the enemy how NecroWorks seals its gates.,Os códigos roubados abrem rotas de manutenção mas ensinam ao inimigo como a NecroWorks sela seus portões.,Los códigos robados abren rutas de mantenimiento pero enseñan al enemigo cómo NecroWorks sella sus puertas.
+CODEX_GRAVE_MANIFEST_TITLE,THE UNREGISTERED MANIFEST,O MANIFESTO NÃO REGISTRADO,EL MANIFIESTO NO REGISTRADO
+CODEX_GRAVE_MANIFEST_BODY,The shipment lists soldiers declared dead before their regiments entered the city.,A carga lista soldados declarados mortos antes de seus regimentos entrarem na cidade.,El cargamento enumera soldados declarados muertos antes de que sus regimientos entraran en la ciudad.
+CODEX_RENDERING_MARKS_TITLE,RENDERING MARKS,MARCAS DE PROCESSAMENTO,MARCAS DE PROCESAMIENTO
+CODEX_RENDERING_MARKS_BODY,Old cuts on the remains match machinery built beneath the current factory floor.,Cortes antigos nos restos correspondem a máquinas construídas sob o piso atual da fábrica.,Cortes antiguos en los restos coinciden con máquinas construidas bajo el piso actual de la fábrica.
+CODEX_MARSHAL_ARMOR_SPEC_TITLE,MARSHAL ARMOR SPECIFICATION,ESPECIFICAÇÃO DA ARMADURA DO MARECHAL,ESPECIFICACIÓN DE LA ARMADURA DEL MARISCAL
+CODEX_MARSHAL_ARMOR_SPEC_BODY,The plate was designed to survive necromantic corrosion and prolonged industrial warfare.,A placa foi projetada para resistir à corrosão necromântica e à guerra industrial prolongada.,La placa fue diseñada para resistir la corrosión nigromántica y la guerra industrial prolongada.
+CODEX_MARSHAL_OSSIFICATION_TITLE,THE OSSIFIED FRAME,A ESTRUTURA OSSIFICADA,LA ESTRUCTURA OSIFICADA
+CODEX_MARSHAL_OSSIFICATION_BODY,The Marshal reinforced his own skeleton until command and weapon became inseparable.,O Marechal reforçou o próprio esqueleto até que comando e arma se tornassem inseparáveis.,El Mariscal reforzó su propio esqueleto hasta que mando y arma se volvieron inseparables.
+CODEX_SEALED_MEMORIES_TITLE,SEALED MEMORIES,MEMÓRIAS SELADAS,MEMORIAS SELLADAS
+CODEX_SEALED_MEMORIES_BODY,The captive mind remembers a pact between the Collegium and the first factory directors.,A mente cativa recorda um pacto entre o Colégio e os primeiros diretores da fábrica.,La mente cautiva recuerda un pacto entre el Colegio y los primeros directores de la fábrica.
+CODEX_COLLEGIUM_TOOLS_TITLE,COLLEGIUM INSTRUMENTS,INSTRUMENTOS DO COLÉGIO,INSTRUMENTOS DEL COLEGIO
+CODEX_COLLEGIUM_TOOLS_BODY,Precision instruments reveal that Souls are measured as production pressure rather than faith.,Instrumentos de precisão revelam que Almas são medidas como pressão produtiva e não como fé.,Instrumentos de precisión revelan que las Almas se miden como presión productiva y no como fe.
+CODEX_AUDITOR_RESONANCE_TITLE,AUDITOR RESONANCE,RESSONÂNCIA DO AUDITOR,RESONANCIA DEL AUDITOR
+CODEX_AUDITOR_RESONANCE_BODY,The core still repeats every spectral order the Auditor approved during the siege.,O núcleo ainda repete cada ordem espectral aprovada pelo Auditor durante o cerco.,El núcleo todavía repite cada orden espectral aprobada por el Auditor durante el asedio.
+CODEX_AUDITOR_RELAY_SCHEMA_TITLE,ARCANE RELAY SCHEMA,ESQUEMA DO RELÉ ARCANO,ESQUEMA DEL RELÉ ARCANO
+CODEX_AUDITOR_RELAY_SCHEMA_BODY,The relay connects battlefield losses to a ledger maintained far beyond the city walls.,O relé conecta as perdas do campo a um registro mantido muito além das muralhas.,El relé conecta las pérdidas del campo con un registro mantenido mucho más allá de las murallas.

@@ -5,6 +5,8 @@ const GAME_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const ACCENT: Color = Color("55d83e")
 const PANEL: Color = Color(0.018, 0.024, 0.022, 0.98)
 const BORDER: Color = Color(0.32, 0.31, 0.25, 1.0)
+const META_STORE: Script = preload("res://scripts/core/meta_progression_store.gd")
+const CODEX_CATALOG: Script = preload("res://scripts/game/codex_catalog.gd")
 
 var current_game: Node = null
 var settings: Dictionary = {}
@@ -15,6 +17,7 @@ var main_menu: Control
 var prologue_menu: Control
 var pause_menu: Control
 var options_menu: Control
+var codex_menu: Control
 var continue_button: Button
 var title_label: Label
 var subtitle_label: Label
@@ -29,12 +32,16 @@ var language_option: OptionButton
 var volume_slider: HSlider
 var options_apply_button: Button
 var options_back_button: Button
+var codex_title: Label
+var codex_content: Label
+var profile: Dictionary = {}
 var localized_buttons: Dictionary = {}
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	settings = SettingsStore.apply_settings(SettingsStore.load_settings())
+	profile = META_STORE.load_profile()
 	build_interface()
 	refresh_localized_text()
 	show_main_menu()
@@ -51,6 +58,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 	if options_menu.visible:
 		close_options()
+	elif codex_menu.visible:
+		show_main_menu()
 	elif prologue_menu.visible:
 		show_main_menu()
 	elif current_game != null:
@@ -67,7 +76,7 @@ func build_interface() -> void:
 	add_child(ui_layer)
 
 	main_menu = create_screen("MainMenu", Color(0.002, 0.006, 0.005, 1.0))
-	var main_box := create_center_panel(main_menu, Vector2(620.0, 650.0))
+	var main_box := create_center_panel(main_menu, Vector2(620.0, 720.0))
 	title_label = create_label(42, ACCENT)
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	main_box.add_child(title_label)
@@ -79,6 +88,7 @@ func build_interface() -> void:
 	add_localized_button(main_box, "MENU_NEW_RUN", start_new_run)
 	continue_button = add_localized_button(main_box, "MENU_CONTINUE", continue_run)
 	add_localized_button(main_box, "MENU_OPTIONS", open_options_from_main)
+	add_localized_button(main_box, "MENU_CODEX", show_codex)
 	add_localized_button(main_box, "MENU_QUIT", quit_game)
 
 	prologue_menu = create_screen("PrologueMenu", Color(0.002, 0.006, 0.005, 1.0))
@@ -138,9 +148,25 @@ func build_interface() -> void:
 	options_apply_button = add_localized_button(options_box, "OPTIONS_APPLY", apply_options)
 	options_back_button = add_localized_button(options_box, "OPTIONS_BACK", close_options)
 
+	codex_menu = create_screen("CodexMenu", Color(0.0, 0.0, 0.0, 0.90))
+	var codex_box := create_center_panel(codex_menu, Vector2(940.0, 820.0))
+	codex_title = create_label(34, ACCENT)
+	codex_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	codex_box.add_child(codex_title)
+	var codex_scroll := ScrollContainer.new()
+	codex_scroll.custom_minimum_size = Vector2(0.0, 610.0)
+	codex_box.add_child(codex_scroll)
+	codex_content = create_label(17)
+	codex_content.custom_minimum_size = Vector2(800.0, 0.0)
+	codex_content.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	codex_content.add_theme_constant_override("line_spacing", 6)
+	codex_scroll.add_child(codex_content)
+	add_localized_button(codex_box, "OPTIONS_BACK", show_main_menu)
+
 	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
+	codex_menu.visible = false
 
 
 func create_screen(screen_name: String, color: Color) -> Control:
@@ -212,6 +238,7 @@ func refresh_localized_text() -> void:
 	prologue_body.text = tr("PROLOGUE_BODY")
 	pause_title.text = tr("PAUSE_TITLE")
 	options_title.text = tr("OPTIONS_TITLE")
+	codex_title.text = tr("CODEX_TITLE")
 	language_label.text = tr("OPTIONS_LANGUAGE")
 	volume_label.text = tr("OPTIONS_MASTER_VOLUME")
 	fullscreen_check.text = tr("OPTIONS_FULLSCREEN")
@@ -219,6 +246,7 @@ func refresh_localized_text() -> void:
 		var button: Button = button_value as Button
 		if is_instance_valid(button):
 			button.text = tr(str(localized_buttons[button_value]))
+	refresh_codex_content()
 
 
 func show_main_menu() -> void:
@@ -227,12 +255,35 @@ func show_main_menu() -> void:
 	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
+	codex_menu.visible = false
 	continue_button.disabled = not RunSaveStore.has_checkpoint()
 
 
 func start_new_run() -> void:
 	main_menu.visible = false
 	prologue_menu.visible = true
+
+
+func show_codex() -> void:
+	main_menu.visible = false
+	codex_menu.visible = true
+	refresh_codex_content()
+
+
+func refresh_codex_content() -> void:
+	if codex_content == null:
+		return
+	var discoveries: Dictionary = profile.get("discoveries", {}) as Dictionary
+	var sections: PackedStringArray = []
+	for discovery_id: String in CODEX_CATALOG.DISCOVERY_IDS:
+		if bool(discoveries.get(discovery_id, false)):
+			sections.append(
+				tr(CODEX_CATALOG.get_title_key(discovery_id))
+				+ "\n" + tr(CODEX_CATALOG.get_body_key(discovery_id))
+			)
+		else:
+			sections.append(tr("CODEX_LOCKED_ENTRY"))
+	codex_content.text = "\n\n".join(sections)
 
 
 func confirm_new_run() -> void:
@@ -263,16 +314,30 @@ func start_game(checkpoint: Dictionary) -> void:
 	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
+	codex_menu.visible = false
 	if not checkpoint.is_empty():
 		current_game.restore_checkpoint_state(checkpoint)
 
 
 func save_checkpoint(state: Dictionary) -> void:
 	RunSaveStore.save_checkpoint(state)
+	META_STORE.merge_discoveries(
+		profile, state.get("narrative", {}).get("discoveries", {}) as Dictionary
+	)
+	META_STORE.save_profile(profile)
 
 
-func on_run_completed(_victory: bool) -> void:
+func on_run_completed(victory: bool) -> void:
 	RunSaveStore.delete_checkpoint()
+	if is_instance_valid(current_game):
+		META_STORE.merge_discoveries(profile, current_game.lore_discoveries)
+		META_STORE.record_run(profile, {
+			"victory": victory,
+			"wave": current_game.current_wave,
+			"enemies_killed": current_game.total_enemies_killed,
+			"army_remaining": current_game.get_total_undead_count(),
+		})
+		META_STORE.save_profile(profile)
 
 
 func pause_game() -> void:
@@ -323,6 +388,7 @@ func open_options() -> void:
 	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = true
+	codex_menu.visible = false
 	var locale: String = LocalizationService.normalize_locale(str(settings.locale))
 	language_option.select({"en": 0, "pt_BR": 1, "es": 2}.get(locale, 0))
 	volume_slider.value = float(settings.master_volume)

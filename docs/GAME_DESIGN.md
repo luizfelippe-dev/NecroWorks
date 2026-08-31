@@ -737,7 +737,7 @@ The Elite trait is visible above the unit before combat contact. The intent is p
 
 ## Menus, settings and localization
 
-Required languages are PT-BR, English and Spanish. Translation keys/resources should be introduced before the UI expands into multiple Factory and meta-progression panels. Final translation and linguistic QA happen after interface copy stabilizes.
+Required languages are PT-BR, English and Spanish. Translation keys/resources cover the current Factory, narrative and meta-progression panels. Final translation and linguistic QA happen after interface copy stabilizes.
 
 The vertical slice requires:
 
@@ -754,7 +754,7 @@ V1 status: Main Menu, Pause, Continue/New Run, language, master volume, fullscre
 
 The first mandatory narrative beat is intentionally brief and occurs only after choosing New Run. It establishes three facts before Wave 1: the living kingdoms are besieging the last industrial city; NecroWorks is a forbidden defense factory; and the Foreman anchors the opposing production line.
 
-Future lore should arrive through optional discoveries and decision events between Waves. It must explain factions and deepen the human/elf/mage conflict without repeatedly pausing the autobattler loop.
+Further lore arrives through optional discoveries and decision events between Waves. The first ten route discoveries persist in the Codex. New entries must explain factions and deepen the human/elf/mage conflict without repeatedly pausing the autobattler loop.
 
 ### Initial incidents
 
@@ -794,4 +794,8 @@ Their costs intentionally compete with base units, rituals and Factory unlocks. 
 
 ## Narrative foundation
 
-The complete first lore pass is maintained in `LORE.md`. In-run writing follows three rules: short decisions, explicit mechanical consequences and corporate-horror language. Longer history belongs in optional discoveries and the future Codex.
+The complete first lore pass is maintained in `LORE.md`. In-run writing follows three rules: short decisions, explicit mechanical consequences and corporate-horror language. Longer history belongs in optional discoveries and the persistent Codex.
+
+## Meta progression V1
+
+Meta progression preserves knowledge, not accumulated combat strength. The permanent profile currently stores discovered lore and the latest 20 completed-run summaries. Future recipe and Factory unlocks must open alternative plans; they must not make a failed player statistically stronger only because more runs were played.

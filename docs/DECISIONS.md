@@ -1,6 +1,6 @@
 # NecroWorks — Decisions
 
-**Atualizado:** 21/08/2026
+**Atualizado:** 31/08/2026
 
 ---
 
@@ -625,3 +625,16 @@ Motivos:
 - a migração fica separada da restauração do gameplay;
 - saves futuros não são interpretados por uma versão antiga do executável;
 - cada nova versão poderá acrescentar uma etapa pequena e testável à cadeia.
+
+## Separar perfil permanente de checkpoint da run
+
+O checkpoint existe para continuar uma partida interrompida e pode ser descartado ao reiniciar ou concluir. Descobertas, desbloqueios e histórico pertencem a um segundo arquivo versionado.
+
+Motivos:
+
+- uma nova run não apaga o Codex;
+- corrupção ou migração de checkpoint não contamina a meta progressão;
+- o perfil pode evoluir por uma cadeia própria de migrações;
+- desbloqueios futuros podem ampliar possibilidades sem alterar o estado de uma run em andamento.
+
+O histórico guarda somente as 20 conclusões mais recentes. Ele serve para leitura e balanceamento pessoal, não como telemetria nem como fonte de bônus acumulativo.

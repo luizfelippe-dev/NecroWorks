@@ -26,6 +26,8 @@ O pacote oficial de templates foi localizado, mas possui cerca de 1,28 GB. Manti
 
 Iniciei a v0.5.0 pelo save: checkpoints novos usam schema v2 e carregam metadados de versão, tipo e data. O loader migra automaticamente o schema v1, adicionando defaults das camadas narrativas, modificadores e rituais sem tocar no arquivo original. Saves desconhecidos ou criados por versões futuras são rejeitados. A cobertura sobe para 43 runners.
 
+Separei a progressão permanente do checkpoint da run. O novo perfil guarda descobertas e as últimas 20 conclusões; salvar ou terminar uma partida incorpora a lore encontrada sem depender da existência posterior daquele checkpoint. O menu principal agora abre um Codex localizado com dez registros das rotas narrativas, ocultando o conteúdo ainda não descoberto. Mantive `main.tscn` como um alias mínimo para que cenas F6 antigas do editor continuem abrindo o gameplay organizado. A suíte chega a 45 runners.
+
 ---
 
 ## 14/08/2026 — Initial Combat
@@ -508,6 +510,6 @@ O catálogo narrativo chegou a cinco incidentes. Uma Oferta Silenciosa introduz 
 
 Fusões Necromânticas formam uma nova área de decisão. Liga de Ossuário converte materiais comuns em Pontos de Fábrica; Formação Vinculada combina Sangue e Almas para produzir um Fantasma. Ambas validam custo e capacidade antes de alterar qualquer recurso.
 
-A primeira lore completa define Vharos, Planta N-0, Diretor, Concordata de Ferro, Colégio do Lacre, Corte Verde e os três chefes. O texto também fixa o tom de horror corporativo e as regras para eventos e futuro Codex.
+A primeira lore completa define Vharos, Planta N-0, Diretor, Concordata de Ferro, Colégio do Lacre, Corte Verde e os três chefes. O texto também fixa o tom de horror corporativo e as regras usadas pelos eventos e pelo Codex persistente.
 
 As runs determinísticas de Bone e Flesh seguem derrotando o Capataz. Testes dedicados cobrem 30 upgrades, três chefes, cinco eventos, persistência das consequências e fusões atômicas.

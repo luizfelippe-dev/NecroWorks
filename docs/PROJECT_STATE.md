@@ -2,7 +2,7 @@
 
 **Atualizado em:** 31/08/2026
 
-**Versão funcional:** v0.4.1 — Consolidação Técnica em desenvolvimento
+**Versão funcional:** v0.5.0 — Fundação de Meta Progressão em desenvolvimento
 
 **Engine:** Godot 4.7.1
 
@@ -23,11 +23,11 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 ## Como executar
 
 - `F5`: shell completo com menu, prólogo, opções, continuar e gameplay.
-- `F6` em `scenes/world/gameplay.tscn`: partida direta para desenvolvimento.
+- `F6` em `scenes/world/gameplay.tscn`: partida direta para desenvolvimento. O alias `main.tscn` mantém compatibilidade com seleções antigas do editor.
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
-Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1.
+Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas e histórico ficam em `user://necroworks_profile.json`, separados do checkpoint descartável.
 
 ## Conteúdo atual
 
@@ -43,6 +43,8 @@ Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint 
 - 10 sinergias;
 - cinco eventos narrativos com escolhas persistentes;
 - dez descobertas vinculadas às rotas desses eventos;
+- Codex localizado que revela permanentemente as dez descobertas já encontradas;
+- histórico persistente das 20 runs concluídas mais recentes;
 - duas escolhas de Cadáver de Chefe;
 - duas receitas de Fusão Necromântica;
 - Fábrica, filas temporizadas, processamento, auto-coleta e Doutrina de Exército;
@@ -101,8 +103,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.4.1 é uma consolidação técnica e visual. Ondas, ciclo da partida, formação, registro do exército, catálogos, regras de sinergia e progressão básica da Fábrica já possuem limites próprios. Os três chefes e seus restos possuem identidade visual, o contrato de animações está definido e o cenário agora combina ilustração, parallax e efeitos procedurais. O preset Windows está pronto; o primeiro executável depende da instalação local do pacote oficial de templates Godot 4.7.1, com aproximadamente 1,28 GB. A separação de combate e painéis maiores permanece pausada por decisão de desenvolvimento.
+A consolidação técnica e visual da v0.4.1 está fechada. A v0.5.0 já possui checkpoint migrável, perfil permanente separado, Codex narrativo e registro básico das últimas 20 runs. A próxima entrega é o catálogo de desbloqueios: receitas e tecnologias devem ampliar escolhas iniciais sem conceder poder bruto apenas por tempo jogado. Depois entram a tela visível do histórico e a expansão do Codex para unidades, inimigos e chefes.
 
-Depois disso, a v0.5.0 será dedicada à meta progressão. A prioridade é criar desbloqueios que ampliem possibilidades, um Codex de unidades, inimigos e lore, histórico de runs e migração de save além do schema 1. Nenhuma progressão permanente deve virar apenas aumento numérico por repetição.
+O preset Windows está pronto; o primeiro executável depende da instalação local do pacote oficial de templates Godot 4.7.1, com aproximadamente 1,28 GB. A separação de combate e painéis maiores permanece pausada para priorizar conteúdo jogável.
 
 O polimento visual final, áudio, tutorial, acessibilidade e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.

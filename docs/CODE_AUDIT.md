@@ -1,6 +1,6 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 25/08/2026
+**Revisado:** 31/08/2026
 
 ## Veredito atual
 
@@ -25,6 +25,9 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 - contrato de animações isolado em `scripts/visual/unit_animation_driver.gd`;
 - preset Windows versionado e validado por configuração;
 - fundo híbrido isolado em uma textura estática e um controlador procedural leve;
+- checkpoint migrável separado do perfil permanente;
+- catálogo de Codex isolado da interface e da localização;
+- alias mínimo `main.tscn` preservando seleções F6 antigas sem duplicar a cena;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;

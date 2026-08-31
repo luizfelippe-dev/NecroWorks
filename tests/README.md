@@ -370,4 +370,16 @@ Valida migração v1 → v2, preservação do estado, defaults novos e rejeiçã
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/save_migration_runner.gd
 ```
 
-A suíte atual contém 43 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026.
+Com a migração de checkpoint, a suíte chegou a 43 cenários `*_runner.gd`, todos aprovados no Godot 4.7.1 headless em 31/08/2026.
+
+## v0.5.0 Perfil e Codex
+
+Valida o perfil permanente separado da run, união de descobertas, limite das 20 entradas de histórico, catálogo das dez descobertas e navegação localizada do Codex:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/meta_progression_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/codex_catalog_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/game_shell_runner.gd
+```
+
+A suíte atual contém 45 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026.

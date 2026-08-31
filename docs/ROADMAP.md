@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 25/08/2026
+**Atualizado:** 31/08/2026
 
 ---
 
@@ -210,7 +210,7 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] two resource recipes/fusions with atomic transactions
 - [x] localized narrative intro prototype
 - [x] first localized in-run narrative decisions on Waves 7 and 13
-- [x] optional discoveries and larger event catalog — each of the ten event routes unlocks a distinct discovery ID for the future Codex
+- [x] optional discoveries and larger event catalog — each of the ten event routes unlocks a distinct persistent Codex entry
 - [x] first complete lore pass — world, factions, bosses, timeline and writing rules in `LORE.md`
 
 ### Gate da v0.4.0
@@ -259,10 +259,18 @@ Conteúdo mecânico novo continua aguardando a separação de combate e economia
 - [ ] characters/operators
 - [ ] starting modifiers
 - [ ] challenges
-- [ ] codex
-- [ ] run history
+- [x] persistent lore Codex V1 with ten event-route discoveries
+- [x] basic persistent run history V1, capped at the latest 20 results
 - [ ] evaluate Last Stand
 - [ ] unlock possibilities rather than raw grind
+
+### Próxima ordem
+
+1. definir um catálogo de desbloqueios que abra possibilidades sem aumentar poder bruto por repetição;
+2. ligar receitas de tropa e tecnologias da Fábrica a condições explícitas desse catálogo;
+3. apresentar o histórico de runs no shell com filtros mínimos e estatísticas legíveis;
+4. expandir o Codex para unidades, inimigos e chefes;
+5. validar migração do perfil quando o schema de meta progressão evoluir.
 
 ---
 

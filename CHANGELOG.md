@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.0] — Em desenvolvimento — Meta Progression
+
+### Added
+
+- perfil permanente versionado e separado do checkpoint de uma run;
+- Codex narrativo no menu principal com dez registros localizados e revelação permanente por descoberta;
+- histórico persistente das 20 runs concluídas mais recentes;
+- alias de compatibilidade `main.tscn` para execuções F6 salvas em versões anteriores da organização;
+- regressões de perfil, catálogo e navegação, elevando a suíte para 45 runners.
+
+### Changed
+
+- descobertas passam do checkpoint para o perfil sempre que a partida é salva ou concluída;
+- resultado, onda, inimigos derrotados e exército restante são registrados no fim da run;
+- painel do menu principal ganhou altura para acomodar o acesso ao Codex sem compressão.
+
 ## [0.4.1] — Em desenvolvimento — Consolidação Técnica
 
 ### Added
