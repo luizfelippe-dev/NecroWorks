@@ -234,17 +234,18 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] extrair identidade, requisitos, tradução e ordem visual para `SynergyCatalog`
 - [x] centralizar custos, capacidade e ciclos da Fábrica em `FactoryProgressionPolicy`
 - [x] extrair formatação dos status de upgrade e criação dos controles básicos de produção
-- [ ] criar silhuetas e sprites próprios para os três chefes
-- [ ] definir famílias visuais de Cadáver por arquétipo e restos exclusivos de chefe
+- [x] criar silhuetas e sprites próprios para os três chefes
+- [x] definir famílias visuais de Cadáver por arquétipo e restos exclusivos de chefe
 - [ ] extrair coordenação de ataques, dano e ciclo de vida das unidades de `scripts/game/main_controller.gd`
 - [ ] separar controladores de HUD, modais, Fábrica e Rituais
-- [ ] definir contrato de animações: idle, movimento, ataque, impacto e morte
+- [x] definir contrato de animações: idle, movimento, ataque, impacto e morte
 - [ ] substituir o fundo procedural puro por composição híbrida de arte, parallax, luz e VFX
-- [ ] criar preset de exportação Windows e primeiro build jogável externo
+- [x] criar e validar preset de exportação Windows
+- [ ] gerar primeiro build externo após instalar os templates de exportação Godot 4.7.1
 
 ### Gate
 
-Adicionar conteúdo novo somente depois que `scripts/game/main_controller.gd` deixar de concentrar combate, economia, ondas e toda a interface. A refatoração será incremental e protegida pelos runners existentes; não haverá reescrita total em uma única alteração.
+Conteúdo mecânico novo continua aguardando a separação de combate e economia. A frente estrutural está pausada temporariamente; arte, animação, fundo, exportação e validação comercial podem avançar porque não ampliam as responsabilidades do controlador. Não haverá reescrita total em uma única alteração.
 
 ---
 

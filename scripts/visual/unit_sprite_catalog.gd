@@ -22,6 +22,12 @@ const ELF: Texture2D = preload(
 const FOREMAN: Texture2D = preload(
 	"res://assets/sprites/units/foreman_prototype.png"
 )
+const GRAVE_MARSHAL: Texture2D = preload(
+	"res://assets/sprites/bosses/grave_marshal_prototype.png"
+)
+const ARCANE_AUDITOR: Texture2D = preload(
+	"res://assets/sprites/bosses/arcane_auditor_prototype.png"
+)
 const LICH: Texture2D = preload(
 	"res://assets/sprites/units/lich_prototype.png"
 )
@@ -43,9 +49,9 @@ static func get_texture(visual_id: String) -> Texture2D:
 		"foreman":
 			return FOREMAN
 		"grave_marshal":
-			return HUMAN_WARRIOR
+			return GRAVE_MARSHAL
 		"arcane_auditor":
-			return MAGE
+			return ARCANE_AUDITOR
 		"lich":
 			return LICH
 		_:

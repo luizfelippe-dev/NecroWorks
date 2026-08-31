@@ -597,3 +597,20 @@ Motivos:
 - a mesma fórmula atende gameplay e interface, evitando divergência de custo ou tempo;
 - saves e testes continuam usando os nomes públicos atuais durante a migração;
 - componentes de UI podem sair gradualmente do código sem uma reescrita arriscada da cena.
+
+## Cadáveres preservam a origem sem exigir um sprite novo para cada inimigo
+
+O protótipo usa a textura do inimigo abatido, transformada e tonalizada por uma família visual. Guerreiro pertence à família blindada, Mago à arcana e Elfo à ágil. Cada chefe mantém sua própria textura também nos restos.
+
+Motivos:
+
+- a origem do recurso fica legível no campo de batalha;
+- chefes continuam reconhecíveis depois da derrota;
+- a solução permite validar tamanho, clique e densidade antes de encomendar animações de morte completas;
+- novos arquétipos podem compartilhar família sem perder seus metadados econômicos.
+
+## Animação visual não controla a simulação
+
+Idle, movimento, ataque, impacto e morte usam uma interface comum, mas não decidem dano, alvo, cooldown, recompensa ou remoção da unidade.
+
+Motivo: a arte final pode substituir o movimento procedural por spritesheets sem alterar balanceamento, saves ou testes determinísticos.

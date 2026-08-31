@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cm4q4sl2bv5xq"]
+[gd_scene format=3 uid="uid://cm4q4sl2bv5xq"]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/units/human_warrior_prototype.png" id="1_sprite"]
 

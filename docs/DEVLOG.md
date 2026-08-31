@@ -14,7 +14,11 @@ Os 30 upgrades e as dez sinergias agora possuem catálogos próprios. O controla
 
 Centralizei custos, capacidade e velocidade das máquinas em `FactoryProgressionPolicy`. A apresentação dos status de upgrade e a criação dos controles básicos de produção também saíram do controlador e agora vivem em `scripts/ui`.
 
-O controlador caiu de 10.507 para menos de 10.000 linhas nesta etapa, sem remover as pontes de compatibilidade. A importação limpa e os 38 runners passaram após a reorganização.
+O controlador caiu de 10.507 para menos de 10.000 linhas nesta etapa, sem remover as pontes de compatibilidade.
+
+Depois da consolidação, avancei a apresentação: Marechal da Sepultura e Auditor Arcano receberam sprites próprios, completando o trio de chefes com o Capataz. Cadáveres comuns agora preservam famílias blindada, arcana ou ágil, enquanto cada chefe deixa restos reconhecíveis.
+
+Também defini o contrato de animações com cinco estados e criei o preset Windows Desktop. A configuração de exportação passou, mas o build local aguarda os templates oficiais do Godot 4.7.1. A suíte cresceu para 41 runners.
 
 ---
 

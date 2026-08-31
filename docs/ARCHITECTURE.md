@@ -71,7 +71,10 @@ scripts/
 │   └── unit_health_bar.gd
 ├── units/
 └── visual/
+    ├── corpse_visual.gd
+    ├── corpse_visual_catalog.gd
     ├── industrial_backdrop.gd
+    ├── unit_animation_driver.gd
     └── unit_sprite_catalog.gd
 
 tests/
@@ -279,6 +282,14 @@ Combat-slot compaction keeps formations from leaving gaps after deaths.
 `scripts/game/upgrade_catalog.gd` é a fonte dos 30 IDs de upgrade, categorias, limites de pilha, marcos de disponibilidade e chaves de localização. `scripts/game/synergy_catalog.gd` concentra as dez sinergias, seus requisitos e a ordem de apresentação. `scripts/ui/upgrade_status_formatter.gd` converte o estado já calculado em texto localizado. O controlador conserva aliases públicos para compatibilidade de saves/testes e permanece responsável por aplicar os efeitos que mutam a run.
 
 `scripts/factory/factory_progression_policy.gd` concentra custos, capacidade e tempos derivados dos níveis das máquinas. `scripts/ui/production_controls_factory.gd` cria o conjunto básico de controles de produção sem conhecer a partida. Essas duas fronteiras iniciam a separação da Fábrica e da UI sem alterar os nós e métodos públicos consumidos pelos testes.
+
+## Bosses, Cadáveres e animações
+
+`UnitSpriteCatalog` entrega texturas distintas para Marechal da Sepultura, Auditor Arcano e Capataz. As imagens-fonte ficam separadas entre `assets/sprites/bosses` e `assets/sprites/units`, com limite de importação de 512 px para controlar memória e escala runtime.
+
+`CorpseVisualCatalog` classifica restos comuns em blindados, arcanos ou ágeis e reserva uma família para cada chefe. `CorpseVisual` mantém o `Button` como área clicável, mas apresenta sprite, tonalidade e rótulo próprios. O processamento continua usando os metadados econômicos já existentes.
+
+`UnitAnimationDriver` define cinco comandos estáveis: `idle`, `move`, `attack`, `hit` e `death`. A implementação procedural é provisória; spritesheets futuros entram atrás do mesmo contrato e não recebem autoridade sobre dano, alvo ou cooldown.
 
 # Movement
 

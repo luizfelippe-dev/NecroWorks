@@ -9,6 +9,8 @@ const VISUAL_IDS: Array[String] = [
 	"human_warrior",
 	"mage",
 	"elf",
+	"grave_marshal",
+	"arcane_auditor",
 	"foreman",
 	"lich"
 ]

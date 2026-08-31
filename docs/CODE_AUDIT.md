@@ -20,6 +20,10 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 - identidade, requisitos e localização das dez sinergias extraídas para `scripts/game/synergy_catalog.gd`;
 - custos, capacidade e ciclos da Fábrica extraídos para `scripts/factory/factory_progression_policy.gd`;
 - status de aprimoramentos e controles básicos de produção extraídos para `scripts/ui`;
+- três chefes com texturas próprias e limite de importação explícito;
+- Cadáveres visuais classificados por origem e chefe;
+- contrato de animações isolado em `scripts/visual/unit_animation_driver.gd`;
+- preset Windows versionado e validado por configuração;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;
@@ -77,6 +81,10 @@ The next safe refactor is to migrate one legacy mirror at a time behind focused 
 ### P2 — Runtime-created UI
 
 Programmatic UI enabled fast iteration but is harder to edit visually and localize. Stable panels should gradually move into dedicated scenes.
+
+### P2 — Build externo aguardando templates
+
+`export_presets.cfg` está válido e aponta para `builds/windows/NecroWorks.exe`. A máquina ainda não possui os templates oficiais de exportação Godot 4.7.1; por isso o executável não foi gerado nesta revisão. Instalar `windows_release_x86_64.exe` e repetir a exportação fecha este item sem mudança de código.
 
 ### P2 — Automated regression coverage
 

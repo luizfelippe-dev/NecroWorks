@@ -12,7 +12,11 @@
 - `SynergyCatalog` como fonte das dez identidades, requisitos e chaves de localização;
 - `FactoryProgressionPolicy` para custos, capacidade e ciclos das máquinas;
 - `UpgradeStatusFormatter` e `ProductionControlsFactory` como limites iniciais da UI;
-- cenários de regressão dedicados às novas fronteiras, elevando a suíte para 38 runners.
+- sprites próprios para Marechal da Sepultura e Auditor Arcano, completando a identidade visual dos três chefes;
+- famílias visuais de Cadáver e restos exclusivos dos chefes;
+- contrato comum de animações para idle, movimento, ataque, impacto e morte;
+- preset de exportação Windows Desktop;
+- cenários de regressão dedicados às novas fronteiras, elevando a suíte para 41 runners.
 
 ### Changed
 
@@ -21,6 +25,7 @@
 - F5 passa por `scenes/core/app.tscn` e F6 pode executar `scenes/world/gameplay.tscn`;
 - referências de cenas, testes e documentação atualizadas com preservação dos UIDs.
 - `MainController` reduzido para menos de dez mil linhas, mantendo as APIs públicas usadas por saves e testes.
+- Cadáveres deixaram de ser botões textuais puros e agora preservam a família visual do inimigo abatido.
 
 ## [0.4.0] — 24/08/2026 — Build Diversity & Content
 

@@ -107,13 +107,13 @@ func refresh_world_localization() -> void:
 		if is_instance_valid(corpse):
 			var route: String = str(corpse.get_meta("processing_route", ""))
 			if route == "soul":
-				corpse.text = tr("CORPSE_SOUL_QUEUED")
+				set_corpse_display_text(corpse, tr("CORPSE_SOUL_QUEUED"))
 			elif is_corpse_queued(corpse):
-				corpse.text = tr("CORPSE_QUEUED")
+				set_corpse_display_text(corpse, tr("CORPSE_QUEUED"))
 			elif get_corpse_soul_value(corpse) > 0:
-				corpse.text = tr("CORPSE_ARCANE")
+				set_corpse_display_text(corpse, tr("CORPSE_ARCANE"))
 			else:
-				corpse.text = tr("CORPSE_LABEL")
+				set_corpse_display_text(corpse, tr("CORPSE_LABEL"))
 
 
 # =========================================================
@@ -213,6 +213,9 @@ const UNIT_SPRITE_CATALOG: Script = preload(
 )
 const CORPSE_PROCESSING_FEEDBACK_SCRIPT: Script = preload(
 	"res://scripts/visual/corpse_processing_feedback.gd"
+)
+const UNIT_ANIMATION_DRIVER_SCRIPT: Script = preload(
+	"res://scripts/visual/unit_animation_driver.gd"
 )
 const RUN_SUMMARY_FORMATTER: Script = preload(
 	"res://scripts/ui/run_summary_formatter.gd"
@@ -4704,9 +4707,13 @@ func spawn_corpse(
 	corpse.set_meta("source_boss", source_boss)
 	corpse.set_meta("soul_value", soul_value)
 	corpse.set_meta("processing_route", "")
-	corpse.text = (
+	if corpse.has_method("configure_visual"):
+		corpse.call(
+			"configure_visual", source_archetype, source_elite, source_boss
+		)
+	set_corpse_display_text(corpse, (
 		tr("CORPSE_ARCANE") if soul_value > 0 else tr("CORPSE_LABEL")
-	)
+	))
 
 
 	corpse.position = (
@@ -4755,7 +4762,7 @@ func enqueue_corpse_for_processing(corpse: Button) -> bool:
 	)
 	corpse.disabled = true
 	corpse.set_meta("processing_route", "material")
-	corpse.text = tr("CORPSE_QUEUED")
+	set_corpse_display_text(corpse, tr("CORPSE_QUEUED"))
 
 
 	if corpse_processing_queue.size() == 1:
@@ -5067,7 +5074,7 @@ func enqueue_corpse_for_soul_extraction(corpse: Button) -> bool:
 	})
 	corpse.disabled = true
 	corpse.set_meta("processing_route", "soul")
-	corpse.text = tr("CORPSE_SOUL_QUEUED")
+	set_corpse_display_text(corpse, tr("CORPSE_SOUL_QUEUED"))
 	if soul_extraction_queue.size() == 1:
 		soul_extractor_timer = get_soul_extractor_cycle_seconds()
 	update_factory_panel_ui()
@@ -5081,6 +5088,13 @@ func enqueue_corpse_for_selected_route(corpse: Button) -> bool:
 
 
 	return enqueue_corpse_for_processing(corpse)
+
+
+func set_corpse_display_text(corpse: Button, value: String) -> void:
+	if corpse.has_method("set_display_text"):
+		corpse.call("set_display_text", value)
+	else:
+		corpse.text = value
 
 
 func update_soul_extractor(delta: float) -> void:
@@ -5989,6 +6003,27 @@ func configure_unit_sprite(
 	var texture_height: float = maxf(float(texture.get_height()), 1.0)
 	var uniform_scale: float = target_height / texture_height
 	sprite.scale = Vector2(uniform_scale, uniform_scale)
+	ensure_unit_animation_driver(unit, sprite)
+
+
+func ensure_unit_animation_driver(unit: Node2D, sprite: Sprite2D) -> Node:
+	var driver: Node = unit.get_node_or_null("AnimationDriver")
+	if driver == null:
+		driver = UNIT_ANIMATION_DRIVER_SCRIPT.new()
+		driver.name = "AnimationDriver"
+		unit.add_child(driver)
+	driver.call("bind", sprite)
+	return driver
+
+
+func play_unit_animation(
+	unit: Node2D, animation_name: String, direction: float = 1.0
+) -> void:
+	if not is_instance_valid(unit):
+		return
+	var driver: Node = unit.get_node_or_null("AnimationDriver")
+	if driver != null:
+		driver.call("play", animation_name, direction)
 
 
 func ensure_unit_health_bar(

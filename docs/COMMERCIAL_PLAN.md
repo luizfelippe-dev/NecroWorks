@@ -379,7 +379,7 @@ This is necessary but not yet sufficient for a public demo. The next commercial-
 
 The first localized prologue and fully localized Run Summary now give public captures a beginning and ending instead of showing only a mechanical sandbox. Before store use, replace the text-only prologue presentation with final key art/audio and validate that returning players can reach gameplay quickly.
 
-The first two localized incidents established trailer-readable narrative decisions and demonstrated that the Bone/Flesh/Soul/Factory economy supports authored choices. The v0.4 catalog now contains five incidents, a faction consequence and two Boss-remain decisions; stronger visual presentation remains necessary before commercial footage.
+The first two localized incidents established trailer-readable narrative decisions and demonstrated that the Bone/Flesh/Soul/Factory economy supports authored choices. The v0.4 catalog now contains five incidents, a faction consequence and two Boss-remain decisions. All three Bosses now have distinct prototype silhouettes and recognizable remains; final animation, battlefield background and combat VFX remain necessary before commercial footage.
 
 ## Build-diversity milestone — 24/08/2026
 

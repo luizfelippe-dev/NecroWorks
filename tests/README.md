@@ -341,4 +341,15 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/f
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/production_controls_factory_runner.gd
 ```
 
-A suíte atual contém 38 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 25/08/2026; as runs determinísticas de Bone e Flesh permanecem como gates obrigatórios de balanceamento.
+## v0.4.1 Boss, Corpse, Animation and Export presentation
+
+Valida texturas próprias dos chefes, famílias de restos, contrato visual e configuração do preset Windows:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/unit_sprite_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/corpse_visual_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/unit_animation_driver_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/export_preset_runner.gd
+```
+
+A suíte atual contém 41 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026; as runs determinísticas de Bone e Flesh permanecem como gates obrigatórios de balanceamento.
