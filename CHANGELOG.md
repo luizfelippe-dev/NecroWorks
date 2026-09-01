@@ -7,16 +7,20 @@
 - perfil permanente versionado e separado do checkpoint de uma run;
 - Codex narrativo no menu principal com dez registros localizados e revelação permanente por descoberta;
 - histórico persistente das 20 runs concluídas mais recentes;
+- tela localizada de histórico com projetos permanentes e resultados de cada run;
+- cinco projetos horizontais: Auto-coleta, Prensa Hemática, Extrator de Almas, Arqueiro Esqueleto e Lich;
 - alias de compatibilidade `main.tscn` para execuções F6 salvas em versões anteriores da organização;
-- regressões de perfil, catálogo e navegação, elevando a suíte para 45 runners.
+- regressões de perfil, catálogo, integração e navegação, elevando a suíte para 50 runners.
 
 ### Changed
 
 - descobertas passam do checkpoint para o perfil sempre que a partida é salva ou concluída;
 - resultado, onda, inimigos derrotados e exército restante são registrados no fim da run;
+- perfil migrado do schema v1 para v2, concedendo projetos compatíveis com o histórico preservado;
+- tecnologias e receitas avançadas exigem marcos permanentes no fluxo F5, mas continuam livres no F6 de desenvolvimento;
 - painel do menu principal ganhou altura para acomodar o acesso ao Codex sem compressão.
 
-## [0.4.1] — Em desenvolvimento — Consolidação Técnica
+## [0.4.1] — 01/09/2026 — Consolidação Técnica
 
 ### Added
 
@@ -34,7 +38,10 @@
 - preset de exportação Windows Desktop;
 - fundo híbrido com ilustração industrial, parallax sutil, névoa e iluminação procedural;
 - schema de checkpoint v2 com metadados e migração automática dos saves v1;
-- cenários de regressão dedicados às novas fronteiras, elevando a suíte para 41 runners.
+- `CombatRuntimeCoordinator` para seleção, dano e limpeza comum do ciclo de vida;
+- `GameplayHudPresenter` e `GameplayPanelCoordinator` para apresentação e exclusividade dos painéis;
+- primeiro executável Windows release validado com os templates oficiais do Godot 4.7.1;
+- cenários de regressão dedicados às novas fronteiras.
 
 ### Changed
 

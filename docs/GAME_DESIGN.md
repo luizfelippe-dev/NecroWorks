@@ -457,16 +457,9 @@ no Undead
 
 This is preferable to immediate army-wipe defeat.
 
-## Last Stand — future
+## Last Stand — evaluated and deferred
 
-Potential later evolution:
-
-- warning state;
-- short recovery timer;
-- emergency production;
-- resource sacrifice.
-
-Not implemented.
+The economic defeat rule remains unchanged for v0.5.0. A clear warning state may enter the vertical slice, but emergency production, recovery timers and resource sacrifice are deferred until external playtests show where defeats become frustrating rather than earned. A rescue mechanic must not erase the value of reserves, Doctrine and production throughput.
 
 ---
 
@@ -798,4 +791,4 @@ The complete first lore pass is maintained in `LORE.md`. In-run writing follows 
 
 ## Meta progression V1
 
-Meta progression preserves knowledge, not accumulated combat strength. The permanent profile currently stores discovered lore and the latest 20 completed-run summaries. Future recipe and Factory unlocks must open alternative plans; they must not make a failed player statistically stronger only because more runs were played.
+Meta progression preserves knowledge, not accumulated combat strength. The permanent profile stores discovered lore, the latest 20 completed-run summaries and five milestone projects. Wave 5 enables the Automated Retrieval project, Wave 10 the Skeleton Archer requisition, Wave 13 the Soul Extractor, 30 processed Corpses the Hematic Press, and the first victory the Lich requisition. These projects only permit their normal run-scoped Factory purchase; they do not grant free units, resources or stats.

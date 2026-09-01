@@ -1,6 +1,6 @@
 # NecroWorks — Commercial Plan
 
-**Revisado:** 21/08/2026
+**Revisado:** 01/09/2026
 
 ## Goal
 
@@ -388,3 +388,9 @@ The v0.4.0 content layer gives a future demo a clearer beginning, middle and end
 This is a strong internal-development update, not yet a Steam-ready public build. The next commercial priorities are dedicated Boss art, readable VFX/SFX, a short guided first run, external playtests and a representative 10–15 minute capture. Store claims should describe the current systems accurately and avoid promising final art or endless replayability before retention data exists.
 
 The first complete lore pass improves naming and marketing consistency. Future capsule copy, trailer narration and Steam description should reuse the Planta N-0, Director and living-coalition vocabulary rather than inventing a separate premise for promotion.
+
+## Internal Windows build and retention foundation — 01/09/2026
+
+The first Windows release executable now exports and starts outside the editor. This closes a technical prerequisite, not the public-demo quality gate: the build still needs a manual pass on another machine, controller/accessibility work, final audio-visual feedback and signed Steam distribution.
+
+Persistent projects now unlock alternative production routes from clear achievements rather than a grind currency. The visible 20-run ledger creates a local playtest record, but it is not analytics. Before changing difficulty or unlock thresholds, collect external completion time, defeat Wave, Corpse processing and chosen-build observations from consenting testers.

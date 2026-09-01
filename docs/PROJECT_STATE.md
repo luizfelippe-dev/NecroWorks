@@ -1,6 +1,6 @@
 # NecroWorks — Estado do Projeto
 
-**Atualizado em:** 31/08/2026
+**Atualizado em:** 01/09/2026
 
 **Versão funcional:** v0.5.0 — Fundação de Meta Progressão em desenvolvimento
 
@@ -27,7 +27,7 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
-Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas e histórico ficam em `user://necroworks_profile.json`, separados do checkpoint descartável.
+Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos e histórico ficam em `user://necroworks_profile.json`, agora com schema v2 e migração automática do perfil v1.
 
 ## Conteúdo atual
 
@@ -44,7 +44,8 @@ Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint 
 - cinco eventos narrativos com escolhas persistentes;
 - dez descobertas vinculadas às rotas desses eventos;
 - Codex localizado que revela permanentemente as dez descobertas já encontradas;
-- histórico persistente das 20 runs concluídas mais recentes;
+- histórico visível e persistente das 20 runs concluídas mais recentes;
+- cinco projetos permanentes baseados em marcos, sem compra ou grind de atributos;
 - duas escolhas de Cadáver de Chefe;
 - duas receitas de Fusão Necromântica;
 - Fábrica, filas temporizadas, processamento, auto-coleta e Doutrina de Exército;
@@ -89,7 +90,7 @@ As transações são atômicas: recursos nunca são consumidos quando a receita 
 - `scripts/core/`: localização, configurações, save e shell;
 - `tests/`: regressão headless por domínio.
 
-`RunDirector` é a fonte do estado da Onda e do resultado da run. `RunSummaryFormatter` monta a apresentação final sem conhecer nós da cena. `CombatFormationPolicy` concentra geometria e posicionamento; `UndeadArmyRegistry` concentra coleções, capacidade e ocupação dos slots. `UpgradeCatalog` e `SynergyCatalog` concentram IDs, disponibilidade, combinações e localização. `FactoryProgressionPolicy` concentra as fórmulas das máquinas. `UpgradeStatusFormatter` e `ProductionControlsFactory` iniciam a retirada da interface criada diretamente pelo controlador. `CorpseVisualCatalog` preserva a origem visual dos restos e `UnitAnimationDriver` estabelece a interface comum de movimento visual. As APIs de compatibilidade continuam ativas para preservar saves, cenas e testes durante a migração.
+`RunDirector` é a fonte do estado da Onda e do resultado da run. `RunSummaryFormatter` monta a apresentação final sem conhecer nós da cena. `CombatFormationPolicy` concentra geometria e posicionamento; `CombatRuntimeCoordinator` concentra seleção comum, aplicação de dano e limpeza de estado; `UndeadArmyRegistry` concentra coleções, capacidade e ocupação dos slots. `GameplayHudPresenter` formata HUD e métricas, enquanto `GameplayPanelCoordinator` garante exclusividade entre Fábrica, Doutrina, Rituais, Fusões e modais. `UpgradeCatalog`, `SynergyCatalog` e `MetaUnlockCatalog` concentram progressão e requisitos estáveis. As APIs de compatibilidade continuam ativas para preservar saves, cenas e testes durante a migração.
 
 ## Critérios de estabilidade
 
@@ -103,8 +104,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A consolidação técnica e visual da v0.4.1 está fechada. A v0.5.0 já possui checkpoint migrável, perfil permanente separado, Codex narrativo e registro básico das últimas 20 runs. A próxima entrega é o catálogo de desbloqueios: receitas e tecnologias devem ampliar escolhas iniciais sem conceder poder bruto apenas por tempo jogado. Depois entram a tela visível do histórico e a expansão do Codex para unidades, inimigos e chefes.
+A v0.4.1 está concluída, incluindo o primeiro executável Windows. A v0.5.0 já possui checkpoint migrável, perfil permanente v2, Codex narrativo, histórico visível e cinco desbloqueios horizontais ligados a marcos de partida. O próximo bloco é formado por operadores, modificadores iniciais equivalentes e desafios; depois o Codex cresce para unidades, inimigos e chefes.
 
-O preset Windows está pronto; o primeiro executável depende da instalação local do pacote oficial de templates Godot 4.7.1, com aproximadamente 1,28 GB. A separação de combate e painéis maiores permanece pausada para priorizar conteúdo jogável.
+O build local validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 113 MB. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
 O polimento visual final, áudio, tutorial, acessibilidade e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.

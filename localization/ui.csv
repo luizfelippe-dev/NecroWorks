@@ -323,6 +323,20 @@ FUSION_OSSUARY_DESC,12 Bones + 6 Flesh\n→ 2 Factory Points,12 Ossos + 6 Carne\
 FUSION_SOULBOUND_NAME,SOULBOUND MUSTER,FORMAÇÃO VINCULADA,FILA VINCULADA
 FUSION_SOULBOUND_DESC,2 Blood + 3 Souls\n→ 1 Ghost without production cost,2 Sangue + 3 Almas\n→ 1 Fantasma sem custo de produção,2 Sangre + 3 Almas\n→ 1 Fantasma sin coste de producción
 MENU_CODEX,CODEX,CÓDICE,CÓDICE
+MENU_RUN_HISTORY,RUN HISTORY,HISTÓRICO DE RUNS,HISTORIAL DE PARTIDAS
+RUN_HISTORY_TITLE,PRODUCTION LEDGER,REGISTRO DE PRODUÇÃO,REGISTRO DE PRODUCCIÓN
+RUN_HISTORY_EMPTY,NO COMPLETED RUNS RECORDED,NENHUMA RUN CONCLUÍDA REGISTRADA,NO HAY PARTIDAS COMPLETADAS REGISTRADAS
+RUN_HISTORY_VICTORY,VICTORY,VITÓRIA,VICTORIA
+RUN_HISTORY_DEFEAT,DEFEAT,DERROTA,DERROTA
+RUN_HISTORY_ENTRY,"#%d — %s | Wave %d\nEnemies: %d | Corpses: %d | Army: %d","#%d — %s | Onda %d\nInimigos: %d | Cadáveres: %d | Exército: %d","#%d — %s | Oleada %d\nEnemigos: %d | Cadáveres: %d | Ejército: %d"
+META_LOCKED,PERMANENT PROJECT LOCKED,PROJETO PERMANENTE BLOQUEADO,PROYECTO PERMANENTE BLOQUEADO
+META_REQUIREMENT_WAVE_5,Complete a run reaching Wave 5,Conclua uma run alcançando a Onda 5,Completa una partida alcanzando la Oleada 5
+META_REQUIREMENT_WAVE_10,Complete a run reaching Wave 10,Conclua uma run alcançando a Onda 10,Completa una partida alcanzando la Oleada 10
+META_REQUIREMENT_WAVE_13,Complete a run reaching Wave 13,Conclua uma run alcançando a Onda 13,Completa una partida alcanzando la Oleada 13
+META_REQUIREMENT_CORPSES_30,Process 30 Corpses across completed runs,Processe 30 Cadáveres em runs concluídas,Procesa 30 Cadáveres en partidas completadas
+META_REQUIREMENT_VICTORY,Complete one victorious run,Conclua uma run vitoriosa,Completa una partida victoriosa
+META_UNLOCKS_TITLE,PERMANENT PROJECTS,PROJETOS PERMANENTES,PROYECTOS PERMANENTES
+META_UNLOCKS_NONE,No permanent projects unlocked,Nenhum projeto permanente desbloqueado,Ningún proyecto permanente desbloqueado
 CODEX_TITLE,NECROWORKS ARCHIVE,ARQUIVO NECROWORKS,ARCHIVO NECROWORKS
 CODEX_LOCKED_ENTRY,LOCKED RECORD,REGISTRO BLOQUEADO,REGISTRO BLOQUEADO
 CODEX_CONCORD_SPY_RING_TITLE,THE IRON CONCORD SPY RING,A REDE DE ESPIÕES DA CONCORDATA,LA RED DE ESPÍAS DE LA CONCORDATA

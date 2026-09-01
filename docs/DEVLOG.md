@@ -28,6 +28,12 @@ Iniciei a v0.5.0 pelo save: checkpoints novos usam schema v2 e carregam metadado
 
 Separei a progressão permanente do checkpoint da run. O novo perfil guarda descobertas e as últimas 20 conclusões; salvar ou terminar uma partida incorpora a lore encontrada sem depender da existência posterior daquele checkpoint. O menu principal agora abre um Codex localizado com dez registros das rotas narrativas, ocultando o conteúdo ainda não descoberto. Mantive `main.tscn` como um alias mínimo para que cenas F6 antigas do editor continuem abrindo o gameplay organizado. A suíte chega a 45 runners.
 
+## 01/09/2026 — Fechamento da v0.4.1 e projetos permanentes
+
+Fechei as três pendências da consolidação. `CombatRuntimeCoordinator` assumiu seleção comum, dano e limpeza de ciclo de vida; `GameplayHudPresenter` passou a formatar os snapshots principais; `GameplayPanelCoordinator` eliminou a lógica repetida de fechar Fábrica, Doutrina, Rituais, Fusões e modais. Instalei somente os templates Windows oficiais do Godot 4.7.1 e gerei o primeiro release local: 113.020.464 bytes, com exportação e inicialização headless aprovadas.
+
+O perfil permanente avançou para o schema v2 com migração do v1. Cinco marcos agora liberam projetos horizontais, mas cada tecnologia ainda precisa ser comprada normalmente durante a run. O histórico ganhou tela própria no menu e apresenta também os projetos disponíveis. Last Stand foi avaliado e adiado até existirem dados externos de derrota. A regressão completa chegou a 50 cenários; Bone e Flesh continuam derrotando o Capataz.
+
 ---
 
 ## 14/08/2026 — Initial Combat

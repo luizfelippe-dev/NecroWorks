@@ -7,6 +7,7 @@ const PANEL: Color = Color(0.018, 0.024, 0.022, 0.98)
 const BORDER: Color = Color(0.32, 0.31, 0.25, 1.0)
 const META_STORE: Script = preload("res://scripts/core/meta_progression_store.gd")
 const CODEX_CATALOG: Script = preload("res://scripts/game/codex_catalog.gd")
+const META_UNLOCK_CATALOG: Script = preload("res://scripts/game/meta_unlock_catalog.gd")
 
 var current_game: Node = null
 var settings: Dictionary = {}
@@ -18,6 +19,7 @@ var prologue_menu: Control
 var pause_menu: Control
 var options_menu: Control
 var codex_menu: Control
+var history_menu: Control
 var continue_button: Button
 var title_label: Label
 var subtitle_label: Label
@@ -34,6 +36,8 @@ var options_apply_button: Button
 var options_back_button: Button
 var codex_title: Label
 var codex_content: Label
+var history_title: Label
+var history_content: Label
 var profile: Dictionary = {}
 var localized_buttons: Dictionary = {}
 
@@ -60,6 +64,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		close_options()
 	elif codex_menu.visible:
 		show_main_menu()
+	elif history_menu.visible:
+		show_main_menu()
 	elif prologue_menu.visible:
 		show_main_menu()
 	elif current_game != null:
@@ -76,7 +82,7 @@ func build_interface() -> void:
 	add_child(ui_layer)
 
 	main_menu = create_screen("MainMenu", Color(0.002, 0.006, 0.005, 1.0))
-	var main_box := create_center_panel(main_menu, Vector2(620.0, 720.0))
+	var main_box := create_center_panel(main_menu, Vector2(620.0, 780.0))
 	title_label = create_label(42, ACCENT)
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	main_box.add_child(title_label)
@@ -89,6 +95,7 @@ func build_interface() -> void:
 	continue_button = add_localized_button(main_box, "MENU_CONTINUE", continue_run)
 	add_localized_button(main_box, "MENU_OPTIONS", open_options_from_main)
 	add_localized_button(main_box, "MENU_CODEX", show_codex)
+	add_localized_button(main_box, "MENU_RUN_HISTORY", show_run_history)
 	add_localized_button(main_box, "MENU_QUIT", quit_game)
 
 	prologue_menu = create_screen("PrologueMenu", Color(0.002, 0.006, 0.005, 1.0))
@@ -163,10 +170,26 @@ func build_interface() -> void:
 	codex_scroll.add_child(codex_content)
 	add_localized_button(codex_box, "OPTIONS_BACK", show_main_menu)
 
+	history_menu = create_screen("RunHistoryMenu", Color(0.0, 0.0, 0.0, 0.90))
+	var history_box := create_center_panel(history_menu, Vector2(880.0, 780.0))
+	history_title = create_label(34, ACCENT)
+	history_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	history_box.add_child(history_title)
+	var history_scroll := ScrollContainer.new()
+	history_scroll.custom_minimum_size = Vector2(0.0, 570.0)
+	history_box.add_child(history_scroll)
+	history_content = create_label(18)
+	history_content.custom_minimum_size = Vector2(740.0, 0.0)
+	history_content.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	history_content.add_theme_constant_override("line_spacing", 7)
+	history_scroll.add_child(history_content)
+	add_localized_button(history_box, "OPTIONS_BACK", show_main_menu)
+
 	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
 	codex_menu.visible = false
+	history_menu.visible = false
 
 
 func create_screen(screen_name: String, color: Color) -> Control:
@@ -239,6 +262,7 @@ func refresh_localized_text() -> void:
 	pause_title.text = tr("PAUSE_TITLE")
 	options_title.text = tr("OPTIONS_TITLE")
 	codex_title.text = tr("CODEX_TITLE")
+	history_title.text = tr("RUN_HISTORY_TITLE")
 	language_label.text = tr("OPTIONS_LANGUAGE")
 	volume_label.text = tr("OPTIONS_MASTER_VOLUME")
 	fullscreen_check.text = tr("OPTIONS_FULLSCREEN")
@@ -247,6 +271,7 @@ func refresh_localized_text() -> void:
 		if is_instance_valid(button):
 			button.text = tr(str(localized_buttons[button_value]))
 	refresh_codex_content()
+	refresh_run_history_content()
 
 
 func show_main_menu() -> void:
@@ -256,6 +281,7 @@ func show_main_menu() -> void:
 	pause_menu.visible = false
 	options_menu.visible = false
 	codex_menu.visible = false
+	history_menu.visible = false
 	continue_button.disabled = not RunSaveStore.has_checkpoint()
 
 
@@ -284,6 +310,49 @@ func refresh_codex_content() -> void:
 		else:
 			sections.append(tr("CODEX_LOCKED_ENTRY"))
 	codex_content.text = "\n\n".join(sections)
+
+
+func show_run_history() -> void:
+	main_menu.visible = false
+	history_menu.visible = true
+	refresh_run_history_content()
+
+
+func refresh_run_history_content() -> void:
+	if history_content == null:
+		return
+	var history: Array = profile.get("run_history", []) as Array
+	var unlocks: Dictionary = profile.get("unlocks", {}) as Dictionary
+	var unlocked_names: PackedStringArray = []
+	for unlock_id: String in META_UNLOCK_CATALOG.UNLOCK_IDS:
+		if bool(unlocks.get(unlock_id, false)):
+			unlocked_names.append(tr(META_UNLOCK_CATALOG.get_name_key(unlock_id)))
+	var lines: PackedStringArray = [
+		tr("META_UNLOCKS_TITLE"),
+		(" • " + "\n • ".join(unlocked_names))
+			if not unlocked_names.is_empty() else tr("META_UNLOCKS_NONE"),
+		"",
+		tr("RUN_HISTORY_TITLE"),
+	]
+	if history.is_empty():
+		lines.append(tr("RUN_HISTORY_EMPTY"))
+		history_content.text = "\n".join(lines)
+		return
+	for index: int in range(history.size()):
+		var entry: Dictionary = history[index] as Dictionary
+		var result_key: String = (
+			"RUN_HISTORY_VICTORY" if bool(entry.get("victory", false))
+			else "RUN_HISTORY_DEFEAT"
+		)
+		lines.append(tr("RUN_HISTORY_ENTRY") % [
+			index + 1,
+			tr(result_key),
+			int(entry.get("wave", 0)),
+			int(entry.get("enemies_killed", 0)),
+			int(entry.get("corpses_processed", 0)),
+			int(entry.get("army_remaining", 0)),
+		])
+	history_content.text = "\n\n".join(lines)
 
 
 func confirm_new_run() -> void:
@@ -315,6 +384,9 @@ func start_game(checkpoint: Dictionary) -> void:
 	pause_menu.visible = false
 	options_menu.visible = false
 	codex_menu.visible = false
+	history_menu.visible = false
+	if current_game.has_method("configure_meta_progression"):
+		current_game.configure_meta_progression(profile.get("unlocks", {}) as Dictionary)
 	if not checkpoint.is_empty():
 		current_game.restore_checkpoint_state(checkpoint)
 
@@ -335,6 +407,7 @@ func on_run_completed(victory: bool) -> void:
 			"victory": victory,
 			"wave": current_game.current_wave,
 			"enemies_killed": current_game.total_enemies_killed,
+			"corpses_processed": current_game.total_corpses_processed,
 			"army_remaining": current_game.get_total_undead_count(),
 		})
 		META_STORE.save_profile(profile)
@@ -389,6 +462,7 @@ func open_options() -> void:
 	pause_menu.visible = false
 	options_menu.visible = true
 	codex_menu.visible = false
+	history_menu.visible = false
 	var locale: String = LocalizationService.normalize_locale(str(settings.locale))
 	language_option.select({"en": 0, "pt_BR": 1, "es": 2}.get(locale, 0))
 	volume_slider.value = float(settings.master_volume)

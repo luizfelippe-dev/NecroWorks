@@ -1,6 +1,6 @@
 # NecroWorks — Decisions
 
-**Atualizado:** 31/08/2026
+**Atualizado:** 01/09/2026
 
 ---
 
@@ -638,3 +638,22 @@ Motivos:
 - desbloqueios futuros podem ampliar possibilidades sem alterar o estado de uma run em andamento.
 
 O histórico guarda somente as 20 conclusões mais recentes. Ele serve para leitura e balanceamento pessoal, não como telemetria nem como fonte de bônus acumulativo.
+
+## Desbloquear possibilidade e cobrar execução dentro da run
+
+Os projetos permanentes habilitam o direito de comprar tecnologias ou receitas avançadas. A compra continua usando Pontos de Fábrica em cada run.
+
+Motivos:
+
+- alcançar um marco abre variedade sem conceder uma unidade pronta;
+- a economia de cada run continua relevante;
+- jogadores experientes recebem mais rotas, não multiplicadores invisíveis;
+- F6 pode ignorar os gates para desenvolvimento e testes isolados.
+
+Marcos V1: Onda 5 para Auto-coleta, Onda 10 para Arqueiro, Onda 13 para Extrator de Almas, 30 Cadáveres processados para Prensa Hemática e uma vitória para Lich.
+
+## Adiar Last Stand mecânico
+
+O estado econômico de derrota continua sendo a regra. Um resgate mecânico com tempo extra, unidade gratuita ou conversão emergencial não entra na v0.5.0.
+
+Motivo: sem dados de playtests externos, o sistema pode apagar o peso da logística ou prolongar runs já perdidas. A v0.6.0 poderá adicionar primeiro um aviso claro de risco; qualquer recuperação jogável só será avaliada com dados de onde e por que as derrotas acontecem.

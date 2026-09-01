@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 31/08/2026
+**Atualizado:** 01/09/2026
 
 ---
 
@@ -236,16 +236,16 @@ NecroWorks must feel like a necromantic factory, not only an autobattler.
 - [x] extrair formatação dos status de upgrade e criação dos controles básicos de produção
 - [x] criar silhuetas e sprites próprios para os três chefes
 - [x] definir famílias visuais de Cadáver por arquétipo e restos exclusivos de chefe
-- [ ] extrair coordenação de ataques, dano e ciclo de vida das unidades de `scripts/game/main_controller.gd`
-- [ ] separar controladores de HUD, modais, Fábrica e Rituais
+- [x] extrair a fronteira comum de seleção, dano e limpeza do ciclo de vida para `CombatRuntimeCoordinator`
+- [x] separar apresentação do HUD e exclusividade de modais/Fábrica/Rituais em componentes próprios
 - [x] definir contrato de animações: idle, movimento, ataque, impacto e morte
 - [x] substituir o fundo procedural puro por composição híbrida de arte, parallax, luz e VFX
 - [x] criar e validar preset de exportação Windows
-- [ ] gerar primeiro build externo após instalar os templates de exportação Godot 4.7.1
+- [x] gerar e validar o primeiro build externo Windows com os templates oficiais do Godot 4.7.1
 
 ### Gate
 
-Conteúdo mecânico novo continua aguardando a separação de combate e economia. A frente estrutural está pausada temporariamente; arte, animação, fundo, exportação e validação comercial podem avançar porque não ampliam as responsabilidades do controlador. Não haverá reescrita total em uma única alteração.
+Milestone concluído. As regras, o estado e a apresentação estável possuem fronteiras testáveis; o controlador segue como orquestrador e será reduzido incrementalmente, sem bloquear conteúdo nem exigir reescrita total.
 
 ---
 
@@ -253,24 +253,24 @@ Conteúdo mecânico novo continua aguardando a separação de combate e economia
 
 - [x] versioned between-Wave run checkpoint and Continue flow V1
 - [x] save migration from schema version 1 to version 2
-- [ ] unlocks
-- [ ] unit recipe unlocks
-- [ ] Factory technology unlocks
+- [x] horizontal unlock catalog V1 with five achievement-based projects
+- [x] unit recipe unlocks V1: Skeleton Archer and Lich requisitions
+- [x] Factory technology unlocks V1: Automated Retrieval, Hematic Press and Soul Extractor
 - [ ] characters/operators
 - [ ] starting modifiers
 - [ ] challenges
 - [x] persistent lore Codex V1 with ten event-route discoveries
-- [x] basic persistent run history V1, capped at the latest 20 results
-- [ ] evaluate Last Stand
-- [ ] unlock possibilities rather than raw grind
+- [x] visible persistent run history V1, capped at the latest 20 results
+- [x] evaluate Last Stand — mechanical rescue deferred until external defeat data exists
+- [x] unlock possibilities rather than raw grind V1
 
 ### Próxima ordem
 
-1. definir um catálogo de desbloqueios que abra possibilidades sem aumentar poder bruto por repetição;
-2. ligar receitas de tropa e tecnologias da Fábrica a condições explícitas desse catálogo;
-3. apresentar o histórico de runs no shell com filtros mínimos e estatísticas legíveis;
+1. criar operadores com vantagens e limitações equivalentes;
+2. ligar operadores a modificadores iniciais explícitos;
+3. definir desafios que concedam opções cosméticas ou laterais;
 4. expandir o Codex para unidades, inimigos e chefes;
-5. validar migração do perfil quando o schema de meta progressão evoluir.
+5. testar os cinco marcos de desbloqueio em runs manuais novas e migradas.
 
 ---
 

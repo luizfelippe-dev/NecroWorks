@@ -382,4 +382,18 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/g
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/game_shell_runner.gd
 ```
 
-A suíte atual contém 45 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 31/08/2026.
+A fundação de perfil e Codex levou a suíte a 45 cenários aprovados no Godot 4.7.1 headless em 31/08/2026.
+
+## Fechamento v0.4.1 e progressão v0.5.0
+
+Valida a fronteira comum do combate, coordenação exclusiva dos painéis, apresentação do HUD, catálogo permanente, gates reais de gameplay e migração do perfil v1:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/combat/combat_runtime_coordinator_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/ui/gameplay_panel_coordinator_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/ui/gameplay_hud_presenter_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/meta_unlock_catalog_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/meta_unlock_gameplay_runner.gd
+```
+
+A suíte atual contém 50 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 01/09/2026, incluindo as estratégias completas Bone e Flesh.

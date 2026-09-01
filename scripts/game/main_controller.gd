@@ -181,6 +181,9 @@ const ENEMY_ARCHETYPE_CATALOG: Script = preload(
 const ENEMY_COMBAT_POLICY: Script = preload(
 	"res://scripts/game/enemy_combat_policy.gd"
 )
+const COMBAT_RUNTIME_COORDINATOR: Script = preload(
+	"res://scripts/game/combat_runtime_coordinator.gd"
+)
 const UNDEAD_RECIPE_CATALOG: Script = preload(
 	"res://scripts/game/undead_recipe_catalog.gd"
 )
@@ -192,6 +195,9 @@ const NARRATIVE_EVENT_CATALOG: Script = preload(
 )
 const FUSION_RECIPE_CATALOG: Script = preload(
 	"res://scripts/game/fusion_recipe_catalog.gd"
+)
+const META_UNLOCK_CATALOG: Script = preload(
+	"res://scripts/game/meta_unlock_catalog.gd"
 )
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
@@ -225,6 +231,12 @@ const UPGRADE_STATUS_FORMATTER: Script = preload(
 )
 const PRODUCTION_CONTROLS_FACTORY: Script = preload(
 	"res://scripts/ui/production_controls_factory.gd"
+)
+const GAMEPLAY_PANEL_COORDINATOR_SCRIPT: Script = preload(
+	"res://scripts/ui/gameplay_panel_coordinator.gd"
+)
+const GAMEPLAY_HUD_PRESENTER: Script = preload(
+	"res://scripts/ui/gameplay_hud_presenter.gd"
 )
 
 
@@ -794,13 +806,14 @@ func ghost_attack_enemy(attacking_ghost: Node2D) -> void:
 
 func kill_ghost(target: Node2D) -> void:
 
-	if not ghosts.has(target):
+	if not COMBAT_RUNTIME_COORDINATOR.erase_runtime_state(
+		target, ghosts, []
+	):
 		return
 
 
 	try_emergency_reclamation(target)
 	undead_army_registry.release_slot(int(target.get("formation_slot")))
-	ghosts.erase(target)
 	total_ghosts_lost += 1
 	target.queue_free()
 	update_bones_ui()
@@ -884,7 +897,9 @@ func lich_attack_enemy(attacking_lich: Node2D) -> void:
 
 func kill_lich(target: Node2D) -> void:
 
-	if not liches.has(target):
+	if not COMBAT_RUNTIME_COORDINATOR.erase_runtime_state(
+		target, liches, []
+	):
 		return
 
 
@@ -892,7 +907,6 @@ func kill_lich(target: Node2D) -> void:
 	var runtime: UndeadRuntimeUnit = get_undead_runtime(target)
 	if runtime != null:
 		undead_army_registry.release_slot(runtime.formation_slot)
-	liches.erase(target)
 	total_liches_lost += 1
 	target.queue_free()
 	update_bones_ui()
@@ -983,23 +997,10 @@ func kill_zombie(
 		undead_army_registry.release_slot(freed_slot)
 
 
-		zombie_slots.erase(
-			target
-		)
-
-
-	zombie_hps.erase(
-		target
-	)
-
-
-	zombie_attack_timers.erase(
-		target
-	)
-
-
-	zombies.erase(
-		target
+	COMBAT_RUNTIME_COORDINATOR.erase_runtime_state(
+		target,
+		zombies,
+		[zombie_slots, zombie_hps, zombie_attack_timers]
 	)
 
 
@@ -1483,6 +1484,8 @@ var soul_extractor_timer: float = 0.0
 var factory_efficiency_level: int = 0
 var skeleton_archer_unlocked: bool = false
 var lich_unlocked: bool = false
+var meta_progression_active: bool = false
+var meta_unlocks: Dictionary = {}
 var lich_summon_cap_bonus: int = 0
 var lich_summon_cooldown_reduction: float = 0.0
 var lich_summon_lifetime_bonus: float = 0.0
@@ -1518,6 +1521,28 @@ var occupied_undead_slots: Dictionary:
 # =========================================================
 
 const FORMATION_COLUMNS: int = COMBAT_FORMATION_POLICY.FORMATION_COLUMNS
+
+
+func configure_meta_progression(unlocks: Dictionary) -> void:
+	meta_progression_active = true
+	meta_unlocks = unlocks.duplicate(true)
+	update_factory_panel_ui()
+	update_bones_ui()
+
+
+func meta_allows(unlock_id: String) -> bool:
+	return (
+		not meta_progression_active
+		or bool(meta_unlocks.get(unlock_id, false))
+	)
+
+
+func get_meta_lock_text(unlock_id: String) -> String:
+	var requirement_key: String = META_UNLOCK_CATALOG.get_requirement_key(unlock_id)
+	return (
+		tr("META_LOCKED")
+		+ ("\n" + tr(requirement_key) if not requirement_key.is_empty() else "")
+	)
 const FORMATION_ROWS: int = COMBAT_FORMATION_POLICY.FORMATION_ROWS
 const MAX_UNDEAD: int = COMBAT_FORMATION_POLICY.MAX_UNDEAD
 const SPAWN_SPACING: Vector2 = COMBAT_FORMATION_POLICY.SPAWN_SPACING
@@ -1586,6 +1611,9 @@ var fusion_nav_button: Button = null
 var fusion_panel: ColorRect = null
 var fusion_status_label: Label = null
 var fusion_recipe_buttons: Dictionary = {}
+var gameplay_panel_coordinator: RefCounted = (
+	GAMEPLAY_PANEL_COORDINATOR_SCRIPT.new()
+)
 
 const RESOURCE_FEEDBACK_TARGET: Vector2 = Vector2(185.0, 820.0)
 
@@ -1618,6 +1646,7 @@ func _ready() -> void:
 	create_army_doctrine_ui()
 	create_ritual_panel_ui()
 	create_fusion_panel_ui()
+	register_gameplay_panels()
 
 
 	# -----------------------------------------------------
@@ -1666,6 +1695,15 @@ func _ready() -> void:
 	update_bones_ui()
 	update_wave_ui()
 	update_debug_ui()
+
+
+func register_gameplay_panels() -> void:
+	gameplay_panel_coordinator.register("factory", factory_panel)
+	gameplay_panel_coordinator.register("doctrine", doctrine_panel)
+	gameplay_panel_coordinator.register("ritual", ritual_panel)
+	gameplay_panel_coordinator.register("fusion", fusion_panel)
+	gameplay_panel_coordinator.register("upgrade", upgrade_panel)
+	gameplay_panel_coordinator.register("narrative", narrative_event_panel)
 
 
 # =========================================================
@@ -2378,7 +2416,9 @@ func apply_damage_to_enemy(
 		damage_amount
 	)
 	var remaining_hp: int = int(enemy_hps[target_enemy])
-	remaining_hp -= effective_damage
+	remaining_hp = COMBAT_RUNTIME_COORDINATOR.apply_damage(
+		remaining_hp, effective_damage
+	)
 	enemy_hps[target_enemy] = remaining_hp
 
 
@@ -3170,41 +3210,9 @@ func update_lich_summons(delta: float) -> void:
 
 
 func get_all_undead_units() -> Array[Node2D]:
-
-	var units: Array[Node2D] = []
-
-
-	for current_zombie: Node2D in zombies:
-
-		if is_instance_valid(current_zombie):
-
-			units.append(
-				current_zombie
-			)
-
-
-	for current_skeleton: Node2D in skeletons:
-
-		if is_instance_valid(current_skeleton):
-
-			units.append(
-				current_skeleton
-			)
-
-
-	for current_ghost: Node2D in ghosts:
-
-		if is_instance_valid(current_ghost):
-
-			units.append(current_ghost)
-
-
-	for current_lich: Node2D in liches:
-		if is_instance_valid(current_lich):
-			units.append(current_lich)
-
-
-	return units
+	return COMBAT_RUNTIME_COORDINATOR.get_valid_units([
+		zombies, skeletons, ghosts, liches
+	])
 
 
 func get_enemy_combat_target(source_enemy: Node2D) -> Node2D:
@@ -3501,49 +3509,11 @@ func show_enemy_ability_feedback(
 func get_closest_undead_to_enemy(
 	source_enemy: Node2D = enemy
 ) -> Node2D:
-
-	if not is_instance_valid(source_enemy):
-		return null
-
-
-	var closest_undead: Node2D = null
-	var closest_horizontal_distance: float = INF
-	var closest_vertical_distance: float = INF
-
-
-	for current_undead: Node2D in get_all_undead_units():
-
-		var horizontal_distance: float = absf(
-			source_enemy.position.x
-			- current_undead.position.x
-		)
-
-
-		var vertical_distance: float = absf(
-			ENEMY_LANE_Y
-			- current_undead.position.y
-		)
-
-
-		if horizontal_distance < closest_horizontal_distance:
-
-			closest_horizontal_distance = horizontal_distance
-			closest_vertical_distance = vertical_distance
-			closest_undead = current_undead
-
-		elif (
-			is_equal_approx(
-				horizontal_distance,
-				closest_horizontal_distance
-			)
-			and vertical_distance < closest_vertical_distance
-		):
-
-			closest_vertical_distance = vertical_distance
-			closest_undead = current_undead
-
-
-	return closest_undead
+	return COMBAT_RUNTIME_COORDINATOR.get_closest_by_axis(
+		source_enemy,
+		get_all_undead_units(),
+		ENEMY_LANE_Y
+	)
 
 
 func damage_undead(
@@ -3557,7 +3527,9 @@ func damage_undead(
 		var skeleton_hp: int = get_runtime_hp(target, skeleton_hps)
 
 
-		skeleton_hp -= damage_amount
+		skeleton_hp = COMBAT_RUNTIME_COORDINATOR.apply_damage(
+			skeleton_hp, damage_amount
+		)
 
 
 		set_runtime_hp(target, skeleton_hp, skeleton_hps)
@@ -3590,7 +3562,9 @@ func damage_undead(
 		var zombie_hp: int = get_runtime_hp(target, zombie_hps)
 
 
-		zombie_hp -= damage_amount
+		zombie_hp = COMBAT_RUNTIME_COORDINATOR.apply_damage(
+			zombie_hp, damage_amount
+		)
 
 
 		set_runtime_hp(target, zombie_hp, zombie_hps)
@@ -3623,7 +3597,9 @@ func damage_undead(
 
 
 	if ghosts.has(target):
-		var ghost_hp: int = int(target.get("current_hp")) - damage_amount
+		var ghost_hp: int = COMBAT_RUNTIME_COORDINATOR.apply_damage(
+			int(target.get("current_hp")), damage_amount
+		)
 		target.set("current_hp", ghost_hp)
 		update_unit_health_bar(
 			target,
@@ -3645,7 +3621,9 @@ func damage_undead(
 			return
 
 
-		runtime.current_hp -= damage_amount
+		runtime.current_hp = COMBAT_RUNTIME_COORDINATOR.apply_damage(
+			runtime.current_hp, damage_amount
+		)
 		update_unit_health_bar(
 			target,
 			runtime.current_hp,
@@ -4088,29 +4066,16 @@ func kill_skeleton(
 		undead_army_registry.release_slot(freed_slot)
 
 
-		skeleton_slots.erase(
-			target
-		)
-
-
 		print(
 			"SLOT LIBERADO: ",
 			freed_slot
 		)
 
 
-	skeleton_hps.erase(
-		target
-	)
-
-
-	skeleton_attack_timers.erase(
-		target
-	)
-
-
-	skeletons.erase(
-		target
+	COMBAT_RUNTIME_COORDINATOR.erase_runtime_state(
+		target,
+		skeletons,
+		[skeleton_slots, skeleton_hps, skeleton_attack_timers]
 	)
 
 
@@ -4367,18 +4332,23 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 	)
 
 
-	enemies.erase(dead_enemy)
-	enemy_hps.erase(dead_enemy)
-	enemy_max_hps.erase(dead_enemy)
-	enemy_damages.erase(dead_enemy)
-	enemy_speeds.erase(dead_enemy)
-	enemy_attack_cooldowns.erase(dead_enemy)
-	enemy_attack_ranges.erase(dead_enemy)
-	enemy_attack_timers.erase(dead_enemy)
-	enemy_attack_counts.erase(dead_enemy)
-	enemy_lane_offsets.erase(dead_enemy)
-	enemy_types.erase(dead_enemy)
-	enemy_elite_flags.erase(dead_enemy)
+	COMBAT_RUNTIME_COORDINATOR.erase_runtime_state(
+		dead_enemy,
+		enemies,
+		[
+			enemy_hps,
+			enemy_max_hps,
+			enemy_damages,
+			enemy_speeds,
+			enemy_attack_cooldowns,
+			enemy_attack_ranges,
+			enemy_attack_timers,
+			enemy_attack_counts,
+			enemy_lane_offsets,
+			enemy_types,
+			enemy_elite_flags,
+		]
+	)
 
 
 	if dead_enemy == enemy:
@@ -4903,7 +4873,10 @@ func toggle_automatic_corpse_collection() -> void:
 
 func purchase_automatic_corpse_collection() -> bool:
 
-	if automatic_corpse_collection_unlocked:
+	if (
+		automatic_corpse_collection_unlocked
+		or not meta_allows(META_UNLOCK_CATALOG.AUTO_RETRIEVAL)
+	):
 		return false
 
 
@@ -4969,7 +4942,10 @@ func purchase_factory_speed_upgrade() -> bool:
 
 func purchase_hematic_press() -> bool:
 
-	if hematic_press_unlocked:
+	if (
+		hematic_press_unlocked
+		or not meta_allows(META_UNLOCK_CATALOG.HEMATIC_PRESS)
+	):
 		return false
 
 
@@ -5017,7 +4993,11 @@ func enqueue_hematic_press() -> bool:
 
 func purchase_soul_extractor() -> bool:
 
-	if soul_extractor_unlocked or factory_points < SOUL_EXTRACTOR_UNLOCK_COST:
+	if (
+		soul_extractor_unlocked
+		or not meta_allows(META_UNLOCK_CATALOG.SOUL_EXTRACTOR)
+		or factory_points < SOUL_EXTRACTOR_UNLOCK_COST
+	):
 		return false
 
 
@@ -5156,7 +5136,11 @@ func purchase_factory_efficiency_upgrade() -> bool:
 
 func purchase_skeleton_archer_blueprint() -> bool:
 
-	if skeleton_archer_unlocked or factory_points < SKELETON_ARCHER_UNLOCK_COST:
+	if (
+		skeleton_archer_unlocked
+		or not meta_allows(META_UNLOCK_CATALOG.SKELETON_ARCHER)
+		or factory_points < SKELETON_ARCHER_UNLOCK_COST
+	):
 		return false
 
 
@@ -5170,7 +5154,11 @@ func purchase_skeleton_archer_blueprint() -> bool:
 
 func purchase_lich_blueprint() -> bool:
 
-	if lich_unlocked or factory_points < LICH_BLUEPRINT_UNLOCK_COST:
+	if (
+		lich_unlocked
+		or not meta_allows(META_UNLOCK_CATALOG.LICH)
+		or factory_points < LICH_BLUEPRINT_UNLOCK_COST
+	):
 		return false
 
 
@@ -6374,17 +6362,7 @@ func show_narrative_event(event_id: String) -> bool:
 
 	current_narrative_event_id = event_id
 	event_decision_in_progress = true
-	if factory_panel != null:
-		factory_panel.visible = false
-	if doctrine_panel != null:
-		doctrine_panel.visible = false
-	if ritual_panel != null:
-		ritual_panel.visible = false
-
-
-	if fusion_panel != null:
-		fusion_panel.visible = false
-	narrative_event_panel.visible = true
+	gameplay_panel_coordinator.show_exclusive("narrative")
 	refresh_narrative_event_ui()
 	return true
 
@@ -6555,19 +6533,7 @@ func show_upgrade_selection() -> void:
 	update_upgrade_ui()
 
 
-	if factory_panel != null:
-		factory_panel.visible = false
-
-
-	if doctrine_panel != null:
-		doctrine_panel.visible = false
-
-
-	if ritual_panel != null:
-		ritual_panel.visible = false
-
-
-	upgrade_panel.visible = true
+	gameplay_panel_coordinator.show_exclusive("upgrade")
 
 
 	print("")
@@ -8146,25 +8112,6 @@ func update_wave_ui() -> void:
 
 	if wave_label == null:
 		return
-
-
-	if run_finished:
-
-		if run_won:
-			wave_label.text = (
-				tr("RUN_COMPLETE")
-				+ "\n" + tr("RUN_VICTORY")
-			)
-
-		else:
-			wave_label.text = (
-				tr("RUN_COMPLETE")
-				+ "\n" + tr("RUN_DEFEAT")
-			)
-
-		return
-
-
 	var wave_title: String = (
 		tr("HUD_WAVE") + " "
 		+ str(current_wave)
@@ -8181,47 +8128,23 @@ func update_wave_ui() -> void:
 	elif is_elite_wave(current_wave):
 
 		wave_title += " - " + tr("WAVE_ELITE")
-
-
-	if event_decision_in_progress:
-		wave_label.text = (
-			wave_title
-			+ "\n" + tr("EVENT_DECISION_PENDING")
-		)
-		return
-
-
-	if wave_transition_in_progress:
-
-		wave_label.text = (
-			wave_title
-			+ " " + tr("WAVE_COMPLETE")
-			+ "\n" + tr("WAVE_SELECT_UPGRADE")
-		)
-
-		return
-
-
-	wave_label.text = (
-		wave_title
-		+ "\n" + tr("WAVE_ENEMIES_REMAINING") + ": "
-		+ str(get_enemies_remaining())
-		+ " / "
-		+ str(enemies_total_this_wave)
-		+ " | " + tr("WAVE_ACTIVE") + ": "
-		+ str(enemies.size())
-		+ " / "
-		+ str(get_max_simultaneous_enemies())
-		+ "\n" + tr("WAVE_PRIMARY") + ": "
-		+ get_enemy_display_name(
+	wave_label.text = GAMEPLAY_HUD_PRESENTER.format_wave({
+		"run_finished": run_finished,
+		"won": run_won,
+		"title": wave_title,
+		"event_pending": event_decision_in_progress,
+		"transition": wave_transition_in_progress,
+		"remaining": get_enemies_remaining(),
+		"total": enemies_total_this_wave,
+		"active": enemies.size(),
+		"max_active": get_max_simultaneous_enemies(),
+		"primary": get_enemy_display_name(
 			str(enemy_types.get(enemy, "human_warrior")),
 			bool(enemy_elite_flags.get(enemy, false))
-		)
-		+ " | " + tr("STAT_HP") + ": "
-		+ str(int(enemy_max_hps.get(enemy, enemy_max_hp)))
-		+ " | " + tr("STAT_DAMAGE") + ": "
-		+ str(int(enemy_damages.get(enemy, enemy_damage)))
-	)
+		),
+		"hp": int(enemy_max_hps.get(enemy, enemy_max_hp)),
+		"damage": int(enemy_damages.get(enemy, enemy_damage)),
+	}, Callable(self, "tr"))
 
 
 # =========================================================
@@ -8498,6 +8421,8 @@ func create_factory_upgrade_button(
 	button.position = button_position
 	button.size = Vector2(260.0, 170.0)
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	button.clip_text = true
 	button.add_theme_font_size_override("font_size", 13)
 	apply_button_style(button, accent_color)
 	factory_panel.add_child(button)
@@ -8508,26 +8433,9 @@ func toggle_factory_panel() -> void:
 
 	if factory_panel == null:
 		return
-
-
-	if upgrade_panel != null and upgrade_panel.visible:
-		factory_panel.visible = false
-		return
-
-
-	if doctrine_panel != null:
-		doctrine_panel.visible = false
-
-
-	if ritual_panel != null:
-		ritual_panel.visible = false
-
-
-	if fusion_panel != null:
-		fusion_panel.visible = false
-
-
-	factory_panel.visible = not factory_panel.visible
+	gameplay_panel_coordinator.toggle_exclusive(
+		"factory", PackedStringArray(["upgrade", "narrative"])
+	)
 	update_factory_panel_ui()
 
 
@@ -8570,6 +8478,16 @@ func update_factory_panel_ui() -> void:
 func update_factory_auto_collection_button() -> void:
 
 	if factory_auto_collection_button == null:
+		return
+	if (
+		not automatic_corpse_collection_unlocked
+		and not meta_allows(META_UNLOCK_CATALOG.AUTO_RETRIEVAL)
+	):
+		factory_auto_collection_button.text = (
+			tr("FACTORY_AUTO_COLLECTION") + "\n\n"
+			+ get_meta_lock_text(META_UNLOCK_CATALOG.AUTO_RETRIEVAL)
+		)
+		factory_auto_collection_button.disabled = true
 		return
 
 
@@ -8653,6 +8571,16 @@ func update_factory_hematic_press_button() -> void:
 
 	if factory_hematic_press_button == null:
 		return
+	if (
+		not hematic_press_unlocked
+		and not meta_allows(META_UNLOCK_CATALOG.HEMATIC_PRESS)
+	):
+		factory_hematic_press_button.text = (
+			tr("FACTORY_HEMATIC_PRESS") + "\n"
+			+ get_meta_lock_text(META_UNLOCK_CATALOG.HEMATIC_PRESS)
+		)
+		factory_hematic_press_button.disabled = true
+		return
 
 
 	if not hematic_press_unlocked:
@@ -8689,6 +8617,16 @@ func update_factory_hematic_press_button() -> void:
 func update_factory_soul_extractor_button() -> void:
 
 	if factory_soul_extractor_button == null:
+		return
+	if (
+		not soul_extractor_unlocked
+		and not meta_allows(META_UNLOCK_CATALOG.SOUL_EXTRACTOR)
+	):
+		factory_soul_extractor_button.text = (
+			tr("FACTORY_SOUL_EXTRACTOR") + "\n"
+			+ get_meta_lock_text(META_UNLOCK_CATALOG.SOUL_EXTRACTOR)
+		)
+		factory_soul_extractor_button.disabled = true
 		return
 
 
@@ -8750,6 +8688,16 @@ func update_factory_skeleton_archer_button() -> void:
 
 	if factory_skeleton_archer_button == null:
 		return
+	if (
+		not skeleton_archer_unlocked
+		and not meta_allows(META_UNLOCK_CATALOG.SKELETON_ARCHER)
+	):
+		factory_skeleton_archer_button.text = (
+			tr("FACTORY_ARCHER_BLUEPRINT") + "\n"
+			+ get_meta_lock_text(META_UNLOCK_CATALOG.SKELETON_ARCHER)
+		)
+		factory_skeleton_archer_button.disabled = true
+		return
 
 
 	if skeleton_archer_unlocked:
@@ -8776,6 +8724,16 @@ func update_factory_skeleton_archer_button() -> void:
 func update_factory_lich_button() -> void:
 
 	if factory_lich_button == null:
+		return
+	if (
+		not lich_unlocked
+		and not meta_allows(META_UNLOCK_CATALOG.LICH)
+	):
+		factory_lich_button.text = (
+			tr("FACTORY_LICH_BLUEPRINT") + "\n"
+			+ get_meta_lock_text(META_UNLOCK_CATALOG.LICH)
+		)
+		factory_lich_button.disabled = true
 		return
 
 
@@ -8948,22 +8906,9 @@ func toggle_army_doctrine_panel() -> void:
 
 	if doctrine_panel == null:
 		return
-
-
-	if upgrade_panel != null and upgrade_panel.visible:
-		doctrine_panel.visible = false
-		return
-
-
-	if factory_panel != null:
-		factory_panel.visible = false
-
-
-	if ritual_panel != null:
-		ritual_panel.visible = false
-
-
-	doctrine_panel.visible = not doctrine_panel.visible
+	gameplay_panel_coordinator.toggle_exclusive(
+		"doctrine", PackedStringArray(["upgrade", "narrative"])
+	)
 	refresh_army_doctrine_status()
 
 
@@ -9233,26 +9178,9 @@ func toggle_ritual_panel() -> void:
 
 	if ritual_panel == null:
 		return
-
-
-	if upgrade_panel != null and upgrade_panel.visible:
-		ritual_panel.visible = false
-		return
-
-
-	if factory_panel != null:
-		factory_panel.visible = false
-
-
-	if doctrine_panel != null:
-		doctrine_panel.visible = false
-
-
-	if fusion_panel != null:
-		fusion_panel.visible = false
-
-
-	ritual_panel.visible = not ritual_panel.visible
+	gameplay_panel_coordinator.toggle_exclusive(
+		"ritual", PackedStringArray(["upgrade", "narrative"])
+	)
 	update_ritual_panel_ui()
 
 
@@ -9406,16 +9334,9 @@ func create_fusion_panel_ui() -> void:
 func toggle_fusion_panel() -> void:
 	if fusion_panel == null:
 		return
-	if upgrade_panel != null and upgrade_panel.visible:
-		fusion_panel.visible = false
-		return
-	if factory_panel != null:
-		factory_panel.visible = false
-	if doctrine_panel != null:
-		doctrine_panel.visible = false
-	if ritual_panel != null:
-		ritual_panel.visible = false
-	fusion_panel.visible = not fusion_panel.visible
+	gameplay_panel_coordinator.toggle_exclusive(
+		"fusion", PackedStringArray(["upgrade", "narrative"])
+	)
 	update_fusion_panel_ui()
 
 
@@ -9675,33 +9596,20 @@ func update_metrics_ui() -> void:
 		return
 
 
-	metrics_label.text = (
-		tr("METRICS_TITLE")
-		+ "\n\n" + tr("METRICS_ENEMIES_KILLED") + "        "
-		+ str(total_enemies_killed)
-		+ "\n" + tr("METRICS_CORPSES_PROCESSED") + "  "
-		+ str(total_corpses_processed)
-		+ "\n" + tr("METRICS_SKELETONS_BUILT") + "       "
-		+ str(total_skeletons_created)
-		+ "\n" + tr("METRICS_SKELETONS_LOST") + "         "
-		+ str(total_skeletons_lost)
-		+ "\n" + tr("METRICS_ZOMBIES_BUILT") + "            "
-		+ str(total_zombies_created)
-		+ "\n" + tr("METRICS_ZOMBIES_LOST") + "              "
-		+ str(total_zombies_lost)
-		+ "\n" + tr("METRICS_GHOSTS_BUILT") + "             "
-		+ str(total_ghosts_created)
-		+ "\n" + tr("METRICS_GHOSTS_LOST") + "               "
-		+ str(total_ghosts_lost)
-		+ "\n" + tr("METRICS_LICHES_BUILT") + "               "
-		+ str(total_liches_created)
-		+ "\n" + tr("METRICS_LICHES_LOST") + "                 "
-		+ str(total_liches_lost)
-		+ "\n" + tr("METRICS_THRALLS_ACTIVE") + "              "
-		+ str(get_temporary_thrall_count())
-		+ "\n" + tr("METRICS_ARMY_ACTIVE") + "                "
-		+ str(get_total_undead_count())
-	)
+	metrics_label.text = GAMEPLAY_HUD_PRESENTER.format_metrics({
+		"enemies_killed": total_enemies_killed,
+		"corpses_processed": total_corpses_processed,
+		"skeletons_built": total_skeletons_created,
+		"skeletons_lost": total_skeletons_lost,
+		"zombies_built": total_zombies_created,
+		"zombies_lost": total_zombies_lost,
+		"ghosts_built": total_ghosts_created,
+		"ghosts_lost": total_ghosts_lost,
+		"liches_built": total_liches_created,
+		"liches_lost": total_liches_lost,
+		"thralls_active": get_temporary_thrall_count(),
+		"army_active": get_total_undead_count(),
+	}, Callable(self, "tr"))
 
 
 	if processing_label != null:
@@ -9916,22 +9824,19 @@ func update_debug_ui() -> void:
 # =========================================================
 
 func update_bones_ui() -> void:
+	if bones_label == null:
+		return
 
 	# v0.2.0 Resource Foundation:
 	# reutilizamos o BonesLabel atual como painel temporário
 	# de recursos. Depois ele será substituído pela UI final
 	# inspirada no target visual do NecroWorks.
-	bones_label.text = (
-		tr("HUD_RESOURCES")
-		+ "\n" + tr("RESOURCE_BONES") + ": "
-		+ str(bones)
-		+ "\n" + tr("RESOURCE_FLESH") + ": "
-		+ str(flesh)
-		+ "\n" + tr("RESOURCE_BLOOD") + ": "
-		+ str(blood)
-		+ "\n" + tr("RESOURCE_SOULS") + ": "
-		+ str(souls)
-	)
+	bones_label.text = GAMEPLAY_HUD_PRESENTER.format_resources({
+		"bones": bones,
+		"flesh": flesh,
+		"blood": blood,
+		"souls": souls,
+	}, Callable(self, "tr"))
 
 
 	var quantity: int = get_selected_production_quantity()

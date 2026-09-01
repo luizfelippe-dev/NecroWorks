@@ -23,6 +23,34 @@ func _initialize() -> void:
 	var loaded: Dictionary = MetaProgressionStore.load_profile(PROFILE_PATH)
 	assert(bool(loaded.discoveries.grave_manifest))
 	assert((loaded.run_history as Array).size() == 20)
+	var legacy_path: String = "user://necroworks_profile_v1_test.json"
+	var legacy_file: FileAccess = FileAccess.open(legacy_path, FileAccess.WRITE)
+	legacy_file.store_string(JSON.stringify({
+		"profile_version": 1,
+		"discoveries": {"sealed_memories": true},
+		"run_history": [{"wave": 10, "corpses_processed": 30}],
+	}))
+	legacy_file = null
+	var migrated: Dictionary = MetaProgressionStore.load_profile(legacy_path)
+	assert(int(migrated.profile_version) == MetaProgressionStore.PROFILE_VERSION)
+	assert(bool(migrated.discoveries.sealed_memories))
+	assert(MetaProgressionStore.is_unlocked(migrated, "skeleton_archer"))
+	assert(MetaProgressionStore.is_unlocked(migrated, "hematic_press"))
+	var malformed_path: String = "user://necroworks_profile_malformed_test.json"
+	var malformed_file: FileAccess = FileAccess.open(malformed_path, FileAccess.WRITE)
+	malformed_file.store_string(JSON.stringify({
+		"profile_version": 2,
+		"discoveries": "invalid",
+		"unlocks": 42,
+		"run_history": ["invalid", {"wave": 5}],
+	}))
+	malformed_file = null
+	var sanitized: Dictionary = MetaProgressionStore.load_profile(malformed_path)
+	assert((sanitized.discoveries as Dictionary).is_empty())
+	assert((sanitized.run_history as Array).size() == 1)
+	assert(MetaProgressionStore.is_unlocked(sanitized, "auto_retrieval"))
 	assert(DirAccess.remove_absolute(ProjectSettings.globalize_path(PROFILE_PATH)) == OK)
+	assert(DirAccess.remove_absolute(ProjectSettings.globalize_path(legacy_path)) == OK)
+	assert(DirAccess.remove_absolute(ProjectSettings.globalize_path(malformed_path)) == OK)
 	print("META PROGRESSION PROFILE VALIDATION: PASS")
 	quit()

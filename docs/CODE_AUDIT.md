@@ -1,6 +1,6 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 31/08/2026
+**Revisado:** 01/09/2026
 
 ## Veredito atual
 
@@ -28,6 +28,10 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 - checkpoint migrável separado do perfil permanente;
 - catálogo de Codex isolado da interface e da localização;
 - alias mínimo `main.tscn` preservando seleções F6 antigas sem duplicar a cena;
+- seleção comum, dano e limpeza de lifecycle extraídos para `CombatRuntimeCoordinator`;
+- recursos, Onda e métricas formatados por `GameplayHudPresenter`;
+- exclusividade de Fábrica, Doutrina, Rituais, Fusões e modais controlada por `GameplayPanelCoordinator`;
+- primeiro build Windows release gerado e iniciado com sucesso;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;
@@ -86,11 +90,9 @@ The next safe refactor is to migrate one legacy mirror at a time behind focused 
 
 Programmatic UI enabled fast iteration but is harder to edit visually and localize. Stable panels should gradually move into dedicated scenes.
 
-### P2 — Build externo aguardando templates
+### Build externo — fechado para desenvolvimento local
 
-`export_presets.cfg` está válido e aponta para `builds/windows/NecroWorks.exe`. A máquina ainda não possui os templates oficiais de exportação Godot 4.7.1; por isso o executável não foi gerado nesta revisão. Instalar `windows_release_x86_64.exe` e repetir a exportação fecha este item sem mudança de código.
-
-O pacote oficial completo foi verificado com aproximadamente 1,28 GB. O download automático não faz parte do repositório; instalação e checklist estão registrados em `docs/BUILDING.md`.
+`export_presets.cfg` aponta para `builds/windows/NecroWorks.exe`. Os templates oficiais Windows x86_64 do Godot 4.7.1 foram instalados e o primeiro release foi gerado com 113 MB. O executável abriu e encerrou em smoke test headless. Assinatura, instalador, Steam depot e teste em outra máquina continuam pertencendo à preparação comercial.
 
 ### P2 — Automated regression coverage
 

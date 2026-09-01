@@ -1,6 +1,6 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 31/08/2026
+**Atualizado:** 01/09/2026
 
 # Stack
 
@@ -547,6 +547,14 @@ Bosses and Elites use disjoint Wave lists. This prevents accidental rule stackin
 `RunSaveStore` continua responsável apenas pelo checkpoint retomável da partida. `MetaProgressionStore` grava `user://necroworks_profile.json` com schema independente, descobertas, espaço reservado para desbloqueios e no máximo 20 resultados concluídos. Essa separação permite apagar ou substituir uma run sem perder progresso permanente.
 
 `CodexCatalog` mantém IDs estáveis e suas chaves de título/corpo. O shell decide se mostra o texto localizado ou um registro bloqueado a partir do perfil. Eventos e saves trabalham somente com IDs, portanto a troca de idioma nunca altera o dado persistido. Novos tipos de entrada devem ampliar o catálogo, sem transferir regras de gameplay para a interface.
+
+O perfil usa schema v2. `MetaUnlockCatalog` deriva cinco projetos permanentes do histórico concluído: Auto-coleta na Onda 5, Arqueiro na 10, Extrator de Almas na 13, Prensa Hemática após 30 Cadáveres processados e Lich após a primeira vitória. O shell injeta esses direitos na cena F5; F6 permanece irrestrito para desenvolvimento e regressão isolada. As compras dentro da run continuam consumindo Pontos de Fábrica, portanto o perfil libera uma possibilidade, não entrega a tecnologia gratuitamente.
+
+## Fronteiras finais da v0.4.1
+
+`CombatRuntimeCoordinator` concentra coleta de unidades válidas, seleção por eixo, transação básica de dano e limpeza consistente das coleções/dicionários no fim do ciclo de vida. Cadência, efeitos de upgrades e recompensas continuam no orquestrador até possuírem interfaces próprias.
+
+`GameplayHudPresenter` recebe snapshots e devolve texto localizado para recursos, Onda e métricas. `GameplayPanelCoordinator` registra Fábrica, Doutrina, Rituais, Fusões e modais, garantindo que somente o painel compatível permaneça aberto. A criação visual ainda ocorre na cena atual, mas navegação e formatação deixaram de ser regras espalhadas pelo controlador.
 
 ## Fusion recipes
 

@@ -25,6 +25,21 @@ func run_validation() -> void:
 	assert(shell.codex_menu.visible)
 	assert(shell.codex_content.text.contains("THE UNREGISTERED MANIFEST"))
 	shell.show_main_menu()
+	shell.profile.run_history = []
+	shell.refresh_run_history_content()
+	assert(shell.history_content.text.contains("NO COMPLETED RUNS"))
+	shell.profile.run_history = [{
+		"victory": true,
+		"wave": 20,
+		"enemies_killed": 120,
+		"corpses_processed": 80,
+		"army_remaining": 12,
+	}]
+	shell.show_run_history()
+	assert(shell.history_menu.visible)
+	assert(shell.history_content.text.contains("VICTORY"))
+	assert(shell.history_content.text.contains("Wave 20"))
+	shell.show_main_menu()
 	shell.start_new_run()
 	assert(shell.prologue_menu.visible)
 	assert(not shell.main_menu.visible)
