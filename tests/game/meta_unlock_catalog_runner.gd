@@ -19,7 +19,7 @@ func _initialize() -> void:
 	MetaProgressionStore.record_run(profile, {
 		"wave": 20,
 		"victory": true,
-		"corpses_processed": 14,
+		"corpses_processed": 30,
 	})
 	for unlock_id: String in MetaUnlockCatalog.UNLOCK_IDS:
 		assert(MetaProgressionStore.is_unlocked(profile, unlock_id))

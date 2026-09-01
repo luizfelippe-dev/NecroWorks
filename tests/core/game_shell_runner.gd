@@ -2,6 +2,7 @@ extends SceneTree
 
 
 const APP_SCENE: PackedScene = preload("res://scenes/core/app.tscn")
+const PROFILE_PATH: String = "user://necroworks_shell_test_profile.json"
 
 
 func _initialize() -> void:
@@ -12,6 +13,7 @@ func run_validation() -> void:
 	var original_locale: String = TranslationServer.get_locale()
 	TranslationServer.set_locale("en")
 	var shell: Node = APP_SCENE.instantiate()
+	shell.profile_path = PROFILE_PATH
 	root.add_child(shell)
 	await process_frame
 	LocalizationService.set_locale("en")
@@ -40,6 +42,11 @@ func run_validation() -> void:
 	assert(shell.history_content.text.contains("VICTORY"))
 	assert(shell.history_content.text.contains("Wave 20"))
 	shell.show_main_menu()
+	shell.show_loadout()
+	assert(shell.loadout_menu.visible)
+	assert(shell.operator_name_label.text.contains("OPERATOR"))
+	assert(shell.challenges_label.text.contains("OPERATIONAL CHALLENGES"))
+	shell.show_main_menu()
 	shell.start_new_run()
 	assert(shell.prologue_menu.visible)
 	assert(not shell.main_menu.visible)
@@ -67,8 +74,20 @@ func run_validation() -> void:
 	assert(shell.pause_menu.visible)
 	shell.resume_game()
 	assert(not paused)
+	var legacy_checkpoint: Dictionary = shell.current_game.build_checkpoint_state()
+	legacy_checkpoint["wave"] = 12
+	(legacy_checkpoint["metrics"] as Dictionary)["corpses_processed"] = 30
+	shell.profile = MetaProgressionStore.default_profile()
+	shell.start_game(legacy_checkpoint)
+	await process_frame
+	assert(MetaProgressionStore.is_unlocked(shell.profile, "auto_retrieval"))
+	assert(MetaProgressionStore.is_unlocked(shell.profile, "skeleton_archer"))
+	assert(MetaProgressionStore.is_unlocked(shell.profile, "hematic_press"))
+	assert(shell.current_game.meta_allows("auto_retrieval"))
 
 	TranslationServer.set_locale(original_locale)
 	print("GAME SHELL NAVIGATION VALIDATION: PASS")
 	shell.queue_free()
+	if FileAccess.file_exists(PROFILE_PATH):
+		assert(DirAccess.remove_absolute(ProjectSettings.globalize_path(PROFILE_PATH)) == OK)
 	quit()

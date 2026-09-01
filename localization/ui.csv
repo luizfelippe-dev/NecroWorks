@@ -324,17 +324,43 @@ FUSION_SOULBOUND_NAME,SOULBOUND MUSTER,FORMAÇÃO VINCULADA,FILA VINCULADA
 FUSION_SOULBOUND_DESC,2 Blood + 3 Souls\n→ 1 Ghost without production cost,2 Sangue + 3 Almas\n→ 1 Fantasma sem custo de produção,2 Sangre + 3 Almas\n→ 1 Fantasma sin coste de producción
 MENU_CODEX,CODEX,CÓDICE,CÓDICE
 MENU_RUN_HISTORY,RUN HISTORY,HISTÓRICO DE RUNS,HISTORIAL DE PARTIDAS
+MENU_LOADOUT,OPERATIONS LOADOUT,CONFIGURAÇÃO DA OPERAÇÃO,CONFIGURACIÓN DE LA OPERACIÓN
 RUN_HISTORY_TITLE,PRODUCTION LEDGER,REGISTRO DE PRODUÇÃO,REGISTRO DE PRODUCCIÓN
 RUN_HISTORY_EMPTY,NO COMPLETED RUNS RECORDED,NENHUMA RUN CONCLUÍDA REGISTRADA,NO HAY PARTIDAS COMPLETADAS REGISTRADAS
 RUN_HISTORY_VICTORY,VICTORY,VITÓRIA,VICTORIA
 RUN_HISTORY_DEFEAT,DEFEAT,DERROTA,DERROTA
 RUN_HISTORY_ENTRY,"#%d — %s | Wave %d\nEnemies: %d | Corpses: %d | Army: %d","#%d — %s | Onda %d\nInimigos: %d | Cadáveres: %d | Exército: %d","#%d — %s | Oleada %d\nEnemigos: %d | Cadáveres: %d | Ejército: %d"
 META_LOCKED,PERMANENT PROJECT LOCKED,PROJETO PERMANENTE BLOQUEADO,PROYECTO PERMANENTE BLOQUEADO
-META_REQUIREMENT_WAVE_5,Complete a run reaching Wave 5,Conclua uma run alcançando a Onda 5,Completa una partida alcanzando la Oleada 5
-META_REQUIREMENT_WAVE_10,Complete a run reaching Wave 10,Conclua uma run alcançando a Onda 10,Completa una partida alcanzando la Oleada 10
-META_REQUIREMENT_WAVE_13,Complete a run reaching Wave 13,Conclua uma run alcançando a Onda 13,Completa una partida alcanzando la Oleada 13
-META_REQUIREMENT_CORPSES_30,Process 30 Corpses across completed runs,Processe 30 Cadáveres em runs concluídas,Procesa 30 Cadáveres en partidas completadas
-META_REQUIREMENT_VICTORY,Complete one victorious run,Conclua uma run vitoriosa,Completa una partida victoriosa
+META_REQUIREMENT_WAVE_5,Complete Wave 5,Conclua a Onda 5,Completa la Oleada 5
+META_REQUIREMENT_WAVE_10,Complete Wave 10,Conclua a Onda 10,Completa la Oleada 10
+META_REQUIREMENT_WAVE_13,Complete Wave 13,Conclua a Onda 13,Completa la Oleada 13
+META_REQUIREMENT_CORPSES_30,Process 30 Corpses in one run,Processe 30 Cadáveres em uma run,Procesa 30 Cadáveres en una partida
+META_REQUIREMENT_VICTORY,Win one run,Vença uma run,Gana una partida
+META_PROJECT_UNLOCKED,PERMANENT PROJECT UNLOCKED,PROJETO PERMANENTE DESBLOQUEADO,PROYECTO PERMANENTE DESBLOQUEADO
+LOADOUT_TITLE,OPERATIONS LOADOUT,CONFIGURAÇÃO DA OPERAÇÃO,CONFIGURACIÓN DE LA OPERACIÓN
+LOADOUT_OPERATOR,OPERATOR,OPERADOR,OPERADOR
+LOADOUT_MODIFIER,STARTING CONTRACT,CONTRATO INICIAL,CONTRATO INICIAL
+LOADOUT_NEXT_OPERATOR,NEXT AVAILABLE OPERATOR,PRÓXIMO OPERADOR DISPONÍVEL,SIGUIENTE OPERADOR DISPONIBLE
+LOADOUT_NEXT_MODIFIER,NEXT AVAILABLE CONTRACT,PRÓXIMO CONTRATO DISPONÍVEL,SIGUIENTE CONTRATO DISPONIBLE
+OPERATOR_DIRECTOR_NAME,BLACK LEDGER DIRECTOR,DIRETOR DO LIVRO-NEGRO,DIRECTOR DEL LIBRO NEGRO
+OPERATOR_DIRECTOR_DESC,Balanced command with no bonus or penalty.,Comando equilibrado sem bônus ou penalidade.,Mando equilibrado sin bonificación ni penalización.
+OPERATOR_OSSUARY_NAME,OSSUARY ENGINEER,ENGENHEIRO DO OSSUÁRIO,INGENIERO DEL OSARIO
+OPERATOR_OSSUARY_DESC,Starts with +5 Bones and Skeletons cost 1 less; Zombies cost 1 more.,Começa com +5 Ossos e Esqueletos custam 1 a menos; Zumbis custam 1 a mais.,Comienza con +5 Huesos y los Esqueletos cuestan 1 menos; los Zombis cuestan 1 más.
+OPERATOR_PLAGUE_NAME,PLAGUE STEWARD,INTENDENTE DA PESTE,INTENDENTE DE LA PLAGA
+OPERATOR_PLAGUE_DESC,Starts with +6 Flesh and Zombies gain +30 HP; Skeletons cost 1 more.,Começa com +6 Carne e Zumbis ganham +30 PV; Esqueletos custam 1 a mais.,Comienza con +6 Carne y los Zombis obtienen +30 PV; los Esqueletos cuestan 1 más.
+MODIFIER_STANDARD_NAME,STANDARD SHIFT,TURNO PADRÃO,TURNO ESTÁNDAR
+MODIFIER_STANDARD_DESC,The production line runs under standard parameters.,A linha de produção opera nos parâmetros padrão.,La línea de producción opera con parámetros estándar.
+MODIFIER_NIGHT_SHIFT_NAME,NIGHT SHIFT,TURNO NOTURNO,TURNO NOCTURNO
+MODIFIER_NIGHT_SHIFT_DESC,Start with +2 Factory Points; enemies deal +2 Damage.,Comece com +2 Pontos de Fábrica; inimigos causam +2 de Dano.,Comienza con +2 Puntos de Fábrica; los enemigos infligen +2 de Daño.
+MODIFIER_IRON_AUDIT_NAME,IRON AUDIT,AUDITORIA DE FERRO,AUDITORÍA DE HIERRO
+MODIFIER_IRON_AUDIT_DESC,Start with +10 Bones and +6 Flesh; enemies gain +12% HP.,Comece com +10 Ossos e +6 Carne; inimigos ganham +12% de PV.,Comienza con +10 Huesos y +6 Carne; los enemigos obtienen +12% de PV.
+CHALLENGES_TITLE,OPERATIONAL CHALLENGES,DESAFIOS OPERACIONAIS,DESAFÍOS OPERATIVOS
+CHALLENGE_COMPLETE,COMPLETE,CONCLUÍDO,COMPLETADO
+CHALLENGE_WAVE_5,STABILIZE FIVE WAVES → AUTO-RETRIEVAL,ESTABILIZE CINCO ONDAS → AUTO-COLETA,ESTABILIZA CINCO OLEADAS → RECOLECCIÓN AUTOMÁTICA
+CHALLENGE_WAVE_10,BREAK THE FIRST MARSHAL → ARCHER / ENGINEER,DERROTE O PRIMEIRO MARECHAL → ARQUEIRO / ENGENHEIRO,DERROTA AL PRIMER MARISCAL → ARQUERO / INGENIERO
+CHALLENGE_CORPSES_30,PROCESS THIRTY CORPSES → PRESS / STEWARD,PROCESSE TRINTA CADÁVERES → PRENSA / INTENDENTE,PROCESA TREINTA CADÁVERES → PRENSA / INTENDENTE
+CHALLENGE_WAVE_13,REACH THE ARCANE SECTOR → EXTRACTOR / NIGHT SHIFT,ALCANCE O SETOR ARCANO → EXTRATOR / TURNO NOTURNO,ALCANZA EL SECTOR ARCANO → EXTRACTOR / TURNO NOCTURNO
+CHALLENGE_VICTORY,TERMINATE THE FOREMAN → LICH / IRON AUDIT,ELIMINE O CAPATAZ → LICH / AUDITORIA DE FERRO,ELIMINA AL CAPATAZ → LICH / AUDITORÍA DE HIERRO
 META_UNLOCKS_TITLE,PERMANENT PROJECTS,PROJETOS PERMANENTES,PROYECTOS PERMANENTES
 META_UNLOCKS_NONE,No permanent projects unlocked,Nenhum projeto permanente desbloqueado,Ningún proyecto permanente desbloqueado
 CODEX_TITLE,NECROWORKS ARCHIVE,ARQUIVO NECROWORKS,ARCHIVO NECROWORKS
@@ -359,3 +385,24 @@ CODEX_AUDITOR_RESONANCE_TITLE,AUDITOR RESONANCE,RESSONÂNCIA DO AUDITOR,RESONANC
 CODEX_AUDITOR_RESONANCE_BODY,The core still repeats every spectral order the Auditor approved during the siege.,O núcleo ainda repete cada ordem espectral aprovada pelo Auditor durante o cerco.,El núcleo todavía repite cada orden espectral aprobada por el Auditor durante el asedio.
 CODEX_AUDITOR_RELAY_SCHEMA_TITLE,ARCANE RELAY SCHEMA,ESQUEMA DO RELÉ ARCANO,ESQUEMA DEL RELÉ ARCANO
 CODEX_AUDITOR_RELAY_SCHEMA_BODY,The relay connects battlefield losses to a ledger maintained far beyond the city walls.,O relé conecta as perdas do campo a um registro mantido muito além das muralhas.,El relé conecta las pérdidas del campo con un registro mantenido mucho más allá de las murallas.
+CODEX_REFERENCE_TITLE,FIELD AND PRODUCTION RECORDS,REGISTROS DE CAMPO E PRODUÇÃO,REGISTROS DE CAMPO Y PRODUCCIÓN
+CODEX_REF_SKELETON_TITLE,SKELETON WARRIOR,ESQUELETO GUERREIRO,ESQUELETO GUERRERO
+CODEX_REF_SKELETON_BODY,A cheap frontline assembled from clean Bones. Fast to replace and effective in disciplined formations.,Uma linha de frente barata montada com Ossos limpos. Rápido de repor e eficiente em formações disciplinadas.,Una primera línea barata montada con Huesos limpios. Rápida de reponer y eficaz en formaciones disciplinadas.
+CODEX_REF_ZOMBIE_TITLE,ZOMBIE TANK,ZUMBI TANQUE,ZOMBI TANQUE
+CODEX_REF_ZOMBIE_BODY,Preserved Flesh built to absorb pressure. Slow but essential against sustained enemy damage.,Carne preservada construída para absorver pressão. Lento mas essencial contra dano inimigo prolongado.,Carne preservada construida para absorber presión. Lenta pero esencial contra daño enemigo prolongado.
+CODEX_REF_GHOST_TITLE,BOUND GHOST,FANTASMA VINCULADO,FANTASMA VINCULADO
+CODEX_REF_GHOST_BODY,A spectral striker sustained by Souls. It bypasses the physical limits of the assembly line.,Um atacante espectral sustentado por Almas. Ignora os limites físicos da linha de montagem.,Un atacante espectral sostenido por Almas. Ignora los límites físicos de la línea de montaje.
+CODEX_REF_LICH_TITLE,PRODUCTION LICH,LICH DE PRODUÇÃO,LICH DE PRODUCCIÓN
+CODEX_REF_LICH_BODY,An arcane command unit capable of summoning temporary servants while maintaining ranged pressure.,Uma unidade de comando arcano capaz de invocar servos temporários enquanto mantém pressão à distância.,Una unidad de mando arcano capaz de invocar siervos temporales mientras mantiene presión a distancia.
+CODEX_REF_HUMAN_WARRIOR_TITLE,IRON CONCORD WARRIOR,GUERREIRO DA CONCORDATA DE FERRO,GUERRERO DE LA CONCORDIA DE HIERRO
+CODEX_REF_HUMAN_WARRIOR_BODY,Armored infantry sent to dismantle the factory one production sector at a time.,Infantaria blindada enviada para desmontar a fábrica setor de produção por setor.,Infantería blindada enviada para desmantelar la fábrica sector de producción por sector.
+CODEX_REF_HUMAN_MAGE_TITLE,COLLEGIUM MAGE,MAGO DO COLÉGIO,MAGO DEL COLEGIO
+CODEX_REF_HUMAN_MAGE_BODY,An arcane specialist who turns distance and concentrated attacks into production failures.,Um especialista arcano que transforma distância e ataques concentrados em falhas de produção.,Un especialista arcano que convierte la distancia y los ataques concentrados en fallos de producción.
+CODEX_REF_ELF_RANGER_TITLE,ELVEN RANGER,PATRULHEIRO ÉLFICO,EXPLORADOR ÉLFICO
+CODEX_REF_ELF_RANGER_BODY,A mobile marksman trained to exploit exposed workers and weak formation lanes.,Um atirador móvel treinado para explorar operários expostos e linhas frágeis da formação.,Un tirador móvil entrenado para explotar operarios expuestos y líneas débiles de la formación.
+CODEX_REF_SEPULCHRAL_MARSHAL_TITLE,SEPULCHRAL MARSHAL,MARECHAL DA SEPULTURA,MARISCAL SEPULCRAL
+CODEX_REF_SEPULCHRAL_MARSHAL_BODY,The Concord's first siege commander. His armor converts attrition into a direct test of frontline durability.,O primeiro comandante de cerco da Concordata. Sua armadura transforma desgaste em um teste direto da linha de frente.,El primer comandante de asedio de la Concordia. Su armadura convierte el desgaste en una prueba directa de la primera línea.
+CODEX_REF_ARCANE_AUDITOR_TITLE,ARCANE AUDITOR,AUDITOR ARCANO,AUDITOR ARCANO
+CODEX_REF_ARCANE_AUDITOR_BODY,The Collegium's inspector weaponizes Souls and measures every loss as evidence against NecroWorks.,O inspetor do Colégio transforma Almas em armas e mede cada perda como prova contra a NecroWorks.,El inspector del Colegio convierte Almas en armas y mide cada pérdida como prueba contra NecroWorks.
+CODEX_REF_FOREMAN_TITLE,THE FOREMAN,O CAPATAZ,EL CAPATAZ
+CODEX_REF_FOREMAN_BODY,The original production authority survived inside the Black Ledger. Defeating him proves who controls Plant N-0.,A autoridade original da produção sobreviveu dentro do Livro-Negro. Derrotá-lo prova quem controla a Planta N-0.,La autoridad original de producción sobrevivió dentro del Libro Negro. Derrotarlo demuestra quién controla la Planta N-0.

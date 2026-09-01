@@ -98,8 +98,8 @@ Não existe uma facção puramente correta. Os vivos têm motivos legítimos par
 
 - registros do primeiro turno de reanimação;
 - contratos assinados por pessoas que venderam os próprios restos;
-- operadores desbloqueáveis ligados às três facções;
+- Engenheiro do Ossuário e Intendente da Peste como operadores desbloqueáveis ligados às rotas de produção;
 - eventos que mudam reputação e rotas de chefe;
-- expansão do Codex que já reconstrói a história conforme descobertas aparecem;
+- Codex com descobertas narrativas e registros de tropas, invasores e chefes;
 - finais diferentes para destruir, assumir ou libertar a Planta N-0.
 - desbloqueios permanentes apresentados como projetos preservados pelo Livro-Negro.

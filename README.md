@@ -308,4 +308,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-A v0.4.1 está concluída e possui build Windows validado. A v0.5.0 já oferece perfil permanente v2, Codex, histórico visível e cinco projetos horizontais para receitas e tecnologias. Próximo foco: operadores com vantagens e limitações equivalentes, modificadores iniciais e desafios sem grind de atributos.
+A v0.5.0 está concluída e possui perfil permanente v3, histórico, Codex ampliado, cinco projetos de Fábrica, três operadores, três contratos iniciais e cinco desafios. Os marcos são registrados durante a run e liberam possibilidades sem grind de atributos. O próximo foco é a v0.6.0: tutorial, acessibilidade, arte e animação finais, áudio, VFX e performance.

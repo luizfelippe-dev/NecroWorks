@@ -37,6 +37,7 @@ signal emergency_reclamation_triggered(
 )
 signal run_checkpoint_requested(state: Dictionary)
 signal run_completed(victory: bool)
+signal meta_progress_reported(event: Dictionary)
 signal restart_requested
 signal return_to_menu_requested
 
@@ -198,6 +199,10 @@ const FUSION_RECIPE_CATALOG: Script = preload(
 )
 const META_UNLOCK_CATALOG: Script = preload(
 	"res://scripts/game/meta_unlock_catalog.gd"
+)
+const OPERATOR_CATALOG: Script = preload("res://scripts/game/operator_catalog.gd")
+const STARTING_MODIFIER_CATALOG: Script = preload(
+	"res://scripts/game/starting_modifier_catalog.gd"
 )
 const PROCESSING_DIRECTIVE_POLICY: Script = preload(
 	"res://scripts/economy/processing_directive_policy.gd"
@@ -1354,6 +1359,7 @@ var ghost_damage_bonus: int = 0
 var ghost_cooldown_reduction: float = 0.0
 var soul_yield_bonus: int = 0
 var enemy_damage_run_bonus: int = 0
+var enemy_hp_run_percent_bonus: int = 0
 var event_zombie_hp_bonus: int = 0
 var event_ghost_damage_bonus: int = 0
 var faction_pressure: Dictionary = {}
@@ -1486,6 +1492,11 @@ var skeleton_archer_unlocked: bool = false
 var lich_unlocked: bool = false
 var meta_progression_active: bool = false
 var meta_unlocks: Dictionary = {}
+var selected_operator: String = OPERATOR_CATALOG.DIRECTOR
+var selected_starting_modifier: String = STARTING_MODIFIER_CATALOG.STANDARD
+var starting_loadout_applied: bool = false
+var meta_unlock_feedback_label: Label = null
+var meta_unlock_feedback_revision: int = 0
 var lich_summon_cap_bonus: int = 0
 var lich_summon_cooldown_reduction: float = 0.0
 var lich_summon_lifetime_bonus: float = 0.0
@@ -1523,11 +1534,113 @@ var occupied_undead_slots: Dictionary:
 const FORMATION_COLUMNS: int = COMBAT_FORMATION_POLICY.FORMATION_COLUMNS
 
 
-func configure_meta_progression(unlocks: Dictionary) -> void:
+func configure_meta_progression(
+	unlocks: Dictionary, loadout: Dictionary = {}, apply_starting_effects: bool = true
+) -> void:
 	meta_progression_active = true
 	meta_unlocks = unlocks.duplicate(true)
+	selected_operator = str(loadout.get("operator", OPERATOR_CATALOG.DIRECTOR))
+	selected_starting_modifier = str(loadout.get(
+		"modifier", STARTING_MODIFIER_CATALOG.STANDARD
+	))
+	if not OPERATOR_CATALOG.is_available(selected_operator, meta_unlocks):
+		selected_operator = OPERATOR_CATALOG.DIRECTOR
+	if not STARTING_MODIFIER_CATALOG.is_available(
+		selected_starting_modifier, meta_unlocks
+	):
+		selected_starting_modifier = STARTING_MODIFIER_CATALOG.STANDARD
+	if apply_starting_effects and not starting_loadout_applied:
+		apply_starting_loadout()
 	update_factory_panel_ui()
 	update_bones_ui()
+
+
+func update_meta_unlocks(unlocks: Dictionary) -> void:
+	var newly_unlocked: Array[String] = []
+	for unlock_id: String in META_UNLOCK_CATALOG.UNLOCK_IDS:
+		if bool(unlocks.get(unlock_id, false)) and not bool(meta_unlocks.get(unlock_id, false)):
+			newly_unlocked.append(unlock_id)
+	meta_unlocks = unlocks.duplicate(true)
+	update_factory_panel_ui()
+	if not newly_unlocked.is_empty():
+		show_meta_unlock_feedback(newly_unlocked)
+
+
+func show_meta_unlock_feedback(unlock_ids: Array[String]) -> void:
+	if meta_unlock_feedback_label == null:
+		meta_unlock_feedback_label = Label.new()
+		meta_unlock_feedback_label.position = Vector2(660.0, 178.0)
+		meta_unlock_feedback_label.size = Vector2(600.0, 70.0)
+		meta_unlock_feedback_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		meta_unlock_feedback_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		meta_unlock_feedback_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		meta_unlock_feedback_label.add_theme_font_size_override("font_size", 17)
+		meta_unlock_feedback_label.add_theme_color_override("font_color", UI_GREEN)
+		meta_unlock_feedback_label.add_theme_color_override("font_outline_color", Color.BLACK)
+		meta_unlock_feedback_label.add_theme_constant_override("outline_size", 6)
+		meta_unlock_feedback_label.z_index = 690
+		add_child(meta_unlock_feedback_label)
+	var names: PackedStringArray = []
+	for unlock_id: String in unlock_ids:
+		names.append(tr(META_UNLOCK_CATALOG.get_name_key(unlock_id)))
+	meta_unlock_feedback_label.text = tr("META_PROJECT_UNLOCKED") + "\n" + " • ".join(names)
+	meta_unlock_feedback_label.visible = true
+	meta_unlock_feedback_revision += 1
+	var revision: int = meta_unlock_feedback_revision
+	get_tree().create_timer(4.0).timeout.connect(func() -> void:
+		if revision == meta_unlock_feedback_revision and is_instance_valid(meta_unlock_feedback_label):
+			meta_unlock_feedback_label.visible = false
+	)
+
+
+func apply_starting_loadout() -> void:
+	starting_loadout_applied = true
+	var effects: Dictionary = OPERATOR_CATALOG.get_definition(
+		selected_operator
+	).get("effects", {}) as Dictionary
+	merge_starting_effects(effects)
+	var modifier_effects: Dictionary = STARTING_MODIFIER_CATALOG.get_definition(
+		selected_starting_modifier
+	).get("effects", {}) as Dictionary
+	merge_starting_effects(modifier_effects)
+	update_active_enemy_loadout_stats()
+
+
+func merge_starting_effects(effects: Dictionary) -> void:
+	bones = maxi(bones + int(effects.get("bones", 0)), 0)
+	flesh = maxi(flesh + int(effects.get("flesh", 0)), 0)
+	factory_points = maxi(factory_points + int(effects.get("factory_points", 0)), 0)
+	skeleton_cost = maxi(skeleton_cost + int(effects.get("skeleton_cost", 0)), 1)
+	zombie_cost = maxi(zombie_cost + int(effects.get("zombie_cost", 0)), 1)
+	if int(effects.get("zombie_hp", 0)) != 0:
+		increase_zombie_max_hp(int(effects.get("zombie_hp", 0)))
+	enemy_damage_run_bonus += maxi(int(effects.get("enemy_damage", 0)), 0)
+	enemy_hp_run_percent_bonus += maxi(int(effects.get("enemy_hp_percent", 0)), 0)
+
+
+func update_active_enemy_loadout_stats() -> void:
+	for current_enemy: Node2D in enemies:
+		if not is_instance_valid(current_enemy):
+			continue
+		if enemy_damage_run_bonus > 0:
+			enemy_damages[current_enemy] = int(
+				enemy_damages.get(current_enemy, enemy_damage)
+			) + enemy_damage_run_bonus
+		if enemy_hp_run_percent_bonus > 0:
+			var previous_max: int = int(enemy_max_hps.get(current_enemy, enemy_max_hp))
+			var bonus: int = maxi(
+				int(round(float(previous_max) * float(enemy_hp_run_percent_bonus) / 100.0)),
+				1
+			)
+			enemy_max_hps[current_enemy] = previous_max + bonus
+			enemy_hps[current_enemy] = int(
+				enemy_hps.get(current_enemy, previous_max)
+			) + bonus
+			update_unit_health_bar(
+				current_enemy,
+				int(enemy_hps[current_enemy]),
+				int(enemy_max_hps[current_enemy])
+			)
 
 
 func meta_allows(unlock_id: String) -> bool:
@@ -2173,6 +2286,13 @@ func start_wave(
 			get_enemy_damage_for_wave(
 				current_wave
 			)
+		)
+	if enemy_hp_run_percent_bonus > 0:
+		enemy_max_hp = maxi(
+			int(round(
+				float(enemy_max_hp) * (1.0 + float(enemy_hp_run_percent_bonus) / 100.0)
+			)),
+			1
 		)
 
 	enemy_damage += enemy_damage_run_bonus
@@ -4418,6 +4538,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 	):
 
 		run_director.complete_wave()
+		meta_progress_reported.emit({"highest_wave": current_wave})
 		blood_fervor_active = false
 		set_processing_directive_locked(false)
 		award_factory_points_for_wave(current_wave)
@@ -5103,6 +5224,7 @@ func update_soul_extractor(delta: float) -> void:
 		corpses.erase(corpse)
 		corpse.queue_free()
 		total_corpses_processed += 1
+		meta_progress_reported.emit({"corpses_processed": total_corpses_processed})
 		souls += souls_gained
 		total_souls_earned += souls_gained
 		soul_extractor_completed.emit(souls_gained, soul_extraction_queue.size())
@@ -5569,6 +5691,7 @@ func process_corpse(
 	total_flesh_earned += flesh_gained
 
 	total_corpses_processed += 1
+	meta_progress_reported.emit({"corpses_processed": total_corpses_processed})
 	corpses_processed_by_directive[directive] = (
 		int(
 			corpses_processed_by_directive.get(
@@ -6286,7 +6409,11 @@ func create_upgrade_button(
 		390.0,
 		340.0
 	)
-	button.add_theme_font_size_override("font_size", 18)
+	button.custom_minimum_size = Vector2.ZERO
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	button.clip_text = true
+	button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	button.add_theme_font_size_override("font_size", 17)
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	apply_button_style(button, UI_GREEN)
 
@@ -7681,6 +7808,10 @@ func finish_run(
 
 
 	if victory:
+		meta_progress_reported.emit({
+			"highest_wave": current_wave,
+			"victories_delta": 1,
+		})
 
 		print("")
 		print("================================")
@@ -7881,9 +8012,14 @@ func build_checkpoint_state() -> Dictionary:
 		},
 		"run_modifiers": {
 			"enemy_damage_bonus": enemy_damage_run_bonus,
+			"enemy_hp_percent_bonus": enemy_hp_run_percent_bonus,
 			"event_zombie_hp_bonus": event_zombie_hp_bonus,
 			"event_ghost_damage_bonus": event_ghost_damage_bonus,
 			"faction_pressure": faction_pressure.duplicate(true),
+		},
+		"meta_loadout": {
+			"operator": selected_operator,
+			"modifier": selected_starting_modifier,
 		},
 		"processing_directive": processing_directive,
 		"rituals": {
@@ -7967,6 +8103,10 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	var run_modifiers: Dictionary = state.get("run_modifiers", {}) as Dictionary
 	enemy_damage_run_bonus = maxi(
 		int(run_modifiers.get("enemy_damage_bonus", 0)),
+		0
+	)
+	enemy_hp_run_percent_bonus = maxi(
+		int(run_modifiers.get("enemy_hp_percent_bonus", enemy_hp_run_percent_bonus)),
 		0
 	)
 	event_zombie_hp_bonus = maxi(

@@ -544,11 +544,13 @@ Bosses and Elites use disjoint Wave lists. This prevents accidental rule stackin
 
 ## Perfil permanente e Codex
 
-`RunSaveStore` continua responsável apenas pelo checkpoint retomável da partida. `MetaProgressionStore` grava `user://necroworks_profile.json` com schema independente, descobertas, espaço reservado para desbloqueios e no máximo 20 resultados concluídos. Essa separação permite apagar ou substituir uma run sem perder progresso permanente.
+`RunSaveStore` continua responsável apenas pelo checkpoint retomável da partida. `MetaProgressionStore` grava `user://necroworks_profile.json` com schema independente, descobertas, progresso agregado, desbloqueios, desafios, loadout e no máximo 20 resultados concluídos. Essa separação permite apagar ou substituir uma run sem perder progresso permanente.
 
-`CodexCatalog` mantém IDs estáveis e suas chaves de título/corpo. O shell decide se mostra o texto localizado ou um registro bloqueado a partir do perfil. Eventos e saves trabalham somente com IDs, portanto a troca de idioma nunca altera o dado persistido. Novos tipos de entrada devem ampliar o catálogo, sem transferir regras de gameplay para a interface.
+`CodexCatalog` mantém IDs estáveis e suas chaves de título/corpo. O shell decide se mostra o texto localizado ou um registro bloqueado a partir do perfil. Além das dez descobertas de rota, o catálogo contém dez referências de tropas, inimigos e chefes liberadas pela maior Onda concluída. Eventos e saves trabalham somente com IDs, portanto a troca de idioma nunca altera o dado persistido.
 
-O perfil usa schema v2. `MetaUnlockCatalog` deriva cinco projetos permanentes do histórico concluído: Auto-coleta na Onda 5, Arqueiro na 10, Extrator de Almas na 13, Prensa Hemática após 30 Cadáveres processados e Lich após a primeira vitória. O shell injeta esses direitos na cena F5; F6 permanece irrestrito para desenvolvimento e regressão isolada. As compras dentro da run continuam consumindo Pontos de Fábrica, portanto o perfil libera uma possibilidade, não entrega a tecnologia gratuitamente.
+O perfil usa schema v3 e reconstrói progresso compatível a partir dos históricos v1/v2. `MetaUnlockCatalog` deriva cinco projetos de Fábrica e quatro opções de loadout: Auto-coleta na Onda 5; Arqueiro e Engenheiro do Ossuário na 10; Extrator de Almas e Turno Noturno na 13; Prensa Hemática e Intendente da Peste após 30 Cadáveres na mesma run; Lich e Auditoria de Ferro após a primeira vitória. `ChallengeCatalog` expõe esses cinco marcos, enquanto `OperatorCatalog` e `StartingModifierCatalog` definem efeitos e disponibilidade sem depender da UI.
+
+O gameplay emite `meta_progress_reported` ao concluir uma Onda, processar um Cadáver ou vencer. O shell aplica o evento atomicamente ao perfil, salva e devolve os direitos atualizados à partida. Por isso a Auto-coleta aparece imediatamente depois da Onda 5. F6 permanece irrestrito para desenvolvimento; no fluxo F5 as compras ainda consomem Pontos de Fábrica, portanto o perfil libera possibilidades e não tecnologias gratuitas.
 
 ## Fronteiras finais da v0.4.1
 

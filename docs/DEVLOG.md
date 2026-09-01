@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 01/09/2026 — Conclusão da v0.5.0
+
+Corrigi o contrato dos marcos permanentes: concluir a Onda 5 agora libera a Auto-coleta na própria run, sem exigir encerramento. O perfil evoluiu para o schema v3 e passou a registrar Onda, Cadáveres e vitória em tempo real. Perfis v1 e v2 são migrados preservando histórico e desbloqueios.
+
+Fechei a camada horizontal com três operadores, três contratos iniciais e cinco desafios operacionais. O menu ganhou uma tela de configuração e o Codex passou a documentar tropas, inimigos e os três chefes. Cartões de aprimoramento agora respeitam largura fixa, quebra automática e recorte, eliminando invasão e sobreposição em 1920×1080. A suíte completa chegou a 53 runners aprovados, incluindo as runs Bone e Flesh.
+
+O build Windows v0.5.0 foi exportado novamente e iniciou sem erros em smoke test headless. O executável possui 113.053.872 bytes e SHA-256 `9BDEA7F4B22C32594E68F7DEBBDE265175405CF010836B97A8DF634433F59AC1`.
+
 ## 25/08/2026 — Consolidação estrutural v0.4.1
 
 Organizei todas as cenas por domínio, movi o controlador jogável para `scripts/game` e preservei os UIDs do Godot. F5 inicia pelo shell em `scenes/core/app.tscn`; F6 executa `scenes/world/gameplay.tscn` diretamente.

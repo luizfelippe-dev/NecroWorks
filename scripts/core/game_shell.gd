@@ -8,6 +8,9 @@ const BORDER: Color = Color(0.32, 0.31, 0.25, 1.0)
 const META_STORE: Script = preload("res://scripts/core/meta_progression_store.gd")
 const CODEX_CATALOG: Script = preload("res://scripts/game/codex_catalog.gd")
 const META_UNLOCK_CATALOG: Script = preload("res://scripts/game/meta_unlock_catalog.gd")
+const OPERATOR_CATALOG: Script = preload("res://scripts/game/operator_catalog.gd")
+const MODIFIER_CATALOG: Script = preload("res://scripts/game/starting_modifier_catalog.gd")
+const CHALLENGE_CATALOG: Script = preload("res://scripts/game/challenge_catalog.gd")
 
 var current_game: Node = null
 var settings: Dictionary = {}
@@ -20,6 +23,7 @@ var pause_menu: Control
 var options_menu: Control
 var codex_menu: Control
 var history_menu: Control
+var loadout_menu: Control
 var continue_button: Button
 var title_label: Label
 var subtitle_label: Label
@@ -38,14 +42,23 @@ var codex_title: Label
 var codex_content: Label
 var history_title: Label
 var history_content: Label
+var loadout_title: Label
+var operator_name_label: Label
+var operator_description_label: Label
+var modifier_name_label: Label
+var modifier_description_label: Label
+var challenges_label: Label
+var next_operator_button: Button
+var next_modifier_button: Button
 var profile: Dictionary = {}
+var profile_path: String = META_STORE.DEFAULT_PATH
 var localized_buttons: Dictionary = {}
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	settings = SettingsStore.apply_settings(SettingsStore.load_settings())
-	profile = META_STORE.load_profile()
+	profile = META_STORE.load_profile(profile_path)
 	build_interface()
 	refresh_localized_text()
 	show_main_menu()
@@ -65,6 +78,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif codex_menu.visible:
 		show_main_menu()
 	elif history_menu.visible:
+		show_main_menu()
+	elif loadout_menu.visible:
 		show_main_menu()
 	elif prologue_menu.visible:
 		show_main_menu()
@@ -96,6 +111,7 @@ func build_interface() -> void:
 	add_localized_button(main_box, "MENU_OPTIONS", open_options_from_main)
 	add_localized_button(main_box, "MENU_CODEX", show_codex)
 	add_localized_button(main_box, "MENU_RUN_HISTORY", show_run_history)
+	add_localized_button(main_box, "MENU_LOADOUT", show_loadout)
 	add_localized_button(main_box, "MENU_QUIT", quit_game)
 
 	prologue_menu = create_screen("PrologueMenu", Color(0.002, 0.006, 0.005, 1.0))
@@ -185,11 +201,37 @@ func build_interface() -> void:
 	history_scroll.add_child(history_content)
 	add_localized_button(history_box, "OPTIONS_BACK", show_main_menu)
 
+	loadout_menu = create_screen("LoadoutMenu", Color(0.0, 0.0, 0.0, 0.92))
+	var loadout_box := create_center_panel(loadout_menu, Vector2(900.0, 820.0))
+	loadout_title = create_label(34, ACCENT)
+	loadout_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	loadout_box.add_child(loadout_title)
+	operator_name_label = create_label(24, Color(0.88, 0.84, 0.69))
+	operator_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	loadout_box.add_child(operator_name_label)
+	operator_description_label = create_wrapped_center_label(17, 86.0)
+	loadout_box.add_child(operator_description_label)
+	next_operator_button = add_localized_button(
+		loadout_box, "LOADOUT_NEXT_OPERATOR", select_next_operator
+	)
+	modifier_name_label = create_label(24, Color(0.70, 0.34, 0.28))
+	modifier_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	loadout_box.add_child(modifier_name_label)
+	modifier_description_label = create_wrapped_center_label(17, 86.0)
+	loadout_box.add_child(modifier_description_label)
+	next_modifier_button = add_localized_button(
+		loadout_box, "LOADOUT_NEXT_MODIFIER", select_next_modifier
+	)
+	challenges_label = create_wrapped_center_label(16, 125.0)
+	loadout_box.add_child(challenges_label)
+	add_localized_button(loadout_box, "OPTIONS_BACK", show_main_menu)
+
 	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
 	codex_menu.visible = false
 	history_menu.visible = false
+	loadout_menu.visible = false
 
 
 func create_screen(screen_name: String, color: Color) -> Control:
@@ -232,6 +274,15 @@ func create_label(font_size: int, color: Color = Color(0.9, 0.9, 0.84)) -> Label
 	return label
 
 
+func create_wrapped_center_label(font_size: int, minimum_height: float) -> Label:
+	var label: Label = create_label(font_size)
+	label.custom_minimum_size.y = minimum_height
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	return label
+
+
 func create_separator() -> HSeparator:
 	var separator := HSeparator.new()
 	separator.custom_minimum_size.y = 12.0
@@ -263,6 +314,7 @@ func refresh_localized_text() -> void:
 	options_title.text = tr("OPTIONS_TITLE")
 	codex_title.text = tr("CODEX_TITLE")
 	history_title.text = tr("RUN_HISTORY_TITLE")
+	loadout_title.text = tr("LOADOUT_TITLE")
 	language_label.text = tr("OPTIONS_LANGUAGE")
 	volume_label.text = tr("OPTIONS_MASTER_VOLUME")
 	fullscreen_check.text = tr("OPTIONS_FULLSCREEN")
@@ -272,6 +324,7 @@ func refresh_localized_text() -> void:
 			button.text = tr(str(localized_buttons[button_value]))
 	refresh_codex_content()
 	refresh_run_history_content()
+	refresh_loadout_content()
 
 
 func show_main_menu() -> void:
@@ -282,6 +335,7 @@ func show_main_menu() -> void:
 	options_menu.visible = false
 	codex_menu.visible = false
 	history_menu.visible = false
+	loadout_menu.visible = false
 	continue_button.disabled = not RunSaveStore.has_checkpoint()
 
 
@@ -309,6 +363,15 @@ func refresh_codex_content() -> void:
 			)
 		else:
 			sections.append(tr("CODEX_LOCKED_ENTRY"))
+	sections.append(tr("CODEX_REFERENCE_TITLE"))
+	for reference_id: String in CODEX_CATALOG.REFERENCE_IDS:
+		if CODEX_CATALOG.is_reference_unlocked(reference_id, profile):
+			sections.append(
+				tr(CODEX_CATALOG.get_reference_title_key(reference_id))
+				+ "\n" + tr(CODEX_CATALOG.get_reference_body_key(reference_id))
+			)
+		else:
+			sections.append(tr("CODEX_LOCKED_ENTRY"))
 	codex_content.text = "\n\n".join(sections)
 
 
@@ -316,6 +379,71 @@ func show_run_history() -> void:
 	main_menu.visible = false
 	history_menu.visible = true
 	refresh_run_history_content()
+
+
+func show_loadout() -> void:
+	main_menu.visible = false
+	loadout_menu.visible = true
+	refresh_loadout_content()
+
+
+func refresh_loadout_content() -> void:
+	if operator_name_label == null:
+		return
+	var operator_id: String = str(profile.get(
+		"selected_operator", OPERATOR_CATALOG.DIRECTOR
+	))
+	var modifier_id: String = str(profile.get(
+		"selected_modifier", MODIFIER_CATALOG.STANDARD
+	))
+	var operator_definition: Dictionary = OPERATOR_CATALOG.get_definition(operator_id)
+	var modifier_definition: Dictionary = MODIFIER_CATALOG.get_definition(modifier_id)
+	operator_name_label.text = tr("LOADOUT_OPERATOR") + ": " + tr(
+		str(operator_definition.get("name_key", ""))
+	)
+	operator_description_label.text = tr(str(
+		operator_definition.get("description_key", "")
+	))
+	modifier_name_label.text = tr("LOADOUT_MODIFIER") + ": " + tr(
+		str(modifier_definition.get("name_key", ""))
+	)
+	modifier_description_label.text = tr(str(
+		modifier_definition.get("description_key", "")
+	))
+	var challenge_lines: PackedStringArray = [tr("CHALLENGES_TITLE")]
+	for challenge_id: String in CHALLENGE_CATALOG.CHALLENGE_IDS:
+		var definition: Dictionary = CHALLENGE_CATALOG.DEFINITIONS[challenge_id] as Dictionary
+		var value: Vector2i = CHALLENGE_CATALOG.get_progress(challenge_id, profile)
+		var status: String = tr("CHALLENGE_COMPLETE") if value.x >= value.y else (
+			str(mini(value.x, value.y)) + "/" + str(value.y)
+		)
+		challenge_lines.append(
+			tr(str(definition.get("title_key", ""))) + " — " + status
+		)
+	challenges_label.text = "\n".join(challenge_lines)
+
+
+func select_next_operator() -> void:
+	var available: Array[String] = OPERATOR_CATALOG.get_available_ids(
+		profile.get("unlocks", {}) as Dictionary
+	)
+	cycle_loadout_selection(available, "selected_operator")
+
+
+func select_next_modifier() -> void:
+	var available: Array[String] = MODIFIER_CATALOG.get_available_ids(
+		profile.get("unlocks", {}) as Dictionary
+	)
+	cycle_loadout_selection(available, "selected_modifier")
+
+
+func cycle_loadout_selection(available: Array[String], profile_key: String) -> void:
+	if available.is_empty():
+		return
+	var current_index: int = available.find(str(profile.get(profile_key, "")))
+	profile[profile_key] = available[(current_index + 1) % available.size()]
+	META_STORE.save_profile(profile, profile_path)
+	refresh_loadout_content()
 
 
 func refresh_run_history_content() -> void:
@@ -377,6 +505,7 @@ func start_game(checkpoint: Dictionary) -> void:
 	move_child(current_game, 0)
 	current_game.run_checkpoint_requested.connect(save_checkpoint)
 	current_game.run_completed.connect(on_run_completed)
+	current_game.meta_progress_reported.connect(on_meta_progress_reported)
 	current_game.restart_requested.connect(restart_game)
 	current_game.return_to_menu_requested.connect(return_to_menu)
 	main_menu.visible = false
@@ -385,8 +514,27 @@ func start_game(checkpoint: Dictionary) -> void:
 	options_menu.visible = false
 	codex_menu.visible = false
 	history_menu.visible = false
+	loadout_menu.visible = false
+	if not checkpoint.is_empty():
+		var checkpoint_metrics: Dictionary = checkpoint.get("metrics", {}) as Dictionary
+		META_STORE.apply_progress_event(profile, {
+			"highest_wave": int(checkpoint.get("wave", 0)),
+			"corpses_processed": int(checkpoint_metrics.get("corpses_processed", 0)),
+		})
+		META_STORE.save_profile(profile, profile_path)
 	if current_game.has_method("configure_meta_progression"):
-		current_game.configure_meta_progression(profile.get("unlocks", {}) as Dictionary)
+		var saved_loadout: Dictionary = checkpoint.get("meta_loadout", {}) as Dictionary
+		current_game.configure_meta_progression(
+			profile.get("unlocks", {}) as Dictionary,
+			{
+				"operator": saved_loadout.get(
+					"operator", profile.get("selected_operator", OPERATOR_CATALOG.DIRECTOR)
+				),
+				"modifier": saved_loadout.get(
+					"modifier", profile.get("selected_modifier", MODIFIER_CATALOG.STANDARD)
+				),
+			}
+		)
 	if not checkpoint.is_empty():
 		current_game.restore_checkpoint_state(checkpoint)
 
@@ -396,7 +544,22 @@ func save_checkpoint(state: Dictionary) -> void:
 	META_STORE.merge_discoveries(
 		profile, state.get("narrative", {}).get("discoveries", {}) as Dictionary
 	)
-	META_STORE.save_profile(profile)
+	META_STORE.save_profile(profile, profile_path)
+
+
+func on_meta_progress_reported(event: Dictionary) -> void:
+	var newly_unlocked: Array[String] = META_STORE.apply_progress_event(profile, event)
+	if (
+		not newly_unlocked.is_empty()
+		or event.has("highest_wave")
+		or int(event.get("victories_delta", 0)) > 0
+	):
+		META_STORE.save_profile(profile, profile_path)
+	if is_instance_valid(current_game) and not newly_unlocked.is_empty():
+		current_game.update_meta_unlocks(profile.get("unlocks", {}) as Dictionary)
+	if not newly_unlocked.is_empty():
+		refresh_run_history_content()
+		refresh_loadout_content()
 
 
 func on_run_completed(victory: bool) -> void:
@@ -409,8 +572,9 @@ func on_run_completed(victory: bool) -> void:
 			"enemies_killed": current_game.total_enemies_killed,
 			"corpses_processed": current_game.total_corpses_processed,
 			"army_remaining": current_game.get_total_undead_count(),
+			"progress_recorded_live": true,
 		})
-		META_STORE.save_profile(profile)
+		META_STORE.save_profile(profile, profile_path)
 
 
 func pause_game() -> void:
@@ -463,6 +627,7 @@ func open_options() -> void:
 	options_menu.visible = true
 	codex_menu.visible = false
 	history_menu.visible = false
+	loadout_menu.visible = false
 	var locale: String = LocalizationService.normalize_locale(str(settings.locale))
 	language_option.select({"en": 0, "pt_BR": 1, "es": 2}.get(locale, 0))
 	volume_slider.value = float(settings.master_volume)

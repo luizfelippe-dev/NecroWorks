@@ -656,4 +656,14 @@ Marcos V1: Onda 5 para Auto-coleta, Onda 10 para Arqueiro, Onda 13 para Extrator
 
 O estado econômico de derrota continua sendo a regra. Um resgate mecânico com tempo extra, unidade gratuita ou conversão emergencial não entra na v0.5.0.
 
+## Registrar marcos permanentes durante a run
+
+Projetos ligados a Ondas e processamento são liberados no instante em que o requisito é cumprido. O gameplay emite somente eventos de progresso; o shell mantém a autoridade sobre o perfil, persiste o resultado e devolve os novos direitos à cena. Encerrar a run continua necessário apenas para histórico e contagem de conclusões.
+
+Isso evita a situação em que a interface promete “concluir a Onda 5”, mas mantém a Auto-coleta bloqueada até uma vitória ou derrota posterior. Também permite continuar uma run já salva sem perder o marco alcançado.
+
+## Operadores e contratos são escolhas horizontais
+
+Cada operador e contrato possui um benefício acompanhado de pressão equivalente. Nenhum deles acumula níveis ou aumenta atributos por repetição. A configuração pertence ao perfil, é escolhida antes da partida e entra no checkpoint para garantir retomada determinística.
+
 Motivo: sem dados de playtests externos, o sistema pode apagar o peso da logística ou prolongar runs já perdidas. A v0.6.0 poderá adicionar primeiro um aviso claro de risco; qualquer recuperação jogável só será avaliada com dados de onde e por que as derrotas acontecem.

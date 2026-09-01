@@ -32,6 +32,9 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 - recursos, Onda e métricas formatados por `GameplayHudPresenter`;
 - exclusividade de Fábrica, Doutrina, Rituais, Fusões e modais controlada por `GameplayPanelCoordinator`;
 - primeiro build Windows release gerado e iniciado com sucesso;
+- perfil permanente v3 com progresso ao vivo e migração v1/v2;
+- catálogos de operadores, contratos e desafios separados da interface;
+- cartões de upgrade limitados por largura, quebra automática e recorte;
 - visual reference isolated from runtime assets;
 - health bar extracted as a reusable UI component;
 - shared army occupancy renamed from Skeleton-specific terminology;
@@ -54,16 +57,16 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 
 ### P1 — Main orchestrator size
 
-`scripts/game/main_controller.gd` ainda coordena combate, economia e a maior parte da UI, mas não é mais fonte das Ondas, formação, registro do exército, catálogos ou fórmulas básicas da Fábrica. O arquivo caiu de 10.507 para menos de 10.000 linhas nesta consolidação.
+`scripts/game/main_controller.gd` ainda coordena combate, economia e a maior parte da UI, mas não é mais fonte das Ondas, formação, registro do exército, catálogos ou fórmulas básicas da Fábrica. O arquivo está próximo de 10.100 linhas após a integração do loadout; o tamanho continua sendo dívida conhecida, mas as novas regras permanentes permanecem fora dele.
 
 Do not split it by arbitrary line count. Extract one responsibility at a time only when it has a stable interface and a focused validation scenario.
 
 Próxima ordem segura:
 
-1. coordenação de ataques, dano e ciclo de vida;
-2. painéis completos de HUD, Fábrica e Rituais;
-3. serviço de processamento e produção com estado próprio;
-4. remoção gradual dos espelhos legados após migração dos consumidores.
+1. serviço de processamento e produção com estado próprio;
+2. controlador dedicado para Fábrica e Rituais;
+3. remoção gradual dos espelhos legados após migração dos consumidores;
+4. conversão progressiva da UI absoluta para containers responsivos.
 
 Cada corte deve manter uma interface pequena e um runner específico. Spawn e ciclo de vida ainda pertencem ao orquestrador nesta etapa.
 

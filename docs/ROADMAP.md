@@ -4,22 +4,15 @@
 
 ---
 
-# Immediate execution order
+# Ordem imediata de execução
 
-1. Manually validate the new sprites and per-Wave processing commitment; close the current milestone with commit/push.
-2. Add visible Corpse processing feedback before making processing automatic. **Completed.**
-3. Introduce the localization foundation and translation keys before creating more large panels. **Completed for the first stable HUD slice.**
-4. Implement Corpse Processor queue, automatic collection toggle, throughput and capacity. **Completed as V1.**
-5. Create the Factory panel shell and its first run-scoped upgrade branch. **Completed as V1; balance requires playtest.**
-6. Add manual bulk production orders with a controller-friendly quantity stepper. **Completed.**
-7. Prototype Army Doctrine planning: target composition, priority and reserves. **Completed; automatic execution waits for production queues.**
-8. Implement timed Skeleton Assembler and Flesh Vat queues. **Completed as V1.**
-9. Connect controlled Army Doctrine replenishment with activation/pause, priority and reserve enforcement. **Completed.**
-10. Extract generic Undead runtime state before implementing a third playable unit. **Completed with a compatibility bridge.**
-11. Add Skeleton Archer first; use it to validate ranged player-unit architecture. **Completed as V1.**
-12. Add Lich only after Souls/advanced recipe costs and summon limits are defined. **Completed as V1.**
-13. Build Main/Pause/Options menus, persistent settings and save flow for the vertical slice. **Completed as V1.**
-14. Complete PT-BR, English and Spanish coverage after interface text stabilizes. **Menu flow complete; gameplay copy still requires a final audit.**
+1. validar manualmente a v0.5.0 em uma run nova e em um checkpoint migrado;
+2. iniciar o tutorial contextual sem interromper o ritmo do autobattler;
+3. criar escala de interface, redução de movimento e opções básicas de acessibilidade;
+4. concluir a auditoria linguística de PT-BR, inglês e espanhol;
+5. substituir a primeira família de sprites temporários por arte e animação finais;
+6. implementar a primeira camada de SFX/VFX e medir legibilidade em hordas grandes;
+7. preparar uma rodada curta de playtests externos antes de alterar dificuldade ou marcos.
 
 This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 
@@ -50,7 +43,7 @@ This order is a dependency chain, not a promise that every item is equally sized
 
 ### Git
 
-- [ ] verify whether `v0.1.0` tag is already present/pushed
+- [x] tag `v0.1.0` presente localmente e em `origin`
 
 ---
 
@@ -251,26 +244,32 @@ Milestone concluído. As regras, o estado e a apresentação estável possuem fr
 
 # v0.5.0 — Meta Progression
 
-- [x] versioned between-Wave run checkpoint and Continue flow V1
-- [x] save migration from schema version 1 to version 2
-- [x] horizontal unlock catalog V1 with five achievement-based projects
-- [x] unit recipe unlocks V1: Skeleton Archer and Lich requisitions
-- [x] Factory technology unlocks V1: Automated Retrieval, Hematic Press and Soul Extractor
-- [ ] characters/operators
-- [ ] starting modifiers
-- [ ] challenges
-- [x] persistent lore Codex V1 with ten event-route discoveries
-- [x] visible persistent run history V1, capped at the latest 20 results
-- [x] evaluate Last Stand — mechanical rescue deferred until external defeat data exists
-- [x] unlock possibilities rather than raw grind V1
+- [x] checkpoint versionado entre Ondas e fluxo Continuar V1
+- [x] migração do save de schema v1 para v2
+- [x] perfil permanente schema v3 com migração dos schemas v1 e v2
+- [x] catálogo horizontal com cinco projetos de Fábrica e quatro opções de loadout
+- [x] receitas desbloqueáveis: Arqueiro Esqueleto e Lich
+- [x] tecnologias desbloqueáveis: Auto-coleta, Prensa Hemática e Extrator de Almas
+- [x] três operadores com vantagens e limitações equivalentes
+- [x] três contratos iniciais com recompensa e pressão explícitas
+- [x] cinco desafios operacionais persistentes e visíveis, incluindo 30 Cadáveres em uma run
+- [x] progresso e desbloqueios atualizados durante a run, sem exigir encerramento
+- [x] Codex persistente com dez descobertas e dez registros de campo/produção
+- [x] histórico persistente e visível das 20 runs concluídas mais recentes
+- [x] avaliar Last Stand — resgate mecânico adiado até existirem dados externos de derrota
+- [x] liberar possibilidades em vez de atributos acumulados
+
+### Gate
+
+Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, desafios, loadout e histórico sem conceder crescimento bruto por repetição. Os cinco marcos foram cobertos em perfil novo e migrado; Onda 5 e Cadáveres atualizam o gameplay imediatamente.
 
 ### Próxima ordem
 
-1. criar operadores com vantagens e limitações equivalentes;
-2. ligar operadores a modificadores iniciais explícitos;
-3. definir desafios que concedam opções cosméticas ou laterais;
-4. expandir o Codex para unidades, inimigos e chefes;
-5. testar os cinco marcos de desbloqueio em runs manuais novas e migradas.
+1. iniciar a v0.6.0 pelo tutorial contextual;
+2. criar opções básicas de acessibilidade e concluir QA linguístico;
+3. substituir sprites temporários pelas famílias finais de animação;
+4. iniciar áudio, VFX e polimento de chefes;
+5. medir performance e clareza em runs externas.
 
 ---
 

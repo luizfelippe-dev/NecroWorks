@@ -1,24 +1,28 @@
 # Changelog
 
-## [0.5.0] — Em desenvolvimento — Meta Progression
+## [0.5.0] — 01/09/2026 — Meta Progression
 
 ### Added
 
 - perfil permanente versionado e separado do checkpoint de uma run;
-- Codex narrativo no menu principal com dez registros localizados e revelação permanente por descoberta;
+- Codex narrativo no menu principal com descobertas de rota e registros de tropas, inimigos e chefes;
 - histórico persistente das 20 runs concluídas mais recentes;
 - tela localizada de histórico com projetos permanentes e resultados de cada run;
-- cinco projetos horizontais: Auto-coleta, Prensa Hemática, Extrator de Almas, Arqueiro Esqueleto e Lich;
+- cinco projetos horizontais de Fábrica e quatro possibilidades permanentes de loadout;
+- tela de configuração com três operadores, três contratos iniciais e cinco desafios operacionais;
+- notificação imediata de projeto permanente liberado durante a partida;
 - alias de compatibilidade `main.tscn` para execuções F6 salvas em versões anteriores da organização;
-- regressões de perfil, catálogo, integração e navegação, elevando a suíte para 50 runners.
+- regressões de perfil, catálogo, integração, loadout e layout, elevando a suíte para 53 runners.
 
 ### Changed
 
 - descobertas passam do checkpoint para o perfil sempre que a partida é salva ou concluída;
+- conclusão de Onda e processamento de Cadáver atualizam o perfil durante a run;
 - resultado, onda, inimigos derrotados e exército restante são registrados no fim da run;
-- perfil migrado do schema v1 para v2, concedendo projetos compatíveis com o histórico preservado;
+- perfil migrado para o schema v3, reconstruindo progresso compatível a partir do histórico preservado;
 - tecnologias e receitas avançadas exigem marcos permanentes no fluxo F5, mas continuam livres no F6 de desenvolvimento;
-- painel do menu principal ganhou altura para acomodar o acesso ao Codex sem compressão.
+- cartões de aprimoramento e projetos ganharam quebra automática, recorte e limites fixos;
+- painel do menu principal ganhou acesso ao loadout sem comprimir os demais controles.
 
 ## [0.4.1] — 01/09/2026 — Consolidação Técnica
 
