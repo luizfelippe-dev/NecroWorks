@@ -248,6 +248,8 @@ Estrutura:
 
 O protótipo já substituiu os quadrados por sprites básicos de todas as unidades atuais. A arte ainda é temporária e sem animação, mas a primeira passagem estrutural também inclui fundo fabril procedural, battlefield separado, faixa de produção, módulos de processamento, painéis de metal escuro, acentos necromânticos e cards contextuais.
 
+A direção final está documentada em `docs/ART_DIRECTION.md`. Guerreiro Esqueleto e Zumbi Tank já possuem concept sheets transparentes com os cinco estados obrigatórios. Eles permanecem como estudos de pose até que cada frame seja exportado com célula e pivô uniformes. O driver já aceita texturas diferentes para `idle`, `move`, `attack`, `hit` e `death`, permitindo integrar a arte sem acoplar animação às regras de combate.
+
 ## Stack
 
 - Godot 4.7.1 stable
@@ -263,6 +265,7 @@ O protótipo já substituiu os quadrados por sprites básicos de todas as unidad
 ```text
 assets/reference/       concept e referências visuais
 assets/sprites/units/   sprites temporários usados pelo runtime
+assets/sprites/animation_concepts/ estudos de pose para animação final
 docs/                   design, arquitetura, roadmap e plano comercial
 scenes/core/             entrada da aplicação, menu e opções
 scenes/world/            gameplay e elementos do campo de batalha
@@ -309,4 +312,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado, configurações v2 com acessibilidade e uma primeira camada audiovisual de combate. Rastros, números, impactos, alertas de chefe e seis vozes SFX procedurais tornam a batalha legível sem alterar a simulação. O próximo foco é substituir essa base por arte, animação e áudio finais, concluir QA linguístico e medir performance externa.
+A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado, configurações v2 com acessibilidade, primeira camada audiovisual e direção de arte consolidada. Rastros, números, impactos, alertas de chefe e seis vozes SFX procedurais tornam a batalha legível sem alterar a simulação. As 422 chaves do catálogo têm conteúdo completo nos três idiomas; a revisão editorial final ainda será feita antes da demo. O próximo foco é exportar frames uniformes, integrar as animações, substituir o áudio provisório e medir performance externa.

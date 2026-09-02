@@ -23,6 +23,14 @@ O combate usa cinco estados visuais comuns. Cada unidade pode trocar a implement
 
 O componente atual fornece movimento procedural mínimo. Spritesheets finais serão conectados por trás desta interface durante o polimento da vertical slice.
 
+## Texturas por estado
+
+`UnitAnimationDriver.configure_state_textures()` aceita um dicionário parcial ou completo com os mesmos cinco nomes de estado. Ao iniciar uma ação, o driver troca a textura antes do tween; ao concluir `move`, `attack` ou `hit`, restaura `idle`. O estado `death` mantém sua textura até a unidade sair da árvore.
+
+Esse caminho permite integrar poses finais gradualmente. Uma unidade pode receber primeiro `idle` e `attack`, continuar usando a textura-base nos demais estados e completar o conjunto depois, sem alterar combate, dano ou cooldown.
+
+Os arquivos em `assets/sprites/animation_concepts/` são referências de pose, não atlases prontos. A versão final deve usar frames individuais ou células uniformes com pivô dos pés idêntico. Não se deve cortar o concept sheet em cinco partes iguais: as silhuetas têm larguras diferentes e atravessam os limites visuais.
+
 ## Movimento reduzido
 
 Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, rotações e mudanças de escala. Impacto preserva apenas um flash curto e morte preserva o desaparecimento imediato, porque ambos comunicam estado essencial. A mesma preferência congela parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera duração de ataque, dano ou cooldown.

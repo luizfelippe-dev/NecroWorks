@@ -1,5 +1,15 @@
 # NecroWorks — Devlog
 
+## 02/09/2026 — Direção de arte e ponte para animação final
+
+Fechei a linguagem visual da vertical slice em um documento próprio: materiais, paleta funcional, leitura de silhuetas, famílias de personagens, interface e critérios de exportação. Guerreiro Esqueleto e Zumbi Tank receberam estudos transparentes com idle, movimento, ataque, impacto e morte. Mantive esses arquivos como concept sheets porque as poses não possuem células técnicas uniformes; cortar a faixa automaticamente degradaria o resultado.
+
+Preparei o runtime para a próxima passagem: `UnitAnimationDriver` agora aceita texturas por estado, restaura idle ao fim da ação e mantém fallback para o sprite atual quando uma pose ainda não existe. Assim, cada família pode ser integrada gradualmente sem tocar em dano, alvo ou cooldown.
+
+Também ampliei o QA de localização. Um runner percorre as 422 chaves do CSV, rejeita campos vazios, duplicatas e divergências entre o catálogo e as traduções importadas em inglês, português do Brasil e espanhol. Com as regressões de arte e idioma, a suíte passa a ter 59 cenários.
+
+Os 59 cenários passaram em 77,81 segundos, incluindo as duas estratégias completas. O preset passou a excluir concept sheets e demais fontes que não pertencem ao runtime; o build final retornou a 113.075.200 bytes, abriu no smoke test headless e recebeu SHA-256 `E692C120DCAB1E84A238450005A1480095E0C82A085D4283AFF000F9F9B6541B`.
+
 ## 01/09/2026 — Conclusão da v0.5.0
 
 Corrigi o contrato dos marcos permanentes: concluir a Onda 5 agora libera a Auto-coleta na própria run, sem exigir encerramento. O perfil evoluiu para o schema v3 e passou a registrar Onda, Cadáveres e vitória em tempo real. Perfis v1 e v2 são migrados preservando histórico e desbloqueios.

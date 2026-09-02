@@ -13,19 +13,36 @@ func _initialize() -> void:
 func run_validation() -> void:
 	var host: Node2D = Node2D.new()
 	var sprite: Sprite2D = Sprite2D.new()
+	var idle_texture: ImageTexture = create_test_texture(Color.GREEN)
+	var attack_texture: ImageTexture = create_test_texture(Color.RED)
+	sprite.texture = idle_texture
 	var driver: Node = DRIVER_SCRIPT.new()
 	root.add_child(host)
 	host.add_child(sprite)
 	host.add_child(driver)
 	driver.call("bind", sprite)
+	assert(driver.call("configure_state_textures", {
+		"idle": idle_texture,
+		"attack": attack_texture,
+	}))
+	assert(sprite.texture == idle_texture)
 	assert(driver.call("play", "attack", -1.0))
 	assert(str(driver.get("current_animation")) == "attack")
+	assert(sprite.texture == attack_texture)
 	await create_timer(0.25).timeout
 	assert(str(driver.get("current_animation")) == "idle")
+	assert(sprite.texture == idle_texture)
 	assert(driver.call("play", "hit"))
 	await create_timer(0.2).timeout
 	assert(str(driver.get("current_animation")) == "idle")
 	assert(not driver.call("play", "unsupported"))
+	assert(not driver.call("configure_state_textures", {"unsupported": idle_texture}))
 	host.free()
 	print("UNIT ANIMATION CONTRACT VALIDATION: PASS")
 	quit()
+
+
+func create_test_texture(color: Color) -> ImageTexture:
+	var image := Image.create(2, 2, false, Image.FORMAT_RGBA8)
+	image.fill(color)
+	return ImageTexture.create_from_image(image)

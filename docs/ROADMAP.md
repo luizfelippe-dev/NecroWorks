@@ -10,9 +10,10 @@
 2. iniciar o tutorial contextual sem interromper o ritmo do autobattler;
 3. criar escala de interface, redução de movimento e opções básicas de acessibilidade;
 4. concluir a auditoria linguística de PT-BR, inglês e espanhol;
-5. substituir a primeira família de sprites temporários por arte e animação finais;
-6. implementar a primeira camada de SFX/VFX e medir legibilidade em hordas grandes;
-7. preparar uma rodada curta de playtests externos antes de alterar dificuldade ou marcos.
+5. exportar frames uniformes a partir da direção aprovada para Esqueleto e Zumbi;
+6. integrar as duas primeiras famílias pelo contrato de texturas por estado;
+7. medir legibilidade e performance em hordas grandes;
+8. preparar uma rodada curta de playtests externos antes de alterar dificuldade ou marcos.
 
 This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 
@@ -267,7 +268,7 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 
 1. [concluído] iniciar a v0.6.0 pelo tutorial contextual;
 2. [em andamento] criar opções básicas de acessibilidade e concluir QA linguístico;
-3. substituir sprites temporários pelas famílias finais de animação;
+3. [em andamento] substituir sprites temporários pelas famílias finais de animação;
 4. [em andamento] iniciar áudio, VFX e polimento de chefes;
 5. medir performance e clareza em runs externas.
 
@@ -284,7 +285,7 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] first-run tutorial in PT-BR / English / Spanish
 - [x] reduced motion and high-contrast options
 - [ ] accessibility options and final linguistic QA
-- [ ] final-ish art direction
+- [x] final-ish art direction
 - [ ] UI matching official target
 - [x] basic temporary sprites for all current combatants
 - [ ] final Skeleton art and animation
@@ -307,6 +308,8 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 ### Gate
 
 Screenshots/trailer must look commercially credible.
+
+**Direção visual fechada em 02/09/2026:** regras de cor, silhueta, escala, interface e exportação estão registradas em `ART_DIRECTION.md`. Os estudos de cinco estados do Guerreiro Esqueleto e do Zumbi Tank foram validados como PNG RGBA transparente. Eles permanecem como concept sheets até a exportação de células uniformes; arte e animação finais continuam abertas.
 
 ---
 

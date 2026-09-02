@@ -57,7 +57,7 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 
 ### P1 — Main orchestrator size
 
-`scripts/game/main_controller.gd` ainda coordena combate, economia e a maior parte da UI, mas não é mais fonte das Ondas, formação, registro do exército, catálogos ou fórmulas básicas da Fábrica. O arquivo está próximo de 10.100 linhas após a integração do loadout; o tamanho continua sendo dívida conhecida, mas as novas regras permanentes permanecem fora dele.
+`scripts/game/main_controller.gd` ainda coordena combate, economia e a maior parte da UI, mas não é mais fonte das Ondas, formação, registro do exército, catálogos ou fórmulas básicas da Fábrica. O arquivo possui 10.252 linhas neste checkpoint; o tamanho continua sendo dívida conhecida, mas direção de arte, animação visual e validação linguística permaneceram fora dele.
 
 Do not split it by arbitrary line count. Extract one responsibility at a time only when it has a stable interface and a focused validation scenario.
 
@@ -181,6 +181,12 @@ A suíte possui 55 runners. Os novos cenários protegem migração de settings v
 ### Apresentação audiovisual V1
 
 VFX e SFX ficaram em dois componentes próprios. O controlador apenas envia eventos depois que o combate resolve ataque ou dano. A árvore visual possui teto de 48 transientes; o áudio reutiliza dez players e limita repetição de ataque/impacto. A suíte subiu para 57 runners, sem alterar resultados das estratégias Bone e Flesh.
+
+### Ponte de animação e integridade linguística
+
+O driver visual aceita texturas opcionais por estado e mantém a textura-base como fallback. Os primeiros concept sheets foram deliberadamente mantidos fora do catálogo de runtime: são fontes de pose com transparência válida, mas não possuem células uniformes. Essa decisão evita dívida visual escondida em recortes frágeis.
+
+O catálogo de localização passou a ter auditoria exaustiva das 422 chaves e dos três idiomas. Isso fecha lacunas técnicas, campos vazios e divergências de importação; naturalidade, tom e consistência terminológica ainda exigem leitura editorial antes da demo. A suíte total sobe para 59 runners.
 
 ### v0.4.0 closure — 24/08/2026
 

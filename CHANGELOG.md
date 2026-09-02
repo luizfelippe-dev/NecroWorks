@@ -13,6 +13,11 @@
 - banco SFX procedural V1 com vozes para ataque, impacto, morte, habilidade, chefe e início de Onda;
 - apresentação localizada de entrada dos três chefes;
 - regressões audiovisuais dedicadas, elevando a suíte para 57 cenários.
+- direção de arte consolidada para personagens, cenário, interface, cores e exportação;
+- concept sheets RGBA de cinco estados para Guerreiro Esqueleto e Zumbi Tank;
+- suporte a texturas por estado no `UnitAnimationDriver`, com fallback seguro para o sprite-base;
+- auditoria integral das 422 chaves em inglês, português do Brasil e espanhol;
+- regressões de assets de animação e integridade linguística, elevando a suíte para 59 cenários.
 
 ### Changed
 
@@ -21,6 +26,8 @@
 - painel de Opções foi ampliado para manter todos os controles dentro de 1920×1080;
 - tutorial concluído é persistido sem contaminar checkpoint ou perfil permanente.
 - feedback visual limitado a 48 elementos transitórios e áudio limitado a dez vozes com cadência protegida para hordas.
+- concept sheets são fontes de direção e não são cortados como atlas enquanto não tiverem células e pivôs uniformes.
+- fontes de conceito e referência permanecem excluídas do build Windows até virarem assets de runtime.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 

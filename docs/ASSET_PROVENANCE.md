@@ -41,6 +41,28 @@ Os arquivos continuam classificados como arte de protótipo. Antes da página da
 
 O cenário foi criado sem personagens, HUD, texto ou logotipos. A região central mantém contraste reduzido para preservar nomes e barras de vida.
 
+## Estudos de animação — 02/09/2026
+
+### Guerreiro Esqueleto
+
+- arquivo: `assets/sprites/animation_concepts/skeleton_warrior_five_state_v1.png`;
+- criação específica para NecroWorks com a ferramenta de geração de imagens da OpenAI;
+- referências internas: `skeleton_prototype.png` e `necrodesignv2.png`;
+- conteúdo: poses de idle, movimento, ataque, impacto e morte;
+- formato: PNG RGBA, 2172×724, fundo transparente;
+- situação: direção aprovada; não integrado como atlas porque as caixas das poses são irregulares.
+
+### Zumbi Tank
+
+- arquivo: `assets/sprites/animation_concepts/zombie_tank_five_state_v1.png`;
+- criação específica para NecroWorks com a ferramenta de geração de imagens da OpenAI;
+- referências internas: `zombie_prototype.png` e `necrodesignv2.png`;
+- conteúdo: poses de idle, movimento, ataque, impacto e morte;
+- formato: PNG RGBA, 2172×724, fundo transparente;
+- situação: direção aprovada; não integrado como atlas porque as caixas das poses são irregulares.
+
+Os originais gerados permanecem fora do repositório no armazenamento local da ferramenta. As cópias versionadas acima são as fontes de trabalho do projeto e ficam excluídas do build Windows enquanto forem apenas conceito. Antes da distribuição comercial, os frames finais ainda passarão por recorte técnico, consistência de pivô, revisão manual e conferência dos termos aplicáveis à geração.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

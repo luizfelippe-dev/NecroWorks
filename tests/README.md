@@ -396,7 +396,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/g
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/meta_unlock_gameplay_runner.gd
 ```
 
-A suíte atual contém 57 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 02/09/2026, incluindo as estratégias completas Bone e Flesh.
+A suíte atual contém 59 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 02/09/2026, incluindo as estratégias completas Bone e Flesh. A execução completa levou 77,81 segundos na máquina de desenvolvimento.
 
 ## Conclusão da v0.5.0
 
@@ -425,3 +425,12 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/a
 ```
 
 Os cenários protegem conteúdo, limpeza e teto da camada transitória, integração com dano, acessibilidade, seis streams procedurais, pool de vozes e controle de repetição.
+
+## Direção de animação e integridade linguística
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/animation_art_direction_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/localization/catalog_integrity_runner.gd
+```
+
+O primeiro cenário valida presença, dimensões e transparência dos concept sheets do Esqueleto e do Zumbi. O segundo percorre as 422 chaves do catálogo, rejeita duplicatas e campos vazios e compara as traduções importadas dos três idiomas com o CSV-fonte.

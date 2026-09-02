@@ -10,6 +10,11 @@ func _initialize() -> void:
 		str(config.get_value("preset.0", "export_path", ""))
 		== "builds/windows/NecroWorks.exe"
 	)
+	var excluded: String = str(config.get_value("preset.0", "exclude_filter", ""))
+	assert(excluded.contains("assets/reference/*"))
+	assert(excluded.contains("assets/sprites/animation_concepts/*"))
+	assert(excluded.contains("tests/*"))
+	assert(excluded.contains("docs/*"))
 	assert(
 		str(config.get_value("preset.0.options", "application/product_name", ""))
 		== "NecroWorks"

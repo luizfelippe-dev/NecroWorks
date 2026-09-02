@@ -13,6 +13,8 @@ const SUPPORTED_ANIMATIONS: Array[String] = [IDLE, MOVE, ATTACK, HIT, DEATH]
 
 var sprite: Sprite2D
 var current_animation: String = IDLE
+var base_texture: Texture2D
+var state_textures: Dictionary = {}
 var base_position: Vector2
 var base_scale: Vector2
 var base_modulate: Color
@@ -23,10 +25,24 @@ var reduced_motion: bool = false
 
 func bind(target_sprite: Sprite2D) -> void:
 	sprite = target_sprite
+	base_texture = sprite.texture
 	base_position = sprite.position
 	base_scale = sprite.scale
 	base_modulate = sprite.modulate
 	set_process(true)
+
+
+func configure_state_textures(textures: Dictionary) -> bool:
+	var validated: Dictionary = {}
+	for animation_name: Variant in textures:
+		var state: String = str(animation_name)
+		var texture: Variant = textures[animation_name]
+		if state not in SUPPORTED_ANIMATIONS or not texture is Texture2D:
+			return false
+		validated[state] = texture
+	state_textures = validated
+	_apply_state_texture(current_animation)
+	return true
 
 
 func _process(delta: float) -> void:
@@ -43,6 +59,7 @@ func play(animation_name: String, direction: float = 1.0) -> bool:
 		action_tween.kill()
 	_restore_visual()
 	current_animation = animation_name
+	_apply_state_texture(animation_name)
 	animation_started.emit(animation_name)
 	if reduced_motion:
 		_play_reduced_animation(animation_name)
@@ -67,6 +84,7 @@ func set_reduced_motion(enabled: bool) -> void:
 		action_tween.kill()
 	_restore_visual()
 	current_animation = IDLE
+	_apply_state_texture(IDLE)
 	set_process(not enabled)
 
 
@@ -116,6 +134,14 @@ func _finish_action(completed_animation: String) -> void:
 	animation_finished.emit(completed_animation)
 	if completed_animation != DEATH:
 		current_animation = IDLE
+		_apply_state_texture(IDLE)
+
+
+func _apply_state_texture(animation_name: String) -> void:
+	if sprite == null:
+		return
+	var fallback: Texture2D = base_texture
+	sprite.texture = state_textures.get(animation_name, fallback) as Texture2D
 
 
 func _restore_visual() -> void:
