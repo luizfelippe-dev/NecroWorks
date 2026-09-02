@@ -265,8 +265,8 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 
 ### Próxima ordem
 
-1. iniciar a v0.6.0 pelo tutorial contextual;
-2. criar opções básicas de acessibilidade e concluir QA linguístico;
+1. [concluído] iniciar a v0.6.0 pelo tutorial contextual;
+2. [em andamento] criar opções básicas de acessibilidade e concluir QA linguístico;
 3. substituir sprites temporários pelas famílias finais de animação;
 4. iniciar áudio, VFX e polimento de chefes;
 5. medir performance e clareza em runs externas.
@@ -280,6 +280,9 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] Options V1: audio, display and language
 - [x] persistent settings V1
 - [x] PT-BR / English / Spanish automated UI coverage
+- [x] persistent settings V2 with V1 migration
+- [x] first-run tutorial in PT-BR / English / Spanish
+- [x] reduced motion and high-contrast options
 - [ ] accessibility options and final linguistic QA
 - [ ] final-ish art direction
 - [ ] UI matching official target
@@ -294,8 +297,8 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [ ] VFX
 - [ ] SFX
 - [ ] music
-- [ ] tutorial
-- [ ] accessibility basics
+- [x] tutorial
+- [x] accessibility basics
 - [ ] performance pass
 
 ### Gate

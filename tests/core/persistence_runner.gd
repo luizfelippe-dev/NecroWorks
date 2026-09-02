@@ -3,6 +3,7 @@ extends SceneTree
 
 const MAIN_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const SETTINGS_PATH: String = "user://necroworks_settings_test.cfg"
+const LEGACY_SETTINGS_PATH: String = "user://necroworks_settings_v1_test.cfg"
 const SAVE_PATH: String = "user://necroworks_run_test.json"
 
 
@@ -15,11 +16,30 @@ func run_validation() -> void:
 		"locale": "pt-BR",
 		"master_volume": 1.7,
 		"fullscreen": true,
+		"reduced_motion": true,
+		"high_contrast": true,
+		"tutorial_enabled": false,
+		"tutorial_completed": true,
 	}, SETTINGS_PATH)
 	var loaded_settings: Dictionary = SettingsStore.load_settings(SETTINGS_PATH)
 	assert(loaded_settings.locale == "pt_BR")
 	assert(is_equal_approx(float(loaded_settings.master_volume), 1.0))
 	assert(loaded_settings.fullscreen)
+	assert(loaded_settings.reduced_motion)
+	assert(loaded_settings.high_contrast)
+	assert(not loaded_settings.tutorial_enabled)
+	assert(loaded_settings.tutorial_completed)
+	var legacy_config := ConfigFile.new()
+	legacy_config.set_value("meta", "version", 1)
+	legacy_config.set_value("general", "locale", "es")
+	legacy_config.set_value("audio", "master_volume", 0.45)
+	legacy_config.set_value("display", "fullscreen", false)
+	assert(legacy_config.save(LEGACY_SETTINGS_PATH) == OK)
+	var migrated_settings: Dictionary = SettingsStore.load_settings(LEGACY_SETTINGS_PATH)
+	assert(migrated_settings.locale == "es")
+	assert(is_equal_approx(float(migrated_settings.master_volume), 0.45))
+	assert(not migrated_settings.reduced_motion)
+	assert(migrated_settings.tutorial_enabled)
 
 	var game: Node = MAIN_SCENE.instantiate()
 	root.add_child(game)
@@ -73,6 +93,7 @@ func run_validation() -> void:
 	assert(RunSaveStore.load_checkpoint(SAVE_PATH).is_empty())
 	assert(RunSaveStore.delete_checkpoint(SAVE_PATH) == OK)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(SETTINGS_PATH))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(LEGACY_SETTINGS_PATH))
 	print("SETTINGS AND CHECKPOINT PERSISTENCE VALIDATION: PASS")
 	game.queue_free()
 	restored_game.queue_free()

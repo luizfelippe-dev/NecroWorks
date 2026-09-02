@@ -18,6 +18,7 @@ var base_scale: Vector2
 var base_modulate: Color
 var idle_time: float = 0.0
 var action_tween: Tween
+var reduced_motion: bool = false
 
 
 func bind(target_sprite: Sprite2D) -> void:
@@ -29,7 +30,7 @@ func bind(target_sprite: Sprite2D) -> void:
 
 
 func _process(delta: float) -> void:
-	if sprite == null or current_animation != IDLE:
+	if reduced_motion or sprite == null or current_animation != IDLE:
 		return
 	idle_time += delta
 	sprite.position.y = base_position.y + sin(idle_time * 3.2) * 1.4
@@ -43,6 +44,9 @@ func play(animation_name: String, direction: float = 1.0) -> bool:
 	_restore_visual()
 	current_animation = animation_name
 	animation_started.emit(animation_name)
+	if reduced_motion:
+		_play_reduced_animation(animation_name)
+		return true
 	match animation_name:
 		IDLE:
 			_finish_action(IDLE)
@@ -55,6 +59,26 @@ func play(animation_name: String, direction: float = 1.0) -> bool:
 		DEATH:
 			_play_death()
 	return true
+
+
+func set_reduced_motion(enabled: bool) -> void:
+	reduced_motion = enabled
+	if action_tween != null and action_tween.is_valid():
+		action_tween.kill()
+	_restore_visual()
+	current_animation = IDLE
+	set_process(not enabled)
+
+
+func _play_reduced_animation(animation_name: String) -> void:
+	if animation_name == HIT:
+		sprite.modulate = Color(1.0, 0.48, 0.40, 1.0)
+		await get_tree().create_timer(0.06, false).timeout
+		if is_instance_valid(sprite):
+			sprite.modulate = base_modulate
+	elif animation_name == DEATH:
+		sprite.modulate.a = 0.0
+	_finish_action(animation_name)
 
 
 func _play_move(direction: float) -> void:

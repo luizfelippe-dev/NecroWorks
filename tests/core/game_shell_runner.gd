@@ -3,6 +3,7 @@ extends SceneTree
 
 const APP_SCENE: PackedScene = preload("res://scenes/core/app.tscn")
 const PROFILE_PATH: String = "user://necroworks_shell_test_profile.json"
+const SETTINGS_PATH: String = "user://necroworks_shell_test_settings.cfg"
 
 
 func _initialize() -> void:
@@ -14,6 +15,7 @@ func run_validation() -> void:
 	TranslationServer.set_locale("en")
 	var shell: Node = APP_SCENE.instantiate()
 	shell.profile_path = PROFILE_PATH
+	shell.settings_path = SETTINGS_PATH
 	root.add_child(shell)
 	await process_frame
 	LocalizationService.set_locale("en")
@@ -58,6 +60,7 @@ func run_validation() -> void:
 	assert(shell.options_apply_button.text == "APLICAR")
 	assert(shell.prologue_title.text == "A ÚLTIMA LINHA DE PRODUÇÃO")
 	assert(shell.prologue_body.text.contains("Cada cadáver é matéria-prima"))
+	assert(shell.reduced_motion_check.text == "REDUZIR MOVIMENTO")
 
 	shell.start_game({})
 	await process_frame
@@ -90,4 +93,6 @@ func run_validation() -> void:
 	shell.queue_free()
 	if FileAccess.file_exists(PROFILE_PATH):
 		assert(DirAccess.remove_absolute(ProjectSettings.globalize_path(PROFILE_PATH)) == OK)
+	if FileAccess.file_exists(SETTINGS_PATH):
+		assert(DirAccess.remove_absolute(ProjectSettings.globalize_path(SETTINGS_PATH)) == OK)
 	quit()

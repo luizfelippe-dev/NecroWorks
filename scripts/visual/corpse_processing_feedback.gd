@@ -8,6 +8,7 @@ const POPUP_DURATION: float = 0.72
 var accent_color: Color = Color(0.38, 0.82, 0.25, 1.0)
 var popup_label: Label = null
 var arrived: bool = false
+var reduced_motion: bool = false
 
 
 func play(
@@ -24,6 +25,10 @@ func play(
 	add_to_group("processing_feedback")
 	create_yield_label(bones_gained, flesh_gained)
 	queue_redraw()
+	if reduced_motion:
+		global_position = target_position
+		show_yield_popup()
+		return
 
 
 	var travel_tween: Tween = create_tween()
@@ -49,6 +54,10 @@ func play(
 		TRAVEL_DURATION
 	)
 	travel_tween.chain().tween_callback(show_yield_popup)
+
+
+func set_reduced_motion(enabled: bool) -> void:
+	reduced_motion = enabled
 
 
 func create_yield_label(
@@ -81,6 +90,10 @@ func show_yield_popup() -> void:
 	scale = Vector2.ONE
 	popup_label.visible = true
 	queue_redraw()
+	if reduced_motion:
+		popup_label.position.y = -46.0
+		get_tree().create_timer(0.35, false).timeout.connect(queue_free)
+		return
 
 
 	var popup_tween: Tween = create_tween()

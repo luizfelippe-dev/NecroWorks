@@ -14,7 +14,9 @@ const CHALLENGE_CATALOG: Script = preload("res://scripts/game/challenge_catalog.
 
 var current_game: Node = null
 var settings: Dictionary = {}
+var settings_path: String = SettingsStore.DEFAULT_PATH
 var options_return_to_pause: bool = false
+var tutorial_step: int = 0
 
 var ui_layer: CanvasLayer
 var main_menu: Control
@@ -34,10 +36,20 @@ var options_title: Label
 var language_label: Label
 var volume_label: Label
 var fullscreen_check: CheckButton
+var reduced_motion_check: CheckButton
+var high_contrast_check: CheckButton
+var tutorial_check: CheckButton
+var tutorial_reset_button: Button
 var language_option: OptionButton
 var volume_slider: HSlider
 var options_apply_button: Button
 var options_back_button: Button
+var tutorial_menu: Control
+var tutorial_title: Label
+var tutorial_body: Label
+var tutorial_progress: Label
+var tutorial_next_button: Button
+var tutorial_skip_button: Button
 var codex_title: Label
 var codex_content: Label
 var history_title: Label
@@ -57,7 +69,7 @@ var localized_buttons: Dictionary = {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	settings = SettingsStore.apply_settings(SettingsStore.load_settings())
+	settings = SettingsStore.apply_settings(SettingsStore.load_settings(settings_path))
 	profile = META_STORE.load_profile(profile_path)
 	build_interface()
 	refresh_localized_text()
@@ -73,7 +85,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel"):
 		return
 	get_viewport().set_input_as_handled()
-	if options_menu.visible:
+	if tutorial_menu != null and tutorial_menu.visible:
+		finish_tutorial()
+	elif options_menu.visible:
 		close_options()
 	elif codex_menu.visible:
 		show_main_menu()
@@ -143,7 +157,7 @@ func build_interface() -> void:
 	add_localized_button(pause_box, "PAUSE_RESTART", restart_game)
 
 	options_menu = create_screen("OptionsMenu", Color(0.0, 0.0, 0.0, 0.84))
-	var options_box := create_center_panel(options_menu, Vector2(640.0, 610.0))
+	var options_box := create_center_panel(options_menu, Vector2(700.0, 840.0))
 	options_title = create_label(34, ACCENT)
 	options_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	options_box.add_child(options_title)
@@ -167,6 +181,18 @@ func build_interface() -> void:
 	fullscreen_check = CheckButton.new()
 	fullscreen_check.custom_minimum_size = Vector2(0.0, 48.0)
 	options_box.add_child(fullscreen_check)
+	reduced_motion_check = CheckButton.new()
+	reduced_motion_check.custom_minimum_size = Vector2(0.0, 44.0)
+	options_box.add_child(reduced_motion_check)
+	high_contrast_check = CheckButton.new()
+	high_contrast_check.custom_minimum_size = Vector2(0.0, 44.0)
+	options_box.add_child(high_contrast_check)
+	tutorial_check = CheckButton.new()
+	tutorial_check.custom_minimum_size = Vector2(0.0, 44.0)
+	options_box.add_child(tutorial_check)
+	tutorial_reset_button = add_localized_button(
+		options_box, "OPTIONS_REPLAY_TUTORIAL", reset_tutorial
+	)
 	options_box.add_child(create_separator())
 	options_apply_button = add_localized_button(options_box, "OPTIONS_APPLY", apply_options)
 	options_back_button = add_localized_button(options_box, "OPTIONS_BACK", close_options)
@@ -226,12 +252,32 @@ func build_interface() -> void:
 	loadout_box.add_child(challenges_label)
 	add_localized_button(loadout_box, "OPTIONS_BACK", show_main_menu)
 
+	tutorial_menu = create_screen("TutorialMenu", Color(0.0, 0.0, 0.0, 0.82))
+	var tutorial_box := create_center_panel(tutorial_menu, Vector2(820.0, 540.0))
+	tutorial_title = create_label(32, ACCENT)
+	tutorial_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tutorial_box.add_child(tutorial_title)
+	tutorial_progress = create_label(16, Color(0.72, 0.72, 0.64))
+	tutorial_progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tutorial_box.add_child(tutorial_progress)
+	tutorial_box.add_child(create_separator())
+	tutorial_body = create_wrapped_center_label(21, 250.0)
+	tutorial_body.add_theme_constant_override("line_spacing", 8)
+	tutorial_box.add_child(tutorial_body)
+	tutorial_next_button = add_localized_button(
+		tutorial_box, "TUTORIAL_NEXT", advance_tutorial
+	)
+	tutorial_skip_button = add_localized_button(
+		tutorial_box, "TUTORIAL_SKIP", finish_tutorial
+	)
+
 	prologue_menu.visible = false
 	pause_menu.visible = false
 	options_menu.visible = false
 	codex_menu.visible = false
 	history_menu.visible = false
 	loadout_menu.visible = false
+	tutorial_menu.visible = false
 
 
 func create_screen(screen_name: String, color: Color) -> Control:
@@ -318,6 +364,9 @@ func refresh_localized_text() -> void:
 	language_label.text = tr("OPTIONS_LANGUAGE")
 	volume_label.text = tr("OPTIONS_MASTER_VOLUME")
 	fullscreen_check.text = tr("OPTIONS_FULLSCREEN")
+	reduced_motion_check.text = tr("OPTIONS_REDUCED_MOTION")
+	high_contrast_check.text = tr("OPTIONS_HIGH_CONTRAST")
+	tutorial_check.text = tr("OPTIONS_TUTORIAL_ENABLED")
 	for button_value: Variant in localized_buttons:
 		var button: Button = button_value as Button
 		if is_instance_valid(button):
@@ -325,6 +374,8 @@ func refresh_localized_text() -> void:
 	refresh_codex_content()
 	refresh_run_history_content()
 	refresh_loadout_content()
+	refresh_tutorial_content()
+	apply_shell_accessibility()
 
 
 func show_main_menu() -> void:
@@ -336,6 +387,7 @@ func show_main_menu() -> void:
 	codex_menu.visible = false
 	history_menu.visible = false
 	loadout_menu.visible = false
+	tutorial_menu.visible = false
 	continue_button.disabled = not RunSaveStore.has_checkpoint()
 
 
@@ -486,6 +538,10 @@ func refresh_run_history_content() -> void:
 func confirm_new_run() -> void:
 	RunSaveStore.delete_checkpoint()
 	start_game({})
+	if bool(settings.get("tutorial_enabled", true)) and not bool(
+		settings.get("tutorial_completed", false)
+	):
+		show_tutorial()
 
 
 func continue_run() -> void:
@@ -515,6 +571,9 @@ func start_game(checkpoint: Dictionary) -> void:
 	codex_menu.visible = false
 	history_menu.visible = false
 	loadout_menu.visible = false
+	tutorial_menu.visible = false
+	if current_game.has_method("configure_accessibility"):
+		current_game.configure_accessibility(settings)
 	if not checkpoint.is_empty():
 		var checkpoint_metrics: Dictionary = checkpoint.get("metrics", {}) as Dictionary
 		META_STORE.apply_progress_event(profile, {
@@ -632,6 +691,9 @@ func open_options() -> void:
 	language_option.select({"en": 0, "pt_BR": 1, "es": 2}.get(locale, 0))
 	volume_slider.value = float(settings.master_volume)
 	fullscreen_check.button_pressed = bool(settings.fullscreen)
+	reduced_motion_check.button_pressed = bool(settings.reduced_motion)
+	high_contrast_check.button_pressed = bool(settings.high_contrast)
+	tutorial_check.button_pressed = bool(settings.tutorial_enabled)
 
 
 func apply_options() -> void:
@@ -640,9 +702,15 @@ func apply_options() -> void:
 		"locale": locales[language_option.selected],
 		"master_volume": volume_slider.value,
 		"fullscreen": fullscreen_check.button_pressed,
+		"reduced_motion": reduced_motion_check.button_pressed,
+		"high_contrast": high_contrast_check.button_pressed,
+		"tutorial_enabled": tutorial_check.button_pressed,
+		"tutorial_completed": bool(settings.get("tutorial_completed", false)),
 	}
 	settings = SettingsStore.apply_settings(settings)
-	SettingsStore.save_settings(settings)
+	SettingsStore.save_settings(settings, settings_path)
+	if is_instance_valid(current_game) and current_game.has_method("configure_accessibility"):
+		current_game.configure_accessibility(settings)
 	refresh_localized_text()
 
 
@@ -656,3 +724,65 @@ func close_options() -> void:
 
 func quit_game() -> void:
 	get_tree().quit()
+
+
+func show_tutorial() -> void:
+	if current_game == null or not bool(settings.get("tutorial_enabled", true)):
+		return
+	tutorial_step = 0
+	tutorial_menu.visible = true
+	pause_menu.visible = false
+	options_menu.visible = false
+	get_tree().paused = true
+	refresh_tutorial_content()
+
+
+func advance_tutorial() -> void:
+	tutorial_step += 1
+	if tutorial_step >= 5:
+		finish_tutorial()
+		return
+	refresh_tutorial_content()
+
+
+func finish_tutorial() -> void:
+	tutorial_menu.visible = false
+	settings.tutorial_completed = true
+	SettingsStore.save_settings(settings, settings_path)
+	get_tree().paused = false
+
+
+func reset_tutorial() -> void:
+	settings.tutorial_completed = false
+	settings.tutorial_enabled = true
+	tutorial_check.button_pressed = true
+	SettingsStore.save_settings(settings, settings_path)
+	if current_game != null:
+		show_tutorial()
+
+
+func refresh_tutorial_content() -> void:
+	if tutorial_title == null:
+		return
+	tutorial_title.text = tr("TUTORIAL_TITLE")
+	tutorial_progress.text = tr("TUTORIAL_PROGRESS") % [tutorial_step + 1, 5]
+	tutorial_body.text = tr("TUTORIAL_STEP_%d" % [tutorial_step + 1])
+	tutorial_next_button.text = tr(
+		"TUTORIAL_FINISH" if tutorial_step == 4 else "TUTORIAL_NEXT"
+	)
+
+
+func apply_shell_accessibility() -> void:
+	if ui_layer == null:
+		return
+	var high_contrast: bool = bool(settings.get("high_contrast", false))
+	apply_contrast_recursive(ui_layer, high_contrast)
+
+
+func apply_contrast_recursive(node: Node, enabled: bool) -> void:
+	if node is Label or node is Button:
+		var control: Control = node as Control
+		control.add_theme_color_override("font_outline_color", Color.BLACK)
+		control.add_theme_constant_override("outline_size", 4 if enabled else 0)
+	for child: Node in node.get_children():
+		apply_contrast_recursive(child, enabled)

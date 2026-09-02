@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.6.0-dev] — 02/09/2026 — Onboarding e Acessibilidade
+
+### Added
+
+- tutorial inicial localizado em cinco etapas, apresentado uma vez na primeira Nova Partida;
+- controles para rever ou desativar o tutorial nas Opções;
+- Movimento Reduzido, removendo parallax, névoa móvel, pulsos, idle procedural e deslocamentos de feedback;
+- Interface de Alto Contraste, com contornos de texto e barras de vida reforçadas;
+- regressões próprias de tutorial e acessibilidade, elevando a suíte para 55 cenários.
+
+### Changed
+
+- configurações migradas para o schema v2, preservando automaticamente arquivos v1;
+- preferências de acessibilidade passam a valer imediatamente no shell e na partida em andamento;
+- painel de Opções foi ampliado para manter todos os controles dentro de 1920×1080;
+- tutorial concluído é persistido sem contaminar checkpoint ou perfil permanente.
+
 ## [0.5.0] — 01/09/2026 — Meta Progression
 
 ### Added

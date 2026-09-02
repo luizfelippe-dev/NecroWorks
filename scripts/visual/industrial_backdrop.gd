@@ -12,6 +12,7 @@ const METAL_LIGHT: Color = Color(0.16, 0.17, 0.15, 1.0)
 var background_sprite: Sprite2D
 var atmosphere_time: float = 0.0
 var redraw_timer: float = 0.0
+var reduced_motion: bool = false
 
 
 func _ready() -> void:
@@ -31,6 +32,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if reduced_motion:
+		return
 	atmosphere_time += delta
 	redraw_timer += delta
 	if background_sprite != null:
@@ -39,6 +42,14 @@ func _process(delta: float) -> void:
 	if redraw_timer >= 0.08:
 		redraw_timer = 0.0
 		queue_redraw()
+
+
+func set_reduced_motion(enabled: bool) -> void:
+	reduced_motion = enabled
+	set_process(not enabled)
+	if background_sprite != null:
+		background_sprite.position = Vector2(-14.0, -8.0)
+	queue_redraw()
 
 
 func _draw() -> void:
@@ -55,7 +66,8 @@ func _draw() -> void:
 	# Névoa em planos lentos cria profundidade sem uma segunda textura pesada.
 	for layer: int in range(4):
 		var phase: float = atmosphere_time * (0.14 + float(layer) * 0.025)
-		var fog_y: float = 350.0 + float(layer) * 112.0 + sin(phase) * 12.0
+		var fog_offset: float = 0.0 if reduced_motion else sin(phase) * 12.0
+		var fog_y: float = 350.0 + float(layer) * 112.0 + fog_offset
 		var fog_alpha: float = 0.026 + float(layer) * 0.008
 		draw_rect(
 			Rect2(-40.0, fog_y, 2000.0, 64.0),
@@ -75,7 +87,9 @@ func _draw() -> void:
 	# Pulsos discretos preservam a linguagem necromântica do layout alvo.
 	for lamp: int in range(7):
 		var lamp_x: float = 210.0 + float(lamp) * 250.0
-		var pulse: float = 0.72 + sin(atmosphere_time * 1.4 + float(lamp)) * 0.18
+		var pulse: float = 0.72 if reduced_motion else (
+			0.72 + sin(atmosphere_time * 1.4 + float(lamp)) * 0.18
+		)
 		draw_circle(
 			Vector2(lamp_x, 286.0),
 			10.0,

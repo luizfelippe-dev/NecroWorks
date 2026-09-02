@@ -47,6 +47,8 @@ func run_validation() -> void:
 	assert(game.run_end_build_label.text.contains("RESUMO DA BUILD"))
 	assert(game.restart_run_button.text == "REINICIAR PARTIDA")
 	assert(game.return_to_menu_button.text == "VOLTAR AO MENU PRINCIPAL")
+	assert(TranslationServer.translate("TUTORIAL_STEP_1").contains("automaticamente"))
+	assert(TranslationServer.translate("OPTIONS_REDUCED_MOTION") == "REDUZIR MOVIMENTO")
 	game.run_end_panel.visible = false
 
 
@@ -62,6 +64,8 @@ func run_validation() -> void:
 		== "GUERRERO HUMANO"
 	)
 	assert(game.corpses.back().text == "CADÁVER")
+	assert(TranslationServer.translate("TUTORIAL_STEP_5").contains("jefes"))
+	assert(TranslationServer.translate("OPTIONS_HIGH_CONTRAST").contains("ALTO CONTRASTE"))
 
 
 	LOCALIZATION_SERVICE.set_locale("en_US")
@@ -71,6 +75,7 @@ func run_validation() -> void:
 		== "PRODUCE ZOMBIE (QUEUE)"
 	)
 	assert(game.create_zombie_button.text.begins_with("PRODUCE ZOMBIE (QUEUE)"))
+	assert(TranslationServer.translate("TUTORIAL_TITLE") == "SHIFT ORIENTATION")
 
 
 	TranslationServer.set_locale(original_locale)

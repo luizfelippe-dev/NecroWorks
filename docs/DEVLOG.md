@@ -527,3 +527,13 @@ Fusões Necromânticas formam uma nova área de decisão. Liga de Ossuário conv
 A primeira lore completa define Vharos, Planta N-0, Diretor, Concordata de Ferro, Colégio do Lacre, Corte Verde e os três chefes. O texto também fixa o tom de horror corporativo e as regras usadas pelos eventos e pelo Codex persistente.
 
 As runs determinísticas de Bone e Flesh seguem derrotando o Capataz. Testes dedicados cobrem 30 upgrades, três chefes, cinco eventos, persistência das consequências e fusões atômicas.
+
+---
+
+## 02/09/2026 — Início da v0.6.0: onboarding e acessibilidade
+
+A primeira Nova Partida agora apresenta uma orientação curta em cinco etapas. Ela explica combate automático, processamento, papéis básicos, decisões entre Ondas, Doutrina e Chefes sem prescrever uma build. O progresso fica nas configurações e o tutorial pode ser pulado, desativado ou revisto em inglês, PT-BR e espanhol.
+
+As Opções receberam Movimento Reduzido e Interface de Alto Contraste. A primeira preferência congela cenário atmosférico e remove movimentos decorativos de unidades e recompensas; a segunda reforça contornos e barras de vida. O settings subiu para v2 com leitura compatível do v1. A regressão completa chegou a 55/55 cenários, mantendo as vitórias determinísticas Bone e Flesh.
+
+O preset Windows foi promovido para 0.6.0.0. A exportação release abriu em smoke test headless; o executável possui 113.063.632 bytes e SHA-256 `DF60BB9700D545608C8EFB1927381D3010380B0DD87DAE494DE25DC116EEE780`.

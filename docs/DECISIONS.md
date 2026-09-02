@@ -662,6 +662,14 @@ Projetos ligados a Ondas e processamento são liberados no instante em que o req
 
 Isso evita a situação em que a interface promete “concluir a Onda 5”, mas mantém a Auto-coleta bloqueada até uma vitória ou derrota posterior. Também permite continuar uma run já salva sem perder o marco alcançado.
 
+## Tutorial pertence às configurações, não ao perfil
+
+A conclusão da orientação é uma preferência local. Ela fica no settings v2 ao lado de idioma e acessibilidade, sem entrar no checkpoint nem no perfil de progressão. Nova Partida respeita essa preferência; Continue nunca interrompe uma run carregada com onboarding. Rever o tutorial não apaga nenhum progresso.
+
+## Movimento reduzido não altera a simulação
+
+Movimento Reduzido desliga somente deslocamentos, oscilações, parallax e transições decorativas. Tempos de ataque, processamento, produção e decisões permanecem iguais. O flash de impacto e a retirada visual de uma unidade continuam presentes por comunicarem mudança de estado.
+
 ## Operadores e contratos são escolhas horizontais
 
 Cada operador e contrato possui um benefício acompanhado de pressão equivalente. Nenhum deles acumula níveis ou aumenta atributos por repetição. A configuração pertence ao perfil, é escolhida antes da partida e entra no checkpoint para garantir retomada determinística.

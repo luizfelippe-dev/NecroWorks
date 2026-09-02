@@ -1739,6 +1739,9 @@ const UI_PANEL: Color = Color(0.025, 0.032, 0.031, 0.96)
 const UI_PANEL_LIGHT: Color = Color(0.075, 0.085, 0.078, 0.98)
 const UI_METAL_BORDER: Color = Color(0.29, 0.28, 0.23, 1.0)
 
+var reduced_motion_enabled: bool = false
+var high_contrast_enabled: bool = false
+
 
 # =========================================================
 # READY
@@ -1808,6 +1811,37 @@ func _ready() -> void:
 	update_bones_ui()
 	update_wave_ui()
 	update_debug_ui()
+
+
+func configure_accessibility(accessibility_settings: Dictionary) -> void:
+	reduced_motion_enabled = bool(accessibility_settings.get("reduced_motion", false))
+	high_contrast_enabled = bool(accessibility_settings.get("high_contrast", false))
+	var backdrop: Node = get_node_or_null("IndustrialBackdrop")
+	if backdrop != null and backdrop.has_method("set_reduced_motion"):
+		backdrop.call("set_reduced_motion", reduced_motion_enabled)
+	apply_accessibility_recursive(self)
+
+
+func apply_accessibility_recursive(node: Node) -> void:
+	if node.name == "AnimationDriver" and node.has_method("set_reduced_motion"):
+		node.call("set_reduced_motion", reduced_motion_enabled)
+	elif node.name == "HealthBar" and node.has_method("set_high_contrast"):
+		node.call("set_high_contrast", high_contrast_enabled)
+	if node is Label or node is Button:
+		var control: Control = node as Control
+		if not control.has_meta("accessibility_outline_size"):
+			control.set_meta(
+				"accessibility_outline_size",
+				control.get_theme_constant("outline_size")
+			)
+		var original_outline: int = int(control.get_meta("accessibility_outline_size"))
+		control.add_theme_color_override("font_outline_color", Color.BLACK)
+		control.add_theme_constant_override(
+			"outline_size",
+			maxi(original_outline, 5) if high_contrast_enabled else original_outline
+		)
+	for child: Node in node.get_children():
+		apply_accessibility_recursive(child)
 
 
 func register_gameplay_panels() -> void:
@@ -5815,6 +5849,7 @@ func play_corpse_processing_feedback(
 
 	feedback.name = "CorpseProcessingFeedback"
 	add_child(feedback)
+	feedback.call("set_reduced_motion", reduced_motion_enabled)
 	feedback.call(
 		"play",
 		feedback_origin,
@@ -6124,6 +6159,7 @@ func ensure_unit_animation_driver(unit: Node2D, sprite: Sprite2D) -> Node:
 		driver.name = "AnimationDriver"
 		unit.add_child(driver)
 	driver.call("bind", sprite)
+	driver.call("set_reduced_motion", reduced_motion_enabled)
 	return driver
 
 
@@ -6171,6 +6207,7 @@ func ensure_unit_health_bar(
 		health_bar.name = "HealthBar"
 		health_bar.z_index = 30
 		unit.add_child(health_bar)
+	health_bar.call("set_high_contrast", high_contrast_enabled)
 
 
 	health_bar.call(

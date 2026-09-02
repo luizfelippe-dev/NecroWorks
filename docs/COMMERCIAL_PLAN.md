@@ -396,3 +396,7 @@ The first Windows release executable now exports and starts outside the editor. 
 Persistent projects now unlock alternative production routes from clear achievements rather than a grind currency. The visible 20-run ledger creates a local playtest record, but it is not analytics. Before changing difficulty or unlock thresholds, collect external completion time, defeat Wave, Corpse processing and chosen-build observations from consenting testers.
 
 The completed v0.5.0 adds three horizontal operators, three risk/reward starting contracts and five visible challenges. These are useful replayability hooks for an internal playtest because they change openings without invalidating earlier runs. The next commercial gate remains presentation and onboarding: the systems are broader, but final art, audio, tutorial clarity and external retention evidence decide whether the Steam demo is credible.
+
+## Primeiro onboarding da vertical slice — 02/09/2026
+
+O tutorial localizado e as preferências de Movimento Reduzido e Alto Contraste removem três barreiras imediatas para testes externos: desconhecimento do ciclo econômico, desconforto com movimento decorativo e baixa leitura de texto/HP. Isso ainda não fecha o gate comercial. Antes de uma demo pública, o tutorial precisa de observação com jogadores novos, remapeamento/controle precisa ser avaliado e apresentação audiovisual precisa atingir consistência de trailer.

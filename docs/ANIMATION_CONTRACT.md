@@ -22,3 +22,7 @@ O combate usa cinco estados visuais comuns. Cada unidade pode trocar a implement
 - a animação não decide dano, cooldown, alvo ou recompensa.
 
 O componente atual fornece movimento procedural mínimo. Spritesheets finais serão conectados por trás desta interface durante o polimento da vertical slice.
+
+## Movimento reduzido
+
+Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, rotações e mudanças de escala. Impacto preserva apenas um flash curto e morte preserva o desaparecimento imediato, porque ambos comunicam estado essencial. A mesma preferência congela parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera duração de ataque, dano ou cooldown.

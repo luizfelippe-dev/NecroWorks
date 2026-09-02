@@ -508,11 +508,17 @@ Not required yet.
 
 `scenes/core/app.tscn` is the F5 application entry point. It owns `GameShell`, the Main Menu, Pause and Options overlays, and instantiates `scenes/world/gameplay.tscn` as the gameplay child. Keeping `scenes/world/gameplay.tscn` independent preserves direct F6 iteration and all gameplay runners.
 
-`SettingsStore` sanitizes and persists locale, master volume and fullscreen mode in a versioned ConfigFile. `RunSaveStore` writes schema version 2 JSON with application version, checkpoint kind and timestamp. Version 1 checkpoints migrate in memory before validation, receiving safe defaults for narrative, run modifiers and rituals; unknown past or future schemas are rejected. `scripts/game/main_controller.gd` owns serialization of run-scoped gameplay state because it remains the authoritative orchestrator; the shell owns disk I/O and lifecycle navigation.
+`SettingsStore` sanitiza e persiste idioma, volume, tela cheia, Movimento Reduzido, Alto Contraste e estado do tutorial em um `ConfigFile` v2. Arquivos v1 recebem os novos campos com defaults seguros em memória e são gravados no formato atual na próxima alteração. `RunSaveStore` grava checkpoints JSON v2 com versão da aplicação, tipo e data; versões desconhecidas são rejeitadas. `scripts/game/main_controller.gd` continua responsável pelo estado da run, enquanto o shell controla disco, menus e ciclo da aplicação.
 
 Automatic checkpoints are requested after an upgrade is committed and before the next Wave starts. Save-and-return also snapshots the current run. Loading restarts the recorded Wave with the saved permanent army and economy instead of attempting a fragile frame-perfect combat restore.
 
-`tests/core/persistence_runner.gd` validates sanitation, JSON round-trip and gameplay restore. `tests/core/game_shell_runner.gd` protects navigation, pause behavior and localized menu copy. These were runners 25 and 26 when introduced; the current suite contains 30.
+`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 55 cenários.
+
+## Onboarding e acessibilidade
+
+O tutorial pertence ao `GameShell`: ele aparece somente em Nova Partida, pausa a árvore sem interromper sua própria interface e registra conclusão no arquivo de configurações. Continue nunca reinicia o tutorial no meio de uma run. O botão de revisão permite reapresentá-lo sem apagar perfil ou checkpoint.
+
+As opções de acessibilidade são propagadas por uma única chamada `configure_accessibility()`. Movimento Reduzido congela as camadas atmosféricas e substitui movimentos decorativos das unidades e do processamento por sinais visuais curtos. Alto Contraste reforça contornos no shell e as barras de vida. A simulação de combate permanece idêntica nas duas modalidades.
 
 The shell also owns the localized prologue before a New Run. End-of-run presentation remains inside `scripts/game/main_controller.gd`, but emits `restart_requested` and `return_to_menu_requested` when hosted by the shell. Direct F6 execution retains safe fallbacks to scene reload/application entry, so gameplay never assumes that a parent shell exists.
 

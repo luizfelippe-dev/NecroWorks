@@ -1,8 +1,8 @@
 # NecroWorks — Estado do Projeto
 
-**Atualizado em:** 01/09/2026
+**Atualizado em:** 02/09/2026
 
-**Versão funcional:** v0.5.0 — Meta Progression concluída
+**Versão funcional:** v0.6.0-dev — onboarding e acessibilidade básica
 
 **Engine:** Godot 4.7.1
 
@@ -27,7 +27,7 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
-Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, agora com schema v3 e migração automática dos perfis v1 e v2.
+Configurações são gravadas em `user://necroworks_settings.cfg`, agora com schema v2 e migração transparente do v1. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, com schema v3 e migração automática dos perfis v1 e v2.
 
 ## Conteúdo atual
 
@@ -54,6 +54,8 @@ Configurações são gravadas em `user://necroworks_settings.cfg`. O checkpoint 
 - Blood, Souls, Bones e Flesh com fontes e usos próprios;
 - menu principal, pausa, opções, localização e checkpoint;
 - interface localizada em inglês, português do Brasil e espanhol.
+- tutorial inicial localizado em cinco etapas, persistente e reproduzível pelas Opções;
+- Movimento Reduzido e Interface de Alto Contraste aplicados em tempo real;
 - Cadáveres visuais blindados, arcanos e ágeis, com restos próprios de chefe;
 - contrato procedural de animações e preset Windows Desktop.
 - fundo híbrido ilustrado com parallax atmosférico, névoa e luz procedural.
@@ -106,8 +108,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.5.0 está concluída. O perfil v3 acompanha progresso durante a própria run, libera projetos assim que o marco é cumprido e preserva desafios, operadores, contratos, Codex e histórico. A próxima etapa é a v0.6.0: tutorial, acessibilidade, arte final, animação, áudio, VFX e performance.
+A v0.5.0 está concluída e a v0.6.0 começou pelo onboarding. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. Os próximos blocos da vertical slice são direção visual final, animações, áudio, VFX, QA linguístico e performance.
 
-O build local validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 113 MB. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 113.063.632 bytes e SHA-256 `DF60BB9700D545608C8EFB1927381D3010380B0DD87DAE494DE25DC116EEE780`. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
-O polimento visual final, áudio, tutorial, acessibilidade e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.
+O polimento visual final, áudio, acessibilidade ampliada e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.

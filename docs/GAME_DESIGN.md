@@ -796,3 +796,9 @@ Meta progression preserves knowledge and options, not accumulated combat strengt
 Operators are sidegrades. The Black Ledger Director is neutral. The Ossuary Engineer favors cheap Skeleton production but makes Zombies more expensive. The Plague Steward strengthens the Flesh opening but makes Skeletons more expensive. Starting contracts follow the same rule: Night Shift trades early Factory Points for enemy Damage, while Iron Audit trades starting resources for enemy HP. A player chooses one operator and one contract before a new run; checkpoints retain that loadout.
 
 Projects only permit their normal run-scoped Factory purchase; they do not grant free advanced units or technologies. Challenges communicate the next lateral possibility and never award permanent raw Damage or HP. Last Stand remains deferred until external playtests provide defeat-quality data.
+
+## Tutorial e leitura acessível
+
+A primeira Nova Partida abre uma orientação de cinco telas antes do combate correr: autobattle e leitura de vida; ciclo Cadáver–recurso; papéis das tropas; decisão entre Ondas e Doutrina; cadência de Chefes e acesso aos painéis. O texto ensina o ciclo sem entregar uma build ótima. Depois da conclusão, a orientação não volta automaticamente, mas pode ser revista ou desativada nas Opções.
+
+Movimento Reduzido preserva somente feedback necessário para entender impacto e morte. Alto Contraste reforça texto e HP sem mudar regras, velocidade ou balanceamento. A acessibilidade não concede informação exclusiva nem vantagem econômica.
