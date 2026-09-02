@@ -9,6 +9,10 @@
 - Movimento Reduzido, removendo parallax, névoa móvel, pulsos, idle procedural e deslocamentos de feedback;
 - Interface de Alto Contraste, com contornos de texto e barras de vida reforçadas;
 - regressões próprias de tutorial e acessibilidade, elevando a suíte para 55 cenários.
+- camada VFX V1 com rastros de ataque, números de dano, impactos, mortes, invocações e alertas de chefe;
+- banco SFX procedural V1 com vozes para ataque, impacto, morte, habilidade, chefe e início de Onda;
+- apresentação localizada de entrada dos três chefes;
+- regressões audiovisuais dedicadas, elevando a suíte para 57 cenários.
 
 ### Changed
 
@@ -16,6 +20,7 @@
 - preferências de acessibilidade passam a valer imediatamente no shell e na partida em andamento;
 - painel de Opções foi ampliado para manter todos os controles dentro de 1920×1080;
 - tutorial concluído é persistido sem contaminar checkpoint ou perfil permanente.
+- feedback visual limitado a 48 elementos transitórios e áudio limitado a dez vozes com cadência protegida para hordas.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 

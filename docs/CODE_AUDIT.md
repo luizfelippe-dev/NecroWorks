@@ -178,6 +178,10 @@ O tutorial permaneceu no `GameShell`, sem criar dependência do gameplay em menu
 
 A suíte possui 55 runners. Os novos cenários protegem migração de settings v1 para v2, tutorial de primeira execução, revisão da orientação, Movimento Reduzido e barras de Alto Contraste. A dívida estrutural principal continua sendo o tamanho do `main_controller.gd`; este bloco não acrescentou novas regras de gameplay ao controlador.
 
+### Apresentação audiovisual V1
+
+VFX e SFX ficaram em dois componentes próprios. O controlador apenas envia eventos depois que o combate resolve ataque ou dano. A árvore visual possui teto de 48 transientes; o áudio reutiliza dez players e limita repetição de ataque/impacto. A suíte subiu para 57 runners, sem alterar resultados das estratégias Bone e Flesh.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.

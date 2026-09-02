@@ -400,3 +400,5 @@ The completed v0.5.0 adds three horizontal operators, three risk/reward starting
 ## Primeiro onboarding da vertical slice — 02/09/2026
 
 O tutorial localizado e as preferências de Movimento Reduzido e Alto Contraste removem três barreiras imediatas para testes externos: desconhecimento do ciclo econômico, desconforto com movimento decorativo e baixa leitura de texto/HP. Isso ainda não fecha o gate comercial. Antes de uma demo pública, o tutorial precisa de observação com jogadores novos, remapeamento/controle precisa ser avaliado e apresentação audiovisual precisa atingir consistência de trailer.
+
+A camada VFX/SFX V1 já permite avaliar cadência e legibilidade em uma run real, mas não deve ser tratada como áudio final de trailer. O próximo gate visual exige sprites animados consistentes; o próximo gate sonoro exige efeitos produzidos, música adaptativa e mixagem em hardware externo.

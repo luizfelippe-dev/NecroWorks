@@ -268,7 +268,7 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 1. [concluído] iniciar a v0.6.0 pelo tutorial contextual;
 2. [em andamento] criar opções básicas de acessibilidade e concluir QA linguístico;
 3. substituir sprites temporários pelas famílias finais de animação;
-4. iniciar áudio, VFX e polimento de chefes;
+4. [em andamento] iniciar áudio, VFX e polimento de chefes;
 5. medir performance e clareza em runs externas.
 
 ---
@@ -296,6 +296,9 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [ ] animation
 - [ ] VFX
 - [ ] SFX
+- [x] combat VFX V1 with bounded transient budget
+- [x] procedural combat SFX V1 with voice budget
+- [x] localized Boss entrance warning
 - [ ] music
 - [x] tutorial
 - [x] accessibility basics

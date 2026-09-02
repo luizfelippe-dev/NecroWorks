@@ -396,7 +396,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/g
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/meta_unlock_gameplay_runner.gd
 ```
 
-A suíte atual contém 55 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 02/09/2026, incluindo as estratégias completas Bone e Flesh.
+A suíte atual contém 57 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 02/09/2026, incluindo as estratégias completas Bone e Flesh.
 
 ## Conclusão da v0.5.0
 
@@ -416,3 +416,12 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/v
 ```
 
 Os cenários validam exibição apenas em Nova Partida, navegação, persistência, revisão, cenário estático em Movimento Reduzido e barras de vida em Alto Contraste.
+
+## VFX e SFX de combate
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/combat_feedback_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/audio/combat_audio_runner.gd
+```
+
+Os cenários protegem conteúdo, limpeza e teto da camada transitória, integração com dano, acessibilidade, seis streams procedurais, pool de vozes e controle de repetição.

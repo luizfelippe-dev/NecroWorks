@@ -56,6 +56,8 @@ Configurações são gravadas em `user://necroworks_settings.cfg`, agora com sch
 - interface localizada em inglês, português do Brasil e espanhol.
 - tutorial inicial localizado em cinco etapas, persistente e reproduzível pelas Opções;
 - Movimento Reduzido e Interface de Alto Contraste aplicados em tempo real;
+- VFX de ataque, dano, habilidade, morte, invocação e entrada de Chefe;
+- seis sinais SFX procedurais com dez vozes simultâneas e proteção contra repetição excessiva;
 - Cadáveres visuais blindados, arcanos e ágeis, com restos próprios de chefe;
 - contrato procedural de animações e preset Windows Desktop.
 - fundo híbrido ilustrado com parallax atmosférico, névoa e luz procedural.
@@ -91,6 +93,7 @@ As transações são atômicas: recursos nunca são consumidos quando a receita 
 - `scripts/economy/`: recursos e diretivas de processamento;
 - `scripts/ui/`: componentes reutilizáveis de interface;
 - `scripts/visual/`: sprites e feedback visual;
+- `scripts/audio/`: identidade sonora, pools e roteamento de eventos;
 - `scripts/core/`: localização, configurações, save e shell;
 - `tests/`: regressão headless por domínio.
 
@@ -108,8 +111,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.5.0 está concluída e a v0.6.0 começou pelo onboarding. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. Os próximos blocos da vertical slice são direção visual final, animações, áudio, VFX, QA linguístico e performance.
+A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade e apresentação audiovisual V1. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. Os próximos blocos da vertical slice são arte e animação finais, substituição dos sons procedurais, música, QA linguístico e performance externa.
 
-O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 113.063.632 bytes e SHA-256 `DF60BB9700D545608C8EFB1927381D3010380B0DD87DAE494DE25DC116EEE780`. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 113.074.640 bytes e SHA-256 `98F9495A34D489D12153E34243D21FE0D02E47A9339550CB26AC0E44DDC2175B`. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
 O polimento visual final, áudio, acessibilidade ampliada e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.

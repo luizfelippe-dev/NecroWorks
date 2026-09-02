@@ -40,3 +40,7 @@ Os arquivos continuam classificados como arte de protótipo. Antes da página da
 - integração: camada estática combinada com parallax, névoa, pulsos verdes e divisor procedural.
 
 O cenário foi criado sem personagens, HUD, texto ou logotipos. A região central mantém contraste reduzido para preservar nomes e barras de vida.
+
+## Áudio procedural V1 — 02/09/2026
+
+Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

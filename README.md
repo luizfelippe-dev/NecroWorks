@@ -278,6 +278,7 @@ tests/factory/           validação de filas, automação, lotes e Doutrina
 tests/units/             contratos de runtime e receitas de tropas
 tests/game/              ciclo e estado da partida
 tests/visual/            validação persistente dos assets de unidade
+tests/audio/             síntese, pool e cadência dos sinais sonoros
 ```
 
 F5 inicia `scenes/core/app.tscn`; F6 pode executar `scenes/world/gameplay.tscn` diretamente. O controlador principal permanece como coordenador de cena, enquanto regras, estado da run, persistência e formatação de interface são extraídos por contratos testáveis.
@@ -308,4 +309,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado e configurações v2 com Movimento Reduzido e Interface de Alto Contraste. O próximo foco é concluir a apresentação da vertical slice: arte e animação finais, áudio, VFX, QA linguístico e performance.
+A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado, configurações v2 com acessibilidade e uma primeira camada audiovisual de combate. Rastros, números, impactos, alertas de chefe e seis vozes SFX procedurais tornam a batalha legível sem alterar a simulação. O próximo foco é substituir essa base por arte, animação e áudio finais, concluir QA linguístico e medir performance externa.

@@ -537,3 +537,13 @@ A primeira Nova Partida agora apresenta uma orientação curta em cinco etapas. 
 As Opções receberam Movimento Reduzido e Interface de Alto Contraste. A primeira preferência congela cenário atmosférico e remove movimentos decorativos de unidades e recompensas; a segunda reforça contornos e barras de vida. O settings subiu para v2 com leitura compatível do v1. A regressão completa chegou a 55/55 cenários, mantendo as vitórias determinísticas Bone e Flesh.
 
 O preset Windows foi promovido para 0.6.0.0. A exportação release abriu em smoke test headless; o executável possui 113.063.632 bytes e SHA-256 `DF60BB9700D545608C8EFB1927381D3010380B0DD87DAE494DE25DC116EEE780`.
+
+---
+
+## 02/09/2026 — Feedback audiovisual V1
+
+O combate passou a mostrar direção do ataque, dano causado, habilidades, invocações e mortes por uma camada visual independente. Chefes ganharam sinal de entrada localizado e presença visual maior no começo da Onda e no ataque especial. Os estados de ataque e impacto do contrato de animação finalmente foram conectados ao runtime.
+
+Criei seis vozes SFX procedurais para validar a cadência antes da produção de áudio final. Dez players são reutilizados e golpes repetidos possuem cooldown sonoro. A camada visual mantém no máximo 48 transientes e reserva anéis para eventos importantes. As estratégias Bone e Flesh continuam vencendo sem mudança nos números de combate.
+
+O build Windows atualizado iniciou em smoke test headless, com 113.074.640 bytes e SHA-256 `98F9495A34D489D12153E34243D21FE0D02E47A9339550CB26AC0E44DDC2175B`.

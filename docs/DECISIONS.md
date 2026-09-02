@@ -670,6 +670,12 @@ A conclusão da orientação é uma preferência local. Ela fica no settings v2 
 
 Movimento Reduzido desliga somente deslocamentos, oscilações, parallax e transições decorativas. Tempos de ataque, processamento, produção e decisões permanecem iguais. O flash de impacto e a retirada visual de uma unidade continuam presentes por comunicarem mudança de estado.
 
+## Separar apresentação audiovisual da resolução do combate
+
+O combate informa evento, posição e intensidade depois de resolver suas regras. `CombatFeedback` e `CombatAudioManager` não calculam dano, alvo, cadência ou recompensa. Assim, trocar VFX procedurais por partículas e substituir tons sintetizados por gravações finais não exige rebalancear nem migrar saves.
+
+O teto de 48 transientes e dez vozes é parte do contrato V1. Golpes comuns não criam anel de impacto: o flash da unidade, o número e o traço já comunicam o acerto. Anéis ficam reservados para acontecimentos com maior prioridade visual.
+
 ## Operadores e contratos são escolhas horizontais
 
 Cada operador e contrato possui um benefício acompanhado de pressão equivalente. Nenhum deles acumula níveis ou aumenta atributos por repetição. A configuração pertence ao perfil, é escolhida antes da partida e entra no checkpoint para garantir retomada determinística.

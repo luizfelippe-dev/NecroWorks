@@ -49,6 +49,7 @@ func run_validation() -> void:
 	assert(game.return_to_menu_button.text == "VOLTAR AO MENU PRINCIPAL")
 	assert(TranslationServer.translate("TUTORIAL_STEP_1").contains("automaticamente"))
 	assert(TranslationServer.translate("OPTIONS_REDUCED_MOTION") == "REDUZIR MOVIMENTO")
+	assert(TranslationServer.translate("BOSS_WARNING").begins_with("SINAL DE CHEFE"))
 	game.run_end_panel.visible = false
 
 

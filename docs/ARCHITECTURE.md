@@ -520,6 +520,12 @@ O tutorial pertence ao `GameShell`: ele aparece somente em Nova Partida, pausa a
 
 As opções de acessibilidade são propagadas por uma única chamada `configure_accessibility()`. Movimento Reduzido congela as camadas atmosféricas e substitui movimentos decorativos das unidades e do processamento por sinais visuais curtos. Alto Contraste reforça contornos no shell e as barras de vida. A simulação de combate permanece idêntica nas duas modalidades.
 
+## Apresentação do combate
+
+`CombatFeedback` recebe somente posições, valores e cores já resolvidos. Ele desenha rastros, números, anéis, mortes e alertas sem conhecer HP, alvos ou recompensas. O limite rígido de 48 nós transitórios impede crescimento da árvore em rajadas de horda. Movimento Reduzido encurta fades e elimina deslocamento/escala.
+
+`CombatAudioManager` mantém dez `AudioStreamPlayer` reutilizáveis e seis eventos estáveis. As ondas são sintetizadas uma vez ao iniciar a cena; ataques e impactos usam cooldowns curtos para evitar dezenas de vozes no mesmo frame. A interface permite trocar os protótipos procedurais por arquivos finais sem tocar no combate.
+
 The shell also owns the localized prologue before a New Run. End-of-run presentation remains inside `scripts/game/main_controller.gd`, but emits `restart_requested` and `return_to_menu_requested` when hosted by the shell. Direct F6 execution retains safe fallbacks to scene reload/application entry, so gameplay never assumes that a parent shell exists.
 
 # Narrative event pipeline

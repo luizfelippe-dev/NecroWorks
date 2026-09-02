@@ -228,6 +228,12 @@ const CORPSE_PROCESSING_FEEDBACK_SCRIPT: Script = preload(
 const UNIT_ANIMATION_DRIVER_SCRIPT: Script = preload(
 	"res://scripts/visual/unit_animation_driver.gd"
 )
+const COMBAT_FEEDBACK_SCRIPT: Script = preload(
+	"res://scripts/visual/combat_feedback.gd"
+)
+const COMBAT_AUDIO_MANAGER_SCRIPT: Script = preload(
+	"res://scripts/audio/combat_audio_manager.gd"
+)
 const RUN_SUMMARY_FORMATTER: Script = preload(
 	"res://scripts/ui/run_summary_formatter.gd"
 )
@@ -793,6 +799,9 @@ func ghost_attack_enemy(attacking_ghost: Node2D) -> void:
 
 	if target_enemy == null:
 		return
+	show_attack_feedback(
+		attacking_ghost, target_enemy, Color(0.32, 0.78, 1.0, 0.90)
+	)
 
 
 	var remaining_hp: int = apply_damage_to_enemy(
@@ -820,6 +829,7 @@ func kill_ghost(target: Node2D) -> void:
 	try_emergency_reclamation(target)
 	undead_army_registry.release_slot(int(target.get("formation_slot")))
 	total_ghosts_lost += 1
+	show_death_feedback(target.position, Color(0.32, 0.78, 1.0, 0.90))
 	target.queue_free()
 	update_bones_ui()
 	update_debug_ui()
@@ -889,6 +899,9 @@ func lich_attack_enemy(attacking_lich: Node2D) -> void:
 	var runtime: UndeadRuntimeUnit = get_undead_runtime(attacking_lich)
 	if target_enemy == null or runtime == null:
 		return
+	show_attack_feedback(
+		attacking_lich, target_enemy, Color(0.70, 0.30, 0.95, 0.92)
+	)
 
 
 	var remaining_hp: int = apply_damage_to_enemy(
@@ -913,6 +926,7 @@ func kill_lich(target: Node2D) -> void:
 	if runtime != null:
 		undead_army_registry.release_slot(runtime.formation_slot)
 	total_liches_lost += 1
+	show_death_feedback(target.position, Color(0.70, 0.30, 0.95, 0.92))
 	target.queue_free()
 	update_bones_ui()
 	update_debug_ui()
@@ -929,6 +943,7 @@ func zombie_attack_enemy(
 
 	if target_enemy == null:
 		return
+	show_attack_feedback(attacking_zombie, target_enemy, UI_FLESH)
 
 
 	var remaining_hp: int = apply_damage_to_enemy(
@@ -1008,7 +1023,7 @@ func kill_zombie(
 		[zombie_slots, zombie_hps, zombie_attack_timers]
 	)
 
-
+	show_death_feedback(target.position, UI_FLESH)
 	target.queue_free()
 
 
@@ -1741,6 +1756,8 @@ const UI_METAL_BORDER: Color = Color(0.29, 0.28, 0.23, 1.0)
 
 var reduced_motion_enabled: bool = false
 var high_contrast_enabled: bool = false
+var combat_feedback: Node2D = null
+var combat_audio_manager: Node = null
 
 
 # =========================================================
@@ -1751,6 +1768,7 @@ func _ready() -> void:
 
 	create_zombie_ui()
 	create_visual_shell()
+	create_combat_presentation()
 	configure_primary_hud_layout()
 	create_debug_hud()
 	create_wave_hud()
@@ -1819,7 +1837,52 @@ func configure_accessibility(accessibility_settings: Dictionary) -> void:
 	var backdrop: Node = get_node_or_null("IndustrialBackdrop")
 	if backdrop != null and backdrop.has_method("set_reduced_motion"):
 		backdrop.call("set_reduced_motion", reduced_motion_enabled)
+	if combat_feedback != null:
+		combat_feedback.call(
+			"set_accessibility", reduced_motion_enabled, high_contrast_enabled
+		)
 	apply_accessibility_recursive(self)
+
+
+func create_combat_presentation() -> void:
+	combat_feedback = COMBAT_FEEDBACK_SCRIPT.new() as Node2D
+	combat_feedback.name = "CombatFeedback"
+	combat_feedback.z_index = 380
+	add_child(combat_feedback)
+	combat_audio_manager = COMBAT_AUDIO_MANAGER_SCRIPT.new()
+	combat_audio_manager.name = "CombatAudioManager"
+	add_child(combat_audio_manager)
+
+
+func show_attack_feedback(source: Node2D, target: Node2D, color: Color) -> void:
+	if not is_instance_valid(source) or not is_instance_valid(target):
+		return
+	play_unit_animation(source, "attack", signf(target.position.x - source.position.x))
+	if combat_feedback != null:
+		combat_feedback.call("show_attack_trace", source.position, target.position, color)
+	play_combat_sound("attack")
+
+
+func show_damage_feedback(target: Node2D, amount: int, hostile: bool) -> void:
+	if not is_instance_valid(target):
+		return
+	play_unit_animation(target, "hit")
+	if combat_feedback != null:
+		combat_feedback.call("show_damage", target.position, amount, hostile)
+	play_combat_sound("hit")
+
+
+func show_death_feedback(position_value: Vector2, color: Color, boss: bool = false) -> void:
+	if combat_feedback != null:
+		combat_feedback.call(
+			"show_impact", position_value, color, 74.0 if boss else 42.0, boss
+		)
+	play_combat_sound("boss" if boss else "death")
+
+
+func play_combat_sound(event_id: String) -> void:
+	if combat_audio_manager != null:
+		combat_audio_manager.call("play_event", event_id)
 
 
 func apply_accessibility_recursive(node: Node) -> void:
@@ -2365,6 +2428,25 @@ func start_wave(
 		register_enemy(existing_enemy)
 
 	fill_enemy_group()
+	if boss_active and is_instance_valid(enemy) and combat_feedback != null:
+		var boss_accent: Color = enemy.get_meta(
+			"visual_accent", Color(0.74, 0.22, 0.90, 0.95)
+		) as Color
+		combat_feedback.call(
+			"show_impact",
+			enemy.position,
+			boss_accent,
+			128.0,
+			true
+		)
+		combat_feedback.call(
+			"show_boss_banner",
+			tr("BOSS_WARNING") % get_current_boss_name(),
+			boss_accent
+		)
+		play_combat_sound("boss")
+	else:
+		play_combat_sound("wave")
 
 
 	update_wave_ui()
@@ -2574,6 +2656,7 @@ func apply_damage_to_enemy(
 		remaining_hp, effective_damage
 	)
 	enemy_hps[target_enemy] = remaining_hp
+	show_damage_feedback(target_enemy, effective_damage, false)
 
 
 	if target_enemy == enemy:
@@ -3299,6 +3382,15 @@ func try_lich_summon(source_lich: Node2D) -> bool:
 	if sprite != null:
 		sprite.modulate = Color(0.72, 0.46, 0.95, 0.82)
 	total_thralls_summoned += 1
+	if combat_feedback != null:
+		combat_feedback.call(
+			"show_impact",
+			source_lich.position,
+			Color(0.72, 0.46, 0.95, 0.90),
+			58.0,
+			false
+		)
+	play_combat_sound("ability")
 	update_bones_ui()
 	return true
 
@@ -3320,6 +3412,7 @@ func expire_temporary_thrall(
 	skeletons.erase(thrall)
 	if natural_expiration:
 		total_thralls_expired += 1
+	show_death_feedback(thrall.position, Color(0.72, 0.46, 0.95, 0.82))
 	thrall.queue_free()
 	update_bones_ui()
 
@@ -3450,6 +3543,9 @@ func perform_enemy_attack(attacking_enemy: Node2D, target: Node2D) -> void:
 
 	if not is_instance_valid(attacking_enemy) or not is_instance_valid(target):
 		return
+	show_attack_feedback(
+		attacking_enemy, target, Color(0.94, 0.24, 0.16, 0.92)
+	)
 
 
 	var archetype_id: String = str(
@@ -3630,6 +3726,15 @@ func show_enemy_ability_feedback(
 	enemy_ability_triggered.emit(archetype_id, ability_id, target_count)
 	if not is_instance_valid(source_enemy):
 		return
+	if combat_feedback != null:
+		combat_feedback.call(
+			"show_impact",
+			source_enemy.position,
+			Color(0.70, 0.30, 0.95, 0.90),
+			62.0,
+			false
+		)
+	play_combat_sound("ability")
 
 
 	var previous_feedback: Node = source_enemy.get_node_or_null(
@@ -3655,8 +3760,11 @@ func show_enemy_ability_feedback(
 
 	var tween: Tween = feedback.create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(feedback, "position:y", -162.0, 0.65)
-	tween.tween_property(feedback, "modulate:a", 0.0, 0.65)
+	if not reduced_motion_enabled:
+		tween.tween_property(feedback, "position:y", -162.0, 0.65)
+	tween.tween_property(
+		feedback, "modulate:a", 0.0, 0.22 if reduced_motion_enabled else 0.65
+	)
 	tween.chain().tween_callback(feedback.queue_free)
 
 
@@ -3675,6 +3783,16 @@ func damage_undead(
 	damage_amount: int,
 	source: String
 ) -> void:
+	if not is_instance_valid(target):
+		return
+	if (
+		not skeleton_hps.has(target)
+		and not zombie_hps.has(target)
+		and not ghosts.has(target)
+		and not liches.has(target)
+	):
+		return
+	show_damage_feedback(target, damage_amount, true)
 
 	if skeleton_hps.has(target):
 
@@ -3837,6 +3955,13 @@ func attack_enemy(
 
 	if target_enemy == null:
 		return
+	var runtime: UndeadRuntimeUnit = get_undead_runtime(attacking_skeleton)
+	var trace_color: Color = (
+		Color(0.78, 0.90, 0.52, 0.92)
+		if runtime != null and runtime.unit_type == UNDEAD_RECIPE_CATALOG.SKELETON_ARCHER
+		else UI_BONE
+	)
+	show_attack_feedback(attacking_skeleton, target_enemy, trace_color)
 
 
 	var remaining_hp: int = apply_damage_to_enemy(
@@ -4232,7 +4357,7 @@ func kill_skeleton(
 		[skeleton_slots, skeleton_hps, skeleton_attack_timers]
 	)
 
-
+	show_death_feedback(target.position, UI_BONE)
 	target.queue_free()
 
 
@@ -4526,7 +4651,13 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 	)
 	update_metrics_ui()
 
-
+	show_death_feedback(
+		death_position,
+		Color(0.72, 0.20, 0.88, 0.95)
+		if defeated_boss
+		else Color(0.92, 0.24, 0.16, 0.92),
+		defeated_boss
+	)
 	dead_enemy.queue_free()
 	refresh_primary_enemy()
 
@@ -4738,6 +4869,16 @@ func boss_special_attack() -> void:
 
 	if target_count <= 0:
 		return
+	play_unit_animation(enemy, "attack", -1.0)
+	if combat_feedback != null:
+		combat_feedback.call(
+			"show_impact",
+			enemy.position,
+			Color(0.74, 0.22, 0.90, 0.95),
+			110.0,
+			true
+		)
+	play_combat_sound("boss")
 
 
 	print("")

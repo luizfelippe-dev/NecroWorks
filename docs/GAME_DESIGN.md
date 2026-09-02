@@ -802,3 +802,9 @@ Projects only permit their normal run-scoped Factory purchase; they do not grant
 A primeira Nova Partida abre uma orientação de cinco telas antes do combate correr: autobattle e leitura de vida; ciclo Cadáver–recurso; papéis das tropas; decisão entre Ondas e Doutrina; cadência de Chefes e acesso aos painéis. O texto ensina o ciclo sem entregar uma build ótima. Depois da conclusão, a orientação não volta automaticamente, mas pode ser revista ou desativada nas Opções.
 
 Movimento Reduzido preserva somente feedback necessário para entender impacto e morte. Alto Contraste reforça texto e HP sem mudar regras, velocidade ou balanceamento. A acessibilidade não concede informação exclusiva nem vantagem econômica.
+
+## Hierarquia audiovisual do combate
+
+Golpe comum usa traço curto, reação da unidade, número e som contido. Habilidades arcanas acrescentam anel violeta e voz própria. Mortes recebem expansão maior; entrada e golpe especial de Chefe ocupam o nível máximo com alerta localizado. Essa hierarquia mantém o autobattler compreensível quando dezenas de unidades atacam juntas.
+
+Os seis sons atuais são protótipos procedurais e validam ritmo, mixagem e frequência de eventos. Eles não representam a identidade sonora final. A troca futura deve preservar os IDs `attack`, `hit`, `death`, `ability`, `boss` e `wave`.
