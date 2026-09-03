@@ -192,6 +192,8 @@ O Guerreiro Esqueleto é a primeira família a consumir a ponte completa. As cin
 
 O Zumbi Tank reutiliza exatamente a mesma ponte, acrescentando somente seu conjunto de texturas e multiplicador de canvas. `kill_zombie()` segue o contrato de retirada visual já provado pelo Esqueleto. A suíte passou a 61 runners; não surgiu uma segunda máquina de estados nem uma nova família de dados de combate.
 
+O Fantasma fecha a terceira família no mesmo catálogo e passa a ter uma cena visualmente autônoma. A integração acrescenta apenas seleção de asset, escala, gatilho de movimento e retirada visual; dano mágico, alcance, custo de Alma e cooldown permanecem intocados. A suíte chega a 62 runners.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.

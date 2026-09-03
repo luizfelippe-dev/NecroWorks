@@ -7,7 +7,7 @@ O preset `Windows Desktop` exporta para `builds/windows/NecroWorks.exe`. A pasta
 - Godot 4.7.1 stable;
 - templates de exportação da mesma versão;
 - projeto importado sem erros;
-- 61 runners aprovados antes de distribuir o executável.
+- 62 runners aprovados antes de distribuir o executável.
 
 O pacote oficial completo de templates possui aproximadamente 1,28 GB. No editor, a instalação fica em **Editor → Manage Export Templates**. A versão instalada deve aparecer como `4.7.1.stable`. Os templates Windows x86_64 oficiais foram instalados e usados com sucesso em 01/09/2026.
 
@@ -37,9 +37,9 @@ Godot_v4.7.1-stable_win64_console.exe `
 ## Build validado
 
 - arquivo local: `builds/windows/NecroWorks.exe`;
-- tamanho: 114.404.320 bytes;
-- SHA-256: `322299C78E079C5C57E93CCB09EFB893C38718C40C41BB643F9631EE7A125206`;
+- tamanho: 115.232.408 bytes;
+- SHA-256: `7E74DD39E6BE88AA9A3F3072EE80A8E0A68FF86291B63A9C55DC106A24A4475A`;
 - exportação release v0.6.0-dev e inicialização headless aprovadas em 03/09/2026;
 - fontes em `assets/reference/`, `assets/sprites/animation_concepts/`, `docs/` e `tests/` ficam fora do pacote;
-- o antigo `zombie_prototype.png` permanece como referência no repositório, mas não entra no executável;
+- os antigos `skeleton_prototype.png` e `zombie_prototype.png` permanecem como referências no repositório, mas não entram no executável;
 - o diretório `builds/` permanece ignorado pelo Git.

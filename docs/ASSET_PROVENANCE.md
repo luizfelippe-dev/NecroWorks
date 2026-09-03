@@ -91,6 +91,21 @@ O prompt-base preservou tanque dorsal, ombreira, olhos verdes, proporções pesa
 
 `zombie_prototype.png` continua versionado como referência de identidade, mas foi retirado do pacote Windows depois que a família V1 assumiu todas as referências de runtime.
 
+## Fantasma — família de runtime V1 — 03/09/2026
+
+- pasta: `assets/sprites/units/ghost_v1/`;
+- arquivos: `idle.png`, `move.png`, `attack.png`, `hit.png` e `death.png`;
+- criação específica para NecroWorks com a ferramenta de geração de imagens da OpenAI;
+- referências internas: `necrodesignv2.png`, `skeleton_warrior_v1/idle.png` e `zombie_tank_v1/idle.png`;
+- formato-fonte: PNG RGBA, 1254×1254, fundo transparente;
+- importação de runtime: limite de 512 px, sem mipmaps;
+- integração: cena própria, `UnitSpriteCatalog` e `UnitAnimationDriver`;
+- revisão: identidade, alpha, dimensões, escala, cinco transições e retirada visual cobertos por regressão.
+
+O idle estabeleceu a identidade antes das outras poses: corpo ciano-violeta, rosto ósseo, núcleo verde, coleira, braceletes, tubos e cauda. Movimento, ataque, impacto e morte reutilizaram esse arquivo como referência direta. Ataque e impacto passaram por extração de fundo; a primeira morte foi descartada por não comunicar derrota e substituída por uma dissipação baixa e horizontal.
+
+`skeleton_prototype.png` continua versionado como registro da primeira passagem, mas deixou o pacote Windows quando o Fantasma recebeu sua própria arte.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

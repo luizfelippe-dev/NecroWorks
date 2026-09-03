@@ -23,6 +23,8 @@
 - regressão dedicada de dimensões, transparência e catálogo da família do Esqueleto, elevando a suíte para 60 cenários.
 - família final V1 do Zumbi Tank com cinco sprites individuais, escala de canvas própria e pose de morte horizontal;
 - cobertura de transparência, importação e ciclo visual completo do Zumbi, elevando a suíte para 61 cenários.
+- identidade visual final V1 do Fantasma, com núcleo de Alma industrial, cinco estados e dissipação horizontal;
+- regressão dedicada da família espectral, elevando a suíte para 62 cenários.
 
 ### Changed
 
@@ -35,6 +37,7 @@
 - fontes de conceito e referência permanecem excluídas do build Windows até virarem assets de runtime.
 - cena editável e catálogo do Esqueleto agora usam a nova pose idle; demais estados entram pelo driver visual.
 - Zumbis agora liberam registro e slot antes dos 0,24 s reservados à leitura da morte visual.
+- a cena do Fantasma deixou de reutilizar o Esqueleto e passou a expor sua própria pose idle no editor.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 

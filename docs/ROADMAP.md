@@ -11,7 +11,7 @@
 3. criar escala de interface, redução de movimento e opções básicas de acessibilidade;
 4. concluir a auditoria linguística de PT-BR, inglês e espanhol;
 5. [concluído] exportar frames uniformes de Esqueleto e Zumbi a partir da direção aprovada;
-6. [concluído] integrar as duas famílias-base pelo contrato de texturas por estado;
+6. [concluído] integrar Esqueleto, Zumbi e Fantasma pelo contrato de texturas por estado;
 7. medir legibilidade e performance em hordas grandes;
 8. preparar uma rodada curta de playtests externos antes de alterar dificuldade ou marcos.
 
@@ -290,7 +290,7 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] basic temporary sprites for all current combatants
 - [x] final Skeleton art and animation V1
 - [x] final Zombie art and animation V1
-- [ ] Ghost art
+- [x] Ghost art and animation V1
 - [ ] enemies
 - [ ] factory art
 - [ ] Boss polish
@@ -314,6 +314,8 @@ Screenshots/trailer must look commercially credible.
 **Primeira família integrada em 03/09/2026:** o Guerreiro Esqueleto possui fontes individuais para os cinco estados, escala de canvas corrigida e morte visual desacoplada da liberação imediata do slot.
 
 **Segunda família integrada em 03/09/2026:** o Zumbi Tank possui as cinco poses, escala própria e morte horizontal. As duas tropas-base agora comprovam o mesmo contrato; o próximo corte visual avança para Fantasma, inimigos e chefes.
+
+**Família espectral integrada em 03/09/2026:** o Fantasma deixou de reutilizar a arte do Esqueleto e ganhou identidade fabril própria, cinco estados e dissipação legível. O próximo corte visual começa pelos três arquétipos inimigos.
 
 ---
 

@@ -762,6 +762,11 @@ func create_ghost_internal(is_free: bool) -> bool:
 	if not is_free:
 		souls -= ghost_cost
 	add_child(new_ghost)
+	ensure_unit_visual(
+		new_ghost,
+		Color(0.32, 0.78, 1.0, 0.90),
+		"ghost"
+	)
 	configure_undead_runtime(
 		new_ghost,
 		UNDEAD_RECIPE_CATALOG.GHOST,
@@ -830,7 +835,7 @@ func kill_ghost(target: Node2D) -> void:
 	undead_army_registry.release_slot(int(target.get("formation_slot")))
 	total_ghosts_lost += 1
 	show_death_feedback(target.position, Color(0.32, 0.78, 1.0, 0.90))
-	target.queue_free()
+	retire_unit_visual(target)
 	update_bones_ui()
 	update_debug_ui()
 
@@ -2297,10 +2302,14 @@ func _process(delta: float) -> void:
 
 
 		if current_ghost.position.distance_to(target_position) > 8.0:
+			var ghost_direction: float = signf(
+				target_position.x - current_ghost.position.x
+			)
 			current_ghost.position = current_ghost.position.move_toward(
 				target_position,
 				float(current_ghost.get("movement_speed")) * delta
 			)
+			play_unit_move_animation(current_ghost, ghost_direction)
 		elif float(current_ghost.get("attack_timer")) <= 0.0:
 			ghost_attack_enemy(current_ghost)
 

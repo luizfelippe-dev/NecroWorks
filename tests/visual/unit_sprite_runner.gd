@@ -6,6 +6,7 @@ const VISUAL_IDS: Array[String] = [
 	"skeleton",
 	"skeleton_archer",
 	"zombie",
+	"ghost",
 	"human_warrior",
 	"mage",
 	"elf",
@@ -49,7 +50,7 @@ func run_validation() -> void:
 		var driver: Node = unit.get_node_or_null("AnimationDriver")
 		assert(driver != null)
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
-		if visual_id in ["skeleton", "zombie"]:
+		if visual_id in ["skeleton", "zombie", "ghost"]:
 			assert(state_textures.size() == 5)
 			assert(sprite.texture == state_textures["idle"])
 			assert(sprite.scale.x > 0.20)
@@ -79,6 +80,17 @@ func run_validation() -> void:
 	await create_timer(0.30).timeout
 	await process_frame
 	assert(not is_instance_valid(retiring_zombie))
+
+	assert(game.create_free_ghost())
+	var retiring_ghost: Node2D = game.ghosts.back() as Node2D
+	var ghost_driver: Node = retiring_ghost.get_node("AnimationDriver")
+	game.kill_ghost(retiring_ghost)
+	assert(not game.ghosts.has(retiring_ghost))
+	assert(is_instance_valid(retiring_ghost))
+	assert(str(ghost_driver.get("current_animation")) == "death")
+	await create_timer(0.30).timeout
+	await process_frame
+	assert(not is_instance_valid(retiring_ghost))
 
 
 	print("UNIT SPRITE VALIDATION: PASS")

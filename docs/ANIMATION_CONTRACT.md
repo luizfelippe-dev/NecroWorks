@@ -43,6 +43,12 @@ A segunda família completa está em `assets/sprites/units/zombie_tank_v1/`. O m
 
 Assim como no Esqueleto, `kill_zombie()` libera coleção, estado runtime e slot antes da espera visual de 0,24 s. Isso impede que a animação altere capacidade, reposição automática, métricas ou condição de derrota.
 
+## Fantasma V1
+
+A família espectral está em `assets/sprites/units/ghost_v1/`. Coleira, tubos, braceletes e núcleo de Alma preservam a origem fabril; cauda e braços definem direção e velocidade. A transparência existe dentro do material espectral, mas o PNG mantém contorno e contraste suficientes para leitura a 96 px.
+
+O movimento usa uma silhueta lançada para frente, o ataque concentra energia entre as mãos, o impacto abre o corpo e a morte colapsa a unidade horizontalmente. `kill_ghost()` também resolve coleção e slot antes dos 0,24 s de dissipação visual.
+
 ## Movimento reduzido
 
 Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, rotações e mudanças de escala. Impacto preserva apenas um flash curto e morte preserva o desaparecimento imediato, porque ambos comunicam estado essencial. A mesma preferência congela parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera duração de ataque, dano ou cooldown.

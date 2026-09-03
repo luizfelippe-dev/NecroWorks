@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 03/09/2026 — Identidade do Fantasma
+
+O Fantasma deixou de ser um Esqueleto tingido de azul. A nova identidade combina corpo ciano-violeta, rosto ósseo, cauda espectral e um núcleo de Alma aprisionado por coleira, tubos, canisters e braceletes industriais. Isso o faz parecer uma munição produzida pela Fábrica e mantém a função ranged legível.
+
+Fechei cinco poses individuais: idle, avanço, descarga de Alma, impacto e dissipação. Descartei a primeira proposta de morte porque ainda parecia viva; a versão integrada colapsa o corpo horizontalmente e apaga o núcleo. Ataque e impacto passaram por extração de fundo antes de entrar no projeto.
+
+A cena própria agora mostra o Fantasma correto no editor e o runtime usa a mesma ponte de animação das tropas anteriores. Coleção e slot são liberados antes dos 0,24 s visuais. Os 62 cenários passaram em 54,21 segundos, incluindo as duas estratégias completas. O build Windows abriu no smoke test com 115.232.408 bytes e SHA-256 `7E74DD39E6BE88AA9A3F3072EE80A8E0A68FF86291B63A9C55DC106A24A4475A`.
+
 ## 03/09/2026 — Zumbi Tank por estados
 
 Transformei o estudo do Zumbi Tank na segunda família completa de runtime. As cinco imagens preservam tanque dorsal, ombreira, olhos verdes e proporções pesadas, com uma pose de morte horizontal que ocupa mais chão que a do Esqueleto. Cada fonte usa PNG RGBA quadrado e importação limitada a 512 px.
