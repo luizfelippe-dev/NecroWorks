@@ -20,11 +20,9 @@ config/icon="res://icon.svg"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
 
 [internationalization]
 
-locale/fallback="en"
 locale/translations=PackedStringArray("res://localization/ui.en.translation", "res://localization/ui.pt_BR.translation", "res://localization/ui.es.translation")
 
 [physics]

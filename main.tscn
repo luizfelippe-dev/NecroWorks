@@ -1,5 +1,5 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://d0hhqd5mko4x6"]
 
-[ext_resource type="PackedScene" path="res://scenes/world/gameplay.tscn" id="1_gameplay"]
+[ext_resource type="PackedScene" uid="uid://bvj1p07akuqgr" path="res://scenes/world/gameplay.tscn" id="1_gameplay"]
 
-[node name="GameplayCompatibility" instance=ExtResource("1_gameplay")]
+[node name="GameplayCompatibility" unique_id=293239922 instance=ExtResource("1_gameplay")]
