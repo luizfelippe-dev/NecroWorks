@@ -160,7 +160,7 @@ The first event scenario raised persistent coverage to 27 runners; both Bone and
 
 ### P2 — Prototype unit scenes
 
-Square placeholders are gone and all current combatants have temporary sprites. Zombie still reuses the Skeleton scene structurally, and none of the units have animation state machines, hit feedback or audio identity. Each commercial unit eventually needs a dedicated presentation scene even if combat data remains shared.
+Square placeholders are gone and all current combatants have sprites. Zombie still reuses the Skeleton scene structurally, but Skeleton Warrior and Zombie Tank now have complete state-texture families, hit feedback and the shared procedural audio layer. Advanced units, enemies and Bosses still need equivalent presentation passes; dedicated scenes remain useful where pivots or effects diverge.
 
 ## Engineering rules going forward
 
@@ -188,7 +188,9 @@ O driver visual aceita texturas opcionais por estado e mantém a textura-base co
 
 O catálogo de localização passou a ter auditoria exaustiva das 422 chaves e dos três idiomas. Isso fecha lacunas técnicas, campos vazios e divergências de importação; naturalidade, tom e consistência terminológica ainda exigem leitura editorial antes da demo. A suíte total sobe para 59 runners.
 
-O Guerreiro Esqueleto é a primeira família a consumir a ponte completa. As cinco texturas ficam no catálogo visual e o controlador somente dispara estados nos eventos que já existiam. A retirada atrasada afeta apenas o nó visual: registro, métricas, slot e recuperação continuam resolvidos antes dos 0,24 s de morte. Esse desenho deve ser repetido no Zumbi, sem criar uma segunda implementação de animação. A regressão completa passou a 60 runners aprovados.
+O Guerreiro Esqueleto é a primeira família a consumir a ponte completa. As cinco texturas ficam no catálogo visual e o controlador somente dispara estados nos eventos que já existiam. A retirada atrasada afeta apenas o nó visual: registro, métricas, slot e recuperação continuam resolvidos antes dos 0,24 s de morte. Esse desenho estabeleceu o padrão usado pelo Zumbi, sem criar uma segunda implementação de animação. Naquele corte, a regressão completa passou a 60 runners aprovados.
+
+O Zumbi Tank reutiliza exatamente a mesma ponte, acrescentando somente seu conjunto de texturas e multiplicador de canvas. `kill_zombie()` segue o contrato de retirada visual já provado pelo Esqueleto. A suíte passou a 61 runners; não surgiu uma segunda máquina de estados nem uma nova família de dados de combate.
 
 ### v0.4.0 closure — 24/08/2026
 

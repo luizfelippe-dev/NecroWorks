@@ -20,9 +20,22 @@ const SKELETON: Texture2D = SKELETON_IDLE
 const SKELETON_ARCHER: Texture2D = preload(
 	"res://assets/sprites/units/skeleton_archer_prototype.png"
 )
-const ZOMBIE: Texture2D = preload(
-	"res://assets/sprites/units/zombie_prototype.png"
+const ZOMBIE_IDLE: Texture2D = preload(
+	"res://assets/sprites/units/zombie_tank_v1/idle.png"
 )
+const ZOMBIE_MOVE: Texture2D = preload(
+	"res://assets/sprites/units/zombie_tank_v1/move.png"
+)
+const ZOMBIE_ATTACK: Texture2D = preload(
+	"res://assets/sprites/units/zombie_tank_v1/attack.png"
+)
+const ZOMBIE_HIT: Texture2D = preload(
+	"res://assets/sprites/units/zombie_tank_v1/hit.png"
+)
+const ZOMBIE_DEATH: Texture2D = preload(
+	"res://assets/sprites/units/zombie_tank_v1/death.png"
+)
+const ZOMBIE: Texture2D = ZOMBIE_IDLE
 const HUMAN_WARRIOR: Texture2D = preload(
 	"res://assets/sprites/units/human_warrior_prototype.png"
 )
@@ -51,6 +64,13 @@ const SKELETON_ANIMATIONS: Dictionary = {
 	"attack": SKELETON_ATTACK,
 	"hit": SKELETON_HIT,
 	"death": SKELETON_DEATH,
+}
+const ZOMBIE_ANIMATIONS: Dictionary = {
+	"idle": ZOMBIE_IDLE,
+	"move": ZOMBIE_MOVE,
+	"attack": ZOMBIE_ATTACK,
+	"hit": ZOMBIE_HIT,
+	"death": ZOMBIE_DEATH,
 }
 
 
@@ -82,9 +102,17 @@ static func get_texture(visual_id: String) -> Texture2D:
 static func get_animation_textures(visual_id: String) -> Dictionary:
 	if visual_id == "skeleton":
 		return SKELETON_ANIMATIONS.duplicate()
+	if visual_id == "zombie":
+		return ZOMBIE_ANIMATIONS.duplicate()
 	return {}
 
 
 static func get_canvas_scale_multiplier(visual_id: String) -> float:
-	# The final Skeleton sources keep a generous transparent safe area.
-	return 1.34 if visual_id == "skeleton" else 1.0
+	# Final state sources keep transparent safe areas around their silhouettes.
+	match visual_id:
+		"skeleton":
+			return 1.34
+		"zombie":
+			return 1.14
+		_:
+			return 1.0

@@ -1024,7 +1024,7 @@ func kill_zombie(
 	)
 
 	show_death_feedback(target.position, UI_FLESH)
-	target.queue_free()
+	retire_unit_visual(target)
 
 
 	update_bones_ui()

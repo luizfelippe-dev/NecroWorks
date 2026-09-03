@@ -49,7 +49,7 @@ func run_validation() -> void:
 		var driver: Node = unit.get_node_or_null("AnimationDriver")
 		assert(driver != null)
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
-		if visual_id == "skeleton":
+		if visual_id in ["skeleton", "zombie"]:
 			assert(state_textures.size() == 5)
 			assert(sprite.texture == state_textures["idle"])
 			assert(sprite.scale.x > 0.20)
@@ -68,6 +68,17 @@ func run_validation() -> void:
 		else:
 			assert(state_textures.is_empty())
 		unit.queue_free()
+
+	assert(game.create_free_zombie("VISUAL_TEST"))
+	var retiring_zombie: Node2D = game.zombies.back() as Node2D
+	var retiring_driver: Node = retiring_zombie.get_node("AnimationDriver")
+	game.kill_zombie(retiring_zombie)
+	assert(not game.zombies.has(retiring_zombie))
+	assert(is_instance_valid(retiring_zombie))
+	assert(str(retiring_driver.get("current_animation")) == "death")
+	await create_timer(0.30).timeout
+	await process_frame
+	assert(not is_instance_valid(retiring_zombie))
 
 
 	print("UNIT SPRITE VALIDATION: PASS")

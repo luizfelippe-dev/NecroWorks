@@ -76,6 +76,21 @@ Os originais gerados permanecem fora do repositório no armazenamento local da f
 
 Os prompts preservaram identidade, equipamento e paleta do protótipo e pediram uma única pose por canvas, alinhamento de base, margem segura e ausência de cenário, texto, sombra ou efeitos externos. Quando a primeira geração trouxe um quadriculado opaco, cada pose afetada passou por uma etapa separada de extração de fundo antes de entrar no repositório.
 
+## Zumbi Tank — família de runtime V1 — 03/09/2026
+
+- pasta: `assets/sprites/units/zombie_tank_v1/`;
+- arquivos: `idle.png`, `move.png`, `attack.png`, `hit.png` e `death.png`;
+- criação específica para NecroWorks com a ferramenta de geração de imagens da OpenAI;
+- referências internas: `zombie_prototype.png` e `zombie_tank_five_state_v1.png`;
+- formato-fonte: PNG RGBA, 1254×1254, fundo transparente;
+- importação de runtime: limite de 512 px, sem mipmaps;
+- integração: `UnitSpriteCatalog` e `UnitAnimationDriver`;
+- revisão: alpha nos quatro cantos, dimensões, escala, transições e retirada visual cobertos por regressão.
+
+O prompt-base preservou tanque dorsal, ombreira, olhos verdes, proporções pesadas, paleta e direção lateral. Cada chamada gerou somente uma pose com canvas quadrado, baseline e margem segura. Movimento, ataque, impacto e morte vieram inicialmente com o quadriculado incorporado; uma segunda passagem de extração removeu apenas o fundo antes da integração.
+
+`zombie_prototype.png` continua versionado como referência de identidade, mas foi retirado do pacote Windows depois que a família V1 assumiu todas as referências de runtime.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

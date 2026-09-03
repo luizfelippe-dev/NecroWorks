@@ -1,5 +1,15 @@
 # NecroWorks — Devlog
 
+## 03/09/2026 — Zumbi Tank por estados
+
+Transformei o estudo do Zumbi Tank na segunda família completa de runtime. As cinco imagens preservam tanque dorsal, ombreira, olhos verdes e proporções pesadas, com uma pose de morte horizontal que ocupa mais chão que a do Esqueleto. Cada fonte usa PNG RGBA quadrado e importação limitada a 512 px.
+
+O catálogo fornece as poses pelo mesmo `UnitAnimationDriver`; não criei uma máquina de estados exclusiva para o Zumbi. Ao morrer, ele libera coleção, runtime e slot imediatamente, esconde barra e rótulo e mantém apenas a apresentação por 0,24 s. Doutrina, capacidade, métricas e derrota continuam determinísticas.
+
+Quatro gerações vieram com o quadriculado incorporado e passaram por extração de fundo dedicada. A validação confere dimensões, alpha, escala, transições e retirada real do nó. Os 61 cenários passaram em 55,97 segundos, incluindo as duas runs completas.
+
+O antigo protótipo do Zumbi deixou de entrar no pacote depois de perder todas as referências de runtime. O build Windows foi exportado novamente, abriu no smoke test com 114.404.320 bytes e recebeu SHA-256 `322299C78E079C5C57E93CCB09EFB893C38718C40C41BB643F9631EE7A125206`.
+
 ## 03/09/2026 — Primeira família animada
 
 Transformei o estudo do Guerreiro Esqueleto em cinco fontes quadradas independentes. Todas preservam o equipamento industrial, usam transparência real e são reduzidas para 512 px na importação. O catálogo entrega as poses ao driver, e o combate agora mostra deslocamento, ataque, impacto e morte sem usar essas animações para decidir regras.

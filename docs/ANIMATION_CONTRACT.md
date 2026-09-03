@@ -37,6 +37,12 @@ A primeira família completa está em `assets/sprites/units/skeleton_warrior_v1/
 
 A pose de morte permanece por 0,24 s depois que a unidade sai das coleções de combate e libera o slot. Barra de vida e rótulo são ocultados imediatamente. Portanto, a apresentação não bloqueia reposição, Doutrina, recuperação rara ou condição de derrota.
 
+## Zumbi Tank V1
+
+A segunda família completa está em `assets/sprites/units/zombie_tank_v1/`. O mesmo contrato controla cinco poses independentes, mas a escala de canvas preserva a massa maior do tanque e a morte usa uma silhueta horizontal. Movimento, ataque e impacto retornam ao idle; a morte permanece até a retirada visual.
+
+Assim como no Esqueleto, `kill_zombie()` libera coleção, estado runtime e slot antes da espera visual de 0,24 s. Isso impede que a animação altere capacidade, reposição automática, métricas ou condição de derrota.
+
 ## Movimento reduzido
 
 Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, rotações e mudanças de escala. Impacto preserva apenas um flash curto e morte preserva o desaparecimento imediato, porque ambos comunicam estado essencial. A mesma preferência congela parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera duração de ataque, dano ou cooldown.

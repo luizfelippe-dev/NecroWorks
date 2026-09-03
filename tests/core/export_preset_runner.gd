@@ -13,6 +13,7 @@ func _initialize() -> void:
 	var excluded: String = str(config.get_value("preset.0", "exclude_filter", ""))
 	assert(excluded.contains("assets/reference/*"))
 	assert(excluded.contains("assets/sprites/animation_concepts/*"))
+	assert(excluded.contains("assets/sprites/units/zombie_prototype.png"))
 	assert(excluded.contains("tests/*"))
 	assert(excluded.contains("docs/*"))
 	assert(

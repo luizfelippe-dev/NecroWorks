@@ -21,6 +21,8 @@
 - família final V1 do Guerreiro Esqueleto com sprites individuais de idle, movimento, ataque, impacto e morte;
 - integração das poses no movimento e feedback de combate, com morte visual curta após a liberação do slot;
 - regressão dedicada de dimensões, transparência e catálogo da família do Esqueleto, elevando a suíte para 60 cenários.
+- família final V1 do Zumbi Tank com cinco sprites individuais, escala de canvas própria e pose de morte horizontal;
+- cobertura de transparência, importação e ciclo visual completo do Zumbi, elevando a suíte para 61 cenários.
 
 ### Changed
 
@@ -32,6 +34,7 @@
 - concept sheets são fontes de direção e não são cortados como atlas enquanto não tiverem células e pivôs uniformes.
 - fontes de conceito e referência permanecem excluídas do build Windows até virarem assets de runtime.
 - cena editável e catálogo do Esqueleto agora usam a nova pose idle; demais estados entram pelo driver visual.
+- Zumbis agora liberam registro e slot antes dos 0,24 s reservados à leitura da morte visual.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 

@@ -10,8 +10,8 @@
 2. iniciar o tutorial contextual sem interromper o ritmo do autobattler;
 3. criar escala de interface, redução de movimento e opções básicas de acessibilidade;
 4. concluir a auditoria linguística de PT-BR, inglês e espanhol;
-5. [concluído para Esqueleto] exportar frames uniformes a partir da direção aprovada;
-6. [concluído para Esqueleto] integrar a primeira família pelo contrato de texturas por estado;
+5. [concluído] exportar frames uniformes de Esqueleto e Zumbi a partir da direção aprovada;
+6. [concluído] integrar as duas famílias-base pelo contrato de texturas por estado;
 7. medir legibilidade e performance em hordas grandes;
 8. preparar uma rodada curta de playtests externos antes de alterar dificuldade ou marcos.
 
@@ -289,7 +289,7 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [ ] UI matching official target
 - [x] basic temporary sprites for all current combatants
 - [x] final Skeleton art and animation V1
-- [ ] final Zombie art and animation
+- [x] final Zombie art and animation V1
 - [ ] Ghost art
 - [ ] enemies
 - [ ] factory art
@@ -309,9 +309,11 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 
 Screenshots/trailer must look commercially credible.
 
-**Direção visual fechada em 02/09/2026:** regras de cor, silhueta, escala, interface e exportação estão registradas em `ART_DIRECTION.md`. Os estudos de cinco estados do Guerreiro Esqueleto e do Zumbi Tank foram validados como PNG RGBA transparente. O estudo do Esqueleto já originou a primeira família técnica; o estudo do Zumbi permanece como fonte de pose.
+**Direção visual fechada em 02/09/2026:** regras de cor, silhueta, escala, interface e exportação estão registradas em `ART_DIRECTION.md`. Os estudos de cinco estados do Guerreiro Esqueleto e do Zumbi Tank foram validados como PNG RGBA transparente e deram origem às duas famílias-base de runtime.
 
-**Primeira família integrada em 03/09/2026:** o Guerreiro Esqueleto possui fontes individuais para os cinco estados, escala de canvas corrigida e morte visual desacoplada da liberação imediata do slot. O próximo corte repete o pipeline no Zumbi Tank.
+**Primeira família integrada em 03/09/2026:** o Guerreiro Esqueleto possui fontes individuais para os cinco estados, escala de canvas corrigida e morte visual desacoplada da liberação imediata do slot.
+
+**Segunda família integrada em 03/09/2026:** o Zumbi Tank possui as cinco poses, escala própria e morte horizontal. As duas tropas-base agora comprovam o mesmo contrato; o próximo corte visual avança para Fantasma, inimigos e chefes.
 
 ---
 
