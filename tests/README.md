@@ -396,7 +396,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/g
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/meta_unlock_gameplay_runner.gd
 ```
 
-A suíte atual contém 59 cenários `*_runner.gd`. Todos passaram no Godot 4.7.1 headless em 02/09/2026, incluindo as estratégias completas Bone e Flesh. A execução completa levou 77,81 segundos na máquina de desenvolvimento.
+A suíte atual contém 60 cenários `*_runner.gd`. Todos passaram em 85,13 segundos no Godot 4.7.1 headless em 03/09/2026, incluindo as estratégias completas Bone e Flesh.
 
 ## Conclusão da v0.5.0
 
@@ -434,3 +434,12 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/l
 ```
 
 O primeiro cenário valida presença, dimensões e transparência dos concept sheets do Esqueleto e do Zumbi. O segundo percorre as 422 chaves do catálogo, rejeita duplicatas e campos vazios e compara as traduções importadas dos três idiomas com o CSV-fonte.
+
+## Guerreiro Esqueleto — cinco estados
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/skeleton_animation_assets_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/unit_sprite_runner.gd
+```
+
+Os cenários validam os cinco assets importados em 512×512, alfa real, catálogo, escala e troca efetiva de pose durante movimento, ataque, impacto e morte.

@@ -57,7 +57,7 @@ Assets, cenas, regras, estado da run e componentes estão separados por domínio
 
 ### P1 — Main orchestrator size
 
-`scripts/game/main_controller.gd` ainda coordena combate, economia e a maior parte da UI, mas não é mais fonte das Ondas, formação, registro do exército, catálogos ou fórmulas básicas da Fábrica. O arquivo possui 10.252 linhas neste checkpoint; o tamanho continua sendo dívida conhecida, mas direção de arte, animação visual e validação linguística permaneceram fora dele.
+`scripts/game/main_controller.gd` ainda coordena combate, economia e a maior parte da UI, mas não é mais fonte das Ondas, formação, registro do exército, catálogos ou fórmulas básicas da Fábrica. O arquivo possui 10.296 linhas neste checkpoint; o tamanho continua sendo dívida conhecida, mas catálogos de arte, o driver de animação e a validação linguística permanecem fora dele.
 
 Do not split it by arbitrary line count. Extract one responsibility at a time only when it has a stable interface and a focused validation scenario.
 
@@ -188,6 +188,8 @@ O driver visual aceita texturas opcionais por estado e mantém a textura-base co
 
 O catálogo de localização passou a ter auditoria exaustiva das 422 chaves e dos três idiomas. Isso fecha lacunas técnicas, campos vazios e divergências de importação; naturalidade, tom e consistência terminológica ainda exigem leitura editorial antes da demo. A suíte total sobe para 59 runners.
 
+O Guerreiro Esqueleto é a primeira família a consumir a ponte completa. As cinco texturas ficam no catálogo visual e o controlador somente dispara estados nos eventos que já existiam. A retirada atrasada afeta apenas o nó visual: registro, métricas, slot e recuperação continuam resolvidos antes dos 0,24 s de morte. Esse desenho deve ser repetido no Zumbi, sem criar uma segunda implementação de animação. A regressão completa passou a 60 runners aprovados.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.
@@ -205,7 +207,7 @@ Closed risks:
 
 Remaining structural debt for v0.5+:
 
-- `scripts/game/main_controller.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. Ondas, chefes, estado da run, formação, exército, catálogos de build e formatação final já foram extraídos; o controlador está em 10.148 linhas. Ainda preciso mover coordenação de ataques/dano, ciclo de vida das unidades, economia e controladores de UI;
+- `scripts/game/main_controller.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. Ondas, chefes, estado da run, formação, exército, catálogos de build e formatação final já foram extraídos; depois da integração visual atual, o controlador está em 10.296 linhas. Ainda preciso mover coordenação de ataques/dano, ciclo de vida das unidades, economia e controladores de UI;
 - upgrades still use a large match statement and should migrate to data plus focused effect handlers before the catalog expands again;
 - Boss visuals reuse prototype archetype sprites and need dedicated presentation scenes;
 - save schema migration beyond version 1 is still absent;

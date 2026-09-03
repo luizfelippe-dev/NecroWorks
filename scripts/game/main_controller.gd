@@ -1032,7 +1032,7 @@ func kill_zombie(
 
 
 # =========================================================
-# VISUAL TEMPORÁRIO
+# APRESENTAÇÃO DAS UNIDADES
 # =========================================================
 
 const SKELETON_COLOR: Color = Color.WHITE
@@ -2125,6 +2125,7 @@ func _process(delta: float) -> void:
 				ENEMY_MIN_X,
 				ENEMY_MAX_X
 			)
+			play_unit_move_animation(current_enemy, -1.0)
 
 		elif current_attack_timer <= 0.0:
 
@@ -2180,12 +2181,16 @@ func _process(delta: float) -> void:
 
 		if skeleton_distance > combat_position_tolerance:
 
+			var skeleton_direction: float = signf(
+				skeleton_target.x - current_skeleton.position.x
+			)
 			current_skeleton.position = (
 				current_skeleton.position.move_toward(
 					skeleton_target,
 					get_undead_runtime(current_skeleton).movement_speed * delta
 				)
 			)
+			play_unit_move_animation(current_skeleton, skeleton_direction)
 
 		else:
 
@@ -2238,12 +2243,16 @@ func _process(delta: float) -> void:
 
 		if zombie_distance > combat_position_tolerance:
 
+			var zombie_direction: float = signf(
+				zombie_target.x - current_zombie.position.x
+			)
 			current_zombie.position = (
 				current_zombie.position.move_toward(
 					zombie_target,
 					get_undead_runtime(current_zombie).movement_speed * delta
 				)
 			)
+			play_unit_move_animation(current_zombie, zombie_direction)
 
 		else:
 
@@ -4358,7 +4367,7 @@ func kill_skeleton(
 	)
 
 	show_death_feedback(target.position, UI_BONE)
-	target.queue_free()
+	retire_unit_visual(target)
 
 
 	print(
@@ -6245,7 +6254,7 @@ func create_skeleton_internal(
 
 
 # =========================================================
-# VISUAL TEMPORÁRIO
+# APRESENTAÇÃO DAS UNIDADES
 # =========================================================
 
 func ensure_unit_visual(
@@ -6288,9 +6297,16 @@ func configure_unit_sprite(
 
 	sprite.texture = texture
 	var texture_height: float = maxf(float(texture.get_height()), 1.0)
-	var uniform_scale: float = target_height / texture_height
+	var canvas_scale: float = UNIT_SPRITE_CATALOG.get_canvas_scale_multiplier(
+		visual_id
+	)
+	var uniform_scale: float = target_height * canvas_scale / texture_height
 	sprite.scale = Vector2(uniform_scale, uniform_scale)
-	ensure_unit_animation_driver(unit, sprite)
+	var animation_driver: Node = ensure_unit_animation_driver(unit, sprite)
+	animation_driver.call(
+		"configure_state_textures",
+		UNIT_SPRITE_CATALOG.get_animation_textures(visual_id)
+	)
 
 
 func ensure_unit_animation_driver(unit: Node2D, sprite: Sprite2D) -> Node:
@@ -6312,6 +6328,34 @@ func play_unit_animation(
 	var driver: Node = unit.get_node_or_null("AnimationDriver")
 	if driver != null:
 		driver.call("play", animation_name, direction)
+
+
+func play_unit_move_animation(unit: Node2D, direction: float) -> void:
+	if not is_instance_valid(unit):
+		return
+	var driver: Node = unit.get_node_or_null("AnimationDriver")
+	if driver != null and str(driver.get("current_animation")) == "idle":
+		driver.call("play", "move", direction)
+
+
+func retire_unit_visual(unit: Node2D, duration: float = 0.24) -> void:
+	if not is_instance_valid(unit):
+		return
+	play_unit_animation(unit, "death")
+	var health_bar: CanvasItem = unit.get_node_or_null("HealthBar") as CanvasItem
+	if health_bar != null:
+		health_bar.visible = false
+	var identity_label: CanvasItem = unit.get_node_or_null("IdentityLabel") as CanvasItem
+	if identity_label != null:
+		identity_label.visible = false
+	get_tree().create_timer(maxf(duration, 0.01), false).timeout.connect(
+		queue_retired_unit.bind(unit)
+	)
+
+
+func queue_retired_unit(unit: Node2D) -> void:
+	if is_instance_valid(unit):
+		unit.queue_free()
 
 
 func ensure_unit_health_bar(

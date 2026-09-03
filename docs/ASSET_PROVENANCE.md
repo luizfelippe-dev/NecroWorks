@@ -63,6 +63,19 @@ O cenário foi criado sem personagens, HUD, texto ou logotipos. A região centra
 
 Os originais gerados permanecem fora do repositório no armazenamento local da ferramenta. As cópias versionadas acima são as fontes de trabalho do projeto e ficam excluídas do build Windows enquanto forem apenas conceito. Antes da distribuição comercial, os frames finais ainda passarão por recorte técnico, consistência de pivô, revisão manual e conferência dos termos aplicáveis à geração.
 
+## Guerreiro Esqueleto — família de runtime V1 — 03/09/2026
+
+- pasta: `assets/sprites/units/skeleton_warrior_v1/`;
+- arquivos: `idle.png`, `move.png`, `attack.png`, `hit.png` e `death.png`;
+- criação específica para NecroWorks com a ferramenta de geração de imagens da OpenAI;
+- referências internas: `skeleton_prototype.png` e `skeleton_warrior_five_state_v1.png`;
+- formato-fonte: PNG RGBA, 1254×1254, fundo transparente;
+- importação de runtime: limite de 512 px, sem mipmaps;
+- integração: `UnitSpriteCatalog` e `UnitAnimationDriver`;
+- revisão: transparência, dimensões, fallback e cinco transições cobertos por regressão.
+
+Os prompts preservaram identidade, equipamento e paleta do protótipo e pediram uma única pose por canvas, alinhamento de base, margem segura e ausência de cenário, texto, sombra ou efeitos externos. Quando a primeira geração trouxe um quadriculado opaco, cada pose afetada passou por uma etapa separada de extração de fundo antes de entrar no repositório.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

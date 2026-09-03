@@ -46,6 +46,27 @@ func run_validation() -> void:
 		assert(sprite.texture.get_height() <= 512)
 		assert(sprite.scale.x > 0.0)
 		assert(is_equal_approx(sprite.scale.x, sprite.scale.y))
+		var driver: Node = unit.get_node_or_null("AnimationDriver")
+		assert(driver != null)
+		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
+		if visual_id == "skeleton":
+			assert(state_textures.size() == 5)
+			assert(sprite.texture == state_textures["idle"])
+			assert(sprite.scale.x > 0.20)
+			game.play_unit_move_animation(unit, 1.0)
+			assert(sprite.texture == state_textures["move"])
+			await create_timer(0.25).timeout
+			assert(sprite.texture == state_textures["idle"])
+			game.play_unit_animation(unit, "attack", 1.0)
+			assert(sprite.texture == state_textures["attack"])
+			await create_timer(0.25).timeout
+			game.play_unit_animation(unit, "hit")
+			assert(sprite.texture == state_textures["hit"])
+			await create_timer(0.20).timeout
+			game.play_unit_animation(unit, "death")
+			assert(sprite.texture == state_textures["death"])
+		else:
+			assert(state_textures.is_empty())
 		unit.queue_free()
 
 

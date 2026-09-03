@@ -60,6 +60,7 @@ Configurações são gravadas em `user://necroworks_settings.cfg`, agora com sch
 - seis sinais SFX procedurais com dez vozes simultâneas e proteção contra repetição excessiva;
 - direção de arte consolidada e concept sheets de cinco estados para Guerreiro Esqueleto e Zumbi Tank;
 - contrato de animação preparado para trocar texturas por estado sem tocar na simulação;
+- Guerreiro Esqueleto com cinco poses de runtime, movimento, ataque, impacto e morte conectados;
 - Cadáveres visuais blindados, arcanos e ágeis, com restos próprios de chefe;
 - contrato procedural de animações e preset Windows Desktop.
 - fundo híbrido ilustrado com parallax atmosférico, névoa e luz procedural.
@@ -114,8 +115,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade, apresentação audiovisual V1 e direção de arte consolidada. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. O catálogo localizado possui 422 chaves completas em inglês, português do Brasil e espanhol, agora verificadas automaticamente. Os próximos blocos da vertical slice são exportar e integrar frames finais, substituir os sons procedurais, criar música, fazer revisão editorial dos três idiomas e medir performance externa.
+A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade, apresentação audiovisual V1, direção de arte consolidada e a primeira família animada. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. O catálogo localizado possui 422 chaves completas em inglês, português do Brasil e espanhol, agora verificadas automaticamente. Os próximos blocos da vertical slice são repetir o pipeline visual no Zumbi, substituir os sons procedurais, criar música, fazer revisão editorial dos três idiomas e medir performance externa.
 
-O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 113.075.200 bytes e SHA-256 `E692C120DCAB1E84A238450005A1480095E0C82A085D4283AFF000F9F9B6541B`. Fontes de conceito, documentação e testes estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 113.823.408 bytes e SHA-256 `D2C669DBBC5A0A2C1694BEF8411803E1A61DE29C04CBFEF635D481409434DCE2`. Fontes de conceito, documentação e testes estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
 O polimento visual final, áudio, acessibilidade ampliada e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.

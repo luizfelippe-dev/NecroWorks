@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://x2jlhh16abtt"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/units/skeleton_prototype.png" id="1_sprite"]
+[ext_resource type="Texture2D" path="res://assets/sprites/units/skeleton_warrior_v1/idle.png" id="1_sprite"]
 [ext_resource type="Script" path="res://scripts/units/undead_runtime_unit.gd" id="2_script"]
 
 [node name="Skeleton" type="Node2D" unique_id=602521724]
@@ -17,4 +17,4 @@ attack_range = 58.0
 [node name="UnitSprite" type="Sprite2D" parent="."]
 z_index = 10
 texture = ExtResource("1_sprite")
-scale = Vector2(0.1875, 0.1875)
+scale = Vector2(0.25125, 0.25125)

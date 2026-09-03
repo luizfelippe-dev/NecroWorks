@@ -1,5 +1,15 @@
 # NecroWorks — Devlog
 
+## 03/09/2026 — Primeira família animada
+
+Transformei o estudo do Guerreiro Esqueleto em cinco fontes quadradas independentes. Todas preservam o equipamento industrial, usam transparência real e são reduzidas para 512 px na importação. O catálogo entrega as poses ao driver, e o combate agora mostra deslocamento, ataque, impacto e morte sem usar essas animações para decidir regras.
+
+A morte visual ganhou 0,24 s de leitura. O Esqueleto libera seu slot e sai das coleções imediatamente; apenas o sprite permanece até concluir o feedback, com barra e rótulo ocultos. Isso mantém Doutrina, reposição, Recuperação Emergencial e derrota determinísticas.
+
+As gerações que trouxeram quadriculado opaco foram rejeitadas e passaram por extração de fundo separada. A nova regressão verifica os cinco PNGs, dimensões importadas, transparência, catálogo e transições. A suíte chega a 60 cenários.
+
+Os 60 cenários passaram em 85,13 segundos, incluindo Bone e Flesh até o Capataz. O release Windows abriu em smoke test headless com 113.823.408 bytes e SHA-256 `D2C669DBBC5A0A2C1694BEF8411803E1A61DE29C04CBFEF635D481409434DCE2`.
+
 ## 02/09/2026 — Direção de arte e ponte para animação final
 
 Fechei a linguagem visual da vertical slice em um documento próprio: materiais, paleta funcional, leitura de silhuetas, famílias de personagens, interface e critérios de exportação. Guerreiro Esqueleto e Zumbi Tank receberam estudos transparentes com idle, movimento, ataque, impacto e morte. Mantive esses arquivos como concept sheets porque as poses não possuem células técnicas uniformes; cortar a faixa automaticamente degradaria o resultado.

@@ -615,6 +615,8 @@ Idle, movimento, ataque, impacto e morte usam uma interface comum, mas não deci
 
 Motivo: a arte final pode substituir o movimento procedural por spritesheets sem alterar balanceamento, saves ou testes determinísticos.
 
+O Guerreiro Esqueleto inaugura a implementação por estados com cinco imagens transparentes independentes em `assets/sprites/units/skeleton_warrior_v1`. Essa primeira versão privilegia leitura imediata e identidade consistente; uma animação quadro a quadro poderá substituir cada estado sem mudar o contrato público nem a simulação. A mesma sequência será aplicada ao Zumbi antes de expandir para tropas avançadas.
+
 ## Migrar checkpoints antigos antes de validar a versão atual
 
 `RunSaveStore` grava schema v2 e aceita schema v1 por uma migração determinística em memória. A migração adiciona metadados e defaults para seções que não existiam no começo do desenvolvimento. Arquivos com versão inválida ou superior à suportada não são carregados.

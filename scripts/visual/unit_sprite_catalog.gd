@@ -1,9 +1,22 @@
 extends RefCounted
 
 
-const SKELETON: Texture2D = preload(
-	"res://assets/sprites/units/skeleton_prototype.png"
+const SKELETON_IDLE: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_warrior_v1/idle.png"
 )
+const SKELETON_MOVE: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_warrior_v1/move.png"
+)
+const SKELETON_ATTACK: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_warrior_v1/attack.png"
+)
+const SKELETON_HIT: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_warrior_v1/hit.png"
+)
+const SKELETON_DEATH: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_warrior_v1/death.png"
+)
+const SKELETON: Texture2D = SKELETON_IDLE
 const SKELETON_ARCHER: Texture2D = preload(
 	"res://assets/sprites/units/skeleton_archer_prototype.png"
 )
@@ -32,6 +45,14 @@ const LICH: Texture2D = preload(
 	"res://assets/sprites/units/lich_prototype.png"
 )
 
+const SKELETON_ANIMATIONS: Dictionary = {
+	"idle": SKELETON_IDLE,
+	"move": SKELETON_MOVE,
+	"attack": SKELETON_ATTACK,
+	"hit": SKELETON_HIT,
+	"death": SKELETON_DEATH,
+}
+
 
 static func get_texture(visual_id: String) -> Texture2D:
 
@@ -56,3 +77,14 @@ static func get_texture(visual_id: String) -> Texture2D:
 			return LICH
 		_:
 			return HUMAN_WARRIOR
+
+
+static func get_animation_textures(visual_id: String) -> Dictionary:
+	if visual_id == "skeleton":
+		return SKELETON_ANIMATIONS.duplicate()
+	return {}
+
+
+static func get_canvas_scale_multiplier(visual_id: String) -> float:
+	# The final Skeleton sources keep a generous transparent safe area.
+	return 1.34 if visual_id == "skeleton" else 1.0

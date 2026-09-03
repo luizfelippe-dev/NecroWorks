@@ -31,6 +31,12 @@ Esse caminho permite integrar poses finais gradualmente. Uma unidade pode recebe
 
 Os arquivos em `assets/sprites/animation_concepts/` são referências de pose, não atlases prontos. A versão final deve usar frames individuais ou células uniformes com pivô dos pés idêntico. Não se deve cortar o concept sheet em cinco partes iguais: as silhuetas têm larguras diferentes e atravessam os limites visuais.
 
+## Guerreiro Esqueleto V1
+
+A primeira família completa está em `assets/sprites/units/skeleton_warrior_v1/`. Os cinco estados usam canvas quadrado, transparência real e importação limitada a 512 px. `UnitSpriteCatalog` entrega o conjunto ao driver; `main_controller.gd` aciona `move` durante deslocamento, `attack` no golpe, `hit` no dano e `death` antes de retirar o nó.
+
+A pose de morte permanece por 0,24 s depois que a unidade sai das coleções de combate e libera o slot. Barra de vida e rótulo são ocultados imediatamente. Portanto, a apresentação não bloqueia reposição, Doutrina, recuperação rara ou condição de derrota.
+
 ## Movimento reduzido
 
 Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, rotações e mudanças de escala. Impacto preserva apenas um flash curto e morte preserva o desaparecimento imediato, porque ambos comunicam estado essencial. A mesma preferência congela parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera duração de ataque, dano ou cooldown.

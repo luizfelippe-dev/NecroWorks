@@ -18,6 +18,9 @@
 - suporte a texturas por estado no `UnitAnimationDriver`, com fallback seguro para o sprite-base;
 - auditoria integral das 422 chaves em inglês, português do Brasil e espanhol;
 - regressões de assets de animação e integridade linguística, elevando a suíte para 59 cenários.
+- família final V1 do Guerreiro Esqueleto com sprites individuais de idle, movimento, ataque, impacto e morte;
+- integração das poses no movimento e feedback de combate, com morte visual curta após a liberação do slot;
+- regressão dedicada de dimensões, transparência e catálogo da família do Esqueleto, elevando a suíte para 60 cenários.
 
 ### Changed
 
@@ -28,6 +31,7 @@
 - feedback visual limitado a 48 elementos transitórios e áudio limitado a dez vozes com cadência protegida para hordas.
 - concept sheets são fontes de direção e não são cortados como atlas enquanto não tiverem células e pivôs uniformes.
 - fontes de conceito e referência permanecem excluídas do build Windows até virarem assets de runtime.
+- cena editável e catálogo do Esqueleto agora usam a nova pose idle; demais estados entram pelo driver visual.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 

@@ -51,7 +51,7 @@ Os concept sheets em `assets/sprites/animation_concepts/` fecham pose, equipamen
 
 O preset Windows exclui essa pasta do pacote distribuído. As fontes permanecem no repositório para orientar a produção, sem aumentar o executável enquanto não forem assets de runtime.
 
-Antes da integração final, cada família precisa de frames exportados individualmente ou de um atlas com células realmente uniformes. `UnitAnimationDriver.configure_state_textures()` já aceita texturas por estado, então essa substituição não exigirá mudança nas regras de combate.
+O Guerreiro Esqueleto já foi exportado em cinco canvases quadrados e integrado em `assets/sprites/units/skeleton_warrior_v1/`. O Zumbi Tank continua aguardando a mesma passagem técnica. `UnitAnimationDriver.configure_state_textures()` mantém a substituição fora das regras de combate.
 
 ## Interface e cenário
 
