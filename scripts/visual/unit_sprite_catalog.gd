@@ -68,9 +68,22 @@ const HUMAN_WARRIOR_DEATH: Texture2D = preload(
 	"res://assets/sprites/units/human_warrior_v1/death.png"
 )
 const HUMAN_WARRIOR: Texture2D = HUMAN_WARRIOR_IDLE
-const MAGE: Texture2D = preload(
-	"res://assets/sprites/units/mage_prototype.png"
+const MAGE_IDLE: Texture2D = preload(
+	"res://assets/sprites/units/mage_v1/idle.png"
 )
+const MAGE_MOVE: Texture2D = preload(
+	"res://assets/sprites/units/mage_v1/move.png"
+)
+const MAGE_ATTACK: Texture2D = preload(
+	"res://assets/sprites/units/mage_v1/attack.png"
+)
+const MAGE_HIT: Texture2D = preload(
+	"res://assets/sprites/units/mage_v1/hit.png"
+)
+const MAGE_DEATH: Texture2D = preload(
+	"res://assets/sprites/units/mage_v1/death.png"
+)
+const MAGE: Texture2D = MAGE_IDLE
 const ELF: Texture2D = preload(
 	"res://assets/sprites/units/elf_prototype.png"
 )
@@ -115,6 +128,13 @@ const HUMAN_WARRIOR_ANIMATIONS: Dictionary = {
 	"hit": HUMAN_WARRIOR_HIT,
 	"death": HUMAN_WARRIOR_DEATH,
 }
+const MAGE_ANIMATIONS: Dictionary = {
+	"idle": MAGE_IDLE,
+	"move": MAGE_MOVE,
+	"attack": MAGE_ATTACK,
+	"hit": MAGE_HIT,
+	"death": MAGE_DEATH,
+}
 
 
 static func get_texture(visual_id: String) -> Texture2D:
@@ -153,6 +173,8 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 		return GHOST_ANIMATIONS.duplicate()
 	if visual_id == "human_warrior":
 		return HUMAN_WARRIOR_ANIMATIONS.duplicate()
+	if visual_id == "mage":
+		return MAGE_ANIMATIONS.duplicate()
 	return {}
 
 
@@ -167,5 +189,7 @@ static func get_canvas_scale_multiplier(visual_id: String) -> float:
 			return 1.07
 		"human_warrior":
 			return 1.22
+		"mage":
+			return 1.20
 		_:
 			return 1.0

@@ -121,6 +121,21 @@ O prompt-base preservou rosto, barba, cabelo curto, armadura de aço, couro, tec
 
 `human_warrior_prototype.png` permanece versionado como referência histórica, mas deixou o pacote Windows depois que a família V1 assumiu cena e catálogo.
 
+## Mago — família de runtime V1 — 04/09/2026
+
+- pasta: `assets/sprites/units/mage_v1/`;
+- arquivos: `idle.png`, `move.png`, `attack.png`, `hit.png` e `death.png`;
+- criação específica para NecroWorks com a ferramenta integrada de geração de imagens da OpenAI;
+- referências internas: `mage_prototype.png`, `human_warrior_v1/idle.png` e `necrodesignv2.png`;
+- formato-fonte: PNG RGBA, 1254×1254, fundo transparente;
+- importação de runtime: limite de 512 px, sem mipmaps;
+- integração: `UnitSpriteCatalog`, `UnitAnimationDriver` e fluxo de retirada inimiga;
+- revisão: identidade, escala entre poses, margem do cajado, alpha, dimensões, cinco transições e retirada visual cobertos por regressão.
+
+O prompt preservou a Maga viva, cabelo preso, olho violeta, casaco escuro, painéis roxos, proteções de latão, cajado industrial e frasco dorsal. As ações pediram avanço baixo, conjuração, recuo e morte horizontal. As cinco fontes passaram por extração de fundo. A primeira descarga foi descartada por tocar a borda; a segunda foi reduzida, mas encolhia a personagem. A pose final concentra uma esfera no cajado e deixa projétil e rastro para o VFX do runtime.
+
+`mage_prototype.png` permanece como referência histórica, mas não entra mais no build Windows.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

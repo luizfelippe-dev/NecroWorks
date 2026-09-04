@@ -196,6 +196,8 @@ O Fantasma fecha a terceira família no mesmo catálogo e passa a ter uma cena v
 
 O Guerreiro Humano inicia as famílias inimigas sem criar uma segunda máquina de estados. Ataque e impacto já eram emitidos pelo feedback comum; o corte adiciona as cinco texturas, escala e retirada visual depois que `CombatRuntimeCoordinator` limpa o estado. Vida, dano, defesa de Elite, cadência e composição das Ondas não mudaram. A suíte chega a 63 runners.
 
+O Mago reutiliza essa fronteira e mantém Rajada Arcana inteiramente no `EnemyCombatPolicy`. A pose de conjuração contém somente a carga no cajado; trajetória e impacto continuam no feedback comum. A retirada de Guerreiro e Mago compartilha o mesmo caminho depois da limpeza do estado. A suíte chega a 64 runners.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.

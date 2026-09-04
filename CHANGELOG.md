@@ -27,6 +27,8 @@
 - regressão dedicada da família espectral, elevando a suíte para 62 cenários.
 - família final V1 do Guerreiro Humano com idle defensivo, avanço protegido, golpe de espada, impacto e morte;
 - regressão dedicada dos assets humanos, elevando a suíte para 63 cenários.
+- família final V1 do Mago com guarda arcana, avanço baixo, conjuração compacta, impacto e morte;
+- regressão dedicada dos assets arcanos, elevando a suíte para 64 cenários.
 
 ### Changed
 
@@ -42,6 +44,8 @@
 - a cena do Fantasma deixou de reutilizar o Esqueleto e passou a expor sua própria pose idle no editor.
 - o Guerreiro Humano agora usa a mesma ponte de animação do exército sem alterar seus atributos de combate;
 - inimigos humanos derrotados permanecem por 0,24 s apenas para apresentar a pose de morte, depois de saírem da simulação.
+- o Mago passou a usar poses próprias sem mover Rajada Arcana, supressão ou dano para a camada visual;
+- o projétil permanece no VFX de combate, enquanto a pose de ataque limita a energia ao núcleo do cajado.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 

@@ -53,7 +53,13 @@ O movimento usa uma silhueta lançada para frente, o ataque concentra energia en
 
 A primeira família inimiga completa está em `assets/sprites/units/human_warrior_v1/`. O escudo lidera o deslocamento, a espada cruza a silhueta no ataque e a abertura involuntária da guarda comunica impacto. A morte é baixa e horizontal, com arma solta e escudo junto ao corpo.
 
-`kill_enemy()` remove o Guerreiro Humano das coleções e tabelas de combate, cria o Cadáver e atualiza a Onda antes dos 0,24 s reservados à pose final. Mago, Elfo e Chefes continuam usando o fallback procedural até receberem famílias próprias.
+`kill_enemy()` remove o Guerreiro Humano das coleções e tabelas de combate, cria o Cadáver e atualiza a Onda antes dos 0,24 s reservados à pose final.
+
+## Mago V1
+
+A família arcana está em `assets/sprites/units/mage_v1/`. Cajado de duas mãos, frasco dorsal, latão, tecido violeta e silhueta estreita mantêm o papel de atacante frágil. Movimento abaixa o centro de massa; ataque concentra uma esfera pequena no cajado; impacto abre a guarda; morte apaga o olho e abandona a arma.
+
+O rastro de ataque e a Rajada Arcana continuam no `CombatFeedback` e no `EnemyCombatPolicy`. As texturas não decidem alvo, dano em área ou supressão. `kill_enemy()` usa a mesma retirada visual de 0,24 s para Guerreiro e Mago. Elfo e Chefes continuam no fallback procedural até receberem famílias próprias.
 
 ## Movimento reduzido
 

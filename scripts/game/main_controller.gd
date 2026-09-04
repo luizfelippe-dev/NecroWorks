@@ -4676,7 +4676,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 		else Color(0.92, 0.24, 0.16, 0.92),
 		defeated_boss
 	)
-	if defeated_archetype == "human_warrior":
+	if defeated_archetype in ["human_warrior", "mage"]:
 		retire_unit_visual(dead_enemy)
 	else:
 		dead_enemy.queue_free()

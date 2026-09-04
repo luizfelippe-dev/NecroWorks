@@ -615,7 +615,9 @@ Idle, movimento, ataque, impacto e morte usam uma interface comum, mas não deci
 
 Motivo: a arte final pode substituir o movimento procedural por spritesheets sem alterar balanceamento, saves ou testes determinísticos.
 
-Guerreiro Esqueleto, Zumbi Tank, Fantasma e Guerreiro Humano usam cinco imagens transparentes independentes em suas pastas V1. Essa primeira versão privilegia leitura imediata e identidade consistente; uma animação quadro a quadro poderá substituir cada estado sem mudar o contrato público nem a simulação. Mago, Elfo e chefes devem seguir a mesma fronteira antes de criar efeitos particulares.
+Guerreiro Esqueleto, Zumbi Tank, Fantasma, Guerreiro Humano e Mago usam cinco imagens transparentes independentes em suas pastas V1. Essa primeira versão privilegia leitura imediata e identidade consistente; uma animação quadro a quadro poderá substituir cada estado sem mudar o contrato público nem a simulação. Elfo e chefes devem seguir a mesma fronteira antes de criar efeitos particulares.
+
+O Mago não embute um projétil longo na textura de ataque. A pose contém apenas a carga junto ao cajado, enquanto `CombatFeedback` desenha direção e impacto. Isso impede projéteis duplicados, cortes de canvas e diferenças visuais entre ataque comum e Rajada Arcana.
 
 ## Migrar checkpoints antigos antes de validar a versão atual
 

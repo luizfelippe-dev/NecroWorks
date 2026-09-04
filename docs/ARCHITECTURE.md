@@ -289,7 +289,7 @@ Combat-slot compaction keeps formations from leaving gaps after deaths.
 
 `CorpseVisualCatalog` classifica restos comuns em blindados, arcanos ou ágeis e reserva uma família para cada chefe. `CorpseVisual` mantém o `Button` como área clicável, mas apresenta sprite, tonalidade e rótulo próprios. O processamento continua usando os metadados econômicos já existentes.
 
-`UnitAnimationDriver` define cinco comandos estáveis: `idle`, `move`, `attack`, `hit` e `death`. Guerreiro Esqueleto, Zumbi Tank, Fantasma e Guerreiro Humano consomem o contrato completo a partir de suas pastas V1, com escala de canvas própria para cada silhueta. Deslocamento, ataque e impacto combinam troca de textura com movimentos curtos de apresentação. A morte mantém o nó visível por 0,24 s, mas registro, slot, métricas e economia já foram resolvidos antes dessa espera visual. Famílias ainda incompletas continuam usando a apresentação procedural pela mesma interface.
+`UnitAnimationDriver` define cinco comandos estáveis: `idle`, `move`, `attack`, `hit` e `death`. Guerreiro Esqueleto, Zumbi Tank, Fantasma, Guerreiro Humano e Mago consomem o contrato completo a partir de suas pastas V1, com escala de canvas própria para cada silhueta. Deslocamento, ataque e impacto combinam troca de textura com movimentos curtos de apresentação. A morte mantém o nó visível por 0,24 s, mas registro, slot, métricas e economia já foram resolvidos antes dessa espera visual. Famílias ainda incompletas continuam usando a apresentação procedural pela mesma interface.
 
 # Movement
 
@@ -512,7 +512,7 @@ Not required yet.
 
 Automatic checkpoints are requested after an upgrade is committed and before the next Wave starts. Save-and-return also snapshots the current run. Loading restarts the recorded Wave with the saved permanent army and economy instead of attempting a fragile frame-perfect combat restore.
 
-`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 63 cenários, incluindo o contrato e os arquivos das quatro famílias animadas.
+`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 64 cenários, incluindo o contrato e os arquivos das cinco famílias animadas.
 
 ## Onboarding e acessibilidade
 

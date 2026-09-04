@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 04/09/2026 — Artilharia arcana da Concordata
+
+O Mago ganhou uma família completa sem perder a silhueta frágil do protótipo. Casaco de carvão, tecido violeta, proteções de latão, cajado e frasco dorsal se repetem em guarda, avanço, conjuração, impacto e morte.
+
+A descarga inicial ocupava a borda do canvas; uma tentativa de correção reduziu demais a personagem. A pose aprovada mantém a escala do idle e concentra a energia no cajado. O rastro continua sendo responsabilidade do VFX, enquanto Rajada Arcana e supressão permanecem no domínio de combate.
+
+Os 64 cenários passaram em 111,78 segundos na versão final dos assets. O release Windows abriu no smoke test com 116.557.184 bytes e SHA-256 `B29B0A0F836996AC601E16165507CA9FE170F00B80B97C84E8098753CB923526`.
+
 ## 04/09/2026 — Linha de frente da Concordata
 
 O Guerreiro Humano é a primeira família inimiga a abandonar a arte temporária. Espada, escudo retangular, aço gasto, couro e tecido carmesim preservam a identidade já reconhecível, enquanto as cinco poses agora separam guarda, avanço, ataque, impacto e morte.

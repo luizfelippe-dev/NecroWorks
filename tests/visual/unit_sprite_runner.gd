@@ -50,7 +50,9 @@ func run_validation() -> void:
 		var driver: Node = unit.get_node_or_null("AnimationDriver")
 		assert(driver != null)
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
-		if visual_id in ["skeleton", "zombie", "ghost", "human_warrior"]:
+		if visual_id in [
+			"skeleton", "zombie", "ghost", "human_warrior", "mage"
+		]:
 			assert(state_textures.size() == 5)
 			assert(sprite.texture == state_textures["idle"])
 			assert(sprite.scale.x > 0.20)
@@ -101,6 +103,21 @@ func run_validation() -> void:
 	await create_timer(0.30).timeout
 	await process_frame
 	assert(not is_instance_valid(retiring_enemy))
+
+	var retiring_mage: Node2D = Node2D.new()
+	game.add_child(retiring_mage)
+	game.ensure_unit_visual(retiring_mage, Color(0.33, 0.30, 0.82), "mage")
+	game.enemies.append(retiring_mage)
+	game.enemy_types[retiring_mage] = "mage"
+	game.enemy_elite_flags[retiring_mage] = false
+	var mage_driver: Node = retiring_mage.get_node("AnimationDriver")
+	game.kill_enemy(retiring_mage)
+	assert(not game.enemies.has(retiring_mage))
+	assert(is_instance_valid(retiring_mage))
+	assert(str(mage_driver.get("current_animation")) == "death")
+	await create_timer(0.30).timeout
+	await process_frame
+	assert(not is_instance_valid(retiring_mage))
 
 
 	print("UNIT SPRITE VALIDATION: PASS")
