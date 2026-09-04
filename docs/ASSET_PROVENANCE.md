@@ -136,6 +136,23 @@ O prompt preservou a Maga viva, cabelo preso, olho violeta, casaco escuro, pain�
 
 `mage_prototype.png` permanece como referência histórica, mas não entra mais no build Windows.
 
+## Elfo — família de runtime V1 — 04/09/2026
+
+- pasta: `assets/sprites/units/elf_v1/`;
+- arquivos: `idle.png`, `move.png`, `attack.png`, `hit.png` e `death.png`;
+- criação específica para NecroWorks com a ferramenta integrada de geração de imagens da OpenAI;
+- referências internas: `elf_prototype.png`, `human_warrior_v1/idle.png` e `necrodesignv2.png`;
+- formato-fonte final: PNG RGBA quadrado, 1254×1254, fundo transparente;
+- importação de runtime: limite de 512 px, sem mipmaps;
+- integração: `UnitSpriteCatalog`, `UnitAnimationDriver` e fluxo de retirada inimiga;
+- revisão: identidade, direção para a esquerda, escala, margem de arco, alpha, cinco transições e retirada visual cobertos por regressão.
+
+O prompt-base preservou a arqueira viva, cabelo claro preso, olhos verdes, orelhas longas, couro escuro, tecido verde, placas leves, arco recurvo e aljava. As ações pediram guarda controlada, avanço baixo, disparo compacto, recuo de impacto e morte horizontal sem gore. A flecha permanece encaixada na textura de ataque; alvo, trajetória e Tiro de Precisão continuam no runtime.
+
+Idle, ataque, impacto e morte precisaram de extração dedicada porque as primeiras saídas incorporaram o quadriculado ao fundo. A primeira morte finalizada usava canvas horizontal; ela foi recomposta em canvas quadrado e extraída novamente para manter o contrato 512×512 sem cortar corpo ou arco.
+
+`elf_prototype.png` permanece como referência histórica, mas não entra mais no build Windows.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

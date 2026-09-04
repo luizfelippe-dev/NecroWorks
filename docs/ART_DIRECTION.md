@@ -33,7 +33,7 @@ Fantasmas e Liches usam roxo, verde frio e transparência controlada. Transparê
 
 ## Invasores e chefes
 
-Humanos usam aço, tecido e cores mais quentes. Magos carregam geometria arcana; Elfos têm silhueta leve e comprida. Chefes precisam ser reconhecidos pelo contorno, não apenas pelo tamanho ou pelo nome. Cada chefe mantém um material dominante e um VFX próprio: ferro para o Marechal, energia arcana para o Auditor e maquinário de produção para o Capataz.
+Humanos usam aço, tecido e cores mais quentes. Magos carregam geometria arcana; Elfos usam couro, placas leves, tecido verde e linhas compridas definidas por arco, orelhas e aljava. Chefes precisam ser reconhecidos pelo contorno, não apenas pelo tamanho ou pelo nome. Cada chefe mantém um material dominante e um VFX próprio: ferro para o Marechal, energia arcana para o Auditor e maquinário de produção para o Capataz.
 
 ## Escala e exportação de personagens
 
@@ -51,7 +51,7 @@ Os concept sheets em `assets/sprites/animation_concepts/` fecham pose, equipamen
 
 O preset Windows exclui essa pasta do pacote distribuído. As fontes permanecem no repositório para orientar a produção, sem aumentar o executável enquanto não forem assets de runtime.
 
-O Guerreiro Esqueleto, o Zumbi Tank, o Fantasma, o Guerreiro Humano e o Mago já foram exportados em cinco canvases quadrados e integrados em suas pastas V1. O Fantasma fixa a linguagem espectral: núcleo verde preso por bronze, massa ciano-violeta e silhueta estreita de projétil. O Guerreiro Humano fixa a linha viva: aço cinza, couro marrom, tecido carmesim e escudo retangular sem brilho necromântico. O Mago usa latão, carvão e violeta concentrado em cajado e frasco, com corpo estreito e pouca blindagem. `UnitAnimationDriver.configure_state_textures()` mantém a substituição fora das regras de combate.
+O Guerreiro Esqueleto, o Zumbi Tank, o Fantasma, o Guerreiro Humano, o Mago e o Elfo já foram exportados em cinco canvases quadrados e integrados em suas pastas V1. O Fantasma fixa a linguagem espectral: núcleo verde preso por bronze, massa ciano-violeta e silhueta estreita de projétil. O Guerreiro Humano fixa a linha viva: aço cinza, couro marrom, tecido carmesim e escudo retangular sem brilho necromântico. O Mago usa latão, carvão e violeta concentrado em cajado e frasco, com corpo estreito e pouca blindagem. O Elfo fecha o trio invasor com cabelo claro, tecido verde, couro escuro e arco recurvo. `UnitAnimationDriver.configure_state_textures()` mantém a substituição fora das regras de combate.
 
 ## Interface e cenário
 

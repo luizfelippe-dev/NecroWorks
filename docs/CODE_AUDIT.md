@@ -198,6 +198,8 @@ O Guerreiro Humano inicia as famílias inimigas sem criar uma segunda máquina d
 
 O Mago reutiliza essa fronteira e mantém Rajada Arcana inteiramente no `EnemyCombatPolicy`. A pose de conjuração contém somente a carga no cajado; trajetória e impacto continuam no feedback comum. A retirada de Guerreiro e Mago compartilha o mesmo caminho depois da limpeza do estado. A suíte chega a 64 runners.
 
+O Elfo fecha o trio básico de invasores na mesma fronteira. A pose de ataque mostra o arco tensionado sem projetar a flecha pelo canvas; prioridade de alvo e Tiro de Precisão permanecem em `EnemyCombatPolicy`. Guerreiro, Mago e Elfo agora compartilham a retirada visual depois que o estado de combate já foi limpo. A suíte chega a 65 runners.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.

@@ -84,9 +84,22 @@ const MAGE_DEATH: Texture2D = preload(
 	"res://assets/sprites/units/mage_v1/death.png"
 )
 const MAGE: Texture2D = MAGE_IDLE
-const ELF: Texture2D = preload(
-	"res://assets/sprites/units/elf_prototype.png"
+const ELF_IDLE: Texture2D = preload(
+	"res://assets/sprites/units/elf_v1/idle.png"
 )
+const ELF_MOVE: Texture2D = preload(
+	"res://assets/sprites/units/elf_v1/move.png"
+)
+const ELF_ATTACK: Texture2D = preload(
+	"res://assets/sprites/units/elf_v1/attack.png"
+)
+const ELF_HIT: Texture2D = preload(
+	"res://assets/sprites/units/elf_v1/hit.png"
+)
+const ELF_DEATH: Texture2D = preload(
+	"res://assets/sprites/units/elf_v1/death.png"
+)
+const ELF: Texture2D = ELF_IDLE
 const FOREMAN: Texture2D = preload(
 	"res://assets/sprites/units/foreman_prototype.png"
 )
@@ -135,6 +148,13 @@ const MAGE_ANIMATIONS: Dictionary = {
 	"hit": MAGE_HIT,
 	"death": MAGE_DEATH,
 }
+const ELF_ANIMATIONS: Dictionary = {
+	"idle": ELF_IDLE,
+	"move": ELF_MOVE,
+	"attack": ELF_ATTACK,
+	"hit": ELF_HIT,
+	"death": ELF_DEATH,
+}
 
 
 static func get_texture(visual_id: String) -> Texture2D:
@@ -175,6 +195,8 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 		return HUMAN_WARRIOR_ANIMATIONS.duplicate()
 	if visual_id == "mage":
 		return MAGE_ANIMATIONS.duplicate()
+	if visual_id == "elf":
+		return ELF_ANIMATIONS.duplicate()
 	return {}
 
 
@@ -191,5 +213,7 @@ static func get_canvas_scale_multiplier(visual_id: String) -> float:
 			return 1.22
 		"mage":
 			return 1.20
+		"elf":
+			return 1.10
 		_:
 			return 1.0

@@ -512,7 +512,7 @@ Not required yet.
 
 Automatic checkpoints are requested after an upgrade is committed and before the next Wave starts. Save-and-return also snapshots the current run. Loading restarts the recorded Wave with the saved permanent army and economy instead of attempting a fragile frame-perfect combat restore.
 
-`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 64 cenários, incluindo o contrato e os arquivos das cinco famílias animadas.
+`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 65 cenários, incluindo o contrato e os arquivos das seis famílias animadas.
 
 ## Onboarding e acessibilidade
 

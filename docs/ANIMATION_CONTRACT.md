@@ -59,7 +59,13 @@ A primeira família inimiga completa está em `assets/sprites/units/human_warrio
 
 A família arcana está em `assets/sprites/units/mage_v1/`. Cajado de duas mãos, frasco dorsal, latão, tecido violeta e silhueta estreita mantêm o papel de atacante frágil. Movimento abaixa o centro de massa; ataque concentra uma esfera pequena no cajado; impacto abre a guarda; morte apaga o olho e abandona a arma.
 
-O rastro de ataque e a Rajada Arcana continuam no `CombatFeedback` e no `EnemyCombatPolicy`. As texturas não decidem alvo, dano em área ou supressão. `kill_enemy()` usa a mesma retirada visual de 0,24 s para Guerreiro e Mago. Elfo e Chefes continuam no fallback procedural até receberem famílias próprias.
+O rastro de ataque e a Rajada Arcana continuam no `CombatFeedback` e no `EnemyCombatPolicy`. As texturas não decidem alvo, dano em área ou supressão. `kill_enemy()` usa a mesma retirada visual de 0,24 s para Guerreiro e Mago.
+
+## Elfo V1
+
+A família de precisão está em `assets/sprites/units/elf_v1/`. Cabelo claro, orelhas longas, couro escuro, placas leves, tecido verde, aljava e arco recurvo mantêm uma silhueta viva e ágil. O movimento reduz a postura, o ataque tensiona o arco, o impacto quebra a base e a morte ocupa o chão com arco separado do corpo.
+
+A textura de ataque contém apenas a flecha encaixada. Trajetória, alvo prioritário e multiplicador do Tiro de Precisão continuam no `CombatFeedback` e no `EnemyCombatPolicy`. O Elfo compartilha com Guerreiro e Mago a retirada de 0,24 s após a resolução do Cadáver. Chefes continuam no fallback procedural até receberem famílias próprias.
 
 ## Movimento reduzido
 

@@ -29,6 +29,8 @@
 - regressão dedicada dos assets humanos, elevando a suíte para 63 cenários.
 - família final V1 do Mago com guarda arcana, avanço baixo, conjuração compacta, impacto e morte;
 - regressão dedicada dos assets arcanos, elevando a suíte para 64 cenários.
+- família final V1 do Elfo com guarda de arqueira, avanço cauteloso, disparo, impacto e morte horizontal;
+- regressão dedicada dos assets élficos e retirada visual, elevando a suíte para 65 cenários.
 
 ### Changed
 
@@ -43,6 +45,7 @@
 - Zumbis agora liberam registro e slot antes dos 0,24 s reservados à leitura da morte visual.
 - a cena do Fantasma deixou de reutilizar o Esqueleto e passou a expor sua própria pose idle no editor.
 - o Guerreiro Humano agora usa a mesma ponte de animação do exército sem alterar seus atributos de combate;
+- o trio básico de invasores vivos agora compartilha retirada visual após a resolução determinística do Cadáver e da Onda;
 - inimigos humanos derrotados permanecem por 0,24 s apenas para apresentar a pose de morte, depois de saírem da simulação.
 - o Mago passou a usar poses próprias sem mover Rajada Arcana, supressão ou dano para a camada visual;
 - o projétil permanece no VFX de combate, enquanto a pose de ataque limita a energia ao núcleo do cajado.

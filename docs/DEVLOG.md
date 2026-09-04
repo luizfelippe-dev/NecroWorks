@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 04/09/2026 — Olhos longos da coalizão
+
+O Elfo encerra o trio básico de invasores com uma família completa. Cabelo claro, orelhas longas, tecido verde, couro escuro, placas leves, arco recurvo e aljava permanecem reconhecíveis em guarda, avanço, disparo, impacto e morte.
+
+O disparo mantém a flecha encaixada no arco, sem atravessar o canvas. Alvo prioritário, multiplicador e frequência do Tiro de Precisão continuam no domínio de combate. Ao morrer, o Elfo sai das coleções, gera Cadáver e resolve a Onda antes dos 0,24 s visuais, seguindo a mesma fronteira do Guerreiro e do Mago.
+
+Quatro poses precisaram de extração de fundo. A morte também foi recomposta de um canvas horizontal para um quadrado transparente, preservando corpo e arco dentro do contrato 512×512. Os 65 cenários passaram em 57,58 segundos, incluindo Bone e Flesh completas. O release Windows abriu no smoke test com 117.157.384 bytes e SHA-256 `584C1B2303F60862502D687C0D3D8848D383E8CFF58CF87B75A15440639CF55E`.
+
 ## 04/09/2026 — Artilharia arcana da Concordata
 
 O Mago ganhou uma família completa sem perder a silhueta frágil do protótipo. Casaco de carvão, tecido violeta, proteções de latão, cajado e frasco dorsal se repetem em guarda, avanço, conjuração, impacto e morte.

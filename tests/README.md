@@ -396,7 +396,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/g
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/game/meta_unlock_gameplay_runner.gd
 ```
 
-A suíte atual contém 64 cenários `*_runner.gd`. Todos passaram em 111,78 segundos no Godot 4.7.1 headless em 04/09/2026, incluindo as estratégias completas Bone e Flesh.
+Depois da integração do Mago, a suíte continha 64 cenários `*_runner.gd`, todos aprovados no Godot 4.7.1 headless, incluindo as estratégias completas Bone e Flesh.
 
 ## Conclusão da v0.5.0
 
@@ -441,11 +441,18 @@ O primeiro cenário valida presença, dimensões e transparência dos concept sh
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/skeleton_animation_assets_runner.gd
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/zombie_animation_assets_runner.gd
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/ghost_animation_assets_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/human_warrior_animation_assets_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/mage_animation_assets_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/elf_animation_assets_runner.gd
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/unit_sprite_runner.gd
 ```
 
-Os cenários validam os 25 assets de Esqueleto, Zumbi, Fantasma, Guerreiro Humano e Mago importados em 512×512, alfa real, catálogo, escalas próprias, troca efetiva de pose e retirada visual sem bloquear slot ou progressão da Onda.
+Os cenários validam os 30 assets de Esqueleto, Zumbi, Fantasma, Guerreiro Humano, Mago e Elfo importados em 512×512, alfa real, catálogo, escalas próprias, troca efetiva de pose e retirada visual sem bloquear slot ou progressão da Onda.
 
 `tests/visual/human_warrior_animation_assets_runner.gd` protege os cinco estados do primeiro invasor. `unit_sprite_runner.gd` também mata o inimigo inicial e confirma que ele sai da coleção antes dos 0,24 s reservados à pose final.
 
 `tests/visual/mage_animation_assets_runner.gd` protege os cinco estados arcanos. O runner integrado cria e elimina um Mago de runtime, confirmando que sua morte visual não retém estado de combate.
+
+`tests/visual/elf_animation_assets_runner.gd` protege os cinco estados da arqueira. O ciclo integrado confirma que o Elfo sai da coleção antes da pose final, sem reter alvo, slot ou progressão.
+
+A suíte atual contém 65 cenários `*_runner.gd`. Todos passaram em 57,58 segundos no Godot 4.7.1 headless em 04/09/2026, incluindo as estratégias completas Bone e Flesh.

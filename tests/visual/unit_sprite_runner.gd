@@ -51,7 +51,7 @@ func run_validation() -> void:
 		assert(driver != null)
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
 		if visual_id in [
-			"skeleton", "zombie", "ghost", "human_warrior", "mage"
+			"skeleton", "zombie", "ghost", "human_warrior", "mage", "elf"
 		]:
 			assert(state_textures.size() == 5)
 			assert(sprite.texture == state_textures["idle"])
@@ -118,6 +118,21 @@ func run_validation() -> void:
 	await create_timer(0.30).timeout
 	await process_frame
 	assert(not is_instance_valid(retiring_mage))
+
+	var retiring_elf: Node2D = Node2D.new()
+	game.add_child(retiring_elf)
+	game.ensure_unit_visual(retiring_elf, Color(0.28, 0.55, 0.22), "elf")
+	game.enemies.append(retiring_elf)
+	game.enemy_types[retiring_elf] = "elf"
+	game.enemy_elite_flags[retiring_elf] = false
+	var elf_driver: Node = retiring_elf.get_node("AnimationDriver")
+	game.kill_enemy(retiring_elf)
+	assert(not game.enemies.has(retiring_elf))
+	assert(is_instance_valid(retiring_elf))
+	assert(str(elf_driver.get("current_animation")) == "death")
+	await create_timer(0.30).timeout
+	await process_frame
+	assert(not is_instance_valid(retiring_elf))
 
 
 	print("UNIT SPRITE VALIDATION: PASS")
