@@ -202,6 +202,8 @@ O Elfo fecha o trio básico de invasores na mesma fronteira. A pose de ataque mo
 
 O Marechal da Sepultura prova a mesma fronteira em escala de chefe. Seus cinco estados reutilizam catálogo, driver e retirada inimiga; o controlador não recebeu regras visuais específicas além da lista de famílias com morte persistente. Dano especial, Cadáver de Chefe e transição continuam nas fronteiras existentes. A suíte chega a 66 runners.
 
+O Auditor Arcano repete o contrato sem criar uma segunda implementação. As cinco poses usam o catálogo comum, a escala já reservada aos chefes e a retirada inimiga existente. Descarga, recompensa e decisão do Núcleo permanecem em seus domínios. A regressão dedicada eleva a suíte para 67 runners.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.

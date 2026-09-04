@@ -621,7 +621,7 @@ O Mago não embute um projétil longo na textura de ataque. A pose contém apena
 
 O Elfo segue a mesma regra: a pose termina com a flecha ainda no arco. `EnemyCombatPolicy` mantém prioridade, frequência e dano do Tiro de Precisão, enquanto o feedback comum comunica trajetória e impacto. A arte não cria uma segunda fonte de verdade para a habilidade.
 
-Chefes usam o mesmo contrato visual, mas recebem a altura já definida por `BOSS_SPRITE_HEIGHT`. O primeiro caso é o Marechal: trocar seu protótipo por cinco poses não altera ataque especial, Cadáver, recompensa nem avanço da Onda. Essa separação será repetida no Auditor e no Capataz.
+Chefes usam o mesmo contrato visual, mas recebem a altura já definida por `BOSS_SPRITE_HEIGHT`. Marechal e Auditor provam que trocar um protótipo por cinco poses não altera ataque especial, Cadáver, recompensa nem avanço da Onda. A mesma separação será aplicada ao Capataz.
 
 ## Migrar checkpoints antigos antes de validar a versão atual
 

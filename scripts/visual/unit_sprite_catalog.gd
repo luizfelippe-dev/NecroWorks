@@ -119,9 +119,22 @@ const GRAVE_MARSHAL_DEATH: Texture2D = preload(
 	"res://assets/sprites/bosses/grave_marshal_v1/death.png"
 )
 const GRAVE_MARSHAL: Texture2D = GRAVE_MARSHAL_IDLE
-const ARCANE_AUDITOR: Texture2D = preload(
-	"res://assets/sprites/bosses/arcane_auditor_prototype.png"
+const ARCANE_AUDITOR_IDLE: Texture2D = preload(
+	"res://assets/sprites/bosses/arcane_auditor_v1/idle.png"
 )
+const ARCANE_AUDITOR_MOVE: Texture2D = preload(
+	"res://assets/sprites/bosses/arcane_auditor_v1/move.png"
+)
+const ARCANE_AUDITOR_ATTACK: Texture2D = preload(
+	"res://assets/sprites/bosses/arcane_auditor_v1/attack.png"
+)
+const ARCANE_AUDITOR_HIT: Texture2D = preload(
+	"res://assets/sprites/bosses/arcane_auditor_v1/hit.png"
+)
+const ARCANE_AUDITOR_DEATH: Texture2D = preload(
+	"res://assets/sprites/bosses/arcane_auditor_v1/death.png"
+)
+const ARCANE_AUDITOR: Texture2D = ARCANE_AUDITOR_IDLE
 const LICH: Texture2D = preload(
 	"res://assets/sprites/units/lich_prototype.png"
 )
@@ -175,6 +188,13 @@ const GRAVE_MARSHAL_ANIMATIONS: Dictionary = {
 	"hit": GRAVE_MARSHAL_HIT,
 	"death": GRAVE_MARSHAL_DEATH,
 }
+const ARCANE_AUDITOR_ANIMATIONS: Dictionary = {
+	"idle": ARCANE_AUDITOR_IDLE,
+	"move": ARCANE_AUDITOR_MOVE,
+	"attack": ARCANE_AUDITOR_ATTACK,
+	"hit": ARCANE_AUDITOR_HIT,
+	"death": ARCANE_AUDITOR_DEATH,
+}
 
 
 static func get_texture(visual_id: String) -> Texture2D:
@@ -219,6 +239,8 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 		return ELF_ANIMATIONS.duplicate()
 	if visual_id == "grave_marshal":
 		return GRAVE_MARSHAL_ANIMATIONS.duplicate()
+	if visual_id == "arcane_auditor":
+		return ARCANE_AUDITOR_ANIMATIONS.duplicate()
 	return {}
 
 
@@ -238,6 +260,8 @@ static func get_canvas_scale_multiplier(visual_id: String) -> float:
 		"elf":
 			return 1.10
 		"grave_marshal":
+			return 1.08
+		"arcane_auditor":
 			return 1.08
 		_:
 			return 1.0

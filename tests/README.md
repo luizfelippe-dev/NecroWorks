@@ -448,7 +448,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/v
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/unit_sprite_runner.gd
 ```
 
-Os cenários validam os 35 assets de Esqueleto, Zumbi, Fantasma, Guerreiro Humano, Mago, Elfo e Marechal importados em 512×512, alfa real, catálogo, escalas próprias, troca efetiva de pose e retirada visual sem bloquear slot ou progressão da Onda.
+Os cenários validam os 40 assets de Esqueleto, Zumbi, Fantasma, Guerreiro Humano, Mago, Elfo, Marechal e Auditor importados em 512×512, alfa real, catálogo, escalas próprias, troca efetiva de pose e retirada visual sem bloquear slot ou progressão da Onda.
 
 `tests/visual/human_warrior_animation_assets_runner.gd` protege os cinco estados do primeiro invasor. `unit_sprite_runner.gd` também mata o inimigo inicial e confirma que ele sai da coleção antes dos 0,24 s reservados à pose final.
 
@@ -458,4 +458,4 @@ Os cenários validam os 35 assets de Esqueleto, Zumbi, Fantasma, Guerreiro Human
 
 `tests/visual/grave_marshal_animation_assets_runner.gd` protege os cinco estados do primeiro chefe finalizado. A regressão conjunta confirma escala ampliada, resolução do Cadáver e transição da Onda independentes da morte visual.
 
-A suíte atual contém 66 cenários `*_runner.gd`. Todos passaram em 60,01 segundos no Godot 4.7.1 headless em 04/09/2026, incluindo as estratégias completas Bone e Flesh.
+A suíte atual contém 67 cenários `*_runner.gd`. Todos passaram em 67,79 segundos no Godot 4.7.1 headless em 04/09/2026, incluindo as estratégias completas Bone e Flesh.

@@ -168,6 +168,21 @@ O prompt preservou o comandante vivo, barba, cicatrizes, placas de aço escuro, 
 
 `grave_marshal_prototype.png` permanece como registro da direção original, mas não entra mais no build Windows.
 
+## Auditor Arcano — família de runtime V1 — 04/09/2026
+
+- pasta: `assets/sprites/bosses/arcane_auditor_v1/`;
+- arquivos: `idle.png`, `move.png`, `attack.png`, `hit.png` e `death.png`;
+- criação específica para NecroWorks com a ferramenta integrada de geração de imagens da OpenAI;
+- referências internas: `arcane_auditor_prototype.png` e `mage_v1/idle.png`;
+- formato-fonte: PNG RGBA, 1254×1254, fundo transparente;
+- importação de runtime: limite de 512 px, sem mipmaps;
+- integração: `UnitSpriteCatalog`, `UnitAnimationDriver`, escala de chefe e retirada inimiga;
+- revisão: identidade, equipamento, margem, alpha, cinco transições e progressão de chefe cobertos por regressão.
+
+O conjunto preserva a figura viva de orelhas longas, máscara, cabelo escuro, vestes de carvão e violeta, latão, reator do cajado, vidraria dorsal e documentos encantados. As poses pediram repouso autoritário, avanço controlado, sentença arcana compacta, recuo e morte horizontal sem gore. Repouso, movimento e morte incorporaram o quadriculado da primeira saída e passaram por extração de fundo. Ataque e impacto já vieram com alpha real.
+
+`arcane_auditor_prototype.png` permanece como referência histórica, mas não entra mais no build Windows.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

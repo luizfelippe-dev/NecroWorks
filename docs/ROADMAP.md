@@ -297,7 +297,7 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [ ] factory art
 - [ ] Boss polish
   - [x] Grave Marshal art and animation V1
-  - [ ] Arcane Auditor art and animation V1
+  - [x] Arcane Auditor art and animation V1
   - [ ] Foreman art and animation V1
 - [ ] animation
 - [ ] VFX
@@ -328,7 +328,9 @@ Screenshots/trailer must look commercially credible.
 
 **Atiradora da coalizão integrada em 04/09/2026:** o Elfo ganhou cinco estados com arco, aljava e silhueta ágil consistentes. A flecha fica contida no ataque e o Tiro de Precisão permanece na regra de combate. Os três chefes formam o próximo corte visual.
 
-**Primeiro chefe integrado em 04/09/2026:** o Marechal da Sepultura ganhou cinco estados, escala ampliada e queda completa sem alterar o encontro. Auditor Arcano e Capataz permanecem como os dois cortes visuais seguintes.
+**Primeiro chefe integrado em 04/09/2026:** o Marechal da Sepultura ganhou cinco estados, escala ampliada e queda completa sem alterar o encontro. Auditor Arcano e Capataz formavam os dois cortes visuais seguintes.
+
+**Segundo chefe integrado em 04/09/2026:** o Auditor Arcano ganhou aparato, documentos e cinco estados próprios. A descarga de quatro alvos e a decisão do Núcleo continuam independentes da arte. O Capataz encerra o corte visual dos chefes.
 
 ---
 

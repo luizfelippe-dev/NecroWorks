@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 04/09/2026 — A sentença do Auditor
+
+O Auditor Arcano é o segundo chefe com família completa. Máscara, orelhas longas, vestes de carvão e violeta, latão, reator circular, frascos dorsais e documentos encantados permanecem reconhecíveis em repouso, avanço, conjuração, impacto e queda.
+
+A pose de ataque concentra a sentença no cajado e na mão livre, sem duplicar a descarga criada pelo combate. O encontro continua decidindo os quatro alvos, dano, recompensa e destino do Núcleo. Na morte, o Auditor sai da simulação e resolve a Onda antes de manter corpo e instrumentos no chão pelos 0,24 s visuais.
+
+Repouso, movimento e morte passaram por extração de fundo; ataque e impacto já vieram com alpha real. Os 67 cenários passaram em 67,79 segundos, incluindo Bone e Flesh completas. O release Windows abriu no smoke test com 119.231.312 bytes e SHA-256 `82D2ADA7DDB62F4806D7DFC6A5A1DCE8194903ACFC746108A96C2282E8B01D0F`.
+
 ## 04/09/2026 — O escudo que fechava a vala
 
 O Marechal da Sepultura é o primeiro chefe com família completa. A massa de aço escuro, detalhes de latão, capa carmesim, escudo em forma de lápide e cutelo de escavação contaminado permanecem consistentes em guarda, avanço, golpe, impacto e queda.

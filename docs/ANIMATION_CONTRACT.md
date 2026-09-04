@@ -71,7 +71,13 @@ A textura de ataque contém apenas a flecha encaixada. Trajetória, alvo priorit
 
 O primeiro chefe completo está em `assets/sprites/bosses/grave_marshal_v1/`. Aço escuro, latão, capa carmesim, escudo em forma de lápide e cutelo de escavação contaminado sustentam uma massa visual maior que a dos invasores comuns. Avanço conserva o escudo à frente; ataque abre a guarda; impacto desloca o peso; morte espalha corpo, escudo e arma horizontalmente.
 
-O runtime mantém altura de chefe e usa o mesmo driver das unidades comuns. Dano em área, cadência especial, recompensa e transição da Onda continuam fora da arte. `kill_enemy()` resolve o Cadáver e a progressão antes de preservar a pose final por 0,24 s. Auditor Arcano e Capataz continuam no fallback procedural até receberem famílias próprias.
+O runtime mantém altura de chefe e usa o mesmo driver das unidades comuns. Dano em área, cadência especial, recompensa e transição da Onda continuam fora da arte. `kill_enemy()` resolve o Cadáver e a progressão antes de preservar a pose final por 0,24 s.
+
+## Auditor Arcano V1
+
+A família arcana está em `assets/sprites/bosses/arcane_auditor_v1/`. Máscara, orelhas longas, vestes de carvão e violeta, latão, reator do cajado, frascos dorsais e documentos encantados permanecem reconhecíveis nos cinco estados. Movimento avança com o aparato compacto; ataque concentra a sentença no cajado e na mão livre; impacto desorganiza os documentos; morte distribui corpo e instrumentos horizontalmente.
+
+A descarga de quatro alvos, a cadência especial e a decisão sobre o Núcleo continuam no combate e na narrativa. A arte não emite o projétil e não altera o encontro. O Capataz permanece como o último chefe no fallback de protótipo.
 
 ## Movimento reduzido
 
