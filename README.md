@@ -246,9 +246,9 @@ Estrutura:
 - maquinário industrial;
 - horror corporativo.
 
-O protótipo já substituiu os quadrados por sprites de todas as unidades atuais. Guerreiro Esqueleto, Zumbi Tank, Fantasma, Guerreiro Humano, Mago e Elfo possuem famílias V1 por estados; as demais unidades ainda usam arte temporária. A primeira passagem estrutural também inclui fundo fabril híbrido, battlefield separado, faixa de produção, módulos de processamento, painéis de metal escuro, acentos necromânticos e cards contextuais.
+O protótipo já substituiu os quadrados por sprites de todas as unidades atuais. Guerreiro Esqueleto, Zumbi Tank, Fantasma, Guerreiro Humano, Mago, Elfo e Marechal da Sepultura possuem famílias V1 por estados; as demais unidades ainda usam arte temporária. A primeira passagem estrutural também inclui fundo fabril híbrido, battlefield separado, faixa de produção, módulos de processamento, painéis de metal escuro, acentos necromânticos e cards contextuais.
 
-A direção final está documentada em `docs/ART_DIRECTION.md`. Guerreiro Esqueleto, Zumbi Tank, Fantasma, Guerreiro Humano, Mago e Elfo já usam sprites individuais de runtime para `idle`, `move`, `attack`, `hit` e `death`. A troca de pose não controla dano, alvo, cooldown, Rajada Arcana ou Tiro de Precisão.
+A direção final está documentada em `docs/ART_DIRECTION.md`. Guerreiro Esqueleto, Zumbi Tank, Fantasma, Guerreiro Humano, Mago, Elfo e Marechal da Sepultura já usam sprites individuais de runtime para `idle`, `move`, `attack`, `hit` e `death`. A troca de pose não controla dano, alvo, cooldown, habilidades especiais nem progressão de chefe.
 
 ## Stack
 
@@ -271,6 +271,7 @@ assets/sprites/units/ghost_v1/ família espectral de cinco estados
 assets/sprites/units/human_warrior_v1/ primeiro invasor com cinco estados
 assets/sprites/units/mage_v1/ invasora arcana com cinco estados
 assets/sprites/units/elf_v1/ invasora de precisão com cinco estados
+assets/sprites/bosses/grave_marshal_v1/ primeiro chefe com cinco estados
 assets/sprites/animation_concepts/ estudos de pose para animação final
 docs/                   design, arquitetura, roadmap e plano comercial
 scenes/core/             entrada da aplicação, menu e opções
@@ -318,4 +319,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado, configurações v2 com acessibilidade, primeira camada audiovisual, direção de arte consolidada e seis famílias animadas por estados. Rastros, números, impactos, alertas de chefe e seis vozes SFX procedurais tornam a batalha legível sem alterar a simulação. As 422 chaves do catálogo têm conteúdo completo nos três idiomas; a revisão editorial final ainda será feita antes da demo. O próximo foco visual são os chefes, acompanhado por áudio produzido e medição de performance externa.
+A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado, configurações v2 com acessibilidade, primeira camada audiovisual, direção de arte consolidada e sete famílias animadas por estados. Rastros, números, impactos, alertas de chefe e seis vozes SFX procedurais tornam a batalha legível sem alterar a simulação. As 422 chaves do catálogo têm conteúdo completo nos três idiomas; a revisão editorial final ainda será feita antes da demo. O próximo foco visual é o Auditor Arcano, seguido pelo Capataz, áudio produzido e medição de performance externa.

@@ -200,6 +200,8 @@ O Mago reutiliza essa fronteira e mantém Rajada Arcana inteiramente no `EnemyCo
 
 O Elfo fecha o trio básico de invasores na mesma fronteira. A pose de ataque mostra o arco tensionado sem projetar a flecha pelo canvas; prioridade de alvo e Tiro de Precisão permanecem em `EnemyCombatPolicy`. Guerreiro, Mago e Elfo agora compartilham a retirada visual depois que o estado de combate já foi limpo. A suíte chega a 65 runners.
 
+O Marechal da Sepultura prova a mesma fronteira em escala de chefe. Seus cinco estados reutilizam catálogo, driver e retirada inimiga; o controlador não recebeu regras visuais específicas além da lista de famílias com morte persistente. Dano especial, Cadáver de Chefe e transição continuam nas fronteiras existentes. A suíte chega a 66 runners.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.

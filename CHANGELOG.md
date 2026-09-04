@@ -31,6 +31,8 @@
 - regressão dedicada dos assets arcanos, elevando a suíte para 64 cenários.
 - família final V1 do Elfo com guarda de arqueira, avanço cauteloso, disparo, impacto e morte horizontal;
 - regressão dedicada dos assets élficos e retirada visual, elevando a suíte para 65 cenários.
+- família final V1 do Marechal da Sepultura com escudo-túmulo, avanço pesado, golpe, impacto e queda;
+- primeira regressão dedicada de chefe animado, elevando a suíte para 66 cenários.
 
 ### Changed
 
@@ -46,6 +48,7 @@
 - a cena do Fantasma deixou de reutilizar o Esqueleto e passou a expor sua própria pose idle no editor.
 - o Guerreiro Humano agora usa a mesma ponte de animação do exército sem alterar seus atributos de combate;
 - o trio básico de invasores vivos agora compartilha retirada visual após a resolução determinística do Cadáver e da Onda;
+- o Marechal mantém sua escala ampliada e resolve progressão de chefe antes dos 0,24 s reservados à morte visual;
 - inimigos humanos derrotados permanecem por 0,24 s apenas para apresentar a pose de morte, depois de saírem da simulação.
 - o Mago passou a usar poses próprias sem mover Rajada Arcana, supressão ou dano para a camada visual;
 - o projétil permanece no VFX de combate, enquanto a pose de ataque limita a energia ao núcleo do cajado.

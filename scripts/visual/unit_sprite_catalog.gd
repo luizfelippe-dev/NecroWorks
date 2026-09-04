@@ -103,9 +103,22 @@ const ELF: Texture2D = ELF_IDLE
 const FOREMAN: Texture2D = preload(
 	"res://assets/sprites/units/foreman_prototype.png"
 )
-const GRAVE_MARSHAL: Texture2D = preload(
-	"res://assets/sprites/bosses/grave_marshal_prototype.png"
+const GRAVE_MARSHAL_IDLE: Texture2D = preload(
+	"res://assets/sprites/bosses/grave_marshal_v1/idle.png"
 )
+const GRAVE_MARSHAL_MOVE: Texture2D = preload(
+	"res://assets/sprites/bosses/grave_marshal_v1/move.png"
+)
+const GRAVE_MARSHAL_ATTACK: Texture2D = preload(
+	"res://assets/sprites/bosses/grave_marshal_v1/attack.png"
+)
+const GRAVE_MARSHAL_HIT: Texture2D = preload(
+	"res://assets/sprites/bosses/grave_marshal_v1/hit.png"
+)
+const GRAVE_MARSHAL_DEATH: Texture2D = preload(
+	"res://assets/sprites/bosses/grave_marshal_v1/death.png"
+)
+const GRAVE_MARSHAL: Texture2D = GRAVE_MARSHAL_IDLE
 const ARCANE_AUDITOR: Texture2D = preload(
 	"res://assets/sprites/bosses/arcane_auditor_prototype.png"
 )
@@ -155,6 +168,13 @@ const ELF_ANIMATIONS: Dictionary = {
 	"hit": ELF_HIT,
 	"death": ELF_DEATH,
 }
+const GRAVE_MARSHAL_ANIMATIONS: Dictionary = {
+	"idle": GRAVE_MARSHAL_IDLE,
+	"move": GRAVE_MARSHAL_MOVE,
+	"attack": GRAVE_MARSHAL_ATTACK,
+	"hit": GRAVE_MARSHAL_HIT,
+	"death": GRAVE_MARSHAL_DEATH,
+}
 
 
 static func get_texture(visual_id: String) -> Texture2D:
@@ -197,6 +217,8 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 		return MAGE_ANIMATIONS.duplicate()
 	if visual_id == "elf":
 		return ELF_ANIMATIONS.duplicate()
+	if visual_id == "grave_marshal":
+		return GRAVE_MARSHAL_ANIMATIONS.duplicate()
 	return {}
 
 
@@ -215,5 +237,7 @@ static func get_canvas_scale_multiplier(visual_id: String) -> float:
 			return 1.20
 		"elf":
 			return 1.10
+		"grave_marshal":
+			return 1.08
 		_:
 			return 1.0

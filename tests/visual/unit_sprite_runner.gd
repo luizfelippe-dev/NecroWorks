@@ -51,7 +51,8 @@ func run_validation() -> void:
 		assert(driver != null)
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
 		if visual_id in [
-			"skeleton", "zombie", "ghost", "human_warrior", "mage", "elf"
+			"skeleton", "zombie", "ghost", "human_warrior", "mage", "elf",
+			"grave_marshal"
 		]:
 			assert(state_textures.size() == 5)
 			assert(sprite.texture == state_textures["idle"])
@@ -133,6 +134,23 @@ func run_validation() -> void:
 	await create_timer(0.30).timeout
 	await process_frame
 	assert(not is_instance_valid(retiring_elf))
+
+	var retiring_marshal: Node2D = Node2D.new()
+	game.add_child(retiring_marshal)
+	game.ensure_unit_visual(
+		retiring_marshal, Color(0.42, 0.28, 0.12), "grave_marshal"
+	)
+	game.enemies.append(retiring_marshal)
+	game.enemy_types[retiring_marshal] = "grave_marshal"
+	game.enemy_elite_flags[retiring_marshal] = false
+	var marshal_driver: Node = retiring_marshal.get_node("AnimationDriver")
+	game.kill_enemy(retiring_marshal)
+	assert(not game.enemies.has(retiring_marshal))
+	assert(is_instance_valid(retiring_marshal))
+	assert(str(marshal_driver.get("current_animation")) == "death")
+	await create_timer(0.30).timeout
+	await process_frame
+	assert(not is_instance_valid(retiring_marshal))
 
 
 	print("UNIT SPRITE VALIDATION: PASS")

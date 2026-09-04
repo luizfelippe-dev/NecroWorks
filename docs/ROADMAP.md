@@ -296,6 +296,9 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] Elf art and animation V1
 - [ ] factory art
 - [ ] Boss polish
+  - [x] Grave Marshal art and animation V1
+  - [ ] Arcane Auditor art and animation V1
+  - [ ] Foreman art and animation V1
 - [ ] animation
 - [ ] VFX
 - [ ] SFX
@@ -324,6 +327,8 @@ Screenshots/trailer must look commercially credible.
 **Artilharia arcana integrada em 04/09/2026:** o Mago ganhou cinco estados e mantém carga visual, trajetória de ataque e Rajada Arcana em responsabilidades separadas. O Elfo encerra o trio básico de invasores.
 
 **Atiradora da coalizão integrada em 04/09/2026:** o Elfo ganhou cinco estados com arco, aljava e silhueta ágil consistentes. A flecha fica contida no ataque e o Tiro de Precisão permanece na regra de combate. Os três chefes formam o próximo corte visual.
+
+**Primeiro chefe integrado em 04/09/2026:** o Marechal da Sepultura ganhou cinco estados, escala ampliada e queda completa sem alterar o encontro. Auditor Arcano e Capataz permanecem como os dois cortes visuais seguintes.
 
 ---
 

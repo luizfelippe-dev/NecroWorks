@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 04/09/2026 — O escudo que fechava a vala
+
+O Marechal da Sepultura é o primeiro chefe com família completa. A massa de aço escuro, detalhes de latão, capa carmesim, escudo em forma de lápide e cutelo de escavação contaminado permanecem consistentes em guarda, avanço, golpe, impacto e queda.
+
+O sprite usa a altura própria dos chefes e a mesma ponte das outras unidades. Ataque especial, dano, Cadáver e progressão da Onda continuam intocados. Na morte, corpo, escudo e arma ocupam uma faixa horizontal por 0,24 s depois que o encontro já foi resolvido.
+
+As cinco gerações incorporaram o fundo quadriculado e passaram por extração individual. Os 66 cenários passaram em 60,01 segundos, incluindo Bone e Flesh completas. O release Windows abriu no smoke test com 118.195.680 bytes e SHA-256 `A3D571A5B2D6332AF68841FC749EA29B5F3F4A6E2C07E9D615353C3859C0E9CF`.
+
 ## 04/09/2026 — Olhos longos da coalizão
 
 O Elfo encerra o trio básico de invasores com uma família completa. Cabelo claro, orelhas longas, tecido verde, couro escuro, placas leves, arco recurvo e aljava permanecem reconhecíveis em guarda, avanço, disparo, impacto e morte.

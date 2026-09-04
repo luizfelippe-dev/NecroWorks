@@ -65,7 +65,13 @@ O rastro de ataque e a Rajada Arcana continuam no `CombatFeedback` e no `EnemyCo
 
 A família de precisão está em `assets/sprites/units/elf_v1/`. Cabelo claro, orelhas longas, couro escuro, placas leves, tecido verde, aljava e arco recurvo mantêm uma silhueta viva e ágil. O movimento reduz a postura, o ataque tensiona o arco, o impacto quebra a base e a morte ocupa o chão com arco separado do corpo.
 
-A textura de ataque contém apenas a flecha encaixada. Trajetória, alvo prioritário e multiplicador do Tiro de Precisão continuam no `CombatFeedback` e no `EnemyCombatPolicy`. O Elfo compartilha com Guerreiro e Mago a retirada de 0,24 s após a resolução do Cadáver. Chefes continuam no fallback procedural até receberem famílias próprias.
+A textura de ataque contém apenas a flecha encaixada. Trajetória, alvo prioritário e multiplicador do Tiro de Precisão continuam no `CombatFeedback` e no `EnemyCombatPolicy`. O Elfo compartilha com Guerreiro e Mago a retirada de 0,24 s após a resolução do Cadáver.
+
+## Marechal da Sepultura V1
+
+O primeiro chefe completo está em `assets/sprites/bosses/grave_marshal_v1/`. Aço escuro, latão, capa carmesim, escudo em forma de lápide e cutelo de escavação contaminado sustentam uma massa visual maior que a dos invasores comuns. Avanço conserva o escudo à frente; ataque abre a guarda; impacto desloca o peso; morte espalha corpo, escudo e arma horizontalmente.
+
+O runtime mantém altura de chefe e usa o mesmo driver das unidades comuns. Dano em área, cadência especial, recompensa e transição da Onda continuam fora da arte. `kill_enemy()` resolve o Cadáver e a progressão antes de preservar a pose final por 0,24 s. Auditor Arcano e Capataz continuam no fallback procedural até receberem famílias próprias.
 
 ## Movimento reduzido
 
