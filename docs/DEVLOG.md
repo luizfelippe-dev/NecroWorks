@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 04/09/2026 — O último turno do Capataz
+
+O Capataz fecha os três chefes com a maior silhueta da run. Barba, charuto, capacete de mineração, pano vermelho, ferro enegrecido, latão, faixas de risco, reservatórios violetas, manopla e martelo-reator permanecem consistentes em guarda, marcha, golpe, impacto e morte.
+
+A primeira guarda cortava parte do martelo e foi descartada. A versão aprovada mantém o equipamento completo e margem segura. O ataque arma o golpe sem duplicar a onda do `Industrial Crush`; os seis alvos, a Onda 20 e o resumo da vitória continuam no domínio de combate. A morte horizontal só permanece depois que a run já foi resolvida.
+
+As cinco poses tiveram o fundo extraído e passaram pelo limite de importação 512×512. Os 68 cenários passaram em 67,57 segundos, incluindo Bone e Flesh completas. O release Windows abriu no smoke test com 120.253.032 bytes e SHA-256 `0BE15CF0D0F5DB5E55112F12B84E226A938A5D6B28F1AD0C536E4B4419B89F55`.
+
 ## 04/09/2026 — A sentença do Auditor
 
 O Auditor Arcano é o segundo chefe com família completa. Máscara, orelhas longas, vestes de carvão e violeta, latão, reator circular, frascos dorsais e documentos encantados permanecem reconhecíveis em repouso, avanço, conjuração, impacto e queda.

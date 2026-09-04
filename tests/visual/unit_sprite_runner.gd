@@ -52,7 +52,7 @@ func run_validation() -> void:
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
 		if visual_id in [
 			"skeleton", "zombie", "ghost", "human_warrior", "mage", "elf",
-			"grave_marshal", "arcane_auditor"
+			"grave_marshal", "arcane_auditor", "foreman"
 		]:
 			assert(state_textures.size() == 5)
 			assert(sprite.texture == state_textures["idle"])
@@ -168,6 +168,23 @@ func run_validation() -> void:
 	await create_timer(0.30).timeout
 	await process_frame
 	assert(not is_instance_valid(retiring_auditor))
+
+	var retiring_foreman: Node2D = Node2D.new()
+	game.add_child(retiring_foreman)
+	game.ensure_unit_visual(
+		retiring_foreman, Color(0.48, 0.26, 0.10), "foreman"
+	)
+	game.enemies.append(retiring_foreman)
+	game.enemy_types[retiring_foreman] = "foreman"
+	game.enemy_elite_flags[retiring_foreman] = false
+	var foreman_driver: Node = retiring_foreman.get_node("AnimationDriver")
+	game.kill_enemy(retiring_foreman)
+	assert(not game.enemies.has(retiring_foreman))
+	assert(is_instance_valid(retiring_foreman))
+	assert(str(foreman_driver.get("current_animation")) == "death")
+	await create_timer(0.30).timeout
+	await process_frame
+	assert(not is_instance_valid(retiring_foreman))
 
 
 	print("UNIT SPRITE VALIDATION: PASS")

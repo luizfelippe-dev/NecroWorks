@@ -77,7 +77,13 @@ O runtime mantém altura de chefe e usa o mesmo driver das unidades comuns. Dano
 
 A família arcana está em `assets/sprites/bosses/arcane_auditor_v1/`. Máscara, orelhas longas, vestes de carvão e violeta, latão, reator do cajado, frascos dorsais e documentos encantados permanecem reconhecíveis nos cinco estados. Movimento avança com o aparato compacto; ataque concentra a sentença no cajado e na mão livre; impacto desorganiza os documentos; morte distribui corpo e instrumentos horizontalmente.
 
-A descarga de quatro alvos, a cadência especial e a decisão sobre o Núcleo continuam no combate e na narrativa. A arte não emite o projétil e não altera o encontro. O Capataz permanece como o último chefe no fallback de protótipo.
+A descarga de quatro alvos, a cadência especial e a decisão sobre o Núcleo continuam no combate e na narrativa. A arte não emite o projétil e não altera o encontro.
+
+## Capataz V1
+
+A família do chefe final está em `assets/sprites/bosses/foreman_v1/`. Ferro enegrecido, latão gasto, faixas de risco, pano vermelho, capacete, charuto, martelo-reator, manopla e reservatórios violetas sustentam a maior massa visual da run. A marcha desloca o peso; o ataque arma o golpe sem desenhar sua onda; o impacto quebra a postura; a morte deita corpo e martelo numa faixa horizontal.
+
+O `Industrial Crush`, seus seis alvos, a conclusão da Onda 20 e o resumo da run continuam fora do driver visual. Os três chefes agora usam o mesmo contrato de cinco estados e altura ampliada.
 
 ## Movimento reduzido
 

@@ -295,10 +295,10 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] Mage art and animation V1
 - [x] Elf art and animation V1
 - [ ] factory art
-- [ ] Boss polish
+- [x] Boss polish
   - [x] Grave Marshal art and animation V1
   - [x] Arcane Auditor art and animation V1
-  - [ ] Foreman art and animation V1
+  - [x] Foreman art and animation V1
 - [ ] animation
 - [ ] VFX
 - [ ] SFX
@@ -331,6 +331,8 @@ Screenshots/trailer must look commercially credible.
 **Primeiro chefe integrado em 04/09/2026:** o Marechal da Sepultura ganhou cinco estados, escala ampliada e queda completa sem alterar o encontro. Auditor Arcano e Capataz formavam os dois cortes visuais seguintes.
 
 **Segundo chefe integrado em 04/09/2026:** o Auditor Arcano ganhou aparato, documentos e cinco estados próprios. A descarga de quatro alvos e a decisão do Núcleo continuam independentes da arte. O Capataz encerra o corte visual dos chefes.
+
+**Trio de chefes concluído em 04/09/2026:** o Capataz ganhou marcha, golpe industrial, impacto e queda próprios em torno do martelo-reator. O `Industrial Crush` e o encerramento da run permanecem no combate. O próximo corte visual cobre Fábrica, Arqueiro Esqueleto e Lich.
 
 ---
 

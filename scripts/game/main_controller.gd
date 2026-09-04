@@ -4677,7 +4677,8 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 		defeated_boss
 	)
 	if defeated_archetype in [
-		"human_warrior", "mage", "elf", "grave_marshal", "arcane_auditor"
+		"human_warrior", "mage", "elf", "grave_marshal", "arcane_auditor",
+		"foreman"
 	]:
 		retire_unit_visual(dead_enemy)
 	else:

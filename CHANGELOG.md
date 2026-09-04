@@ -35,6 +35,8 @@
 - primeira regressão dedicada de chefe animado, elevando a suíte para 66 cenários.
 - família final V1 do Auditor Arcano com aparato de auditoria, avanço, conjuração, impacto e queda;
 - regressão dedicada do segundo chefe animado, elevando a suíte para 67 cenários.
+- família final V1 do Capataz com martelo-reator, marcha pesada, golpe industrial, impacto e queda;
+- regressão dedicada do chefe final, concluindo os três chefes e elevando a suíte para 68 cenários.
 
 ### Changed
 
@@ -53,6 +55,8 @@
 - o Marechal mantém sua escala ampliada e resolve progressão de chefe antes dos 0,24 s reservados à morte visual;
 - o Auditor mantém descarga especial, alvo, recompensa e decisão de Núcleo fora da camada visual;
 - o protótipo do Auditor deixou de entrar no pacote depois que a família V1 assumiu o runtime;
+- o Capataz preserva o Industrial Crush, o encerramento da run e sua apresentação de vitória fora da arte;
+- o protótipo do Capataz deixou de entrar no pacote depois que sua família V1 assumiu o runtime;
 - inimigos humanos derrotados permanecem por 0,24 s apenas para apresentar a pose de morte, depois de saírem da simulação.
 - o Mago passou a usar poses próprias sem mover Rajada Arcana, supressão ou dano para a camada visual;
 - o projétil permanece no VFX de combate, enquanto a pose de ataque limita a energia ao núcleo do cajado.

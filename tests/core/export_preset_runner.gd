@@ -20,6 +20,7 @@ func _initialize() -> void:
 	assert(excluded.contains("assets/sprites/units/elf_prototype.png"))
 	assert(excluded.contains("assets/sprites/bosses/grave_marshal_prototype.png"))
 	assert(excluded.contains("assets/sprites/bosses/arcane_auditor_prototype.png"))
+	assert(excluded.contains("assets/sprites/units/foreman_prototype.png"))
 	assert(excluded.contains("tests/*"))
 	assert(excluded.contains("docs/*"))
 	assert(

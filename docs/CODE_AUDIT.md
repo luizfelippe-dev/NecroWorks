@@ -204,6 +204,8 @@ O Marechal da Sepultura prova a mesma fronteira em escala de chefe. Seus cinco e
 
 O Auditor Arcano repete o contrato sem criar uma segunda implementação. As cinco poses usam o catálogo comum, a escala já reservada aos chefes e a retirada inimiga existente. Descarga, recompensa e decisão do Núcleo permanecem em seus domínios. A regressão dedicada eleva a suíte para 67 runners.
 
+O Capataz conclui o trio com a mesma fronteira. Sua família entra pelo catálogo, usa a altura ampliada e preserva a queda após a resolução lógica da vitória. `Industrial Crush`, alvos e resumo final não dependem da textura. A suíte chega a 68 runners sem criar regras de combate específicas para arte.
+
 ### v0.4.0 closure — 24/08/2026
 
 The content milestone is mechanically closed with focused runners and successful deterministic Bone/Flesh victories. Boss profiles, narrative events and fusion recipes are data-driven boundaries that can grow without new parallel state families.

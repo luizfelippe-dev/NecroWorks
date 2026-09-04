@@ -183,6 +183,21 @@ O conjunto preserva a figura viva de orelhas longas, máscara, cabelo escuro, ve
 
 `arcane_auditor_prototype.png` permanece como referência histórica, mas não entra mais no build Windows.
 
+## Capataz — família de runtime V1 — 04/09/2026
+
+- pasta: `assets/sprites/bosses/foreman_v1/`;
+- arquivos: `idle.png`, `move.png`, `attack.png`, `hit.png` e `death.png`;
+- criação específica para NecroWorks com a ferramenta integrada de geração de imagens da OpenAI;
+- referências internas: `foreman_prototype.png` e `grave_marshal_v1/idle.png`;
+- formato-fonte: PNG RGBA, 1254×1254, fundo transparente;
+- importação de runtime: limite de 512 px, sem mipmaps;
+- integração: `UnitSpriteCatalog`, `UnitAnimationDriver`, escala de chefe e retirada inimiga;
+- revisão: identidade, martelo inteiro, margem, alpha, cinco transições e vitória cobertos por regressão.
+
+O conjunto preserva o supervisor vivo integrado à armadura: barba, charuto, capacete de mineração, pano vermelho, ferro enegrecido, latão, faixas de risco, manopla, tubos, reservatórios violetas e martelo-reator. As poses pediram guarda compacta, marcha pesada, golpe sem onda externa, recuo e morte horizontal sem gore. A primeira guarda cortava o martelo e foi recomposta antes da aprovação. As cinco gerações passaram por extração de fundo; no ataque, a máscara final de alpha foi concluída por remoção técnica do quadriculado depois de três tentativas de extração integrada preservarem fundo opaco.
+
+`foreman_prototype.png` permanece como referência histórica, mas não entra mais no build Windows.
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

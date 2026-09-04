@@ -375,10 +375,12 @@ Current introduction curve:
 Wave 1  → Human Warrior
 Wave 8  → Mage enters the reinforcement rotation
 Wave 11 → Warrior / Mage / Elf rotation
+Wave 10 → Grave Marshal
+Wave 15 → Arcane Auditor
 Wave 20 → The Foreman
 ```
 
-Prototype identity is communicated through labels and distinct colors. Final characters require dedicated art, animation, silhouettes, audio and richer behavior. Mage AOE/control and Elf precision targeting remain future evolutions, not current features.
+Combat identity is communicated through silhouettes, health bars, labels, five-state art and behavior. Warrior mitigation, Mage Burst and Elf Precision reinforce those roles mechanically. The three Bosses also have complete state families and distinct specials. Produced audio and final Elite variants remain necessary before commercial capture.
 
 ## Enemy group escalation
 
