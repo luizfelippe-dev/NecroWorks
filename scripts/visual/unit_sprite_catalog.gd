@@ -52,9 +52,22 @@ const GHOST_DEATH: Texture2D = preload(
 	"res://assets/sprites/units/ghost_v1/death.png"
 )
 const GHOST: Texture2D = GHOST_IDLE
-const HUMAN_WARRIOR: Texture2D = preload(
-	"res://assets/sprites/units/human_warrior_prototype.png"
+const HUMAN_WARRIOR_IDLE: Texture2D = preload(
+	"res://assets/sprites/units/human_warrior_v1/idle.png"
 )
+const HUMAN_WARRIOR_MOVE: Texture2D = preload(
+	"res://assets/sprites/units/human_warrior_v1/move.png"
+)
+const HUMAN_WARRIOR_ATTACK: Texture2D = preload(
+	"res://assets/sprites/units/human_warrior_v1/attack.png"
+)
+const HUMAN_WARRIOR_HIT: Texture2D = preload(
+	"res://assets/sprites/units/human_warrior_v1/hit.png"
+)
+const HUMAN_WARRIOR_DEATH: Texture2D = preload(
+	"res://assets/sprites/units/human_warrior_v1/death.png"
+)
+const HUMAN_WARRIOR: Texture2D = HUMAN_WARRIOR_IDLE
 const MAGE: Texture2D = preload(
 	"res://assets/sprites/units/mage_prototype.png"
 )
@@ -95,6 +108,13 @@ const GHOST_ANIMATIONS: Dictionary = {
 	"hit": GHOST_HIT,
 	"death": GHOST_DEATH,
 }
+const HUMAN_WARRIOR_ANIMATIONS: Dictionary = {
+	"idle": HUMAN_WARRIOR_IDLE,
+	"move": HUMAN_WARRIOR_MOVE,
+	"attack": HUMAN_WARRIOR_ATTACK,
+	"hit": HUMAN_WARRIOR_HIT,
+	"death": HUMAN_WARRIOR_DEATH,
+}
 
 
 static func get_texture(visual_id: String) -> Texture2D:
@@ -131,6 +151,8 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 		return ZOMBIE_ANIMATIONS.duplicate()
 	if visual_id == "ghost":
 		return GHOST_ANIMATIONS.duplicate()
+	if visual_id == "human_warrior":
+		return HUMAN_WARRIOR_ANIMATIONS.duplicate()
 	return {}
 
 
@@ -143,5 +165,7 @@ static func get_canvas_scale_multiplier(visual_id: String) -> float:
 			return 1.14
 		"ghost":
 			return 1.07
+		"human_warrior":
+			return 1.22
 		_:
 			return 1.0

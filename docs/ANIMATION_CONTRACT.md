@@ -49,6 +49,12 @@ A família espectral está em `assets/sprites/units/ghost_v1/`. Coleira, tubos, 
 
 O movimento usa uma silhueta lançada para frente, o ataque concentra energia entre as mãos, o impacto abre o corpo e a morte colapsa a unidade horizontalmente. `kill_ghost()` também resolve coleção e slot antes dos 0,24 s de dissipação visual.
 
+## Guerreiro Humano V1
+
+A primeira família inimiga completa está em `assets/sprites/units/human_warrior_v1/`. O escudo lidera o deslocamento, a espada cruza a silhueta no ataque e a abertura involuntária da guarda comunica impacto. A morte é baixa e horizontal, com arma solta e escudo junto ao corpo.
+
+`kill_enemy()` remove o Guerreiro Humano das coleções e tabelas de combate, cria o Cadáver e atualiza a Onda antes dos 0,24 s reservados à pose final. Mago, Elfo e Chefes continuam usando o fallback procedural até receberem famílias próprias.
+
 ## Movimento reduzido
 
 Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, rotações e mudanças de escala. Impacto preserva apenas um flash curto e morte preserva o desaparecimento imediato, porque ambos comunicam estado essencial. A mesma preferência congela parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera duração de ataque, dano ou cooldown.

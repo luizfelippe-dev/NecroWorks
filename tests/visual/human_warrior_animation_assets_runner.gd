@@ -6,7 +6,7 @@ const STATES: Array[String] = ["idle", "move", "attack", "hit", "death"]
 
 
 func _initialize() -> void:
-	var textures: Dictionary = CATALOG.get_animation_textures("skeleton")
+	var textures: Dictionary = CATALOG.get_animation_textures("human_warrior")
 	assert(textures.size() == STATES.size())
 	for state: String in STATES:
 		assert(state in textures)
@@ -17,6 +17,6 @@ func _initialize() -> void:
 		var image: Image = texture.get_image()
 		assert(not image.is_empty())
 		assert(image.get_pixel(0, 0).a < 0.01)
-	assert(CATALOG.get_canvas_scale_multiplier("skeleton") > 1.0)
-	print("SKELETON ANIMATION ASSETS VALIDATION: PASS")
+	assert(CATALOG.get_canvas_scale_multiplier("human_warrior") > 1.0)
+	print("HUMAN WARRIOR ANIMATION ASSETS VALIDATION: PASS")
 	quit()

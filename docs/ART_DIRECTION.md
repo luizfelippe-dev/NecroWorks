@@ -51,7 +51,7 @@ Os concept sheets em `assets/sprites/animation_concepts/` fecham pose, equipamen
 
 O preset Windows exclui essa pasta do pacote distribuído. As fontes permanecem no repositório para orientar a produção, sem aumentar o executável enquanto não forem assets de runtime.
 
-O Guerreiro Esqueleto, o Zumbi Tank e o Fantasma já foram exportados em cinco canvases quadrados e integrados em suas pastas V1. O Fantasma fixa a linguagem espectral: núcleo verde preso por bronze, massa ciano-violeta e silhueta estreita de projétil. `UnitAnimationDriver.configure_state_textures()` mantém a substituição fora das regras de combate.
+O Guerreiro Esqueleto, o Zumbi Tank, o Fantasma e o Guerreiro Humano já foram exportados em cinco canvases quadrados e integrados em suas pastas V1. O Fantasma fixa a linguagem espectral: núcleo verde preso por bronze, massa ciano-violeta e silhueta estreita de projétil. O Guerreiro Humano fixa a linha viva: aço cinza, couro marrom, tecido carmesim e escudo retangular sem brilho necromântico. `UnitAnimationDriver.configure_state_textures()` mantém a substituição fora das regras de combate.
 
 ## Interface e cenário
 

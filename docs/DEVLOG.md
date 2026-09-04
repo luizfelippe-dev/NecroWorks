@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 04/09/2026 — Linha de frente da Concordata
+
+O Guerreiro Humano é a primeira família inimiga a abandonar a arte temporária. Espada, escudo retangular, aço gasto, couro e tecido carmesim preservam a identidade já reconhecível, enquanto as cinco poses agora separam guarda, avanço, ataque, impacto e morte.
+
+O fluxo inimigo reutiliza o mesmo `UnitAnimationDriver` das tropas. A simulação remove o soldado, gera o Cadáver, paga recompensas e avança a Onda antes de manter a pose final por 0,24 s. Nenhum valor de vida, dano, defesa, alcance ou cadência foi alterado.
+
+Os 63 cenários passaram em 97,34 segundos, incluindo Bone e Flesh completas. O build Windows abriu no smoke test com 115.957.824 bytes e SHA-256 `23D288A6FAA25506A47D5048E6306BCFC5CE1C3D63336B9AF07671EA58660B23`.
+
 ## 03/09/2026 — Identidade do Fantasma
 
 O Fantasma deixou de ser um Esqueleto tingido de azul. A nova identidade combina corpo ciano-violeta, rosto ósseo, cauda espectral e um núcleo de Alma aprisionado por coleira, tubos, canisters e braceletes industriais. Isso o faz parecer uma munição produzida pela Fábrica e mantém a função ranged legível.

@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 03/09/2026
+**Atualizado:** 04/09/2026
 
 ---
 
@@ -11,7 +11,7 @@
 3. criar escala de interface, redução de movimento e opções básicas de acessibilidade;
 4. concluir a auditoria linguística de PT-BR, inglês e espanhol;
 5. [concluído] exportar frames uniformes de Esqueleto e Zumbi a partir da direção aprovada;
-6. [concluído] integrar Esqueleto, Zumbi e Fantasma pelo contrato de texturas por estado;
+6. [concluído] integrar Esqueleto, Zumbi, Fantasma e Guerreiro Humano pelo contrato de texturas por estado;
 7. medir legibilidade e performance em hordas grandes;
 8. preparar uma rodada curta de playtests externos antes de alterar dificuldade ou marcos.
 
@@ -291,7 +291,9 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] final Skeleton art and animation V1
 - [x] final Zombie art and animation V1
 - [x] Ghost art and animation V1
-- [ ] enemies
+- [x] Human Warrior art and animation V1
+- [ ] Mage art and animation V1
+- [ ] Elf art and animation V1
 - [ ] factory art
 - [ ] Boss polish
 - [ ] animation
@@ -316,6 +318,8 @@ Screenshots/trailer must look commercially credible.
 **Segunda família integrada em 03/09/2026:** o Zumbi Tank possui as cinco poses, escala própria e morte horizontal. As duas tropas-base agora comprovam o mesmo contrato; o próximo corte visual avança para Fantasma, inimigos e chefes.
 
 **Família espectral integrada em 03/09/2026:** o Fantasma deixou de reutilizar a arte do Esqueleto e ganhou identidade fabril própria, cinco estados e dissipação legível. O próximo corte visual começa pelos três arquétipos inimigos.
+
+**Primeiro invasor integrado em 04/09/2026:** o Guerreiro Humano ganhou guarda, avanço, golpe, impacto e morte próprios. A retirada visual ocorre depois da resolução determinística do Cadáver e da Onda. Mago e Elfo são os próximos cortes inimigos.
 
 ---
 

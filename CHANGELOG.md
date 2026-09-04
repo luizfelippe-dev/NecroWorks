@@ -25,6 +25,8 @@
 - cobertura de transparência, importação e ciclo visual completo do Zumbi, elevando a suíte para 61 cenários.
 - identidade visual final V1 do Fantasma, com núcleo de Alma industrial, cinco estados e dissipação horizontal;
 - regressão dedicada da família espectral, elevando a suíte para 62 cenários.
+- família final V1 do Guerreiro Humano com idle defensivo, avanço protegido, golpe de espada, impacto e morte;
+- regressão dedicada dos assets humanos, elevando a suíte para 63 cenários.
 
 ### Changed
 
@@ -38,6 +40,8 @@
 - cena editável e catálogo do Esqueleto agora usam a nova pose idle; demais estados entram pelo driver visual.
 - Zumbis agora liberam registro e slot antes dos 0,24 s reservados à leitura da morte visual.
 - a cena do Fantasma deixou de reutilizar o Esqueleto e passou a expor sua própria pose idle no editor.
+- o Guerreiro Humano agora usa a mesma ponte de animação do exército sem alterar seus atributos de combate;
+- inimigos humanos derrotados permanecem por 0,24 s apenas para apresentar a pose de morte, depois de saírem da simulação.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 

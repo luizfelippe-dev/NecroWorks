@@ -1,6 +1,6 @@
 # NecroWorks — Estado do Projeto
 
-**Atualizado em:** 02/09/2026
+**Atualizado em:** 04/09/2026
 
 **Versão funcional:** v0.6.0-dev — onboarding e acessibilidade básica
 
@@ -63,6 +63,7 @@ Configurações são gravadas em `user://necroworks_settings.cfg`, agora com sch
 - Guerreiro Esqueleto com cinco poses de runtime, movimento, ataque, impacto e morte conectados;
 - Zumbi Tank com cinco poses de runtime, escala pesada e retirada visual conectadas;
 - Fantasma com identidade fabril própria, cinco poses e dissipação conectadas;
+- Guerreiro Humano com cinco poses próprias e retirada visual conectada;
 - Cadáveres visuais blindados, arcanos e ágeis, com restos próprios de chefe;
 - contrato procedural de animações e preset Windows Desktop.
 - fundo híbrido ilustrado com parallax atmosférico, névoa e luz procedural.
@@ -117,8 +118,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade, apresentação audiovisual V1, direção de arte consolidada e três tropas animadas por estados. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. O catálogo localizado possui 422 chaves completas em inglês, português do Brasil e espanhol, verificadas automaticamente. Os próximos blocos da vertical slice são Guerreiro Humano, Mago, Elfo e chefes, além de áudio produzido, música, revisão editorial e medição de performance externa.
+A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade, apresentação audiovisual V1, direção de arte consolidada, três tropas e o primeiro invasor animados por estados. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. O catálogo localizado possui 422 chaves completas em inglês, português do Brasil e espanhol, verificadas automaticamente. Os próximos blocos da vertical slice são Mago, Elfo e chefes, além de áudio produzido, música, revisão editorial e medição de performance externa.
 
-O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 115.232.408 bytes e SHA-256 `7E74DD39E6BE88AA9A3F3072EE80A8E0A68FF86291B63A9C55DC106A24A4475A`. Fontes de conceito, documentação, testes e os protótipos substituídos do Esqueleto e do Zumbi estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 115.957.824 bytes e SHA-256 `23D288A6FAA25506A47D5048E6306BCFC5CE1C3D63336B9AF07671EA58660B23`. Fontes de conceito, documentação, testes e os protótipos substituídos do Guerreiro Humano, Esqueleto e Zumbi estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
 O polimento visual final, áudio, acessibilidade ampliada e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.

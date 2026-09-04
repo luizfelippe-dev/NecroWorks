@@ -246,9 +246,9 @@ Estrutura:
 - maquinário industrial;
 - horror corporativo.
 
-O protótipo já substituiu os quadrados por sprites de todas as unidades atuais. Guerreiro Esqueleto, Zumbi Tank e Fantasma possuem famílias V1 por estados; as demais unidades ainda usam arte temporária. A primeira passagem estrutural também inclui fundo fabril híbrido, battlefield separado, faixa de produção, módulos de processamento, painéis de metal escuro, acentos necromânticos e cards contextuais.
+O protótipo já substituiu os quadrados por sprites de todas as unidades atuais. Guerreiro Esqueleto, Zumbi Tank, Fantasma e Guerreiro Humano possuem famílias V1 por estados; as demais unidades ainda usam arte temporária. A primeira passagem estrutural também inclui fundo fabril híbrido, battlefield separado, faixa de produção, módulos de processamento, painéis de metal escuro, acentos necromânticos e cards contextuais.
 
-A direção final está documentada em `docs/ART_DIRECTION.md`. Guerreiro Esqueleto, Zumbi Tank e Fantasma já usam sprites individuais de runtime para `idle`, `move`, `attack`, `hit` e `death`. A troca de pose não controla dano, alvo ou cooldown.
+A direção final está documentada em `docs/ART_DIRECTION.md`. Guerreiro Esqueleto, Zumbi Tank, Fantasma e Guerreiro Humano já usam sprites individuais de runtime para `idle`, `move`, `attack`, `hit` e `death`. A troca de pose não controla dano, alvo ou cooldown.
 
 ## Stack
 
@@ -268,6 +268,7 @@ assets/sprites/units/   sprites temporários usados pelo runtime
 assets/sprites/units/skeleton_warrior_v1/ primeira família de cinco estados
 assets/sprites/units/zombie_tank_v1/ segunda família de cinco estados
 assets/sprites/units/ghost_v1/ família espectral de cinco estados
+assets/sprites/units/human_warrior_v1/ primeiro invasor com cinco estados
 assets/sprites/animation_concepts/ estudos de pose para animação final
 docs/                   design, arquitetura, roadmap e plano comercial
 scenes/core/             entrada da aplicação, menu e opções
