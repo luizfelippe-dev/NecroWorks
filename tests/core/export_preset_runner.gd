@@ -1,6 +1,10 @@
 extends SceneTree
 
 
+const APP_VERSION_DATA: Script = preload("res://scripts/core/app_version.gd")
+const RUN_SAVE_STORE: Script = preload("res://scripts/core/run_save_store.gd")
+
+
 func _initialize() -> void:
 	var config: ConfigFile = ConfigFile.new()
 	assert(config.load("res://export_presets.cfg") == OK)
@@ -27,5 +31,18 @@ func _initialize() -> void:
 		str(config.get_value("preset.0.options", "application/product_name", ""))
 		== "NecroWorks"
 	)
+	assert(
+		str(config.get_value("preset.0.options", "application/file_version", ""))
+		== APP_VERSION_DATA.WINDOWS
+	)
+	assert(
+		str(config.get_value("preset.0.options", "application/product_version", ""))
+		== APP_VERSION_DATA.WINDOWS
+	)
+	assert(
+		str(ProjectSettings.get_setting("application/config/version", ""))
+		== APP_VERSION_DATA.NUMBER
+	)
+	assert(RUN_SAVE_STORE.APP_VERSION == APP_VERSION_DATA.NUMBER)
 	print("WINDOWS EXPORT PRESET VALIDATION: PASS")
 	quit()

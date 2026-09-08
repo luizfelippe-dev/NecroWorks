@@ -2,7 +2,7 @@
 
 **Atualizado em:** 08/09/2026
 
-**Versão funcional:** v0.6.0-dev — vertical slice em validação externa
+**Versão funcional:** v0.6.0 — vertical slice técnica concluída
 
 **Engine:** Godot 4.7.1
 
@@ -129,8 +129,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.5.0 está concluída e a v0.6.0 fechou suas correções internas de auditoria. Onboarding, acessibilidade básica, onze famílias animadas, Fábrica ilustrada, VFX, áudio procedural, ambiente, save transacional, recuperação e diagnóstico possuem regressão. O perfil v3 registra telemetria mecânica das vinte runs recentes, enquanto settings v3 guarda tutorial, acessibilidade e mixagem. O catálogo localizado possui 432 chaves completas em inglês, português do Brasil e espanhol.
+A v0.6.0 está concluída como vertical slice técnica. Onboarding, acessibilidade básica, onze famílias animadas, Fábrica ilustrada, VFX, áudio procedural, ambiente, save transacional, recuperação e diagnóstico possuem regressão. O perfil v3 registra telemetria mecânica das vinte runs recentes, enquanto settings v3 guarda tutorial, acessibilidade e mixagem. O catálogo localizado possui 432 chaves completas em inglês, português do Brasil e espanhol. Projeto, checkpoint e metadados Windows compartilham a versão `0.6.0`, visível no menu principal.
 
-O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 122.942.824 bytes e SHA-256 `6F6359F64B74AEEDFEC316FD0D9C95AD006EF8F44FE4FB64D89BF312559115EB`. O gate aprovou 78 runners em 73,42 segundos antes da exportação e do smoke test. Fontes de conceito, documentação, testes e protótipos substituídos estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.0 validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 122.944.360 bytes e SHA-256 `7DBEAD6A35314013D62E60A08A22B8588EA0D84C63697186C9A82739E3498B13`. O gate aprovou 78 runners em 73,22 segundos antes da exportação e do smoke test. Fontes de conceito, documentação, testes e protótipos substituídos estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
 O próximo trabalho não deve ser confundido com mais uma correção automática: revisão editorial nativa, teste cego, perfil em hardware real, instalação limpa, direitos comerciais e Steamworks são gates externos. O acompanhamento está em `AUDIT_STATUS.md`; execução em `PLAYTEST_PROTOCOL.md` e `RELEASE_GATES.md`.

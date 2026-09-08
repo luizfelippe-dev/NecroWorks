@@ -818,3 +818,7 @@ O resumo identifica quatro causas práticas: ausência de frontline, processamen
 ## Linha de base das cinco estratégias
 
 A Onda 12 é o primeiro ponto comum de comparação para enxame de Ossos, frontline de Carne, caster de Almas, híbrida e automação-alvo. O runner registra tempo, abates e sobreviventes. Seu papel é detectar regressão e dominância evidente; o balanceamento final exige múltiplas sementes, upgrades variados e playtests externos conforme `PLAYTEST_PROTOCOL.md`.
+
+## Escopo da vertical slice
+
+A v0.6.0 encerra a prova jogável desse loop sem declarar conteúdo final. Novas tropas, máquinas ou camadas meta só entram depois que a v0.7.0 mostrar uma lacuna concreta nos playtests. Essa contenção protege clareza, duração e capacidade de balancear o que já existe.

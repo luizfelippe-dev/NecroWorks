@@ -17,13 +17,15 @@ Este quadro separa correção de código, validação interna e dependências ex
 
 ## Fase B — Vertical slice
 
+**Milestone técnica:** concluída como v0.6.0 em 08/09/2026. O aceite não absorve gates humanos ou comerciais.
+
 | Frente | Estado | Limite conhecido |
 |---|---|---|
 | Famílias visuais e três chefes | V1 concluída | revisão artística final continua antes da loja |
 | Fábrica legível | V1 concluída | arte física, processamento e sinais de produção integrados |
 | HUD e resoluções | Base técnica concluída | QA manual com escala do Windows e ultrawide real ainda necessário |
 | Onboarding e causa da derrota | V1 concluída | entendimento precisa ser observado em teste cego |
-| Áudio e mixagem | Protótipo funcional | trilha e efeitos autorais finais ainda precisam ser produzidos/licenciados |
+| Áudio e mixagem | V1 aceita | camada procedural suficiente para a slice; produção comercial segue na v0.7.0 |
 | Balanceamento interno | Linha de base concluída | cinco builds automatizadas; diversão e dominância exigem jogadores e múltiplas sementes |
 | Desempenho interno | Smoke concluído | meta de FPS depende de build release em hardware mínimo e recomendado |
 

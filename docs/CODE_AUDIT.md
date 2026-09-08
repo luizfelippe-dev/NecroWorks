@@ -172,11 +172,13 @@ Square placeholders are gone and all current combatants have sprites. Zombie sti
 - preserve the stable horizontal enemy lane until replaced by a tested combat model;
 - update the project-state document, roadmap and changelog after each stable milestone.
 
-### v0.6.0-dev — onboarding e acessibilidade
+### v0.6.0 — vertical slice concluída
 
 O tutorial permaneceu no `GameShell`, sem criar dependência do gameplay em menus ou persistência local. As preferências chegam ao controlador por `configure_accessibility()` e são distribuídas somente aos adaptadores visuais. Essa fronteira mantém o combate determinístico e permite substituir sprites e VFX sem reimplementar acessibilidade.
 
 A suíte possui 55 runners. Os novos cenários protegem migração de settings v1 para v2, tutorial de primeira execução, revisão da orientação, Movimento Reduzido e barras de Alto Contraste. A dívida estrutural principal continua sendo o tamanho do `main_controller.gd`; este bloco não acrescentou novas regras de gameplay ao controlador.
+
+O corte final da milestone elevou a suíte a 78 runners, centralizou a versão `0.6.0` entre projeto, checkpoint e metadados Windows e registrou o contrato de aceite em `VERTICAL_SLICE_ACCEPTANCE.md`. A contagem de 55 acima permanece como marco histórico do primeiro corte de onboarding.
 
 ### Apresentação audiovisual V1
 

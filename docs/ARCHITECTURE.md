@@ -581,3 +581,5 @@ O gameplay emite `meta_progress_reported` ao concluir uma Onda, processar um Cad
 `RunRecoveryEvaluator` concentra a pergunta “esta run ainda possui um caminho legal de recuperação?” usando tropas, filas, Cadáveres, capacidade, recursos, receitas avançadas e fusões. `RunDefeatAnalyzer` classifica a falha como ausência de frontline, processamento parado, produção sem recursos ou atrito; o resumo apenas localiza o diagnóstico.
 
 Áudio obedece aos barramentos `Master`, `Music`, `SFX` e `UI`. A arte física da Fábrica é uma camada passiva atrás dos controles, sem assumir regras de produção. O gate em `tools/validate_release.ps1` descobre runners automaticamente e mantém logs/builds fora do Git.
+
+`scripts/core/app_version.gd` é a fonte única da versão de produto. O menu mostra `v0.6.0`; checkpoint, `project.godot` e teste do preset Windows precisam coincidir com ela antes de qualquer build aceito.

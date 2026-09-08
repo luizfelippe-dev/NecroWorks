@@ -707,3 +707,7 @@ Automação verifica regras, integridade, exportação e cenários determinísti
 ## Builds puras podem perder no meio da run
 
 A matriz da Onda 12 não exige vitória de todos os arquétipos. Ela exige resolução determinística e papéis distintos. Na linha de base de 08/09/2026, enxame puro de Ossos e frontline pura de Carne perderam, enquanto caster, híbrida e automação-alvo venceram. Ajustes só serão feitos após múltiplas sementes e observação humana, para não remover dificuldade com base em um único cenário.
+
+## A versão do produto possui uma fonte única
+
+`AppVersion` define o número sem sufixo de desenvolvimento, a apresentação no menu e o formato de quatro partes do executável Windows. O gate verifica projeto, checkpoint e preset contra essa fonte. A v0.6.0 só foi fechada depois dessa convergência, evitando builds com identidade divergente.

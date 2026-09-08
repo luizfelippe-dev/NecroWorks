@@ -475,3 +475,5 @@ A suíte atual contém 78 cenários `*_runner.gd` e 1.201 chamadas `assert()` id
 ```
 
 O gate exige `PASS` em cada runner, rejeita erros de script mesmo com exit code zero, salva logs ignorados pelo Git, exporta o Windows release, inicia um smoke test e grava SHA-256. A matriz de builds pode ser executada isoladamente por `tests/balance/vertical_slice_build_matrix_runner.gd`.
+
+O runner de exportação também exige que `AppVersion`, `project.godot`, checkpoint e as versões de arquivo/produto do Windows estejam sincronizados. Esse contrato impede publicar uma build final ainda marcada como desenvolvimento.

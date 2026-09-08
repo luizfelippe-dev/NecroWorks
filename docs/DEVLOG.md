@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 08/09/2026 — Vertical slice v0.6.0 fechada
+
+Transformei o conjunto aprovado pela auditoria em uma milestone identificável. `AppVersion` passou a ser a fonte de `0.6.0`, o menu mostra a versão e o gate confere checkpoint, projeto e metadados Windows. O documento de aceite fixa exatamente o que esta entrega prova e transfere revisão nativa, hardware real, áudio comercial, direitos e Steamworks para a validação da demo.
+
+O fechamento preserva o escopo: não acrescentei sistemas de combate depois da regressão de auditoria. A entrega é a mesma vertical slice de 20 ondas, agora com versão coerente, critérios reproduzíveis e fronteira clara para começar a v0.7.0.
+
+O gate final aprovou os 78 runners em 73,22 segundos. O Windows release abriu no smoke test com 122.944.360 bytes e SHA-256 `7DBEAD6A35314013D62E60A08A22B8588EA0D84C63697186C9A82739E3498B13`.
+
 ## 08/09/2026 — A auditoria virou contrato executável
 
 Fechei as correções que dependiam do repositório. O save passou a validar schema, IDs, limites, filas, capacidade e métricas; recuperação e diagnóstico de derrota agora têm políticas únicas. O gate de release descobre todos os runners, rejeita erro silencioso, preserva logs, exporta o Windows release, inicia o executável e registra hash. A mesma regressão roda no CI.

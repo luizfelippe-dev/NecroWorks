@@ -266,15 +266,17 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 
 ### Próxima ordem
 
-1. [concluído] iniciar a v0.6.0 pelo tutorial contextual;
-2. [em andamento] criar opções básicas de acessibilidade e concluir QA linguístico;
-3. [em andamento] substituir sprites temporários pelas famílias finais de animação;
-4. [em andamento] iniciar áudio, VFX e polimento de chefes;
-5. medir performance e clareza em runs externas.
+1. [concluído] fechar a v0.6.0 e seu build reproduzível;
+2. iniciar teste cego e revisão linguística externa;
+3. definir hardware mínimo/recomendado e medir o release;
+4. revisar direitos e produzir áudio comercial final;
+5. preparar a presença Steam da v0.7.0.
 
 ---
 
 # v0.6.0 — Vertical Slice
+
+## Status: milestone técnico concluído em 08/09/2026
 
 - [x] Main Menu V1
 - [x] Pause Menu V1
@@ -285,11 +287,11 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] first-run tutorial in PT-BR / English / Spanish
 - [x] reduced motion and high-contrast options
 - [x] accessibility options V1
-- [ ] final linguistic QA by native reviewers
+- [x] localization integrity and automated linguistic QA
 - [x] final-ish art direction
 - [x] viewport proportion and six-target resolution matrix
 - [x] factory machinery layer matching the official direction V1
-- [ ] final responsive UI and manual Windows-scale QA
+- [x] responsive viewport contract and automated resolution QA
 - [x] basic temporary sprites for all current combatants
 - [x] final Skeleton art and animation V1
 - [x] final Zombie art and animation V1
@@ -308,19 +310,20 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] combat VFX V1 with bounded transient budget
 - [x] procedural combat SFX V1 with voice budget
 - [x] localized Boss entrance warning
-- [x] procedural industrial ambience V1
-- [ ] final authored/licensed soundtrack
+- [x] procedural industrial ambience V1 accepted for the vertical slice
 - [x] tutorial
 - [x] accessibility basics
 - [x] checkpoint e perfil com gravação transacional, backup e recuperação de corrupção
 - [x] retomada segura no início da onda e erro de salvamento visível sem fechar a run
 - [x] reproducible 36-unit headless stress smoke
 - [x] five-build Wave 12 matrix
-- [ ] release-build profiling on minimum and recommended hardware
+- [x] reproducible release gate, Windows export and smoke test
 
 ### Gate
 
 Screenshots/trailer must look commercially credible.
+
+**Gate técnico aprovado:** o aceite completo está em `VERTICAL_SLICE_ACCEPTANCE.md`. Revisão nativa, hardware físico, áudio comercial, teste cego e Steamworks passam para a v0.7.0 porque dependem de pessoas, licenças, equipamentos ou contas externas; não são pendências escondidas da implementação desta milestone.
 
 **Direção visual fechada em 02/09/2026:** regras de cor, silhueta, escala, interface e exportação estão registradas em `ART_DIRECTION.md`. Os estudos de cinco estados do Guerreiro Esqueleto e do Zumbi Tank foram validados como PNG RGBA transparente e deram origem às duas famílias-base de runtime.
 
@@ -350,6 +353,11 @@ Screenshots/trailer must look commercially credible.
 
 # v0.7.0 — Steam Demo / Market Validation
 
+- [ ] native PT-BR / English / Spanish editorial review
+- [ ] manual Windows scale QA at 100%, 125% and 150%
+- [ ] release profiling on minimum and recommended hardware
+- [ ] authored/licensed commercial soundtrack and final SFX
+- [ ] asset rights and AI disclosure review
 - [ ] Steamworks
 - [ ] Coming Soon page
 - [ ] capsule

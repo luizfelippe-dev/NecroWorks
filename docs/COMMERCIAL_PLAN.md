@@ -408,3 +408,7 @@ A camada VFX/SFX V1 já permite avaliar cadência e legibilidade em uma run real
 Arqueiro, Lich e a leitura física da Fábrica fecharam as lacunas visuais V1. O ambiente industrial e os volumes separados permitem um playtest apresentável, mas ainda não são trilha e desenho de som finais. O pacote técnico agora possui gate reproduzível, hash e histórico local rico o suficiente para comparar runs.
 
 A próxima decisão comercial não é acrescentar dezenas de sistemas. É executar o protocolo cego, revisar direitos dos assets, obter leitura editorial nativa e produzir material de loja com gameplay real. A página “Em breve” só deve afirmar recursos que estarão no build e usar a versão que já passou pelos gates técnicos e manuais.
+
+## Vertical slice fechada
+
+A v0.6.0 é o build-base para validação externa. O número aparece no menu e acompanha checkpoint, projeto e executável, permitindo relacionar cada observação ao mesmo artefato. A partir daqui, qualquer mudança usada em playtest deve gerar novo commit, novo hash e nota curta de impacto.

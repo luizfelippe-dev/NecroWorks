@@ -4,9 +4,9 @@
 
 ## Estado atual
 
-A v0.5.0 está fechada. A v0.6.0 possui vertical slice funcional com 20 ondas, cinco famílias permanentes de mortos-vivos, três invasores, três chefes, Fábrica automatizada, progressão horizontal, narrativa, tutorial, localização, acessibilidade básica, arte por estados, VFX e áudio procedural.
+A v0.6.0 está fechada como vertical slice técnica, com 20 ondas, cinco famílias permanentes de mortos-vivos, três invasores, três chefes, Fábrica automatizada, progressão horizontal, narrativa, tutorial, localização, acessibilidade básica, arte por estados, VFX e áudio procedural.
 
-As correções internas da auditoria estão implementadas: save transacional, checkpoint de início de onda, validação defensiva, recuperação e diagnóstico centralizados, gate de release, CI, matriz de resoluções, estresse e cinco estratégias. O quadro completo está em `docs/AUDIT_STATUS.md`.
+As correções internas da auditoria estão implementadas: save transacional, checkpoint de início de onda, validação defensiva, recuperação e diagnóstico centralizados, gate de release, CI, matriz de resoluções, estresse e cinco estratégias. O aceite está em `docs/VERTICAL_SLICE_ACCEPTANCE.md`; o quadro completo, em `docs/AUDIT_STATUS.md`.
 
 ## Ordem de continuação
 

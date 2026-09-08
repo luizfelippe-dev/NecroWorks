@@ -2,6 +2,7 @@ extends Node
 
 
 const GAME_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
+const APP_VERSION_DATA: Script = preload("res://scripts/core/app_version.gd")
 const ACCENT: Color = Color("55d83e")
 const PANEL: Color = Color(0.018, 0.024, 0.022, 0.98)
 const BORDER: Color = Color(0.32, 0.31, 0.25, 1.0)
@@ -29,6 +30,7 @@ var loadout_menu: Control
 var continue_button: Button
 var title_label: Label
 var subtitle_label: Label
+var version_label: Label
 var prologue_title: Label
 var prologue_body: Label
 var pause_title: Label
@@ -127,6 +129,10 @@ func build_interface() -> void:
 	subtitle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	subtitle_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	main_box.add_child(subtitle_label)
+	version_label = create_label(13, Color(0.48, 0.52, 0.47))
+	version_label.text = APP_VERSION_DATA.DISPLAY
+	version_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	main_box.add_child(version_label)
 	main_box.add_child(create_separator())
 	add_localized_button(main_box, "MENU_NEW_RUN", start_new_run)
 	continue_button = add_localized_button(main_box, "MENU_CONTINUE", continue_run)

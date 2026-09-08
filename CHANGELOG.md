@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.0-dev] — 02/09/2026 — Onboarding e Acessibilidade
+## [0.6.0] — 08/09/2026 — Vertical Slice
 
 ### Added
 
@@ -12,6 +12,8 @@
 - matriz de seis resoluções, estresse de 36 unidades e cinco estratégias na Onda 12;
 - telemetria ampliada no histórico local das vinte runs;
 - documentação de situação da auditoria, protocolo de playtest e gates de release;
+- versão centralizada entre menu, checkpoint, projeto e executável Windows;
+- contrato de aceite da vertical slice e transferência explícita dos gates externos para a v0.7.0;
 
 - tutorial inicial localizado em cinco etapas, apresentado uma vez na primeira Nova Partida;
 - controles para rever ou desativar o tutorial nas Opções;

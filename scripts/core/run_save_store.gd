@@ -4,7 +4,8 @@ extends RefCounted
 
 const SAVE_VERSION: int = 2
 const DEFAULT_PATH: String = "user://necroworks_run.json"
-const APP_VERSION: String = "0.6.0-dev"
+const APP_VERSION_DATA: Script = preload("res://scripts/core/app_version.gd")
+const APP_VERSION: String = APP_VERSION_DATA.NUMBER
 const TRANSACTION_STORE: Script = preload(
 	"res://scripts/core/transactional_json_store.gd"
 )
