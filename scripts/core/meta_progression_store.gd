@@ -9,6 +9,10 @@ const UNLOCK_CATALOG: Script = preload("res://scripts/game/meta_unlock_catalog.g
 const CHALLENGE_CATALOG: Script = preload("res://scripts/game/challenge_catalog.gd")
 const OPERATOR_CATALOG: Script = preload("res://scripts/game/operator_catalog.gd")
 const MODIFIER_CATALOG: Script = preload("res://scripts/game/starting_modifier_catalog.gd")
+const TRANSACTION_STORE: Script = preload(
+	"res://scripts/core/transactional_json_store.gd"
+)
+const READ_ONLY_MARKER: String = "_persistence_read_only"
 
 
 static func default_profile() -> Dictionary:
@@ -30,17 +34,19 @@ static func default_profile() -> Dictionary:
 
 
 static func load_profile(path: String = DEFAULT_PATH) -> Dictionary:
-	if not FileAccess.file_exists(path):
+	var profile: Dictionary = TRANSACTION_STORE.load_dictionary(path)
+	if profile.is_empty():
+		profile = TRANSACTION_STORE.load_dictionary(
+			path + TRANSACTION_STORE.BACKUP_SUFFIX
+		)
+	if profile.is_empty():
 		return default_profile()
-	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return default_profile()
-	var parser: JSON = JSON.new()
-	if parser.parse(file.get_as_text()) != OK or not parser.data is Dictionary:
-		return default_profile()
-	var profile: Dictionary = parser.data as Dictionary
 	var stored_version: int = int(profile.get("profile_version", 1))
-	if stored_version < 1 or stored_version > PROFILE_VERSION:
+	if stored_version > PROFILE_VERSION:
+		var protected_default: Dictionary = default_profile()
+		protected_default[READ_ONLY_MARKER] = true
+		return protected_default
+	if stored_version < 1:
 		return default_profile()
 	if stored_version < PROFILE_VERSION:
 		profile["profile_version"] = PROFILE_VERSION
@@ -117,13 +123,12 @@ static func load_profile(path: String = DEFAULT_PATH) -> Dictionary:
 static func save_profile(
 	profile: Dictionary, path: String = DEFAULT_PATH
 ) -> Error:
+	if bool(profile.get(READ_ONLY_MARKER, false)):
+		return ERR_FILE_UNRECOGNIZED
 	var payload: Dictionary = profile.duplicate(true)
+	payload.erase(READ_ONLY_MARKER)
 	payload["profile_version"] = PROFILE_VERSION
-	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
-	if file == null:
-		return FileAccess.get_open_error()
-	file.store_string(JSON.stringify(payload, "\t"))
-	return OK
+	return TRANSACTION_STORE.save_dictionary(payload, path)
 
 
 static func merge_discoveries(profile: Dictionary, discoveries: Dictionary) -> void:

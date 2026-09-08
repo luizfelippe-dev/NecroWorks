@@ -8,6 +8,8 @@ MENU_QUIT,QUIT,SAIR,SALIR
 PAUSE_TITLE,PRODUCTION PAUSED,PRODUÇÃO PAUSADA,PRODUCCIÓN PAUSADA
 PAUSE_RESUME,RESUME,CONTINUAR,REANUDAR
 PAUSE_SAVE_MENU,SAVE AND RETURN TO MENU,SALVAR E VOLTAR AO MENU,GUARDAR Y VOLVER AL MENÚ
+PAUSE_CHECKPOINT_NOTE,Continue resumes at the start of the current Wave.,Continuar retoma no início da Onda atual.,Continuar retoma al inicio de la Oleada actual.
+PAUSE_SAVE_FAILED,Save failed (error %d). The run remains open.,Falha ao salvar (erro %d). A partida continua aberta.,Error al guardar (error %d). La partida sigue abierta.
 PAUSE_RESTART,RESTART RUN,REINICIAR PARTIDA,REINICIAR PARTIDA
 OPTIONS_TITLE,OPTIONS,OPÇÕES,OPCIONES
 OPTIONS_LANGUAGE,LANGUAGE,IDIOMA,IDIOMA

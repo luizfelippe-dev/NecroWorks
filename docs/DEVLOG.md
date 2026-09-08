@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 08/09/2026 — Uma run não pode depender da sorte do disco
+
+Fechei o primeiro risco crítico apontado pela auditoria externa. Checkpoint e perfil agora passam por uma gravação transacional comum: o conteúdo nasce em um arquivo temporário, é relido, preserva a versão anterior como backup e só depois assume o caminho principal. Se o arquivo novo estiver truncado, o carregamento recupera o backup. Se o jogo encontrar um perfil criado por schema futuro, mantém o arquivo intacto em vez de regravá-lo com defaults antigos.
+
+Também tornei explícita a unidade real de retomada. Salvar durante a pausa conserva o início da Onda atual, não um estado híbrido do meio do combate. Assim, dano, mortes e recompensas parciais não podem ser reaproveitados por recarga. Quando a escrita falha, a partida continua pausada e mostra o erro no idioma ativo; na conclusão, o perfil é confirmado antes da exclusão do checkpoint.
+
+O novo runner cobre corrupção, backup, payload inválido, diretório indisponível, schema futuro e falha do botão Salvar e Voltar. A regressão completa chegou a 69 cenários e passou em 64,19 segundos no Godot 4.7.1 headless, incluindo as estratégias Bone e Flesh. O release Windows abriu no smoke test com 120.257.664 bytes e SHA-256 `D9CB479E03883B76C969509964BFF6E4BD1A70A69BADFCF51716C31753E9AE3E`.
+
 ## 04/09/2026 — O último turno do Capataz
 
 O Capataz fecha os três chefes com a maior silhueta da run. Barba, charuto, capacete de mineração, pano vermelho, ferro enegrecido, latão, faixas de risco, reservatórios violetas, manopla e martelo-reator permanecem consistentes em guarda, marcha, golpe, impacto e morte.

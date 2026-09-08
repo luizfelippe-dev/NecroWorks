@@ -743,7 +743,7 @@ The vertical slice requires:
 - remappable controls where practical;
 - persistent settings and versioned save data.
 
-V1 status: Main Menu, Pause, Continue/New Run, language, master volume, fullscreen and versioned run checkpoints are implemented. Continue resumes from a recorded Wave with permanent strategic state; it does not promise a frame-perfect mid-combat resume.
+V1 status: Main Menu, Pause, Continue/New Run, language, master volume, fullscreen and versioned run checkpoints are implemented. Continue resumes at the start of the recorded Wave with its confirmed strategic state. Damage, deaths, rewards and machine progress earned during an interrupted Wave are deliberately rolled back; the pause screen communicates this rule before saving.
 
 ## Narrative delivery V1
 

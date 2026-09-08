@@ -1,6 +1,6 @@
 # NecroWorks — Estado do Projeto
 
-**Atualizado em:** 04/09/2026
+**Atualizado em:** 08/09/2026
 
 **Versão funcional:** v0.6.0-dev — onboarding e acessibilidade básica
 
@@ -27,7 +27,9 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
-Configurações são gravadas em `user://necroworks_settings.cfg`, agora com schema v2 e migração transparente do v1. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, com schema v3 e migração automática dos perfis v1 e v2.
+Configurações são gravadas em `user://necroworks_settings.cfg`, agora com schema v2 e migração transparente do v1. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, com schema v3 e migração automática dos perfis v1 e v2. Os dois arquivos JSON passam por escrita temporária, validação, substituição atômica e backup anterior. Um checkpoint corrompido recupera o `.bak`; um perfil de versão futura permanece intacto e protegido contra sobrescrita.
+
+O salvamento de pausa representa o início da onda atual. Ao continuar, a composição, a economia e as escolhas confirmadas voltam ao ponto seguro anterior ao combate; mortes, dano, Cadáveres e recompensas parciais da onda são descartados. Se a gravação falhar, a partida não é fechada.
 
 ## Conteúdo atual
 
@@ -118,13 +120,13 @@ Antes de publicar qualquer milestone:
 2. executar todos os `*_runner.gd` em modo headless;
 3. executar `tests/balance/full_run_runner.gd` e confirmar vitória das estratégias Bone e Flesh;
 4. testar F5, F6, pausa, idiomas, checkpoint e reinício manualmente;
-5. validar integridade das 422 chaves nos três idiomas;
+5. validar integridade das 424 chaves nos três idiomas;
 6. revisar `git diff` e manter o worktree limpo após o push.
 
 ## Próxima etapa
 
-A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade, apresentação audiovisual V1, direção de arte consolidada, três tropas, os três invasores básicos e os três chefes animados por estados. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. O catálogo localizado possui 422 chaves completas em inglês, português do Brasil e espanhol, verificadas automaticamente. Os próximos blocos da vertical slice são arte da Fábrica, Arqueiro Esqueleto e Lich, além de áudio produzido, música, revisão editorial e medição de performance externa.
+A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade, apresentação audiovisual V1, direção de arte consolidada, três tropas, os três invasores básicos e os três chefes animados por estados. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. O catálogo localizado possui 424 chaves completas em inglês, português do Brasil e espanhol, verificadas automaticamente. O primeiro pacote da auditoria externa também está concluído: checkpoint e perfil são transacionais, recuperam backup e tratam falha sem perder a partida. Os próximos blocos são centralizar derrota/recuperação, arte da Fábrica, Arqueiro Esqueleto e Lich, além de áudio produzido, música, revisão editorial e medição de performance externa.
 
-O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 120.253.032 bytes e SHA-256 `0BE15CF0D0F5DB5E55112F12B84E226A938A5D6B28F1AD0C536E4B4419B89F55`. Fontes de conceito, documentação, testes e os protótipos substituídos do Capataz, Auditor, Marechal, Guerreiro Humano, Mago, Elfo, Esqueleto e Zumbi estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 120.257.664 bytes e SHA-256 `D9CB479E03883B76C969509964BFF6E4BD1A70A69BADFCF51716C31753E9AE3E`. Fontes de conceito, documentação, testes e os protótipos substituídos do Capataz, Auditor, Marechal, Guerreiro Humano, Mago, Elfo, Esqueleto e Zumbi estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
 O polimento visual final, áudio, acessibilidade ampliada e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.

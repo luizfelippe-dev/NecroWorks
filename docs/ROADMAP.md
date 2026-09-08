@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 04/09/2026
+**Atualizado:** 08/09/2026
 
 ---
 
@@ -308,6 +308,8 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [ ] music
 - [x] tutorial
 - [x] accessibility basics
+- [x] checkpoint e perfil com gravação transacional, backup e recuperação de corrupção
+- [x] retomada segura no início da onda e erro de salvamento visível sem fechar a run
 - [ ] performance pass
 
 ### Gate
@@ -333,6 +335,8 @@ Screenshots/trailer must look commercially credible.
 **Segundo chefe integrado em 04/09/2026:** o Auditor Arcano ganhou aparato, documentos e cinco estados próprios. A descarga de quatro alvos e a decisão do Núcleo continuam independentes da arte. O Capataz encerra o corte visual dos chefes.
 
 **Trio de chefes concluído em 04/09/2026:** o Capataz ganhou marcha, golpe industrial, impacto e queda próprios em torno do martelo-reator. O `Industrial Crush` e o encerramento da run permanecem no combate. O próximo corte visual cobre Fábrica, Arqueiro Esqueleto e Lich.
+
+**Confiabilidade de retomada concluída em 08/09/2026:** checkpoint e perfil usam escrita transacional com backup. `Continuar` volta ao início da onda atual, falhas de gravação mantêm a partida aberta e schemas futuros do perfil não são sobrescritos. O próximo corte técnico centraliza derrota e recuperação antes de ampliar sistemas comerciais.
 
 ---
 

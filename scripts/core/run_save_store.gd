@@ -4,7 +4,14 @@ extends RefCounted
 
 const SAVE_VERSION: int = 2
 const DEFAULT_PATH: String = "user://necroworks_run.json"
-const APP_VERSION: String = "0.4.1"
+const APP_VERSION: String = "0.6.0-dev"
+const TRANSACTION_STORE: Script = preload(
+	"res://scripts/core/transactional_json_store.gd"
+)
+const REQUIRED_DICTIONARIES: Array[String] = [
+	"resources", "army", "upgrades", "factory", "production", "metrics",
+	"doctrine", "narrative", "run_modifiers", "rituals"
+]
 
 
 static func has_checkpoint(path: String = DEFAULT_PATH) -> bool:
@@ -25,33 +32,20 @@ static func save_checkpoint(
 		"checkpoint_kind": "between_wave",
 		"saved_at_unix": int(Time.get_unix_time_from_system()),
 	}
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	if file == null:
-		return FileAccess.get_open_error()
-	file.store_string(JSON.stringify(payload, "\t"))
-	return OK
+	if not validate_checkpoint(payload):
+		return ERR_INVALID_DATA
+	return TRANSACTION_STORE.save_dictionary(payload, path)
 
 
 static func load_checkpoint(path: String = DEFAULT_PATH) -> Dictionary:
-	if not FileAccess.file_exists(path):
-		return {}
-
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return {}
-	var parser := JSON.new()
-	if parser.parse(file.get_as_text()) != OK:
-		return {}
-	var parsed: Variant = parser.data
-	if not parsed is Dictionary:
-		return {}
-
-	var state: Dictionary = migrate_payload(parsed as Dictionary)
-	if state.is_empty():
-		return {}
-	if int(state.get("wave", 0)) < 1:
-		return {}
-	return state
+	for candidate: String in [path, path + TRANSACTION_STORE.BACKUP_SUFFIX]:
+		var parsed: Dictionary = TRANSACTION_STORE.load_dictionary(candidate)
+		if parsed.is_empty():
+			continue
+		var state: Dictionary = migrate_payload(parsed)
+		if validate_checkpoint(state):
+			return state
+	return {}
 
 
 static func migrate_payload(payload: Dictionary) -> Dictionary:
@@ -70,7 +64,36 @@ static func migrate_payload(payload: Dictionary) -> Dictionary:
 
 	if int(migrated.get("save_version", -1)) != SAVE_VERSION:
 		return {}
+	if not validate_checkpoint(migrated):
+		return {}
 	return migrated
+
+
+static func validate_checkpoint(state: Dictionary) -> bool:
+	if state.is_empty() or int(state.get("save_version", -1)) != SAVE_VERSION:
+		return false
+	var wave_value: Variant = state.get("wave")
+	if not wave_value is int and not wave_value is float:
+		return false
+	var wave: int = int(wave_value)
+	if wave < 1 or wave > 1000:
+		return false
+	for key: String in REQUIRED_DICTIONARIES:
+		if not state.get(key) is Dictionary:
+			return false
+	if not state.get("processing_directive") is String:
+		return false
+	var metadata: Dictionary = state.get("save_metadata", {}) as Dictionary
+	if str(metadata.get("checkpoint_kind", "")) != "between_wave":
+		return false
+	for resource_value: Variant in (state.resources as Dictionary).values():
+		if int(resource_value) < 0:
+			return false
+	for count_value: Variant in (state.army as Dictionary).values():
+		var count: int = int(count_value)
+		if count < 0 or count > 1000:
+			return false
+	return true
 
 
 static func _migrate_v1_to_v2(payload: Dictionary) -> Dictionary:
@@ -105,6 +128,4 @@ static func _migrate_v1_to_v2(payload: Dictionary) -> Dictionary:
 
 
 static func delete_checkpoint(path: String = DEFAULT_PATH) -> Error:
-	if not FileAccess.file_exists(path):
-		return OK
-	return DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	return TRANSACTION_STORE.delete_family(path)

@@ -32,6 +32,7 @@ var subtitle_label: Label
 var prologue_title: Label
 var prologue_body: Label
 var pause_title: Label
+var pause_status_label: Label
 var options_title: Label
 var language_label: Label
 var volume_label: Label
@@ -64,6 +65,7 @@ var next_operator_button: Button
 var next_modifier_button: Button
 var profile: Dictionary = {}
 var profile_path: String = META_STORE.DEFAULT_PATH
+var run_save_path: String = RunSaveStore.DEFAULT_PATH
 var localized_buttons: Dictionary = {}
 
 
@@ -155,6 +157,11 @@ func build_interface() -> void:
 	add_localized_button(pause_box, "MENU_OPTIONS", open_options_from_pause)
 	add_localized_button(pause_box, "PAUSE_SAVE_MENU", save_and_return_to_menu)
 	add_localized_button(pause_box, "PAUSE_RESTART", restart_game)
+	pause_status_label = create_label(14, Color(0.82, 0.80, 0.68, 1.0))
+	pause_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pause_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	pause_status_label.custom_minimum_size = Vector2(0.0, 44.0)
+	pause_box.add_child(pause_status_label)
 
 	options_menu = create_screen("OptionsMenu", Color(0.0, 0.0, 0.0, 0.84))
 	var options_box := create_center_panel(options_menu, Vector2(700.0, 840.0))
@@ -357,6 +364,8 @@ func refresh_localized_text() -> void:
 	prologue_title.text = tr("PROLOGUE_TITLE")
 	prologue_body.text = tr("PROLOGUE_BODY")
 	pause_title.text = tr("PAUSE_TITLE")
+	if pause_status_label != null:
+		pause_status_label.text = tr("PAUSE_CHECKPOINT_NOTE")
 	options_title.text = tr("OPTIONS_TITLE")
 	codex_title.text = tr("CODEX_TITLE")
 	history_title.text = tr("RUN_HISTORY_TITLE")
@@ -536,7 +545,7 @@ func refresh_run_history_content() -> void:
 
 
 func confirm_new_run() -> void:
-	RunSaveStore.delete_checkpoint()
+	RunSaveStore.delete_checkpoint(run_save_path)
 	start_game({})
 	if bool(settings.get("tutorial_enabled", true)) and not bool(
 		settings.get("tutorial_completed", false)
@@ -545,7 +554,7 @@ func confirm_new_run() -> void:
 
 
 func continue_run() -> void:
-	var checkpoint: Dictionary = RunSaveStore.load_checkpoint()
+	var checkpoint: Dictionary = RunSaveStore.load_checkpoint(run_save_path)
 	if checkpoint.is_empty():
 		show_main_menu()
 		return
@@ -596,14 +605,18 @@ func start_game(checkpoint: Dictionary) -> void:
 		)
 	if not checkpoint.is_empty():
 		current_game.restore_checkpoint_state(checkpoint)
+	else:
+		save_checkpoint(current_game.get_resume_checkpoint_state())
 
 
-func save_checkpoint(state: Dictionary) -> void:
-	RunSaveStore.save_checkpoint(state)
+func save_checkpoint(state: Dictionary) -> Error:
+	var checkpoint_error: Error = RunSaveStore.save_checkpoint(state, run_save_path)
+	if checkpoint_error != OK:
+		return checkpoint_error
 	META_STORE.merge_discoveries(
 		profile, state.get("narrative", {}).get("discoveries", {}) as Dictionary
 	)
-	META_STORE.save_profile(profile, profile_path)
+	return META_STORE.save_profile(profile, profile_path)
 
 
 func on_meta_progress_reported(event: Dictionary) -> void:
@@ -622,10 +635,12 @@ func on_meta_progress_reported(event: Dictionary) -> void:
 
 
 func on_run_completed(victory: bool) -> void:
-	RunSaveStore.delete_checkpoint()
 	if is_instance_valid(current_game):
-		META_STORE.merge_discoveries(profile, current_game.lore_discoveries)
-		META_STORE.record_run(profile, {
+		var completed_profile: Dictionary = profile.duplicate(true)
+		META_STORE.merge_discoveries(
+			completed_profile, current_game.lore_discoveries
+		)
+		META_STORE.record_run(completed_profile, {
 			"victory": victory,
 			"wave": current_game.current_wave,
 			"enemies_killed": current_game.total_enemies_killed,
@@ -633,7 +648,9 @@ func on_run_completed(victory: bool) -> void:
 			"army_remaining": current_game.get_total_undead_count(),
 			"progress_recorded_live": true,
 		})
-		META_STORE.save_profile(profile, profile_path)
+		if META_STORE.save_profile(completed_profile, profile_path) == OK:
+			profile = completed_profile
+			RunSaveStore.delete_checkpoint(run_save_path)
 
 
 func pause_game() -> void:
@@ -641,6 +658,7 @@ func pause_game() -> void:
 		return
 	get_tree().paused = true
 	pause_menu.visible = true
+	pause_status_label.text = tr("PAUSE_CHECKPOINT_NOTE")
 
 
 func resume_game() -> void:
@@ -651,7 +669,12 @@ func resume_game() -> void:
 
 func save_and_return_to_menu() -> void:
 	if is_instance_valid(current_game):
-		save_checkpoint(current_game.build_checkpoint_state())
+		var save_error: Error = save_checkpoint(
+			current_game.get_resume_checkpoint_state()
+		)
+		if save_error != OK:
+			pause_status_label.text = tr("PAUSE_SAVE_FAILED") % save_error
+			return
 		current_game.queue_free()
 	current_game = null
 	show_main_menu()
@@ -665,7 +688,7 @@ func return_to_menu() -> void:
 
 
 func restart_game() -> void:
-	RunSaveStore.delete_checkpoint()
+	RunSaveStore.delete_checkpoint(run_save_path)
 	start_game({})
 
 

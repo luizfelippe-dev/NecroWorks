@@ -1763,6 +1763,7 @@ var reduced_motion_enabled: bool = false
 var high_contrast_enabled: bool = false
 var combat_feedback: Node2D = null
 var combat_audio_manager: Node = null
+var resume_checkpoint_state: Dictionary = {}
 
 
 # =========================================================
@@ -6833,7 +6834,8 @@ func select_narrative_event_choice(choice_id: String) -> bool:
 
 
 func continue_wave_after_transition() -> void:
-	run_checkpoint_requested.emit(build_checkpoint_state())
+	var checkpoint: Dictionary = capture_resume_checkpoint_state()
+	run_checkpoint_requested.emit(checkpoint)
 	start_wave(current_wave)
 
 
@@ -8307,6 +8309,17 @@ func build_checkpoint_state() -> Dictionary:
 	}
 
 
+func capture_resume_checkpoint_state() -> Dictionary:
+	resume_checkpoint_state = build_checkpoint_state().duplicate(true)
+	return resume_checkpoint_state.duplicate(true)
+
+
+func get_resume_checkpoint_state() -> Dictionary:
+	if resume_checkpoint_state.is_empty():
+		return capture_resume_checkpoint_state()
+	return resume_checkpoint_state.duplicate(true)
+
+
 func restore_checkpoint_state(state: Dictionary) -> bool:
 	var saved_wave: int = int(state.get("wave", 0))
 	if saved_wave < 1:
@@ -8448,6 +8461,7 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 		show_narrative_event(pending_event)
 	else:
 		start_wave(saved_wave)
+	resume_checkpoint_state = state.duplicate(true)
 	update_bones_ui()
 	update_debug_ui()
 	update_factory_panel_ui()

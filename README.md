@@ -28,7 +28,9 @@ Enemy
 
 Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de entrada com Nova Partida, Continuar, Opções e Sair. `F6` sobre `scenes/world/gameplay.tscn` permanece disponível para testar diretamente o gameplay.
 
-O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistidos em `user://necroworks_settings.cfg`; o checkpoint versionado de partida usa `user://necroworks_run.json` e restaura onda, recursos, exército, upgrades, Fábrica e Doutrina.
+O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistidos em `user://necroworks_settings.cfg`; o checkpoint versionado de partida usa `user://necroworks_run.json` e restaura onda, recursos, exército, upgrades, Fábrica e Doutrina. A gravação JSON é transacional, mantém um backup anterior e nunca fecha a partida quando o disco recusa o salvamento.
+
+`Continuar` retoma o início da onda atual. O checkpoint preserva as decisões estratégicas confirmadas antes do combate, mas não conserva dano, recompensas ou progresso parcial daquela onda. Essa regra é mostrada no menu de pausa e impede que salvar no meio do combate duplique recursos.
 
 Nova Partida apresenta o primeiro prólogo narrativo localizado. A tela final também está integralmente localizada e oferece Reiniciar ou Voltar ao Menu Principal sem romper o shell da aplicação.
 
@@ -319,4 +321,4 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado, configurações v2 com acessibilidade, primeira camada audiovisual, direção de arte consolidada e nove famílias animadas por estados. Os três chefes estão completos. Rastros, números, impactos, alertas e seis vozes SFX procedurais tornam a batalha legível sem alterar a simulação. As 422 chaves do catálogo têm conteúdo completo nos três idiomas; a revisão editorial final ainda será feita antes da demo. O próximo foco visual é a Fábrica, seguido pelas tropas avançadas, áudio produzido e medição de performance externa.
+A v0.5.0 está concluída e a v0.6.0 está em desenvolvimento. Além do perfil permanente v3, histórico, Codex, projetos, operadores, contratos e desafios, o jogo agora possui tutorial inicial localizado, configurações v2 com acessibilidade, primeira camada audiovisual, direção de arte consolidada e nove famílias animadas por estados. Os três chefes estão completos. Rastros, números, impactos, alertas e seis vozes SFX procedurais tornam a batalha legível sem alterar a simulação. As 424 chaves do catálogo têm conteúdo completo nos três idiomas; a revisão editorial final ainda será feita antes da demo. Checkpoint e perfil usam gravação transacional, backup recuperável e proteção contra schemas futuros. O próximo foco visual é a Fábrica, seguido pelas tropas avançadas, áudio produzido e medição de performance externa.

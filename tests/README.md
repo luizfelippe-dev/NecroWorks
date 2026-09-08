@@ -433,7 +433,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/v
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/localization/catalog_integrity_runner.gd
 ```
 
-O primeiro cenário valida presença, dimensões e transparência dos concept sheets do Esqueleto e do Zumbi. O segundo percorre as 422 chaves do catálogo, rejeita duplicatas e campos vazios e compara as traduções importadas dos três idiomas com o CSV-fonte.
+O primeiro cenário valida presença, dimensões e transparência dos concept sheets do Esqueleto e do Zumbi. O segundo percorre as 424 chaves do catálogo, rejeita duplicatas e campos vazios e compara as traduções importadas dos três idiomas com o CSV-fonte.
 
 ## Famílias animadas — cinco estados
 
@@ -458,4 +458,12 @@ Os cenários validam os 45 assets de Esqueleto, Zumbi, Fantasma, Guerreiro Human
 
 `tests/visual/grave_marshal_animation_assets_runner.gd` protege os cinco estados do primeiro chefe finalizado. A regressão conjunta confirma escala ampliada, resolução do Cadáver e transição da Onda independentes da morte visual.
 
-A suíte atual contém 68 cenários `*_runner.gd`. Todos passaram em 67,57 segundos no Godot 4.7.1 headless em 04/09/2026, incluindo as estratégias completas Bone e Flesh.
+## Salvamento transacional e retomada
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/save_reliability_runner.gd
+```
+
+O cenário corrompe arquivos deliberadamente, valida recuperação pelo backup, rejeição de payload incompleto, falha de escrita sem fechar a run, proteção contra schema futuro e retomada sem ganhos parciais da Onda.
+
+A suíte atual contém 69 cenários `*_runner.gd`. Todos passaram em 64,19 segundos no Godot 4.7.1 headless em 08/09/2026, incluindo as estratégias completas Bone e Flesh.

@@ -647,6 +647,12 @@ Motivos:
 
 O histórico guarda somente as 20 conclusões mais recentes. Ele serve para leitura e balanceamento pessoal, não como telemetria nem como fonte de bônus acumulativo.
 
+## Gravar JSON por transação e retomar no início da Onda
+
+Checkpoint e perfil nunca substituem diretamente o último arquivo válido. Cada gravação produz um temporário, relê e valida seu JSON, preserva o anterior como backup e somente então promove a nova versão. Se qualquer etapa falhar, a partida permanece aberta e o arquivo recuperável não é descartado. Um perfil de schema futuro entra em modo somente leitura para impedir downgrade destrutivo.
+
+O ponto de retomada é o início da Onda atual. O jogo não promete restaurar quadro, inimigos, vida parcial, Cadáveres em trânsito ou timers de máquinas. Essa fronteira mantém a simulação determinística e impede repetir uma parte favorável da Onda conservando suas recompensas.
+
 ## Desbloquear possibilidade e cobrar execução dentro da run
 
 Os projetos permanentes habilitam o direito de comprar tecnologias ou receitas avançadas. A compra continua usando Pontos de Fábrica em cada run.

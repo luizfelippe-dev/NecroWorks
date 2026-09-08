@@ -140,11 +140,11 @@ Before the demo, extend persistent coverage for:
 - wave progression;
 - save migration from future schema versions.
 
-### P1 — Persistence boundary (foundation completed)
+### P1 — Persistence boundary (confiabilidade concluída em 08/09/2026)
 
-The application now separates disk I/O from gameplay state: `RunSaveStore` owns validated versioned JSON, while `scripts/game/main_controller.gd` produces and restores a documented checkpoint dictionary. Corrupt, absent and incompatible saves fail closed and disable Continue instead of partially mutating a run.
+O disco está separado do estado de gameplay: `RunSaveStore` valida o checkpoint versionado, `MetaProgressionStore` mantém o perfil e `TransactionalJsonStore` fornece a escrita temporária, backup e promoção atômica comuns. Arquivos principais corrompidos recuperam o backup; conteúdo ausente ou incompatível falha fechado. Um executável antigo não sobrescreve perfil de schema futuro.
 
-The current checkpoint is Wave-granular rather than frame-perfect. Active enemies, Corpse queues and fractional machine timers restart at the saved Wave boundary. This is intentional for V1, but the policy must be surfaced to playtesters and revisited before Steam cloud-save integration.
+O checkpoint é granular por Onda, não por frame. Inimigos ativos, Cadáveres, dano e timers parciais reiniciam na fronteira salva. A pausa explica essa regra, e Salvar e Voltar só encerra o gameplay depois de uma escrita confirmada. Esse modelo continua sendo a base para a futura integração com Steam Cloud.
 
 Settings and application-shell navigation have persistent automated coverage. Their milestone passed 26/26 on Godot 4.7.1.
 

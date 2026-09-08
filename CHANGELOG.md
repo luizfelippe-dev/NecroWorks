@@ -37,6 +37,8 @@
 - regressão dedicada do segundo chefe animado, elevando a suíte para 67 cenários.
 - família final V1 do Capataz com martelo-reator, marcha pesada, golpe industrial, impacto e queda;
 - regressão dedicada do chefe final, concluindo os três chefes e elevando a suíte para 68 cenários.
+- armazenamento JSON transacional compartilhado por checkpoint e perfil, com arquivo temporário validado e backup da gravação anterior;
+- regressão de confiabilidade cobrindo corrupção, recuperação do backup, falha de escrita, schema inválido e proteção de perfil futuro, elevando a suíte para 69 cenários.
 
 ### Changed
 
@@ -60,6 +62,10 @@
 - inimigos humanos derrotados permanecem por 0,24 s apenas para apresentar a pose de morte, depois de saírem da simulação.
 - o Mago passou a usar poses próprias sem mover Rajada Arcana, supressão ou dano para a camada visual;
 - o projétil permanece no VFX de combate, enquanto a pose de ataque limita a energia ao núcleo do cajado.
+- `Continuar` agora retoma explicitamente o início da onda atual, sem preservar ganhos ou dano parciais do combate interrompido;
+- Salvar e Voltar ao Menu só encerra a partida depois da confirmação de escrita; em caso de erro, a run permanece aberta e informa a falha no idioma ativo;
+- conclusão de run confirma o perfil permanente antes de remover o checkpoint;
+- perfis criados por schemas futuros entram em modo protegido e não podem ser sobrescritos por uma versão antiga do jogo.
 
 ## [0.5.0] — 01/09/2026 — Meta Progression
 
