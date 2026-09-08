@@ -2,7 +2,7 @@
 
 **Atualizado em:** 08/09/2026
 
-**Versão funcional:** v0.6.0-dev — onboarding e acessibilidade básica
+**Versão funcional:** v0.6.0-dev — vertical slice em validação externa
 
 **Engine:** Godot 4.7.1
 
@@ -27,7 +27,7 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
-Configurações são gravadas em `user://necroworks_settings.cfg`, agora com schema v2 e migração transparente do v1. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, com schema v3 e migração automática dos perfis v1 e v2. Os dois arquivos JSON passam por escrita temporária, validação, substituição atômica e backup anterior. Um checkpoint corrompido recupera o `.bak`; um perfil de versão futura permanece intacto e protegido contra sobrescrita.
+Configurações são gravadas em `user://necroworks_settings.cfg`, agora com schema v3 e migração transparente, incluindo volumes de Música, Efeitos e Interface. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, com schema v3 e migração automática dos perfis v1 e v2. Os dois arquivos JSON passam por escrita temporária, validação, substituição atômica e backup anterior. Um checkpoint corrompido recupera o `.bak`; um perfil de versão futura permanece intacto e protegido contra sobrescrita.
 
 O salvamento de pausa representa o início da onda atual. Ao continuar, a composição, a economia e as escolhas confirmadas voltam ao ponto seguro anterior ao combate; mortes, dano, Cadáveres e recompensas parciais da onda são descartados. Se a gravação falhar, a partida não é fechada.
 
@@ -59,7 +59,7 @@ O salvamento de pausa representa o início da onda atual. Ao continuar, a compos
 - tutorial inicial localizado em cinco etapas, persistente e reproduzível pelas Opções;
 - Movimento Reduzido e Interface de Alto Contraste aplicados em tempo real;
 - VFX de ataque, dano, habilidade, morte, invocação e entrada de Chefe;
-- seis sinais SFX procedurais com dez vozes simultâneas e proteção contra repetição excessiva;
+- nove sinais SFX procedurais com dez vozes simultâneas, ambiente industrial e proteção contra repetição excessiva;
 - direção de arte consolidada e concept sheets de cinco estados para Guerreiro Esqueleto e Zumbi Tank;
 - contrato de animação preparado para trocar texturas por estado sem tocar na simulação;
 - Guerreiro Esqueleto com cinco poses de runtime, movimento, ataque, impacto e morte conectados;
@@ -71,9 +71,13 @@ O salvamento de pausa representa o início da onda atual. Ao continuar, a compos
 - Marechal da Sepultura com cinco poses próprias, escala de chefe e retirada visual conectada;
 - Auditor Arcano com cinco poses próprias, aparato preservado e descarga separada da arte;
 - Capataz com cinco poses próprias, martelo-reator inteiro e vitória separada da arte;
+- Arqueiro Esqueleto e Lich com cinco poses próprias e alpha validado;
 - Cadáveres visuais blindados, arcanos e ágeis, com restos próprios de chefe;
 - contrato procedural de animações e preset Windows Desktop.
 - fundo híbrido ilustrado com parallax atmosférico, névoa e luz procedural.
+- maquinário ilustrado da Fábrica atrás dos controles de produção;
+- diagnóstico localizado da derrota e histórico com duração, composição, recursos, diretiva, operador e contrato;
+- gate automatizado de regressão, exportação, smoke test e hash, com CI no Windows.
 
 ## Eventos da run
 
@@ -120,13 +124,13 @@ Antes de publicar qualquer milestone:
 2. executar todos os `*_runner.gd` em modo headless;
 3. executar `tests/balance/full_run_runner.gd` e confirmar vitória das estratégias Bone e Flesh;
 4. testar F5, F6, pausa, idiomas, checkpoint e reinício manualmente;
-5. validar integridade das 424 chaves nos três idiomas;
+5. validar integridade das 432 chaves nos três idiomas;
 6. revisar `git diff` e manter o worktree limpo após o push.
 
 ## Próxima etapa
 
-A v0.5.0 está concluída e a v0.6.0 já possui onboarding, acessibilidade, apresentação audiovisual V1, direção de arte consolidada, três tropas, os três invasores básicos e os três chefes animados por estados. O perfil v3 acompanha progresso durante a própria run, enquanto o settings v2 guarda tutorial e acessibilidade sem misturar esses dados com a partida. O catálogo localizado possui 424 chaves completas em inglês, português do Brasil e espanhol, verificadas automaticamente. O primeiro pacote da auditoria externa também está concluído: checkpoint e perfil são transacionais, recuperam backup e tratam falha sem perder a partida. Os próximos blocos são centralizar derrota/recuperação, arte da Fábrica, Arqueiro Esqueleto e Lich, além de áudio produzido, música, revisão editorial e medição de performance externa.
+A v0.5.0 está concluída e a v0.6.0 fechou suas correções internas de auditoria. Onboarding, acessibilidade básica, onze famílias animadas, Fábrica ilustrada, VFX, áudio procedural, ambiente, save transacional, recuperação e diagnóstico possuem regressão. O perfil v3 registra telemetria mecânica das vinte runs recentes, enquanto settings v3 guarda tutorial, acessibilidade e mixagem. O catálogo localizado possui 432 chaves completas em inglês, português do Brasil e espanhol.
 
-O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 120.257.664 bytes e SHA-256 `D9CB479E03883B76C969509964BFF6E4BD1A70A69BADFCF51716C31753E9AE3E`. Fontes de conceito, documentação, testes e os protótipos substituídos do Capataz, Auditor, Marechal, Guerreiro Humano, Mago, Elfo, Esqueleto e Zumbi estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.0-dev validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 122.942.824 bytes e SHA-256 `6F6359F64B74AEEDFEC316FD0D9C95AD006EF8F44FE4FB64D89BF312559115EB`. O gate aprovou 78 runners em 73,42 segundos antes da exportação e do smoke test. Fontes de conceito, documentação, testes e protótipos substituídos estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
-O polimento visual final, áudio, acessibilidade ampliada e preparação comercial permanecem no escopo da v0.6.0 e v0.7.0.
+O próximo trabalho não deve ser confundido com mais uma correção automática: revisão editorial nativa, teste cego, perfil em hardware real, instalação limpa, direitos comerciais e Steamworks são gates externos. O acompanhamento está em `AUDIT_STATUS.md`; execução em `PLAYTEST_PROTOCOL.md` e `RELEASE_GATES.md`.

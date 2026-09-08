@@ -14,6 +14,9 @@ PAUSE_RESTART,RESTART RUN,REINICIAR PARTIDA,REINICIAR PARTIDA
 OPTIONS_TITLE,OPTIONS,OPÇÕES,OPCIONES
 OPTIONS_LANGUAGE,LANGUAGE,IDIOMA,IDIOMA
 OPTIONS_MASTER_VOLUME,MASTER VOLUME,VOLUME GERAL,VOLUMEN GENERAL
+OPTIONS_MUSIC_VOLUME,MUSIC / AMBIENCE,MÚSICA / AMBIENTE,MÚSICA / AMBIENTE
+OPTIONS_SFX_VOLUME,COMBAT / FACTORY EFFECTS,EFEITOS DE COMBATE / FÁBRICA,EFECTOS DE COMBATE / FÁBRICA
+OPTIONS_UI_VOLUME,INTERFACE EFFECTS,EFEITOS DE INTERFACE,EFECTOS DE INTERFAZ
 OPTIONS_FULLSCREEN,FULLSCREEN,TELA CHEIA,PANTALLA COMPLETA
 OPTIONS_APPLY,APPLY,APLICAR,APLICAR
 OPTIONS_BACK,BACK,VOLTAR,VOLVER
@@ -91,6 +94,11 @@ UPGRADE_TAKEN,TAKEN,ESCOLHIDO,SELECCIONADO
 RUN_COMPLETE,RUN COMPLETE,PARTIDA CONCLUÍDA,PARTIDA COMPLETADA
 RUN_VICTORY,VICTORY,VITÓRIA,VICTORIA
 RUN_DEFEAT,DEFEAT,DERROTA,DERROTA
+RUN_DEFEAT_DIAGNOSIS,LIKELY FAILURE POINT,PONTO PROVÁVEL DA FALHA,PUNTO PROBABLE DEL FALLO
+RUN_DEFEAT_CAUSE_NO_FRONTLINE,The line collapsed without durable Zombies. Protect ranged production with a frontline.,A linha caiu sem Zumbis resistentes. Proteja a produção de retaguarda com uma linha de frente.,La línea cayó sin Zombis resistentes. Protege la producción a distancia con una primera línea.
+RUN_DEFEAT_CAUSE_PROCESSING_STALLED,Too many Corpses were left outside the processor. Increase collection or throughput before the next pressure spike.,Cadáveres demais ficaram fora do processador. Aumente a coleta ou o ritmo antes do próximo pico de pressão.,Demasiados Cadáveres quedaron fuera del procesador. Aumenta la recolección o el ritmo antes del próximo pico de presión.
+RUN_DEFEAT_CAUSE_PRODUCTION_STARVED,The factory exhausted every rebuild route. Keep an emergency reserve or lower Doctrine targets.,A fábrica esgotou todas as rotas de reconstrução. Guarde uma reserva de emergência ou reduza as metas da Doutrina.,La fábrica agotó todas las rutas de reconstrucción. Guarda una reserva de emergencia o reduce las metas de Doctrina.
+RUN_DEFEAT_CAUSE_ATTRITION,The army lost the damage race despite having production options. Revisit formation roles and upgrades.,O exército perdeu a corrida de dano apesar das opções de produção. Reveja funções da formação e aprimoramentos.,El ejército perdió la carrera de daño pese a tener opciones de producción. Revisa los roles de formación y las mejoras.
 WAVE_BOSS,BOSS,CHEFE,JEFE
 WAVE_ELITE,ELITE,ELITE,ÉLITE
 STAT_HP,HP,PV,PV

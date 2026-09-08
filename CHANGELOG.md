@@ -4,6 +4,15 @@
 
 ### Added
 
+- validação defensiva de checkpoint e perfil, recuperação centralizada e diagnóstico localizado da derrota;
+- gate único com 78 runners, logs, exportação, smoke test, hash e workflow Windows;
+- famílias V1 completas do Arqueiro Esqueleto e do Lich;
+- arte física V1 da Fábrica com processador, cuba, prensa, reservatórios e esteira;
+- buses `Music`, `SFX` e `UI`, volumes persistentes, ambiente industrial e sinais de processamento/produção/bloqueio;
+- matriz de seis resoluções, estresse de 36 unidades e cinco estratégias na Onda 12;
+- telemetria ampliada no histórico local das vinte runs;
+- documentação de situação da auditoria, protocolo de playtest e gates de release;
+
 - tutorial inicial localizado em cinco etapas, apresentado uma vez na primeira Nova Partida;
 - controles para rever ou desativar o tutorial nas Opções;
 - Movimento Reduzido, removendo parallax, névoa móvel, pulsos, idle procedural e deslocamentos de feedback;

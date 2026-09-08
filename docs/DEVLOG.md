@@ -1,5 +1,15 @@
 # NecroWorks — Devlog
 
+## 08/09/2026 — A auditoria virou contrato executável
+
+Fechei as correções que dependiam do repositório. O save passou a validar schema, IDs, limites, filas, capacidade e métricas; recuperação e diagnóstico de derrota agora têm políticas únicas. O gate de release descobre todos os runners, rejeita erro silencioso, preserva logs, exporta o Windows release, inicia o executável e registra hash. A mesma regressão roda no CI.
+
+Arqueiro Esqueleto e Lich ganharam cinco estados com transparência real, completando as onze famílias atuais. A área inferior recebeu maquinário de processamento, cuba, prensa, reservatórios e esteira. O áudio passou a buses separados, volumes persistentes, ambiente industrial e sinais próprios de processamento, produção e bloqueio.
+
+A cobertura chegou a 78 runners e 1.201 asserts estáticos. Todos passaram em 73,42 segundos. O Windows release abriu no smoke test com 122.942.824 bytes e SHA-256 `6F6359F64B74AEEDFEC316FD0D9C95AD006EF8F44FE4FB64D89BF312559115EB`.
+
+A Onda 12 agora compara cinco perfis: Ossos, Carne, Almas, híbrido e automação. O teste não força todas as builds a vencer; registra resolução, tempo, abates e sobreviventes para detectar regressões sem fingir que automação mede diversão. Teste cego, revisão editorial, hardware real, direitos e Steamworks permanecem gates externos documentados.
+
 ## 08/09/2026 — Uma run não pode depender da sorte do disco
 
 Fechei o primeiro risco crítico apontado pela auditoria externa. Checkpoint e perfil agora passam por uma gravação transacional comum: o conteúdo nasce em um arquivo temporário, é relido, preserva a versão anterior como backup e só depois assume o caminho principal. Se o arquivo novo estiver truncado, o carregamento recupera o backup. Se o jogo encontrar um perfil criado por schema futuro, mantém o arquivo intacto em vez de regravá-lo com defaults antigos.

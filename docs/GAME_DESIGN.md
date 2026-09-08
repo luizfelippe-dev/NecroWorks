@@ -809,4 +809,12 @@ Movimento Reduzido preserva somente feedback necessário para entender impacto e
 
 Golpe comum usa traço curto, reação da unidade, número e som contido. Habilidades arcanas acrescentam anel violeta e voz própria. Mortes recebem expansão maior; entrada e golpe especial de Chefe ocupam o nível máximo com alerta localizado. Essa hierarquia mantém o autobattler compreensível quando dezenas de unidades atacam juntas.
 
-Os seis sons atuais são protótipos procedurais e validam ritmo, mixagem e frequência de eventos. Eles não representam a identidade sonora final. A troca futura deve preservar os IDs `attack`, `hit`, `death`, `ability`, `boss` e `wave`.
+Os nove sons atuais são protótipos procedurais e validam ritmo, mixagem e frequência de eventos. Eles não representam a identidade sonora final. A troca futura deve preservar os IDs `attack`, `hit`, `death`, `ability`, `boss`, `wave`, `processing`, `production` e `machine_blocked`.
+
+## Diagnóstico e leitura da derrota
+
+O resumo identifica quatro causas práticas: ausência de frontline, processamento parado, produção sem recursos e atrito. O texto não declara que existe uma única solução correta; ele conecta o resultado a um gargalo observável para que a próxima tentativa tenha uma hipótese concreta.
+
+## Linha de base das cinco estratégias
+
+A Onda 12 é o primeiro ponto comum de comparação para enxame de Ossos, frontline de Carne, caster de Almas, híbrida e automação-alvo. O runner registra tempo, abates e sobreviventes. Seu papel é detectar regressão e dominância evidente; o balanceamento final exige múltiplas sementes, upgrades variados e playtests externos conforme `PLAYTEST_PROTOCOL.md`.

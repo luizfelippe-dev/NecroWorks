@@ -198,6 +198,18 @@ O conjunto preserva o supervisor vivo integrado à armadura: barba, charuto, cap
 
 `foreman_prototype.png` permanece como referência histórica, mas não entra mais no build Windows.
 
+## Arqueiro Esqueleto, Lich e Fábrica — 08/09/2026
+
+- pastas: `assets/sprites/units/skeleton_archer_v1/` e `assets/sprites/units/lich_v1/`;
+- arquivo: `assets/backgrounds/factory_floor_v1.png`;
+- criação específica para NecroWorks com a ferramenta integrada de geração de imagens da OpenAI;
+- referência interna: `assets/reference/necrodesignv2.png` e protótipos já registrados;
+- sprites: cinco PNGs RGBA por família, importados com limite de 512 px;
+- Fábrica: PNG de 1536×1024 importado com limite de 1024 px;
+- revisão: transparência real, margens, identidade, cobertura dos cinco estados e legibilidade atrás da interface verificadas por regressão.
+
+Esses assets são V1 de produção interna, não uma declaração automática de direitos para distribuição. Antes da Steam, os termos aplicáveis, a declaração de conteúdo gerado, créditos e qualquer material derivado precisam constar da revisão comercial final.
+
 ## Áudio procedural V1 — 02/09/2026
 
-Os seis efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.
+Os nove efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`, e o ambiente industrial é sintetizado por `scripts/audio/industrial_ambient_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.

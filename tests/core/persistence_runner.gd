@@ -15,6 +15,9 @@ func run_validation() -> void:
 	SettingsStore.save_settings({
 		"locale": "pt-BR",
 		"master_volume": 1.7,
+		"music_volume": 0.35,
+		"sfx_volume": 0.55,
+		"ui_volume": 0.75,
 		"fullscreen": true,
 		"reduced_motion": true,
 		"high_contrast": true,
@@ -24,6 +27,9 @@ func run_validation() -> void:
 	var loaded_settings: Dictionary = SettingsStore.load_settings(SETTINGS_PATH)
 	assert(loaded_settings.locale == "pt_BR")
 	assert(is_equal_approx(float(loaded_settings.master_volume), 1.0))
+	assert(is_equal_approx(float(loaded_settings.music_volume), 0.35))
+	assert(is_equal_approx(float(loaded_settings.sfx_volume), 0.55))
+	assert(is_equal_approx(float(loaded_settings.ui_volume), 0.75))
 	assert(loaded_settings.fullscreen)
 	assert(loaded_settings.reduced_motion)
 	assert(loaded_settings.high_contrast)
@@ -38,6 +44,7 @@ func run_validation() -> void:
 	var migrated_settings: Dictionary = SettingsStore.load_settings(LEGACY_SETTINGS_PATH)
 	assert(migrated_settings.locale == "es")
 	assert(is_equal_approx(float(migrated_settings.master_volume), 0.45))
+	assert(is_equal_approx(float(migrated_settings.music_volume), 0.65))
 	assert(not migrated_settings.reduced_motion)
 	assert(migrated_settings.tutorial_enabled)
 
@@ -53,6 +60,7 @@ func run_validation() -> void:
 	game.skeleton_archer_unlocked = true
 	game.total_enemies_killed = 12
 	game.total_corpses_processed = 9
+	game.run_elapsed_seconds = 143.5
 	game.processing_directive = game.PROCESSING_BONE_FOCUS
 	game.skeleton_production_queue.append({
 		"unit_type": "skeleton_warrior",
@@ -82,6 +90,7 @@ func run_validation() -> void:
 	assert(restored_game.total_enemies_killed == 12)
 	assert(restored_game.total_corpses_processed == 9)
 	assert(restored_game.processing_directive == game.PROCESSING_BONE_FOCUS)
+	assert(is_equal_approx(restored_game.run_elapsed_seconds, 143.5))
 	assert(restored_game.skeleton_production_queue.size() == 1)
 	assert(restored_game.doctrine_target_skeletons == 4)
 	assert(restored_game.get_total_undead_count() == 1)

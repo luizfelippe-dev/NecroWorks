@@ -433,7 +433,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/v
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/localization/catalog_integrity_runner.gd
 ```
 
-O primeiro cenário valida presença, dimensões e transparência dos concept sheets do Esqueleto e do Zumbi. O segundo percorre as 424 chaves do catálogo, rejeita duplicatas e campos vazios e compara as traduções importadas dos três idiomas com o CSV-fonte.
+O primeiro cenário valida presença, dimensões e transparência dos concept sheets do Esqueleto e do Zumbi. O segundo percorre as 432 chaves do catálogo, rejeita duplicatas e campos vazios e compara as traduções importadas dos três idiomas com o CSV-fonte.
 
 ## Famílias animadas — cinco estados
 
@@ -466,4 +466,12 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/c
 
 O cenário corrompe arquivos deliberadamente, valida recuperação pelo backup, rejeição de payload incompleto, falha de escrita sem fechar a run, proteção contra schema futuro e retomada sem ganhos parciais da Onda.
 
-A suíte atual contém 69 cenários `*_runner.gd`. Todos passaram em 64,19 segundos no Godot 4.7.1 headless em 08/09/2026, incluindo as estratégias completas Bone e Flesh.
+A suíte atual contém 78 cenários `*_runner.gd` e 1.201 chamadas `assert()` identificadas estaticamente. Além das estratégias completas Bone e Flesh, ela cobre confiabilidade de save, recuperação/derrota, ambiente e buses, Fábrica, onze famílias visuais, seis resoluções, horda de 36 unidades e cinco perfis de build.
+
+## Gate único
+
+```powershell
+.\tools\validate_release.ps1 -GodotPath "C:\caminho\Godot_v4.7.1-stable_win64_console.exe"
+```
+
+O gate exige `PASS` em cada runner, rejeita erros de script mesmo com exit code zero, salva logs ignorados pelo Git, exporta o Windows release, inicia um smoke test e grava SHA-256. A matriz de builds pode ser executada isoladamente por `tests/balance/vertical_slice_build_matrix_runner.gd`.

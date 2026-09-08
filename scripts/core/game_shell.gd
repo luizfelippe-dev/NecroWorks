@@ -36,6 +36,9 @@ var pause_status_label: Label
 var options_title: Label
 var language_label: Label
 var volume_label: Label
+var music_volume_label: Label
+var sfx_volume_label: Label
+var ui_volume_label: Label
 var fullscreen_check: CheckButton
 var reduced_motion_check: CheckButton
 var high_contrast_check: CheckButton
@@ -43,6 +46,9 @@ var tutorial_check: CheckButton
 var tutorial_reset_button: Button
 var language_option: OptionButton
 var volume_slider: HSlider
+var music_volume_slider: HSlider
+var sfx_volume_slider: HSlider
+var ui_volume_slider: HSlider
 var options_apply_button: Button
 var options_back_button: Button
 var tutorial_menu: Control
@@ -165,6 +171,7 @@ func build_interface() -> void:
 
 	options_menu = create_screen("OptionsMenu", Color(0.0, 0.0, 0.0, 0.84))
 	var options_box := create_center_panel(options_menu, Vector2(700.0, 840.0))
+	options_box.add_theme_constant_override("separation", 8)
 	options_title = create_label(34, ACCENT)
 	options_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	options_box.add_child(options_title)
@@ -185,6 +192,15 @@ func build_interface() -> void:
 	volume_slider.step = 0.05
 	volume_slider.custom_minimum_size = Vector2(0.0, 44.0)
 	options_box.add_child(volume_slider)
+	music_volume_label = create_label(16)
+	options_box.add_child(music_volume_label)
+	music_volume_slider = create_volume_slider(options_box)
+	sfx_volume_label = create_label(16)
+	options_box.add_child(sfx_volume_label)
+	sfx_volume_slider = create_volume_slider(options_box)
+	ui_volume_label = create_label(16)
+	options_box.add_child(ui_volume_label)
+	ui_volume_slider = create_volume_slider(options_box)
 	fullscreen_check = CheckButton.new()
 	fullscreen_check.custom_minimum_size = Vector2(0.0, 48.0)
 	options_box.add_child(fullscreen_check)
@@ -372,6 +388,9 @@ func refresh_localized_text() -> void:
 	loadout_title.text = tr("LOADOUT_TITLE")
 	language_label.text = tr("OPTIONS_LANGUAGE")
 	volume_label.text = tr("OPTIONS_MASTER_VOLUME")
+	music_volume_label.text = tr("OPTIONS_MUSIC_VOLUME")
+	sfx_volume_label.text = tr("OPTIONS_SFX_VOLUME")
+	ui_volume_label.text = tr("OPTIONS_UI_VOLUME")
 	fullscreen_check.text = tr("OPTIONS_FULLSCREEN")
 	reduced_motion_check.text = tr("OPTIONS_REDUCED_MOTION")
 	high_contrast_check.text = tr("OPTIONS_HIGH_CONTRAST")
@@ -643,9 +662,27 @@ func on_run_completed(victory: bool) -> void:
 		META_STORE.record_run(completed_profile, {
 			"victory": victory,
 			"wave": current_game.current_wave,
+			"duration_seconds": snappedf(current_game.run_elapsed_seconds, 0.1),
 			"enemies_killed": current_game.total_enemies_killed,
 			"corpses_processed": current_game.total_corpses_processed,
 			"army_remaining": current_game.get_total_undead_count(),
+			"skeletons_built": current_game.total_skeletons_created,
+			"skeletons_lost": current_game.total_skeletons_lost,
+			"zombies_built": current_game.total_zombies_created,
+			"zombies_lost": current_game.total_zombies_lost,
+			"ghosts_built": current_game.total_ghosts_created,
+			"ghosts_lost": current_game.total_ghosts_lost,
+			"liches_built": current_game.total_liches_created,
+			"liches_lost": current_game.total_liches_lost,
+			"upgrades_selected": current_game.total_upgrades_selected,
+			"bones_remaining": current_game.bones,
+			"flesh_remaining": current_game.flesh,
+			"blood_remaining": current_game.blood,
+			"souls_remaining": current_game.souls,
+			"processing_routes": current_game.corpses_processed_by_directive.duplicate(true),
+			"defeat_reason": current_game.last_defeat_reason,
+			"operator": current_game.selected_operator,
+			"contract": current_game.selected_starting_modifier,
 			"progress_recorded_live": true,
 		})
 		if META_STORE.save_profile(completed_profile, profile_path) == OK:
@@ -713,6 +750,9 @@ func open_options() -> void:
 	var locale: String = LocalizationService.normalize_locale(str(settings.locale))
 	language_option.select({"en": 0, "pt_BR": 1, "es": 2}.get(locale, 0))
 	volume_slider.value = float(settings.master_volume)
+	music_volume_slider.value = float(settings.music_volume)
+	sfx_volume_slider.value = float(settings.sfx_volume)
+	ui_volume_slider.value = float(settings.ui_volume)
 	fullscreen_check.button_pressed = bool(settings.fullscreen)
 	reduced_motion_check.button_pressed = bool(settings.reduced_motion)
 	high_contrast_check.button_pressed = bool(settings.high_contrast)
@@ -724,6 +764,9 @@ func apply_options() -> void:
 	settings = {
 		"locale": locales[language_option.selected],
 		"master_volume": volume_slider.value,
+		"music_volume": music_volume_slider.value,
+		"sfx_volume": sfx_volume_slider.value,
+		"ui_volume": ui_volume_slider.value,
 		"fullscreen": fullscreen_check.button_pressed,
 		"reduced_motion": reduced_motion_check.button_pressed,
 		"high_contrast": high_contrast_check.button_pressed,
@@ -735,6 +778,16 @@ func apply_options() -> void:
 	if is_instance_valid(current_game) and current_game.has_method("configure_accessibility"):
 		current_game.configure_accessibility(settings)
 	refresh_localized_text()
+
+
+func create_volume_slider(parent: Container) -> HSlider:
+	var slider := HSlider.new()
+	slider.min_value = 0.0
+	slider.max_value = 1.0
+	slider.step = 0.05
+	slider.custom_minimum_size = Vector2(0.0, 32.0)
+	parent.add_child(slider)
+	return slider
 
 
 func close_options() -> void:

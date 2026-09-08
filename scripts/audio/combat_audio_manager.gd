@@ -20,11 +20,15 @@ func _ready() -> void:
 		"ability": create_tone(270.0, 620.0, 0.30, 0.10, 0.30),
 		"boss": create_tone(82.0, 42.0, 0.52, 0.12, 0.50),
 		"wave": create_tone(210.0, 340.0, 0.24, 0.04, 0.26),
+		"processing": create_tone(92.0, 210.0, 0.24, 0.32, 0.34),
+		"production": create_tone(180.0, 430.0, 0.20, 0.08, 0.30),
+		"machine_blocked": create_tone(105.0, 72.0, 0.14, 0.18, 0.28),
 	}
 	for index: int in range(PLAYER_POOL_SIZE):
 		var player := AudioStreamPlayer.new()
 		player.name = "CombatVoice%d" % index
 		player.volume_db = -8.0
+		player.bus = &"SFX"
 		add_child(player)
 		players.append(player)
 

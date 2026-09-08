@@ -17,9 +17,22 @@ const SKELETON_DEATH: Texture2D = preload(
 	"res://assets/sprites/units/skeleton_warrior_v1/death.png"
 )
 const SKELETON: Texture2D = SKELETON_IDLE
-const SKELETON_ARCHER: Texture2D = preload(
-	"res://assets/sprites/units/skeleton_archer_prototype.png"
+const SKELETON_ARCHER_IDLE: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_archer_v1/idle.png"
 )
+const SKELETON_ARCHER_MOVE: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_archer_v1/move.png"
+)
+const SKELETON_ARCHER_ATTACK: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_archer_v1/attack.png"
+)
+const SKELETON_ARCHER_HIT: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_archer_v1/hit.png"
+)
+const SKELETON_ARCHER_DEATH: Texture2D = preload(
+	"res://assets/sprites/units/skeleton_archer_v1/death.png"
+)
+const SKELETON_ARCHER: Texture2D = SKELETON_ARCHER_IDLE
 const ZOMBIE_IDLE: Texture2D = preload(
 	"res://assets/sprites/units/zombie_tank_v1/idle.png"
 )
@@ -148,9 +161,12 @@ const ARCANE_AUDITOR_DEATH: Texture2D = preload(
 	"res://assets/sprites/bosses/arcane_auditor_v1/death.png"
 )
 const ARCANE_AUDITOR: Texture2D = ARCANE_AUDITOR_IDLE
-const LICH: Texture2D = preload(
-	"res://assets/sprites/units/lich_prototype.png"
-)
+const LICH_IDLE: Texture2D = preload("res://assets/sprites/units/lich_v1/idle.png")
+const LICH_MOVE: Texture2D = preload("res://assets/sprites/units/lich_v1/move.png")
+const LICH_ATTACK: Texture2D = preload("res://assets/sprites/units/lich_v1/attack.png")
+const LICH_HIT: Texture2D = preload("res://assets/sprites/units/lich_v1/hit.png")
+const LICH_DEATH: Texture2D = preload("res://assets/sprites/units/lich_v1/death.png")
+const LICH: Texture2D = LICH_IDLE
 
 const SKELETON_ANIMATIONS: Dictionary = {
 	"idle": SKELETON_IDLE,
@@ -158,6 +174,13 @@ const SKELETON_ANIMATIONS: Dictionary = {
 	"attack": SKELETON_ATTACK,
 	"hit": SKELETON_HIT,
 	"death": SKELETON_DEATH,
+}
+const SKELETON_ARCHER_ANIMATIONS: Dictionary = {
+	"idle": SKELETON_ARCHER_IDLE,
+	"move": SKELETON_ARCHER_MOVE,
+	"attack": SKELETON_ARCHER_ATTACK,
+	"hit": SKELETON_ARCHER_HIT,
+	"death": SKELETON_ARCHER_DEATH,
 }
 const ZOMBIE_ANIMATIONS: Dictionary = {
 	"idle": ZOMBIE_IDLE,
@@ -215,6 +238,13 @@ const FOREMAN_ANIMATIONS: Dictionary = {
 	"hit": FOREMAN_HIT,
 	"death": FOREMAN_DEATH,
 }
+const LICH_ANIMATIONS: Dictionary = {
+	"idle": LICH_IDLE,
+	"move": LICH_MOVE,
+	"attack": LICH_ATTACK,
+	"hit": LICH_HIT,
+	"death": LICH_DEATH,
+}
 
 
 static func get_texture(visual_id: String) -> Texture2D:
@@ -247,6 +277,8 @@ static func get_texture(visual_id: String) -> Texture2D:
 static func get_animation_textures(visual_id: String) -> Dictionary:
 	if visual_id == "skeleton":
 		return SKELETON_ANIMATIONS.duplicate()
+	if visual_id == "skeleton_archer":
+		return SKELETON_ARCHER_ANIMATIONS.duplicate()
 	if visual_id == "zombie":
 		return ZOMBIE_ANIMATIONS.duplicate()
 	if visual_id == "ghost":
@@ -263,6 +295,8 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 		return ARCANE_AUDITOR_ANIMATIONS.duplicate()
 	if visual_id == "foreman":
 		return FOREMAN_ANIMATIONS.duplicate()
+	if visual_id == "lich":
+		return LICH_ANIMATIONS.duplicate()
 	return {}
 
 
@@ -271,6 +305,8 @@ static func get_canvas_scale_multiplier(visual_id: String) -> float:
 	match visual_id:
 		"skeleton":
 			return 1.34
+		"skeleton_archer":
+			return 1.20
 		"zombie":
 			return 1.14
 		"ghost":
@@ -287,5 +323,7 @@ static func get_canvas_scale_multiplier(visual_id: String) -> float:
 			return 1.08
 		"foreman":
 			return 1.08
+		"lich":
+			return 1.12
 		_:
 			return 1.0

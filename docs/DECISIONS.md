@@ -678,7 +678,7 @@ Isso evita a situação em que a interface promete “concluir a Onda 5”, mas 
 
 ## Tutorial pertence às configurações, não ao perfil
 
-A conclusão da orientação é uma preferência local. Ela fica no settings v2 ao lado de idioma e acessibilidade, sem entrar no checkpoint nem no perfil de progressão. Nova Partida respeita essa preferência; Continue nunca interrompe uma run carregada com onboarding. Rever o tutorial não apaga nenhum progresso.
+A conclusão da orientação é uma preferência local. Ela fica no settings v3 ao lado de idioma, acessibilidade e volumes por barramento, sem entrar no checkpoint nem no perfil de progressão. Nova Partida respeita essa preferência; Continue nunca interrompe uma run carregada com onboarding. Rever o tutorial não apaga nenhum progresso.
 
 ## Movimento reduzido não altera a simulação
 
@@ -695,3 +695,15 @@ O teto de 48 transientes e dez vozes é parte do contrato V1. Golpes comuns não
 Cada operador e contrato possui um benefício acompanhado de pressão equivalente. Nenhum deles acumula níveis ou aumenta atributos por repetição. A configuração pertence ao perfil, é escolhida antes da partida e entra no checkpoint para garantir retomada determinística.
 
 Motivo: sem dados de playtests externos, o sistema pode apagar o peso da logística ou prolongar runs já perdidas. A v0.6.0 poderá adicionar primeiro um aviso claro de risco; qualquer recuperação jogável só será avaliada com dados de onde e por que as derrotas acontecem.
+
+## Checkpoint é uma fronteira de onda
+
+O save manual não tenta serializar cada projétil, timer e golpe do combate. Ele grava o estado confirmado no início da onda atual. Retomar descarta dano, mortes, Cadáveres e recompensas parciais, eliminando duplicação e estados híbridos sem transformar o save em ferramenta de vantagem.
+
+## Gate interno não substitui evidência externa
+
+Automação verifica regras, integridade, exportação e cenários determinísticos. Ela não atribui diversão nem compreende interface como uma pessoa nova. Por isso a auditoria usa três estados separados: concluído no repositório, pendente de QA manual e dependente de validação externa.
+
+## Builds puras podem perder no meio da run
+
+A matriz da Onda 12 não exige vitória de todos os arquétipos. Ela exige resolução determinística e papéis distintos. Na linha de base de 08/09/2026, enxame puro de Ossos e frontline pura de Carne perderam, enquanto caster, híbrida e automação-alvo venceram. Ajustes só serão feitos após múltiplas sementes e observação humana, para não remover dificuldade com base em um único cenário.

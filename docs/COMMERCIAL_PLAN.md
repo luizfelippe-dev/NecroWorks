@@ -401,4 +401,10 @@ The completed v0.5.0 adds three horizontal operators, three risk/reward starting
 
 O tutorial localizado e as preferências de Movimento Reduzido e Alto Contraste removem três barreiras imediatas para testes externos: desconhecimento do ciclo econômico, desconforto com movimento decorativo e baixa leitura de texto/HP. Isso ainda não fecha o gate comercial. Antes de uma demo pública, o tutorial precisa de observação com jogadores novos, remapeamento/controle precisa ser avaliado e apresentação audiovisual precisa atingir consistência de trailer.
 
-A camada VFX/SFX V1 já permite avaliar cadência e legibilidade em uma run real, mas não deve ser tratada como áudio final de trailer. Esqueleto, Zumbi, Fantasma, o trio básico de invasores e os três chefes comprovam a linguagem por estados. O próximo gate visual exige a mesma consistência na Fábrica, no Arqueiro e no Lich. O gate sonoro exige efeitos produzidos, música adaptativa e mixagem em hardware externo.
+A camada VFX/SFX V1 já permite avaliar cadência e legibilidade em uma run real, mas não deve ser tratada como áudio final de trailer. As onze famílias atuais e a Fábrica comprovam a linguagem visual V1. O gate sonoro ainda exige efeitos produzidos, música autoral ou licenciada e mixagem em hardware externo.
+
+## Preparação após a auditoria — 08/09/2026
+
+Arqueiro, Lich e a leitura física da Fábrica fecharam as lacunas visuais V1. O ambiente industrial e os volumes separados permitem um playtest apresentável, mas ainda não são trilha e desenho de som finais. O pacote técnico agora possui gate reproduzível, hash e histórico local rico o suficiente para comparar runs.
+
+A próxima decisão comercial não é acrescentar dezenas de sistemas. É executar o protocolo cego, revisar direitos dos assets, obter leitura editorial nativa e produzir material de loja com gameplay real. A página “Em breve” só deve afirmar recursos que estarão no build e usar a versão que já passou pelos gates técnicos e manuais.

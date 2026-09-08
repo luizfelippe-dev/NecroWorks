@@ -1,10 +1,10 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 01/09/2026
+**Revisado:** 08/09/2026
 
 ## Veredito atual
 
-O projeto está saudável para um protótipo jogável e inicia sem erros de parser ou runtime.
+O projeto está saudável para uma vertical slice jogável e inicia sem erros de parser ou runtime.
 
 Assets, cenas, regras, estado da run e componentes estão separados por domínio. F5 aponta para `scenes/core/app.tscn` e F6 pode executar `scenes/world/gameplay.tscn`. O maior risco restante é a concentração de combate, economia e construção de UI em `scripts/game/main_controller.gd`.
 
@@ -186,7 +186,7 @@ VFX e SFX ficaram em dois componentes próprios. O controlador apenas envia even
 
 O driver visual aceita texturas opcionais por estado e mantém a textura-base como fallback. Os primeiros concept sheets foram deliberadamente mantidos fora do catálogo de runtime: são fontes de pose com transparência válida, mas não possuem células uniformes. Essa decisão evita dívida visual escondida em recortes frágeis.
 
-O catálogo de localização passou a ter auditoria exaustiva das 422 chaves e dos três idiomas. Isso fecha lacunas técnicas, campos vazios e divergências de importação; naturalidade, tom e consistência terminológica ainda exigem leitura editorial antes da demo. A suíte total sobe para 59 runners.
+O catálogo de localização passou a ter auditoria exaustiva e atualmente cobre 432 chaves nos três idiomas. Isso fecha lacunas técnicas, campos vazios e divergências de importação; naturalidade, tom e consistência terminológica ainda exigem leitura editorial antes da demo. A suíte total chegou a 78 runners.
 
 O Guerreiro Esqueleto é a primeira família a consumir a ponte completa. As cinco texturas ficam no catálogo visual e o controlador somente dispara estados nos eventos que já existiam. A retirada atrasada afeta apenas o nó visual: registro, métricas, slot e recuperação continuam resolvidos antes dos 0,24 s de morte. Esse desenho estabeleceu o padrão usado pelo Zumbi, sem criar uma segunda implementação de animação. Naquele corte, a regressão completa passou a 60 runners aprovados.
 
@@ -221,10 +221,25 @@ Closed risks:
 - the upgrade pool contains 30 unique IDs and multiple one-time rares;
 - new player-facing text exists in EN, PT-BR and ES.
 
-Remaining structural debt for v0.5+:
+## Fechamento da auditoria interna — 08/09/2026
 
-- `scripts/game/main_controller.gd` chegou a 10.746 linhas e deixou de ser uma fronteira aceitável para manutenção. Ondas, chefes, estado da run, formação, exército, catálogos de build e formatação final já foram extraídos; depois da integração visual atual, o controlador está em 10.296 linhas. Ainda preciso mover coordenação de ataques/dano, ciclo de vida das unidades, economia e controladores de UI;
-- upgrades still use a large match statement and should migrate to data plus focused effect handlers before the catalog expands again;
-- Boss visuals reuse prototype archetype sprites and need dedicated presentation scenes;
-- save schema migration beyond version 1 is still absent;
-- full logging is too verbose for release builds and needs a debug-channel boundary.
+- checkpoint e perfil usam escrita transacional, backup recuperável e proteção contra schema futuro;
+- checkpoint representa explicitamente o início da onda e descarta ganhos parciais ao retomar;
+- payloads validam tipos, limites, IDs, filas, capacidade e métricas;
+- derrota, recuperação e diagnóstico possuem políticas únicas e regressões próprias;
+- todas as onze famílias visuais atuais possuem cinco estados;
+- Fábrica, produção e processamento ganharam contexto visual e sonoro;
+- resolução preserva a proporção em seis formatos automatizados;
+- o teste de estresse cobre 36 mortos-vivos, máximo de inimigos, HUD e limite de VFX;
+- uma matriz automatizada registra cinco perfis de build na Onda 12;
+- o gate único executa regressões, exporta, inicia o release e registra hash; o CI repete a parte reproduzível.
+
+### Dívida estrutural preservada com intenção
+
+`scripts/game/main_controller.gd` ainda possui cerca de 10,4 mil linhas. Ele continua grande demais para manutenção confortável, mas as extrações já feitas dão fronteiras testadas para uma redução incremental. Não haverá reescrita total perto da demo. Os próximos cortes seguros são efeitos de upgrade, economia de produção, ciclo de vida de inimigos e construção da interface.
+
+O log de desenvolvimento também continua verboso. Antes da release candidate, mensagens de combate devem passar por categoria e nível, desativadas por padrão no build comercial.
+
+### Pendências que código não encerra
+
+Diversão, clareza, retenção, linguagem natural, FPS em hardware real, instalação pela Steam e direitos comerciais dependem dos gates descritos em `AUDIT_STATUS.md`, `PLAYTEST_PROTOCOL.md` e `RELEASE_GATES.md`.

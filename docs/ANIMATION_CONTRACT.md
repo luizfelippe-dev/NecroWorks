@@ -92,3 +92,5 @@ Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, 
 ## Integração V1
 
 Ataques e impactos do runtime agora acionam o contrato de animação. A camada independente `CombatFeedback` complementa esses estados com traço de direção e número de dano. Anéis são reservados para habilidades, invocação, morte e presença de Chefe; não aparecem em cada golpe comum para evitar poluição visual em formações grandes.
+
+Arqueiro Esqueleto e Lich completam o mesmo contrato com cinco PNGs RGBA cada. O Arqueiro preserva arco, flecha, aljava e silhueta de retaguarda; o Lich preserva cajado, coroa óssea e núcleo espectral. Com essas duas famílias, todas as onze apresentações atuais de aliados, invasores e chefes possuem idle, movimento, ataque, impacto e morte sem alterar a simulação.

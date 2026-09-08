@@ -26,6 +26,15 @@ func run_validation() -> void:
 	var resume_state: Dictionary = game.get_resume_checkpoint_state()
 	assert(int(resume_state.resources.bones) == 21)
 	assert(int(resume_state.metrics.enemies_killed) == 3)
+	var restored_game: Node = MAIN_SCENE.instantiate()
+	root.add_child(restored_game)
+	await process_frame
+	restored_game.set_process(false)
+	assert(restored_game.restore_checkpoint_state(resume_state))
+	assert(restored_game.bones == 21)
+	assert(restored_game.total_enemies_killed == 3)
+	restored_game.queue_free()
+	await process_frame
 	assert(RunSaveStore.save_checkpoint(wave_start, RUN_PATH) == OK)
 
 	var next_state: Dictionary = wave_start.duplicate(true)
@@ -57,6 +66,8 @@ func run_validation() -> void:
 	corrupt_file = null
 	var recovered_profile: Dictionary = MetaProgressionStore.load_profile(PROFILE_PATH)
 	assert(int(recovered_profile.progress.highest_wave) == 4)
+	assert(str(recovered_profile.get(MetaProgressionStore.LOAD_STATUS_MARKER)) ==
+		MetaProgressionStore.STATUS_RECOVERED)
 
 	var future_profile: Dictionary = MetaProgressionStore.default_profile()
 	future_profile.profile_version = MetaProgressionStore.PROFILE_VERSION + 1
@@ -80,6 +91,17 @@ func run_validation() -> void:
 		PROFILE_PATH + TransactionalJsonStore.BACKUP_SUFFIX
 	)
 	assert(int(still_healthy_backup.progress.highest_wave) == 4)
+
+	TransactionalJsonStore.delete_family(PROFILE_PATH)
+	corrupt_file = FileAccess.open(PROFILE_PATH, FileAccess.WRITE)
+	assert(corrupt_file != null)
+	corrupt_file.store_string("broken without backup")
+	corrupt_file = null
+	var corrupt_profile: Dictionary = MetaProgressionStore.load_profile(PROFILE_PATH)
+	assert(str(corrupt_profile.get(MetaProgressionStore.LOAD_STATUS_MARKER)) ==
+		MetaProgressionStore.STATUS_CORRUPT)
+	assert(MetaProgressionStore.save_profile(corrupt_profile, PROFILE_PATH) ==
+		ERR_FILE_UNRECOGNIZED)
 
 	var shell: Node = SHELL_SCENE.instantiate()
 	shell.profile_path = PROFILE_PATH + ".shell"

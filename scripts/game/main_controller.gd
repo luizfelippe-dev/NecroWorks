@@ -197,6 +197,12 @@ const NARRATIVE_EVENT_CATALOG: Script = preload(
 const FUSION_RECIPE_CATALOG: Script = preload(
 	"res://scripts/game/fusion_recipe_catalog.gd"
 )
+const RUN_RECOVERY_EVALUATOR: Script = preload(
+	"res://scripts/game/run_recovery_evaluator.gd"
+)
+const RUN_DEFEAT_ANALYZER: Script = preload(
+	"res://scripts/game/run_defeat_analyzer.gd"
+)
 const META_UNLOCK_CATALOG: Script = preload(
 	"res://scripts/game/meta_unlock_catalog.gd"
 )
@@ -222,6 +228,9 @@ const FACTORY_PROGRESSION_POLICY: Script = preload(
 const UNIT_SPRITE_CATALOG: Script = preload(
 	"res://scripts/visual/unit_sprite_catalog.gd"
 )
+const FACTORY_FLOOR_TEXTURE: Texture2D = preload(
+	"res://assets/backgrounds/factory_floor_v1.png"
+)
 const CORPSE_PROCESSING_FEEDBACK_SCRIPT: Script = preload(
 	"res://scripts/visual/corpse_processing_feedback.gd"
 )
@@ -233,6 +242,9 @@ const COMBAT_FEEDBACK_SCRIPT: Script = preload(
 )
 const COMBAT_AUDIO_MANAGER_SCRIPT: Script = preload(
 	"res://scripts/audio/combat_audio_manager.gd"
+)
+const INDUSTRIAL_AMBIENT_MANAGER_SCRIPT: Script = preload(
+	"res://scripts/audio/industrial_ambient_manager.gd"
 )
 const RUN_SUMMARY_FORMATTER: Script = preload(
 	"res://scripts/ui/run_summary_formatter.gd"
@@ -550,6 +562,7 @@ func update_undead_production_queue(
 	var remaining: int = maxi(int(order["remaining"]) - 1, 0)
 	order["remaining"] = remaining
 	production_unit_completed.emit(queued_unit_type, remaining)
+	play_combat_sound("production")
 
 
 	if remaining <= 0:
@@ -1293,6 +1306,8 @@ var boss_special_attack_timer: float = 0.0
 var run_finished: bool:
 	get: return bool(run_director.run_finished)
 	set(value): run_director.run_finished = value
+var last_defeat_reason: String = ""
+var run_elapsed_seconds: float = 0.0
 var run_won: bool:
 	get: return bool(run_director.run_won)
 	set(value): run_director.run_won = value
@@ -1763,6 +1778,7 @@ var reduced_motion_enabled: bool = false
 var high_contrast_enabled: bool = false
 var combat_feedback: Node2D = null
 var combat_audio_manager: Node = null
+var industrial_ambient_manager: Node = null
 var resume_checkpoint_state: Dictionary = {}
 
 
@@ -1858,6 +1874,9 @@ func create_combat_presentation() -> void:
 	combat_audio_manager = COMBAT_AUDIO_MANAGER_SCRIPT.new()
 	combat_audio_manager.name = "CombatAudioManager"
 	add_child(combat_audio_manager)
+	industrial_ambient_manager = INDUSTRIAL_AMBIENT_MANAGER_SCRIPT.new()
+	industrial_ambient_manager.name = "IndustrialAmbientManager"
+	add_child(industrial_ambient_manager)
 
 
 func show_attack_feedback(source: Node2D, target: Node2D, color: Color) -> void:
@@ -1933,6 +1952,7 @@ func _process(delta: float) -> void:
 
 	if run_finished:
 		return
+	run_elapsed_seconds += maxf(delta, 0.0)
 
 
 	update_corpse_processor(delta)
@@ -5519,6 +5539,7 @@ func update_hematic_press(delta: float) -> void:
 	blood += 1
 	total_blood_earned += 1
 	hematic_press_completed.emit(hematic_press_queue)
+	play_combat_sound("production")
 	hematic_press_timer = (
 		HEMATIC_PRESS_CYCLE_SECONDS
 		if hematic_press_queue > 0
@@ -6025,6 +6046,7 @@ func play_corpse_processing_feedback(
 		accent_color
 	)
 	pulse_resources_panel(accent_color)
+	play_combat_sound("processing")
 	corpse_processing_feedback_started.emit(
 		directive,
 		bones_gained,
@@ -7766,38 +7788,8 @@ func check_defeat_condition() -> void:
 		return
 
 
-	if get_total_undead_count() > 0:
-		return
-
-
 	cleanup_invalid_corpses()
-
-
-	if not corpses.is_empty():
-		return
-
-
-	if get_total_queued_undead() > 0:
-		return
-
-
-	var can_build_skeleton: bool = (
-		bones >= skeleton_cost
-	)
-
-
-	var can_build_zombie: bool = (
-		flesh >= zombie_cost
-	)
-	var can_build_ghost: bool = souls >= ghost_cost
-
-
-	if (
-		can_build_skeleton
-		or can_build_zombie
-		or can_build_ghost
-	):
-
+	if can_recover_from_army_wipe():
 		return
 
 
@@ -7824,6 +7816,46 @@ func check_defeat_condition() -> void:
 	finish_run(
 		false
 	)
+
+
+func can_recover_from_army_wipe() -> bool:
+	var soulbound_recipe: Dictionary = FUSION_RECIPE_CATALOG.get_recipe(
+		FUSION_RECIPE_CATALOG.SOULBOUND_MUSTER
+	)
+	return RUN_RECOVERY_EVALUATOR.can_recover({
+		"active_army": get_total_undead_count(),
+		"queued_undead": get_total_queued_undead(),
+		"recoverable_corpses": corpses.size(),
+		"available_capacity": get_available_production_capacity(),
+		"resources": {
+			"bones": bones,
+			"flesh": flesh,
+			"blood": blood,
+			"souls": souls,
+		},
+		"pending_resources": {"blood": hematic_press_queue},
+		"recipes": [
+			{"available": true, "resource": "bones", "cost": skeleton_cost},
+			{
+				"available": skeleton_archer_unlocked,
+				"resource": "bones",
+				"cost": skeleton_archer_cost,
+			},
+			{"available": true, "resource": "flesh", "cost": zombie_cost},
+			{"available": true, "resource": "souls", "cost": ghost_cost},
+			{
+				"available": lich_unlocked,
+				"resource": "souls",
+				"cost": lich_cost,
+			},
+		],
+		"fusion_routes": [
+			{
+				"available": true,
+				"costs": soulbound_recipe.get("costs", {}),
+			},
+		],
+	})
 
 
 func cleanup_invalid_corpses() -> void:
@@ -8022,6 +8054,19 @@ func finish_run(
 		return
 
 
+	if not victory:
+		last_defeat_reason = RUN_DEFEAT_ANALYZER.analyze({
+			"wave": current_wave,
+			"zombies_built": total_zombies_created,
+			"corpses_created": total_enemies_killed,
+			"corpses_processed": total_corpses_processed,
+			"resources": {
+				"bones": bones,
+				"flesh": flesh,
+				"souls": souls,
+			},
+			"cheapest_recipe_cost": mini(skeleton_cost, mini(zombie_cost, ghost_cost)),
+		})
 	run_director.finish(victory)
 
 
@@ -8146,6 +8191,11 @@ func show_run_end_screen() -> void:
 			"flesh_processed": int(corpses_processed_by_directive[PROCESSING_FLESH_FOCUS]),
 			"synergy_summary": get_run_synergy_summary(),
 			"result_message": get_run_result_message(),
+			"defeat_analysis": (
+				tr(RUN_DEFEAT_ANALYZER.get_translation_key(last_defeat_reason))
+				if not run_won and not last_defeat_reason.is_empty()
+				else ""
+			),
 		}
 	)
 
@@ -8268,6 +8318,7 @@ func build_checkpoint_state() -> Dictionary:
 			"soul_anchor_level": soul_anchor_level,
 		},
 		"metrics": {
+			"elapsed_seconds": run_elapsed_seconds,
 			"enemies_killed": total_enemies_killed,
 			"corpses_processed": total_corpses_processed,
 			"skeletons_created": total_skeletons_created,
@@ -8424,6 +8475,7 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	hematic_press_queue = maxi(int(production.get("hematic_press_queue", 0)), 0)
 
 	var metrics: Dictionary = state.get("metrics", {}) as Dictionary
+	run_elapsed_seconds = maxf(float(metrics.get("elapsed_seconds", 0.0)), 0.0)
 	total_enemies_killed = maxi(int(metrics.get("enemies_killed", 0)), 0)
 	total_corpses_processed = maxi(int(metrics.get("corpses_processed", 0)), 0)
 	total_skeletons_created = maxi(int(metrics.get("skeletons_created", 0)), 0)
@@ -8680,6 +8732,15 @@ func create_factory_panel_ui() -> void:
 	factory_panel.z_index = 650
 	factory_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(factory_panel)
+	var factory_art := TextureRect.new()
+	factory_art.name = "FactoryMachineryArt"
+	factory_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	factory_art.texture = FACTORY_FLOOR_TEXTURE
+	factory_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	factory_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	factory_art.modulate = Color(0.72, 0.82, 0.70, 0.32)
+	factory_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	factory_panel.add_child(factory_art)
 
 
 	var title_label: Label = Label.new()
@@ -10197,12 +10258,7 @@ func update_debug_ui() -> void:
 		+ "\nCorpses: "
 		+ str(corpses.size())
 		+ "\nCan Rebuild: "
-		+ str(
-			bones >= skeleton_cost
-			or flesh >= zombie_cost
-			or souls >= ghost_cost
-			or not corpses.is_empty()
-		)
+		+ str(can_recover_from_army_wipe())
 		+ "\nBoss: "
 		+ str(boss_active)
 		+ "\nRun Finished: "

@@ -8,9 +8,17 @@ const APP_VERSION: String = "0.6.0-dev"
 const TRANSACTION_STORE: Script = preload(
 	"res://scripts/core/transactional_json_store.gd"
 )
+const UPGRADE_CATALOG: Script = preload("res://scripts/game/upgrade_catalog.gd")
 const REQUIRED_DICTIONARIES: Array[String] = [
 	"resources", "army", "upgrades", "factory", "production", "metrics",
 	"doctrine", "narrative", "run_modifiers", "rituals"
+]
+const RESOURCE_IDS: Array[String] = ["bones", "flesh", "blood", "souls"]
+const ARMY_IDS: Array[String] = [
+	"skeleton_warrior", "skeleton_archer", "zombie_tank", "ghost", "lich"
+]
+const PROCESSING_DIRECTIVES: Array[String] = [
+	"balanced", "bone_focus", "flesh_focus"
 ]
 
 
@@ -81,19 +89,78 @@ static func validate_checkpoint(state: Dictionary) -> bool:
 	for key: String in REQUIRED_DICTIONARIES:
 		if not state.get(key) is Dictionary:
 			return false
-	if not state.get("processing_directive") is String:
+	if not state.get("processing_directive") is String or str(
+		state.processing_directive
+	) not in PROCESSING_DIRECTIVES:
 		return false
 	var metadata: Dictionary = state.get("save_metadata", {}) as Dictionary
 	if str(metadata.get("checkpoint_kind", "")) != "between_wave":
 		return false
-	for resource_value: Variant in (state.resources as Dictionary).values():
-		if int(resource_value) < 0:
+	var resources: Dictionary = state.resources as Dictionary
+	for resource_id: String in RESOURCE_IDS:
+		if not _is_bounded_number(resources.get(resource_id), 0, 100000000):
 			return false
-	for count_value: Variant in (state.army as Dictionary).values():
-		var count: int = int(count_value)
-		if count < 0 or count > 1000:
+	var army: Dictionary = state.army as Dictionary
+	var army_total: int = 0
+	for unit_id_value: Variant in army:
+		var unit_id: String = str(unit_id_value)
+		if unit_id not in ARMY_IDS or not _is_bounded_number(
+			army[unit_id_value], 0, 36
+		):
+			return false
+		army_total += int(army[unit_id_value])
+	if army_total > 36:
+		return false
+	for upgrade_id_value: Variant in (state.upgrades as Dictionary):
+		var upgrade_id: String = str(upgrade_id_value)
+		if not UPGRADE_CATALOG.is_known(upgrade_id) or not _is_bounded_number(
+			state.upgrades[upgrade_id_value], 0, 100
+		):
+			return false
+	var production: Dictionary = state.production as Dictionary
+	for queue_id: String in ["skeleton_queue", "zombie_queue"]:
+		if not production.get(queue_id, []) is Array:
+			return false
+		if not _validate_production_queue(production.get(queue_id, []) as Array):
+			return false
+	if not _is_bounded_number(production.get("hematic_press_queue", 0), 0, 3):
+		return false
+	for metric_value: Variant in (state.metrics as Dictionary).values():
+		if not _is_bounded_number(metric_value, 0, 100000000):
 			return false
 	return true
+
+
+static func _validate_production_queue(queue: Array) -> bool:
+	if queue.size() > 3:
+		return false
+	var queued_total: int = 0
+	for order_value: Variant in queue:
+		if not order_value is Dictionary:
+			return false
+		var order: Dictionary = order_value as Dictionary
+		var unit_type: String = str(order.get("unit_type", ""))
+		if unit_type not in [
+			"skeleton", "skeleton_warrior", "skeleton_archer",
+			"zombie", "zombie_tank",
+		]:
+			return false
+		if not _is_bounded_number(order.get("remaining"), 1, 36):
+			return false
+		queued_total += int(order.remaining)
+	return queued_total <= 36
+
+
+static func _is_bounded_number(value: Variant, minimum: int, maximum: int) -> bool:
+	if not value is int and not value is float:
+		return false
+	var numeric_value: float = float(value)
+	return (
+		not is_nan(numeric_value)
+		and not is_inf(numeric_value)
+		and numeric_value >= minimum
+		and numeric_value <= maximum
+	)
 
 
 static func _migrate_v1_to_v2(payload: Dictionary) -> Dictionary:

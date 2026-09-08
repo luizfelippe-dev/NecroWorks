@@ -1,0 +1,43 @@
+name: Release Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  regression-and-export:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Godot 4.7.1 with export templates
+        uses: chickensoft-games/setup-godot@v2.4.1
+        with:
+          version: 4.7.1
+          use-dotnet: false
+          include-templates: true
+
+      - name: Run regression and Windows release gate
+        shell: pwsh
+        run: ./tools/validate_release.ps1 -GodotPath godot
+
+      - name: Upload validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: necroworks-validation-${{ github.run_number }}
+          path: artifacts/validation
+          if-no-files-found: error
+
+      - name: Upload validated Windows build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: NecroWorks-Windows-${{ github.sha }}
+          path: builds/windows/NecroWorks.exe
+          if-no-files-found: error

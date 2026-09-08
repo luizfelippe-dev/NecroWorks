@@ -103,3 +103,9 @@ Não existe uma facção puramente correta. Os vivos têm motivos legítimos par
 - Codex com descobertas narrativas e registros de tropas, invasores e chefes;
 - finais diferentes para destruir, assumir ou libertar a Planta N-0.
 - desbloqueios permanentes apresentados como projetos preservados pelo Livro-Negro.
+
+## A Fábrica em cena
+
+O maquinário visível segue a lógica do mundo: ossos são triturados e alinhados, carne é preservada em cubas, sangue é prensado sob pressão e Almas ficam contidas em reservatórios instáveis. A esteira não é decoração neutra; ela mostra a doutrina da Planta N-0, que transforma cada morto em inventário, energia e próximo turno de trabalho.
+
+Os sinais mecânicos e o ambiente industrial devem sustentar a história sem parágrafos durante o combate. Eventos, Codex e chefes carregam a exposição; a Fábrica prova a premissa pela ação.

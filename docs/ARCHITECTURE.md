@@ -512,7 +512,7 @@ Not required yet.
 
 Checkpoints automáticos são confirmados antes do início de cada Onda. Salvar e Voltar reutiliza exatamente esse estado seguro: carregar reinicia a Onda registrada com exército e economia anteriores ao combate, sem tentar serializar inimigos, dano, Cadáveres ou timers parciais. O shell somente fecha a run depois que o armazenamento confirma a gravação.
 
-`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/save_reliability_runner.gd` força corrupção, fallback, falha de escrita, payload inválido e schema futuro. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 69 cenários, incluindo o contrato e os arquivos das nove famílias animadas.
+`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/save_reliability_runner.gd` força corrupção, fallback, falha de escrita, payload inválido, schema futuro e descarte de ganhos parciais. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 78 cenários, incluindo onze famílias animadas, recuperação, áudio, resoluções, estresse e matriz de builds.
 
 ## Onboarding e acessibilidade
 
@@ -573,3 +573,11 @@ O gameplay emite `meta_progress_reported` ao concluir uma Onda, processar um Cad
 ## Fusion recipes
 
 `scripts/game/fusion_recipe_catalog.gd` owns immutable recipe IDs, costs, rewards and localization keys. `can_execute_fusion_recipe()` performs the complete preflight; `execute_fusion_recipe()` mutates state only after validation. The current recipes either grant Factory Points or create a free Ghost through the standard runtime path. `tests/economy/fusion_recipe_runner.gd` protects atomic failure, outputs, population pressure and localization.
+
+## Confiabilidade e operação da v0.6.0
+
+`TransactionalJsonStore` é a fronteira comum de escrita temporária, releitura, backup e substituição de checkpoint e perfil. `RunSaveStore` valida schema, IDs, números, filas, capacidade e métricas antes que o payload toque a cena. `MetaProgressionStore` diferencia ausência, corrupção recuperável e schema futuro, evitando transformar incompatibilidade em perda silenciosa.
+
+`RunRecoveryEvaluator` concentra a pergunta “esta run ainda possui um caminho legal de recuperação?” usando tropas, filas, Cadáveres, capacidade, recursos, receitas avançadas e fusões. `RunDefeatAnalyzer` classifica a falha como ausência de frontline, processamento parado, produção sem recursos ou atrito; o resumo apenas localiza o diagnóstico.
+
+Áudio obedece aos barramentos `Master`, `Music`, `SFX` e `UI`. A arte física da Fábrica é uma camada passiva atrás dos controles, sem assumir regras de produção. O gate em `tools/validate_release.ps1` descobre runners automaticamente e mantém logs/builds fora do Git.

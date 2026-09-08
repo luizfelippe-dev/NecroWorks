@@ -14,12 +14,17 @@ func run_validation() -> void:
 	await process_frame
 	var sounds: Dictionary = audio.get("sounds") as Dictionary
 	var players: Array = audio.get("players") as Array
-	assert(sounds.size() == 6)
+	assert(sounds.size() == 9)
 	assert(players.size() == 10)
-	for event_id: String in ["attack", "hit", "death", "ability", "boss", "wave"]:
+	for event_id: String in [
+		"attack", "hit", "death", "ability", "boss", "wave",
+		"processing", "production", "machine_blocked"
+	]:
 		var stream: AudioStreamWAV = sounds[event_id] as AudioStreamWAV
 		assert(stream != null)
 		assert(stream.data.size() > 100)
+	for player_value: Variant in players:
+		assert((player_value as AudioStreamPlayer).bus == &"SFX")
 	assert(audio.call("play_event", "attack"))
 	assert(not audio.call("play_event", "attack"))
 	assert(audio.call("play_event", "ability"))

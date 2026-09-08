@@ -51,8 +51,9 @@ func run_validation() -> void:
 		assert(driver != null)
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
 		if visual_id in [
-			"skeleton", "zombie", "ghost", "human_warrior", "mage", "elf",
-			"grave_marshal", "arcane_auditor", "foreman"
+			"skeleton", "skeleton_archer", "zombie", "ghost", "lich",
+			"human_warrior", "mage", "elf", "grave_marshal",
+			"arcane_auditor", "foreman"
 		]:
 			assert(state_textures.size() == 5)
 			assert(sprite.texture == state_textures["idle"])

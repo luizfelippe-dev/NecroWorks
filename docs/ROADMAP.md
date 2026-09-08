@@ -6,14 +6,14 @@
 
 # Ordem imediata de execução
 
-1. validar manualmente a v0.5.0 em uma run nova e em um checkpoint migrado;
-2. iniciar o tutorial contextual sem interromper o ritmo do autobattler;
-3. criar escala de interface, redução de movimento e opções básicas de acessibilidade;
-4. concluir a auditoria linguística de PT-BR, inglês e espanhol;
-5. [concluído] exportar frames uniformes de Esqueleto e Zumbi a partir da direção aprovada;
-6. [concluído] integrar Esqueleto, Zumbi, Fantasma, Guerreiro Humano e Mago pelo contrato de texturas por estado;
-7. medir legibilidade e performance em hordas grandes;
-8. preparar uma rodada curta de playtests externos antes de alterar dificuldade ou marcos.
+1. [concluído] fechar confiabilidade de save, retomada, schema, derrota e gate de release;
+2. [concluído] completar as onze famílias visuais atuais e a arte física da Fábrica;
+3. [concluído] integrar buses, volumes separados, sinais fabris e ambiente industrial V1;
+4. [concluído] medir seis resoluções, horda de 36 unidades e cinco perfis de build;
+5. executar QA manual em escala do Windows, hardware real e instalação limpa;
+6. realizar revisão editorial nativa de PT-BR, inglês e espanhol;
+7. realizar testes cegos conforme `PLAYTEST_PROTOCOL.md`;
+8. ajustar dificuldade e interface somente com a evidência coletada.
 
 This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 
@@ -284,9 +284,12 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] persistent settings V2 with V1 migration
 - [x] first-run tutorial in PT-BR / English / Spanish
 - [x] reduced motion and high-contrast options
-- [ ] accessibility options and final linguistic QA
+- [x] accessibility options V1
+- [ ] final linguistic QA by native reviewers
 - [x] final-ish art direction
-- [ ] UI matching official target
+- [x] viewport proportion and six-target resolution matrix
+- [x] factory machinery layer matching the official direction V1
+- [ ] final responsive UI and manual Windows-scale QA
 - [x] basic temporary sprites for all current combatants
 - [x] final Skeleton art and animation V1
 - [x] final Zombie art and animation V1
@@ -294,23 +297,26 @@ Milestone concluído em 01/09/2026. O perfil preserva conhecimento, projetos, de
 - [x] Human Warrior art and animation V1
 - [x] Mage art and animation V1
 - [x] Elf art and animation V1
-- [ ] factory art
+- [x] factory art V1
 - [x] Boss polish
   - [x] Grave Marshal art and animation V1
   - [x] Arcane Auditor art and animation V1
   - [x] Foreman art and animation V1
-- [ ] animation
-- [ ] VFX
-- [ ] SFX
+- [x] animation V1 for all eleven current families
+- [x] VFX V1
+- [x] SFX V1
 - [x] combat VFX V1 with bounded transient budget
 - [x] procedural combat SFX V1 with voice budget
 - [x] localized Boss entrance warning
-- [ ] music
+- [x] procedural industrial ambience V1
+- [ ] final authored/licensed soundtrack
 - [x] tutorial
 - [x] accessibility basics
 - [x] checkpoint e perfil com gravação transacional, backup e recuperação de corrupção
 - [x] retomada segura no início da onda e erro de salvamento visível sem fechar a run
-- [ ] performance pass
+- [x] reproducible 36-unit headless stress smoke
+- [x] five-build Wave 12 matrix
+- [ ] release-build profiling on minimum and recommended hardware
 
 ### Gate
 
@@ -334,9 +340,11 @@ Screenshots/trailer must look commercially credible.
 
 **Segundo chefe integrado em 04/09/2026:** o Auditor Arcano ganhou aparato, documentos e cinco estados próprios. A descarga de quatro alvos e a decisão do Núcleo continuam independentes da arte. O Capataz encerra o corte visual dos chefes.
 
-**Trio de chefes concluído em 04/09/2026:** o Capataz ganhou marcha, golpe industrial, impacto e queda próprios em torno do martelo-reator. O `Industrial Crush` e o encerramento da run permanecem no combate. O próximo corte visual cobre Fábrica, Arqueiro Esqueleto e Lich.
+**Trio de chefes concluído em 04/09/2026:** o Capataz ganhou marcha, golpe industrial, impacto e queda próprios em torno do martelo-reator. O `Industrial Crush` e o encerramento da run permanecem no combate. Fábrica, Arqueiro Esqueleto e Lich foram concluídos no corte de 08/09/2026.
 
 **Confiabilidade de retomada concluída em 08/09/2026:** checkpoint e perfil usam escrita transacional com backup. `Continuar` volta ao início da onda atual, falhas de gravação mantêm a partida aberta e schemas futuros do perfil não são sobrescritos. O próximo corte técnico centraliza derrota e recuperação antes de ampliar sistemas comerciais.
+
+**Correções internas da auditoria concluídas em 08/09/2026:** validação defensiva, recuperação e diagnóstico foram centralizados; Arqueiro e Lich fecharam as famílias visuais; a Fábrica ganhou maquinário; o áudio passou a quatro buses e nove sinais; seis resoluções, estresse máximo e cinco estratégias receberam regressões. O fechamento público agora depende dos gates humanos, legais, comerciais e de hardware descritos em `AUDIT_STATUS.md`.
 
 ---
 

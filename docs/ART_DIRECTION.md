@@ -51,13 +51,15 @@ Os concept sheets em `assets/sprites/animation_concepts/` fecham pose, equipamen
 
 O preset Windows exclui essa pasta do pacote distribuído. As fontes permanecem no repositório para orientar a produção, sem aumentar o executável enquanto não forem assets de runtime.
 
-O Guerreiro Esqueleto, o Zumbi Tank, o Fantasma, o Guerreiro Humano, o Mago, o Elfo e os três chefes já foram exportados em cinco canvases quadrados e integrados em suas pastas V1. O Fantasma fixa a linguagem espectral: núcleo verde preso por bronze, massa ciano-violeta e silhueta estreita de projétil. O Guerreiro Humano fixa a linha viva: aço cinza, couro marrom, tecido carmesim e escudo retangular sem brilho necromântico. O Mago usa latão, carvão e violeta concentrado em cajado e frasco, com corpo estreito e pouca blindagem. O Elfo fecha o trio invasor com cabelo claro, tecido verde, couro escuro e arco recurvo. O Marechal amplia aço, latão e carmesim numa silhueta dominada pelo escudo-túmulo. O Auditor combina carvão, violeta, latão, documentos e vidraria. O Capataz encerra a escala com ferro enegrecido, faixas de risco, reservatórios e martelo-reator. `UnitAnimationDriver.configure_state_textures()` mantém a substituição fora das regras de combate.
+O Guerreiro Esqueleto, o Arqueiro Esqueleto, o Zumbi Tank, o Fantasma, o Lich, o Guerreiro Humano, o Mago, o Elfo e os três chefes já foram exportados em cinco canvases quadrados e integrados em suas pastas V1. O Fantasma fixa a linguagem espectral: núcleo verde preso por bronze, massa ciano-violeta e silhueta estreita de projétil. O Arqueiro usa osso, couro escuro e metal verde para comunicar retaguarda; o Lich concentra a leitura arcana em coroa, cajado e núcleo. O Guerreiro Humano fixa a linha viva: aço cinza, couro marrom, tecido carmesim e escudo retangular sem brilho necromântico. O Mago usa latão, carvão e violeta concentrado em cajado e frasco, com corpo estreito e pouca blindagem. O Elfo fecha o trio invasor com cabelo claro, tecido verde, couro escuro e arco recurvo. O Marechal amplia aço, latão e carmesim numa silhueta dominada pelo escudo-túmulo. O Auditor combina carvão, violeta, latão, documentos e vidraria. O Capataz encerra a escala com ferro enegrecido, faixas de risco, reservatórios e martelo-reator. `UnitAnimationDriver.configure_state_textures()` mantém a substituição fora das regras de combate.
 
 ## Interface e cenário
 
 A interface usa painéis de metal escuro, bordas quentes e acentos verdes. Molduras devem organizar a informação sem competir com a batalha. Botões importantes precisam de estado normal, foco, hover, pressionado, bloqueado e selecionado.
 
 O cenário híbrido atual preserva a ilustração como base e deixa névoa, luz, parallax e feedback em código. Essa divisão é intencional: a imagem sustenta identidade e detalhe; o runtime sustenta resposta, acessibilidade e variação.
+
+O painel inferior ganhou uma segunda ilustração dedicada à linha física da Fábrica: processador ósseo, cuba de carne, prensa hemática, reservatórios de Alma e esteira. Ela permanece atrás dos controles com baixa opacidade, de modo que entradas, saídas e gargalos ganhem contexto sem reduzir a leitura dos cartões.
 
 ## Critério para a vertical slice
 

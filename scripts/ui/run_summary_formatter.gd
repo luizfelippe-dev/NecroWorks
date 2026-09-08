@@ -55,6 +55,11 @@ static func build_build_summary(translate: Callable, state: Dictionary) -> Strin
 		_t(translate, "RUN_OPERATION_STATUS"),
 		str(state.get("result_message", "")),
 	]
+	var defeat_analysis: String = str(state.get("defeat_analysis", ""))
+	if not defeat_analysis.is_empty():
+		lines.append("")
+		lines.append(_t(translate, "RUN_DEFEAT_DIAGNOSIS"))
+		lines.append(defeat_analysis)
 	return "\n".join(lines)
 
 

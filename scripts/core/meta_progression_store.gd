@@ -13,6 +13,10 @@ const TRANSACTION_STORE: Script = preload(
 	"res://scripts/core/transactional_json_store.gd"
 )
 const READ_ONLY_MARKER: String = "_persistence_read_only"
+const LOAD_STATUS_MARKER: String = "_persistence_status"
+const STATUS_RECOVERED: String = "recovered_backup"
+const STATUS_CORRUPT: String = "corrupt"
+const STATUS_FUTURE: String = "future_version"
 
 
 static func default_profile() -> Dictionary:
@@ -34,17 +38,26 @@ static func default_profile() -> Dictionary:
 
 
 static func load_profile(path: String = DEFAULT_PATH) -> Dictionary:
+	var primary_exists: bool = FileAccess.file_exists(path)
+	var backup_path: String = path + TRANSACTION_STORE.BACKUP_SUFFIX
+	var backup_exists: bool = FileAccess.file_exists(backup_path)
 	var profile: Dictionary = TRANSACTION_STORE.load_dictionary(path)
+	var loaded_from_backup: bool = false
 	if profile.is_empty():
-		profile = TRANSACTION_STORE.load_dictionary(
-			path + TRANSACTION_STORE.BACKUP_SUFFIX
-		)
+		profile = TRANSACTION_STORE.load_dictionary(backup_path)
+		loaded_from_backup = not profile.is_empty()
 	if profile.is_empty():
+		if primary_exists or backup_exists:
+			var corrupt_default: Dictionary = default_profile()
+			corrupt_default[READ_ONLY_MARKER] = true
+			corrupt_default[LOAD_STATUS_MARKER] = STATUS_CORRUPT
+			return corrupt_default
 		return default_profile()
 	var stored_version: int = int(profile.get("profile_version", 1))
 	if stored_version > PROFILE_VERSION:
 		var protected_default: Dictionary = default_profile()
 		protected_default[READ_ONLY_MARKER] = true
+		protected_default[LOAD_STATUS_MARKER] = STATUS_FUTURE
 		return protected_default
 	if stored_version < 1:
 		return default_profile()
@@ -117,6 +130,8 @@ static func load_profile(path: String = DEFAULT_PATH) -> Dictionary:
 	if not MODIFIER_CATALOG.is_available(selected_modifier, unlocks):
 		selected_modifier = MODIFIER_CATALOG.STANDARD
 	profile["selected_modifier"] = selected_modifier
+	if loaded_from_backup:
+		profile[LOAD_STATUS_MARKER] = STATUS_RECOVERED
 	return profile
 
 
@@ -127,6 +142,7 @@ static func save_profile(
 		return ERR_FILE_UNRECOGNIZED
 	var payload: Dictionary = profile.duplicate(true)
 	payload.erase(READ_ONLY_MARKER)
+	payload.erase(LOAD_STATUS_MARKER)
 	payload["profile_version"] = PROFILE_VERSION
 	return TRANSACTION_STORE.save_dictionary(payload, path)
 
