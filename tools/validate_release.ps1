@@ -56,9 +56,14 @@ if (-not $SkipExport) {
     if ($LASTEXITCODE -ne 0) {
         throw "Windows release export failed. See $exportLog"
     }
-    & $buildPath --headless --quit-after 3 *> (Join-Path $logRoot "windows_smoke.log")
-    if ($LASTEXITCODE -ne 0) {
-        throw "Windows release smoke test failed."
+    $smokeLog = Join-Path $logRoot "windows_smoke.log"
+    $smokeErrorLog = Join-Path $logRoot "windows_smoke_errors.log"
+    $smokeProcess = Start-Process -FilePath $buildPath -ArgumentList "--headless", "--quit-after", "3" `
+        -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput $smokeLog `
+        -RedirectStandardError $smokeErrorLog
+    $smokeText = (Get-Content -Raw -LiteralPath $smokeLog) + (Get-Content -Raw -LiteralPath $smokeErrorLog)
+    if ($smokeProcess.ExitCode -ne 0 -or $smokeText -match "SCRIPT ERROR|Parse Error|ERROR:") {
+        throw "Windows release smoke test failed. See $smokeLog and $smokeErrorLog"
     }
     $build = Get-Item -LiteralPath $buildPath
     $summary.export_validated = $true

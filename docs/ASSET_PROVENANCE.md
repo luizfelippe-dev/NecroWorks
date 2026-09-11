@@ -1,11 +1,43 @@
 # Proveniência dos Assets
 
+**Atualizado em:** 11/09/2026 — v0.6.2
+
 Este registro acompanha os assets visuais criados especificamente para o projeto e evita dúvidas futuras durante a preparação comercial.
 
 ## Referências de direção
 
 - `assets/reference/necrodesign.png` — referência visual inicial;
 - `assets/reference/necrodesignv2.png` — direção principal de horror industrial, metal escuro e energia necromântica verde.
+
+## Apresentação v0.6.2 — 11/09/2026
+
+### Arte da tela inicial
+
+- arquivo: `assets/backgrounds/necroworks_title_v2.png`;
+- criação específica para NecroWorks com a ferramenta integrada de geração de imagens da OpenAI;
+- referência interna: `assets/reference/necrodesignv2.png`;
+- função: fundo ilustrado da tela inicial, com o portão da fábrica como foco e área de leitura para título e controles;
+- integração: `scripts/visual/title_atmosphere.gd` e `scripts/core/game_shell.gd`;
+- texto, logotipo tipográfico e botões são renderizados pela interface, sem depender de texto na imagem;
+- prompt completo e registro do passe: [PRESENTATION_UPDATE.md](PRESENTATION_UPDATE.md).
+
+A ilustração é um asset de apresentação interna. A adequação final de contraste, composição e identidade depende de avaliação visual no jogo.
+
+### Tipografia
+
+| Fonte | Arquivo | Uso | Origem e licença |
+|---|---|---|---|
+| Cinzel | `assets/fonts/cinzel/Cinzel.ttf` | títulos e marca tipográfica | Google Fonts; Cinzel Project Authors; SIL OFL 1.1 |
+| Barlow Medium | `assets/fonts/barlow/Barlow-Medium.ttf` | textos, botões e números | Google Fonts; Barlow Project Authors; SIL OFL 1.1 |
+| Barlow Condensed Medium | `assets/fonts/barlow_condensed/BarlowCondensed-Medium.ttf` | alternativa compacta disponível no tema | Google Fonts; Barlow Project Authors; SIL OFL 1.1 |
+
+Cada pasta contém seu `OFL.txt`. O preset Windows inclui `assets/fonts/*/OFL.txt` para distribuir os avisos junto das fontes. `necro_ui_theme.gd` centraliza o uso dessas famílias.
+
+### Símbolos, molduras e movimento
+
+`resource_glyph.gd` desenha os quatro símbolos econômicos; `industrial_panel_frame.gd` desenha bordas internas e rebites. Esses elementos são geometria produzida pelo próprio código do projeto e não incorporam packs externos de ícones.
+
+`unit_motion.gdshader` e os perfis de `UnitSpriteCatalog` animam as texturas V1 existentes com deformação contínua e âncoras por família. A v0.6.2 não adiciona spritesheets nem quadros de personagens desenhados ou gerados. `FrameBlend` e as sequências de texturas repetidas deixaram o caminho atual de apresentação. O contrato e seus limites estão em [ANIMATION_CONTRACT.md](ANIMATION_CONTRACT.md).
 
 ## Sprites de chefe — 31/08/2026
 

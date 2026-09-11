@@ -7,7 +7,7 @@ O preset `Windows Desktop` exporta para `builds/windows/NecroWorks.exe`. A pasta
 - Godot 4.7.1 stable;
 - templates de exportação da mesma versão;
 - projeto importado sem erros;
-- 78 runners aprovados antes de distribuir o executável.
+- 79 runners aprovados antes de distribuir o executável.
 
 O pacote oficial completo de templates possui aproximadamente 1,28 GB. No editor, a instalação fica em **Editor → Manage Export Templates**. A versão instalada deve aparecer como `4.7.1.stable`. Os templates Windows x86_64 oficiais foram instalados e usados com sucesso em 01/09/2026.
 
@@ -37,12 +37,14 @@ Godot_v4.7.1-stable_win64_console.exe `
 ## Build validado
 
 - arquivo local: `builds/windows/NecroWorks.exe`;
-- tamanho: 122.944.360 bytes;
-- SHA-256: `7DBEAD6A35314013D62E60A08A22B8588EA0D84C63697186C9A82739E3498B13`;
-- exportação release v0.6.1 e inicialização headless aprovadas em 11/09/2026;
-- gate integral aprovado com 78 runners em 73,22 segundos antes da exportação;
+- tamanho: 125.000.592 bytes;
+- SHA-256: `ECD158932E17A8E68CA59D91DA5DD43883AE153090C87E6F1DD0D422B3FAEC7E`;
+- exportação release v0.6.2 e inicialização headless aprovadas em 11/09/2026;
+- gate integral aprovado com 79 runners em 101,80 segundos antes da exportação;
 - fontes em `assets/reference/`, `assets/sprites/animation_concepts/`, `docs/` e `tests/` ficam fora do pacote;
 - os antigos `arcane_auditor_prototype.png`, `grave_marshal_prototype.png`, `foreman_prototype.png`, `elf_prototype.png`, `human_warrior_prototype.png`, `mage_prototype.png`, `skeleton_prototype.png` e `zombie_prototype.png` permanecem como referências no repositório, mas não entram no executável;
+- ferramentas de desenvolvimento e capturas em `artifacts/` ficam fora do pacote;
+- fontes Cinzel/Barlow e seus três avisos `OFL.txt` foram incluídos na exportação;
 - o diretório `builds/` permanece ignorado pelo Git.
 
 Os logs e o resumo legível por máquina ficam em `artifacts/validation/`, também ignorado. Assinatura, instalador, depot Steam e teste em outra máquina continuam obrigatórios antes de distribuição pública.

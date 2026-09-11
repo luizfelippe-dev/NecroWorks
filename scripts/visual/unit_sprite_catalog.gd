@@ -300,20 +300,38 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 	return {}
 
 
-static func get_animation_sequences(visual_id: String) -> Dictionary:
-	var textures: Dictionary = get_animation_textures(visual_id)
-	if textures.is_empty():
-		return {}
-	return {
-		"move": [
-			textures["move"], textures["move"], textures["idle"],
-			textures["idle"], textures["move"], textures["move"],
-		],
-		"attack": [
-			textures["idle"], textures["idle"], textures["attack"],
-			textures["attack"], textures["attack"], textures["idle"],
-		],
+static func get_animation_sequences(_visual_id: String) -> Dictionary:
+	# Reserve this API for actual authored frames, not duplicated state images.
+	return {}
+
+
+static func get_motion_profile(visual_id: String) -> Dictionary:
+	var enemies := ["human_warrior", "mage", "elf", "grave_marshal", "arcane_auditor", "foreman"]
+	var profile := {
+		"facing": -1.0 if visual_id in enemies else 1.0,
+		"walk_period": 0.56, "attack_duration": 0.32, "stride": 0.045,
+		"bob": 1.15, "attack_travel": 6.0, "spectral": 0.0,
 	}
+	if visual_id in ["zombie", "grave_marshal", "foreman"]:
+		profile.merge({"walk_period": 0.76, "stride": 0.033, "bob": 0.8, "attack_duration": 0.38, "attack_travel": 5.0}, true)
+	elif visual_id in ["elf", "skeleton_archer"]:
+		profile.merge({"walk_period": 0.48, "attack_duration": 0.30, "attack_travel": 2.0}, true)
+	elif visual_id in ["mage", "lich", "arcane_auditor"]:
+		profile.merge({"walk_period": 0.66, "stride": 0.021, "attack_duration": 0.36, "attack_travel": 2.0}, true)
+	elif visual_id == "ghost":
+		profile.merge({"walk_period": 0.85, "spectral": 1.0, "bob": 2.0, "attack_travel": 3.0}, true)
+	# Image-space leg anchors exclude weapons, capes and nearly transparent halos.
+	var leg_anchors := {
+		"skeleton": Vector2(0.42, 0.55), "skeleton_archer": Vector2(0.40, 0.57),
+		"zombie": Vector2(0.45, 0.58), "human_warrior": Vector2(0.54, 0.58),
+		"elf": Vector2(0.53, 0.60), "mage": Vector2(0.59, 0.60),
+		"lich": Vector2(0.53, 0.67), "grave_marshal": Vector2(0.51, 0.75),
+		"arcane_auditor": Vector2(0.50, 0.65), "foreman": Vector2(0.53, 0.65),
+	}
+	var anchor: Vector2 = leg_anchors.get(visual_id, Vector2(0.5, 0.6))
+	profile["leg_split"] = anchor.x
+	profile["leg_root"] = anchor.y
+	return profile
 
 
 static func get_canvas_scale_multiplier(visual_id: String) -> float:

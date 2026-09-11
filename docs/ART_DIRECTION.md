@@ -1,6 +1,6 @@
 # Direção de Arte
 
-**Atualizado em:** 02/09/2026
+**Atualizado em:** 11/09/2026 — v0.6.2
 
 NecroWorks combina horror industrial, fantasia sombria e leitura de autobattler. A arte precisa vender a fantasia de uma fábrica que transforma derrota em produção: ferro oxidado, latão gasto, osso, couro, vidro químico e energia necromântica verde.
 
@@ -55,11 +55,25 @@ O Guerreiro Esqueleto, o Arqueiro Esqueleto, o Zumbi Tank, o Fantasma, o Lich, o
 
 ## Interface e cenário
 
-A interface usa painéis de metal escuro, bordas quentes e acentos verdes. Molduras devem organizar a informação sem competir com a batalha. Botões importantes precisam de estado normal, foco, hover, pressionado, bloqueado e selecionado.
+A interface usa metal verde-escuro, bronze gasto, títulos em marfim e acentos verdes. `necro_ui_theme.gd` concentra a paleta e os estados de botão. Molduras internas, linhas de luz e rebites são desenhados em código por `industrial_panel_frame.gd`. Botões importantes mantêm estado normal, foco, hover, pressionado, bloqueado e selecionado.
+
+Cinzel dá identidade aos títulos. Barlow Medium mantém leitura em textos, números e métricas; Barlow Condensed Medium permanece no tema como alternativa para composições compactas. As três fontes vêm do Google Fonts, com licença SIL Open Font License 1.1 preservada ao lado dos arquivos em `assets/fonts/` e incluída no pacote Windows. Textos permanecem controles reais, localizáveis e compatíveis com Alto Contraste.
+
+A HUD da v0.6.2 apresenta recursos em cartões individuais, com símbolos de osso, carne, sangue e Alma; métricas em colunas; retratos nas ações de produção; e barras para progresso da Onda e ciclos das máquinas. A diferenciação usa símbolo, nome e cor juntos. O rodapé mantém o espaço seguro já reservado para execução incorporada, e as molduras não ampliam as áreas de clique.
+
+A tela inicial usa `assets/backgrounds/necroworks_title_v2.png`, criada para este passe a partir de `necrodesignv2.png`. A composição destaca o portão industrial e preserva uma região escura para título e ações. O deslocamento lento da arte pertence a `title_atmosphere.gd`; o gradiente de leitura, o título, a versão e todos os botões são elementos de interface. Nova Partida e Continuar têm prioridade sobre os atalhos de progressão e configuração.
 
 O cenário híbrido atual preserva a ilustração como base e deixa névoa, luz, parallax e feedback em código. Essa divisão é intencional: a imagem sustenta identidade e detalhe; o runtime sustenta resposta, acessibilidade e variação.
 
 O painel inferior ganhou uma segunda ilustração dedicada à linha física da Fábrica: processador ósseo, cuba de carne, prensa hemática, reservatórios de Alma e esteira. Ela permanece atrás dos controles com baixa opacidade, de modo que entradas, saídas e gargalos ganhem contexto sem reduzir a leitura dos cartões.
+
+## Movimento na v0.6.2
+
+As onze famílias continuam com as cinco poses V1 existentes. A caminhada agora usa fase contínua, peso de entrada e saída e deformação localizada, com âncoras de pernas ajustadas por família. Zumbis e chefes pesados marcham mais lentamente; arqueiros e Elfos usam cadência curta; conjuradores reduzem amplitude; o Fantasma recebe ondulação espectral. O ataque aplica recuperação sobre sua pose, e o dano recebido acrescenta feedback sem cancelar a ação em andamento.
+
+Não foram produzidos novos quadros desenhados de personagens nesta versão. A camada procedural substitui a mistura duplicada de poses e mantém a porta aberta para animações quadro a quadro ou rig próprio. Ainda é preciso avaliar em jogo se cada arma, capa e membro conserva a forma durante o movimento. Uma suíte aprovada protege execução e estado, mas não demonstra, sozinha, qualidade de animação.
+
+O registro do passe, incluindo o prompt da nova arte de abertura, está em [PRESENTATION_UPDATE.md](PRESENTATION_UPDATE.md).
 
 ## Critério para a vertical slice
 

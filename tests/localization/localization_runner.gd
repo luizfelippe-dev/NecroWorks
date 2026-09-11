@@ -73,9 +73,9 @@ func run_validation() -> void:
 	await process_frame
 	assert(
 		TranslationServer.translate("PRODUCTION_QUEUE_ZOMBIE")
-		== "PRODUCE ZOMBIE (QUEUE)"
+		== "ZOMBIE"
 	)
-	assert(game.create_zombie_button.text.begins_with("PRODUCE ZOMBIE (QUEUE)"))
+	assert(game.create_zombie_button.text.begins_with("ZOMBIE"))
 	assert(TranslationServer.translate("TUTORIAL_TITLE") == "SHIFT ORIENTATION")
 
 

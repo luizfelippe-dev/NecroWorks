@@ -1,16 +1,18 @@
 # Contrato de Animações
 
-O combate usa cinco estados visuais comuns. Cada unidade pode trocar a implementação provisória por spritesheets ou animações desenhadas sem alterar a lógica da partida.
+**Atualizado em:** 11/09/2026 — v0.6.2
+
+O combate usa cinco comandos visuais comuns. Cada unidade pode trocar a implementação procedural por spritesheets ou animações desenhadas sem alterar a lógica da partida.
 
 | Estado | Intenção | Duração-base do protótipo |
 |---|---|---:|
 | `idle` | manter a unidade viva e legível | contínua |
-| `move` | indicar deslocamento e direção | 0,32 s por ciclo |
-| `attack` | antecipação, impacto e recuperação | 0,28 s |
-| `hit` | confirmar dano recebido | 0,15 s |
+| `move` | indicar deslocamento e direção | 0,48–0,85 s por ciclo-base, conforme a família |
+| `attack` | dar continuidade e recuperação ao impacto | 0,30–0,38 s, conforme a família |
+| `hit` | confirmar dano recebido | 0,14 s |
 | `death` | retirar a unidade visualmente | 0,22 s |
 
-`scripts/visual/unit_animation_driver.gd` é o adaptador atual. Ele trabalha sobre o `UnitSprite`, preserva escala, posição e cor-base e emite sinais no começo e no fim de cada ação.
+`scripts/visual/unit_animation_driver.gd` é o adaptador atual. Ele trabalha sobre o `UnitSprite`, preserva escala, posição e cor-base e emite sinais nas transições de estado principais. O flash de dano também pode coexistir com uma ação em andamento.
 
 ## Regras para a arte final
 
@@ -21,13 +23,17 @@ O combate usa cinco estados visuais comuns. Cada unidade pode trocar a implement
 - a morte deve entregar o ponto exato usado para criar o Cadáver;
 - a animação não decide dano, cooldown, alvo ou recompensa.
 
-O componente atual reproduz poses-chave em seis fases, faz uma transição cruzada curta entre texturas e interpola o corpo a cada frame renderizado. A caminhada combina duas passadas, elevação e inclinação; o ataque separa antecipação, avanço, contato e recuperação. Spritesheets quadro a quadro ainda podem substituir as poses-chave por trás da mesma interface.
+Na v0.6.2, o movimento é contínuo: o driver observa a posição real da unidade e mantém uma fase de passada independente das chamadas de `play("move")`. Entrada e saída da locomoção usam aproximação suave; distância percorrida e perfil da família ajustam a cadência. O shader `unit_motion.gdshader` alterna deslocamentos locais da região inferior da textura, usando âncoras de pernas próprias para cada silhueta. Fantasmas recebem ondulação espectral em lugar do apoio de pernas.
+
+O ataque aplica avanço, rotação curta, deformação localizada e recuperação sobre a pose V1. Seu evento chega depois que o combate resolveu o impacto; a apresentação não posterga dano para criar uma antecipação fictícia. O flash e o recuo de `hit` possuem timer independente e não interrompem movimento ou ataque.
+
+Este passe não adiciona frames desenhados de caminhada ou ataque. O runtime deixa de criar `FrameBlend` e de repetir texturas V1 como se fossem quadros novos. A naturalidade dessa deformação ainda precisa de playtest humano, sobretudo em armas largas, capas e formações cheias. Os limites e o escopo visual estão registrados em [PRESENTATION_UPDATE.md](PRESENTATION_UPDATE.md).
 
 ## Texturas por estado
 
-`UnitAnimationDriver.configure_state_textures()` aceita um dicionário parcial ou completo com os mesmos cinco nomes de estado. `configure_frame_sequences()` recebe sequências com pelo menos duas texturas para `move` e `attack`; o catálogo atual fornece seis fases a todas as onze famílias. Ao concluir `move`, `attack` ou `hit`, o driver restaura transformação e `idle`. O estado `death` mantém sua textura até a unidade sair da árvore.
+`UnitAnimationDriver.configure_state_textures()` aceita um dicionário parcial ou completo com os mesmos cinco nomes de estado. `configure_motion()` recebe o perfil procedural fornecido por `UnitSpriteCatalog`. `configure_frame_sequences()` continua aceitando pelo menos duas texturas para `move` e `attack`, mas `get_animation_sequences()` devolve um dicionário vazio para as onze famílias atuais. A interface fica reservada para sequências com quadros próprios.
 
-Um pedido de `move` recebido durante um ciclo já ativo é aceito sem reiniciar a linha do tempo. Isso evita que chamadas frequentes da movimentação prendam a pose no primeiro frame. Cada reprodução recebe uma geração própria; impacto, ataque, morte ou Movimento Reduzido invalidam esperas anteriores sem permitir que uma ação velha restaure a textura depois da nova.
+Um pedido de `move` recebido durante um ciclo ativo é aceito sem reiniciar a fase. A continuidade do deslocamento real mantém a caminhada, e uma pequena tolerância impede oscilação de estado entre atualizações. Ao concluir ataque ou impacto, o driver retoma `move` se ainda observar locomoção; caso contrário, retorna a `idle`. O estado `death` bloqueia novos comandos e mantém sua textura até a saída da árvore.
 
 Esse caminho permite integrar poses finais gradualmente. Uma unidade pode receber primeiro `idle` e `attack`, continuar usando a textura-base nos demais estados e completar o conjunto depois, sem alterar combate, dano ou cooldown.
 
@@ -41,7 +47,7 @@ A pose de morte permanece por 0,24 s depois que a unidade sai das coleções de 
 
 ## Zumbi Tank V1
 
-A segunda família completa está em `assets/sprites/units/zombie_tank_v1/`. O mesmo contrato controla cinco poses independentes, mas a escala de canvas preserva a massa maior do tanque e a morte usa uma silhueta horizontal. Movimento, ataque e impacto retornam ao idle; a morte permanece até a retirada visual.
+A segunda família completa está em `assets/sprites/units/zombie_tank_v1/`. O mesmo contrato controla cinco poses independentes, mas a escala de canvas preserva a massa maior do tanque e a morte usa uma silhueta horizontal. O perfil atual adota passada mais lenta e amplitude menor; após o ataque, o estado acompanha o deslocamento observado. A morte permanece até a retirada visual.
 
 Assim como no Esqueleto, `kill_zombie()` libera coleção, estado runtime e slot antes da espera visual de 0,24 s. Isso impede que a animação altere capacidade, reposição automática, métricas ou condição de derrota.
 
@@ -89,7 +95,7 @@ O `Industrial Crush`, seus seis alvos, a conclusão da Onda 20 e o resumo da run
 
 ## Movimento reduzido
 
-Quando a preferência está ativa, `UnitAnimationDriver` remove idle, avanços, rotações e mudanças de escala. Impacto preserva apenas um flash curto e morte preserva o desaparecimento imediato, porque ambos comunicam estado essencial. A mesma preferência congela parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera duração de ataque, dano ou cooldown.
+Quando a preferência está ativa, `UnitAnimationDriver` zera a deformação do shader e remove oscilação ociosa, avanços e rotações. Impacto preserva apenas um flash curto; morte desaparece imediatamente. As texturas continuam identificando os estados. A mesma preferência congela a atmosfera da tela inicial, parallax, névoa e pulsos do cenário, além de eliminar o voo do token de processamento. Nenhuma dessas mudanças altera dano, cooldown ou economia.
 
 ## Integração V1
 

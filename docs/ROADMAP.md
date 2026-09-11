@@ -10,13 +10,14 @@
 2. [concluído] completar as onze famílias visuais atuais e a arte física da Fábrica;
 3. [concluído] integrar buses, volumes separados, sinais fabris e ambiente industrial V1;
 4. [concluído] medir seis resoluções, horda de 36 unidades e cinco perfis de build;
-5. [concluído] substituir impulsos rígidos por sequências interpoladas de caminhada e ataque nas onze famílias;
+5. [concluído — v0.6.2] retirar a mistura de poses repetidas, manter passada contínua e feedback de dano independente; renovar menu e HUD;
+   - [pendente] validar naturalidade em gameplay e produzir animação autoral em uma família antes de expandir para todas;
 6. executar QA manual em escala do Windows, hardware real e instalação limpa;
 7. realizar revisão editorial nativa de PT-BR, inglês e espanhol;
 8. realizar testes cegos conforme `PLAYTEST_PROTOCOL.md`;
 9. ajustar dificuldade e interface somente com a evidência coletada.
 
-This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
+Esta ordem respeita as dependências do projeto. A aprovação técnica de um passe não encerra a revisão visual nem o playtest com pessoas.
 
 ---
 

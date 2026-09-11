@@ -1,6 +1,10 @@
 # NecroWorks — Code Audit
 
-**Revisado:** 08/09/2026
+**Revisado:** 11/09/2026
+
+## Apresentação v0.6.2
+
+A camada visual ganhou `GameplayDashboard`, tema comum, símbolos, molduras e atmosfera do menu. O driver de unidade deixou de criar sprites auxiliares e timers por fase; mantém um relógio contínuo, perfis e shader próprios. Isso não encerra a dívida do controlador principal nem substitui animação autoral. Layout localizado, sinergias roláveis e estados visuais possuem regressões específicas.
 
 ## Veredito atual
 
@@ -188,7 +192,7 @@ VFX e SFX ficaram em dois componentes próprios. O controlador apenas envia even
 
 O driver visual aceita texturas opcionais por estado e mantém a textura-base como fallback. Os primeiros concept sheets foram deliberadamente mantidos fora do catálogo de runtime: são fontes de pose com transparência válida, mas não possuem células uniformes. Essa decisão evita dívida visual escondida em recortes frágeis.
 
-O catálogo de localização passou a ter auditoria exaustiva e atualmente cobre 432 chaves nos três idiomas. Isso fecha lacunas técnicas, campos vazios e divergências de importação; naturalidade, tom e consistência terminológica ainda exigem leitura editorial antes da demo. A suíte total chegou a 78 runners.
+O catálogo de localização passou a ter auditoria exaustiva e atualmente cobre 433 chaves nos três idiomas. Isso fecha lacunas técnicas, campos vazios e divergências de importação; naturalidade, tom e consistência terminológica ainda exigem leitura editorial antes da demo. A suíte total chegou a 79 runners.
 
 O Guerreiro Esqueleto é a primeira família a consumir a ponte completa. As cinco texturas ficam no catálogo visual e o controlador somente dispara estados nos eventos que já existiam. A retirada atrasada afeta apenas o nó visual: registro, métricas, slot e recuperação continuam resolvidos antes dos 0,24 s de morte. Esse desenho estabeleceu o padrão usado pelo Zumbi, sem criar uma segunda implementação de animação. Naquele corte, a regressão completa passou a 60 runners aprovados.
 

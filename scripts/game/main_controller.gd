@@ -1803,6 +1803,10 @@ func _ready() -> void:
 	create_ritual_panel_ui()
 	create_fusion_panel_ui()
 	register_gameplay_panels()
+	var dashboard := preload("res://scripts/ui/gameplay_dashboard.gd").new()
+	dashboard.name = "GameplayDashboard"
+	add_child(dashboard)
+	dashboard.bind(self)
 
 
 	# -----------------------------------------------------
@@ -6349,6 +6353,7 @@ func configure_unit_sprite(
 		"configure_frame_sequences",
 		UNIT_SPRITE_CATALOG.get_animation_sequences(visual_id)
 	)
+	animation_driver.call("configure_motion", UNIT_SPRITE_CATALOG.get_motion_profile(visual_id))
 
 
 func ensure_unit_animation_driver(unit: Node2D, sprite: Sprite2D) -> Node:
@@ -6376,7 +6381,7 @@ func play_unit_move_animation(unit: Node2D, direction: float) -> void:
 	if not is_instance_valid(unit):
 		return
 	var driver: Node = unit.get_node_or_null("AnimationDriver")
-	if driver != null and str(driver.get("current_animation")) == "idle":
+	if driver != null:
 		driver.call("play", "move", direction)
 
 
@@ -9997,53 +10002,8 @@ func create_stylebox(
 	return style
 
 
-func apply_button_style(
-	button: Button,
-	accent_color: Color
-) -> void:
-
-	button.add_theme_stylebox_override(
-		"normal",
-		create_stylebox(
-			UI_PANEL_LIGHT,
-			accent_color.darkened(0.48),
-			3,
-			3
-		)
-	)
-	button.add_theme_stylebox_override(
-		"hover",
-		create_stylebox(
-			Color(0.08, 0.105, 0.08, 0.99),
-			accent_color,
-			3,
-			3
-		)
-	)
-	button.add_theme_stylebox_override(
-		"pressed",
-		create_stylebox(
-			accent_color.darkened(0.72),
-			accent_color.lightened(0.15),
-			4,
-			3
-		)
-	)
-	button.add_theme_stylebox_override(
-		"disabled",
-		create_stylebox(
-			Color(0.035, 0.04, 0.037, 0.92),
-			Color(0.13, 0.14, 0.12, 1.0),
-			2,
-			3
-		)
-	)
-	button.add_theme_color_override("font_color", UI_TEXT)
-	button.add_theme_color_override("font_hover_color", Color.WHITE)
-	button.add_theme_color_override(
-		"font_disabled_color",
-		Color(0.35, 0.37, 0.33, 1.0)
-	)
+func apply_button_style(button: Button, accent_color: Color) -> void:
+	preload("res://scripts/ui/necro_ui_theme.gd").style_button(button, accent_color)
 
 
 func update_metrics_ui() -> void:
@@ -10333,6 +10293,9 @@ func update_bones_ui() -> void:
 		+ " " + tr("RESOURCE_BONES")
 	)
 
+
+	if not skeleton_archer_unlocked:
+		create_skeleton_archer_button.text = tr("PRODUCTION_ARCHER_LOCKED")
 
 	create_skeleton_button.disabled = (
 		run_finished

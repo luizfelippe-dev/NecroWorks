@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 11/09/2026 — Apresentação industrial v0.6.2
+
+O passe anterior continuou artificial. Retirei a transição cruzada entre poses repetidas e mantive um relógio de passada independente das chamadas de movimento. A região das pernas agora recebe deformação contínua com âncoras específicas; o dano funciona como camada separada, sem cancelar golpes. Não acrescentei quadros desenhados: o próximo salto artístico ainda depende de animação própria validada em gameplay.
+
+Refiz a entrada com uma ilustração da fábrica e ações organizadas à esquerda. A HUD ganhou símbolos, cartões econômicos, números alinhados, molduras e progresso de produção. Os testes de texto longo encontraram sobreposição em lotes de dez e nas dez sinergias; corrigi com rótulos compactos, dicas e uma área rolável.
+
+O gate aprovou 79 runners em 101,80 segundos. O Windows release foi exportado e iniciado com 125.000.592 bytes e SHA-256 `ECD158932E17A8E68CA59D91DA5DD43883AE153090C87E6F1DD0D422B3FAEC7E`. Menu/HUD foram renderizados nos três idiomas; a comparação visual de quatro fases cobre as onze famílias. O comportamento foi testado a 30, 60 e 144 Hz. A produção real manteve as mesmas regras e valores.
+
 ## 11/09/2026 — Passe de fluidez v0.6.1
 
 Reescrevi a apresentação de caminhada e ataque para abandonar o impulso de uma única pose. Todas as onze famílias percorrem seis fases com transição cruzada; a caminhada usa duas passadas com oscilação contínua, enquanto o ataque separa antecipação, contato sustentado e recuperação. O driver protege a sequência com uma geração de reprodução e não reinicia um ciclo de movimento que ainda está ativo. Dano, cadência, alvo, alcance e economia permaneceram intactos.

@@ -1,6 +1,6 @@
 # NecroWorks — Gates de Release
 
-**Atualizado em:** 08/09/2026
+**Atualizado em:** 11/09/2026
 
 ## Gate automatizado
 
@@ -9,6 +9,8 @@
 ```
 
 O comando executa todos os runners em ordem estável, exige marcador `PASS`, rejeita erro de script mesmo quando o processo retorna código zero, grava logs em `artifacts/validation/`, exporta o Windows release, inicia um smoke test e registra tamanho e SHA-256. A workflow `release-gate.yml` repete a regressão em Windows no GitHub Actions.
+
+Na v0.6.2, a suíte reúne 79 runners. O teste de apresentação cobre os três idiomas, lotes de produção e mínimos reais dos controles; a regressão de sinergias verifica rolagem dentro do painel. Capturas renderizadas são produzidas por `tools/capture_presentation.gd`, sem usar o perfil de quem joga. No Windows, o smoke test espera explicitamente o processo gráfico terminar e verifica seu código de saída e os logs de erro; iniciar o processo sem esperar não conta como aprovação.
 
 ## Matriz manual antes da demo
 

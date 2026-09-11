@@ -1,20 +1,21 @@
 extends Node
 
-
 signal animation_started(animation_name: String)
 signal animation_finished(animation_name: String)
 
-const IDLE: String = "idle"
-const MOVE: String = "move"
-const ATTACK: String = "attack"
-const HIT: String = "hit"
-const DEATH: String = "death"
+const IDLE := "idle"
+const MOVE := "move"
+const ATTACK := "attack"
+const HIT := "hit"
+const DEATH := "death"
 const SUPPORTED_ANIMATIONS: Array[String] = [IDLE, MOVE, ATTACK, HIT, DEATH]
-const MOVE_DURATION: float = 0.32
-const ATTACK_DURATION: float = 0.28
+const MOTION_SHADER: Shader = preload("res://scripts/visual/unit_motion.gdshader")
+const MOVE_DURATION := 0.48
+const ATTACK_DURATION := 0.32
+const HIT_DURATION := 0.14
+const DEATH_DURATION := 0.22
 
 var sprite: Sprite2D
-var blend_sprite: Sprite2D
 var current_animation: String = IDLE
 var base_texture: Texture2D
 var state_textures: Dictionary = {}
@@ -22,36 +23,52 @@ var frame_sequences: Dictionary = {}
 var base_position: Vector2
 var base_scale: Vector2
 var base_modulate: Color
-var idle_time: float = 0.0
-var action_tween: Tween
-var blend_tween: Tween
-var reduced_motion: bool = false
-var playback_generation: int = 0
+var reduced_motion := false
+var action_elapsed := 0.0
+var gait_phase := 0.0
+var locomotion_weight := 0.0
+var movement_grace := 0.0
+var observed_motion_grace := 0.0
+var hit_remaining := 0.0
+var idle_time := 0.0
+var facing := 1.0
+var previous_world_position: Vector2
+var motion_material: ShaderMaterial
+var profile: Dictionary = {}
+var death_finished := false
+static var texture_bounds: Dictionary = {}
 
 
 func bind(target_sprite: Sprite2D) -> void:
 	sprite = target_sprite
-	if blend_sprite == null:
-		blend_sprite = Sprite2D.new()
-		blend_sprite.name = "FrameBlend"
-		blend_sprite.z_index = sprite.z_index + 1
-		blend_sprite.visible = false
-		sprite.get_parent().add_child(blend_sprite)
 	base_texture = sprite.texture
 	base_position = sprite.position
 	base_scale = sprite.scale
 	base_modulate = sprite.modulate
+	previous_world_position = sprite.get_parent().global_position
+	motion_material = ShaderMaterial.new()
+	motion_material.shader = MOTION_SHADER
+	sprite.material = motion_material
 	set_process(true)
+
+
+func configure_motion(motion_profile: Dictionary) -> void:
+	profile = motion_profile.duplicate()
+	facing = float(profile.get("facing", 1.0))
+	motion_material.set_shader_parameter("facing", facing)
+	motion_material.set_shader_parameter("spectral", float(profile.get("spectral", 0.0)))
+	motion_material.set_shader_parameter("stride", float(profile.get("stride", 0.045)))
+	motion_material.set_shader_parameter("leg_split", float(profile.get("leg_split", 0.5)))
+	motion_material.set_shader_parameter("leg_root", float(profile.get("leg_root", 0.6)))
 
 
 func configure_state_textures(textures: Dictionary) -> bool:
 	var validated: Dictionary = {}
 	for animation_name: Variant in textures:
-		var state: String = str(animation_name)
-		var texture: Variant = textures[animation_name]
-		if state not in SUPPORTED_ANIMATIONS or not texture is Texture2D:
+		var state := str(animation_name)
+		if state not in SUPPORTED_ANIMATIONS or not textures[animation_name] is Texture2D:
 			return false
-		validated[state] = texture
+		validated[state] = textures[animation_name]
 	state_textures = validated
 	_apply_state_texture(current_animation)
 	return true
@@ -60,238 +77,149 @@ func configure_state_textures(textures: Dictionary) -> bool:
 func configure_frame_sequences(sequences: Dictionary) -> bool:
 	var validated: Dictionary = {}
 	for animation_name: Variant in sequences:
-		var state: String = str(animation_name)
+		var state := str(animation_name)
 		var frames: Variant = sequences[animation_name]
 		if state not in [MOVE, ATTACK] or not frames is Array or frames.size() < 2:
 			return false
-		var typed_frames: Array[Texture2D] = []
 		for frame: Variant in frames:
 			if not frame is Texture2D:
 				return false
-			typed_frames.append(frame as Texture2D)
-		validated[state] = typed_frames
+		validated[state] = frames.duplicate()
 	frame_sequences = validated
 	return true
 
 
-func _process(delta: float) -> void:
-	_sync_blend_sprite_transform()
-	if reduced_motion or sprite == null or current_animation != IDLE:
-		return
-	idle_time += delta
-	sprite.position.y = base_position.y + sin(idle_time * 3.2) * 1.4
-
-
-func play(animation_name: String, direction: float = 1.0) -> bool:
+func play(animation_name: String, _direction: float = 1.0) -> bool:
 	if sprite == null or animation_name not in SUPPORTED_ANIMATIONS:
 		return false
-	if animation_name == MOVE and current_animation == MOVE:
+	if current_animation == DEATH:
+		return animation_name == DEATH
+	# Damage feedback is an independent layer, never a cancellation of locomotion/attack.
+	if animation_name == HIT:
+		hit_remaining = HIT_DURATION
+		if current_animation in [ATTACK, MOVE]:
+			return true
+	if animation_name == MOVE:
+		movement_grace = MOVE_DURATION
+		if current_animation in [ATTACK, MOVE]:
+			return true
+	if animation_name == current_animation:
 		return true
-	playback_generation += 1
-	if action_tween != null and action_tween.is_valid():
-		action_tween.kill()
-	_restore_visual()
 	current_animation = animation_name
+	action_elapsed = 0.0
 	_apply_state_texture(animation_name)
 	animation_started.emit(animation_name)
-	if reduced_motion:
-		_play_reduced_animation(animation_name)
-		return true
-	match animation_name:
-		IDLE:
-			_finish_action(IDLE)
-		MOVE:
-			_play_move(direction)
-			play_frame_sequence(MOVE, MOVE_DURATION, playback_generation)
-		ATTACK:
-			_play_attack(direction)
-			play_frame_sequence(ATTACK, ATTACK_DURATION, playback_generation)
-		HIT:
-			_play_hit()
-		DEATH:
-			_play_death()
+	if animation_name == DEATH:
+		movement_grace = 0.0
+		locomotion_weight = 0.0
+		hit_remaining = 0.0
+	_render_pose()
 	return true
+
+
+func _process(delta: float) -> void:
+	if sprite != null:
+		advance(delta, sprite.get_parent().global_position)
+
+
+func advance(delta: float, world_position: Vector2) -> void:
+	if sprite == null or delta <= 0.0:
+		return
+	var distance := world_position.distance_to(previous_world_position)
+	previous_world_position = world_position
+	var moving := distance > 0.015 and distance < 100.0
+	if moving:
+		observed_motion_grace = 0.08
+		if current_animation == IDLE:
+			play(MOVE)
+		movement_grace = 0.08
+	else:
+		observed_motion_grace = maxf(0.0, observed_motion_grace - delta)
+		movement_grace = maxf(0.0, movement_grace - delta)
+	if current_animation == MOVE and movement_grace <= 0.0:
+		_finish_action(MOVE)
+	var target_weight := 1.0 if current_animation == MOVE and observed_motion_grace > 0.0 else 0.0
+	locomotion_weight = lerpf(locomotion_weight, target_weight, 1.0 - exp(-18.0 * delta))
+	var pace := clampf(distance / delta / 90.0, 0.65, 1.55) if moving else 1.0
+	gait_phase += delta * TAU / float(profile.get("walk_period", 0.56)) * pace
+	idle_time += delta
+	action_elapsed += delta
+	hit_remaining = maxf(0.0, hit_remaining - delta)
+	if current_animation == ATTACK and action_elapsed >= float(profile.get("attack_duration", ATTACK_DURATION)):
+		_finish_action(ATTACK)
+	elif current_animation == HIT and action_elapsed >= HIT_DURATION:
+		_finish_action(HIT)
+	_render_pose()
 
 
 func set_reduced_motion(enabled: bool) -> void:
 	reduced_motion = enabled
-	playback_generation += 1
-	if action_tween != null and action_tween.is_valid():
-		action_tween.kill()
-	_restore_visual()
-	current_animation = IDLE
-	_apply_state_texture(IDLE)
-	set_process(not enabled)
-
-
-func _play_reduced_animation(animation_name: String) -> void:
-	if animation_name == HIT:
-		sprite.modulate = Color(1.0, 0.48, 0.40, 1.0)
-		await get_tree().create_timer(0.06, false).timeout
-		if is_instance_valid(sprite):
-			sprite.modulate = base_modulate
-	elif animation_name == DEATH:
-		sprite.modulate.a = 0.0
-	_finish_action(animation_name)
-
-
-func _play_move(direction: float) -> void:
-	action_tween = create_tween()
-	action_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	action_tween.set_parallel(true)
-	action_tween.tween_property(
-		sprite, "position:y", base_position.y - 2.2, MOVE_DURATION * 0.25
-	)
-	action_tween.tween_property(
-		sprite, "rotation", 0.028 * signf(direction), MOVE_DURATION * 0.25
-	)
-	action_tween.chain().set_parallel(true)
-	action_tween.tween_property(
-		sprite, "position:y", base_position.y + 0.8, MOVE_DURATION * 0.25
-	)
-	action_tween.tween_property(
-		sprite, "rotation", -0.022 * signf(direction), MOVE_DURATION * 0.25
-	)
-	action_tween.chain().set_parallel(true)
-	action_tween.tween_property(
-		sprite, "position:y", base_position.y - 1.5, MOVE_DURATION * 0.25
-	)
-	action_tween.tween_property(
-		sprite, "rotation", 0.018 * signf(direction), MOVE_DURATION * 0.25
-	)
-	action_tween.chain().set_parallel(true)
-	action_tween.tween_property(
-		sprite, "position:y", base_position.y, MOVE_DURATION * 0.25
-	)
-	action_tween.tween_property(sprite, "rotation", 0.0, MOVE_DURATION * 0.25)
-
-
-func _play_attack(direction: float) -> void:
-	var facing: float = signf(direction) if not is_zero_approx(direction) else 1.0
-	var anticipation: Vector2 = Vector2(-3.0 * facing, 1.0)
-	var impact: Vector2 = Vector2(12.0 * facing, -1.5)
-	action_tween = create_tween()
-	action_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	action_tween.set_parallel(true)
-	action_tween.tween_property(
-		sprite, "position", base_position + anticipation, ATTACK_DURATION * 0.25
-	)
-	action_tween.tween_property(
-		sprite, "rotation", -0.045 * facing, ATTACK_DURATION * 0.25
-	)
-	action_tween.chain().set_parallel(true)
-	action_tween.set_ease(Tween.EASE_OUT)
-	action_tween.tween_property(
-		sprite, "position", base_position + impact, ATTACK_DURATION * 0.32
-	)
-	action_tween.tween_property(
-		sprite, "rotation", 0.055 * facing, ATTACK_DURATION * 0.32
-	)
-	action_tween.chain().set_parallel(true)
-	action_tween.set_ease(Tween.EASE_IN_OUT)
-	action_tween.tween_property(
-		sprite, "position", base_position + impact * 0.78, ATTACK_DURATION * 0.14
-	)
-	action_tween.tween_property(
-		sprite, "rotation", 0.035 * facing, ATTACK_DURATION * 0.14
-	)
-	action_tween.chain().set_parallel(true)
-	action_tween.tween_property(
-		sprite, "position", base_position, ATTACK_DURATION * 0.29
-	)
-	action_tween.tween_property(sprite, "rotation", 0.0, ATTACK_DURATION * 0.29)
-
-
-func play_frame_sequence(
-	animation_name: String, duration: float, generation: int
-) -> void:
-	var frames: Array = frame_sequences.get(animation_name, []) as Array
-	if frames.is_empty():
-		await get_tree().create_timer(duration, false).timeout
-	else:
-		var frame_duration: float = duration / float(frames.size())
-		for frame: Texture2D in frames:
-			if generation != playback_generation or not is_instance_valid(sprite):
-				return
-			_crossfade_to_texture(frame, frame_duration * 0.68)
-			await get_tree().create_timer(frame_duration, false).timeout
-	if generation == playback_generation and is_instance_valid(sprite):
-		_finish_action(animation_name)
-
-
-func _play_hit() -> void:
-	action_tween = create_tween()
-	action_tween.tween_property(sprite, "modulate", Color(1.0, 0.28, 0.22, 1.0), 0.05)
-	action_tween.tween_property(sprite, "modulate", base_modulate, 0.10)
-	action_tween.finished.connect(_finish_action.bind(HIT))
-
-
-func _play_death() -> void:
-	action_tween = create_tween()
-	action_tween.set_parallel(true)
-	action_tween.tween_property(sprite, "modulate:a", 0.0, 0.22)
-	action_tween.tween_property(sprite, "scale", base_scale * 0.82, 0.22)
-	action_tween.finished.connect(_finish_action.bind(DEATH))
-
-
-func _finish_action(completed_animation: String) -> void:
-	animation_finished.emit(completed_animation)
-	if completed_animation != DEATH:
-		_restore_visual()
-		current_animation = IDLE
-		_apply_state_texture(IDLE)
-
-
-func _apply_state_texture(animation_name: String) -> void:
-	if sprite == null:
-		return
-	var fallback: Texture2D = base_texture
-	sprite.texture = state_textures.get(animation_name, fallback) as Texture2D
-
-
-func _crossfade_to_texture(texture: Texture2D, duration: float) -> void:
-	if sprite.texture == texture:
-		return
-	if blend_tween != null and blend_tween.is_valid():
-		blend_tween.kill()
-	blend_sprite.texture = sprite.texture
-	blend_sprite.position = sprite.position
-	blend_sprite.scale = sprite.scale
-	blend_sprite.rotation = sprite.rotation
-	blend_sprite.modulate = base_modulate
-	blend_sprite.visible = true
-	sprite.texture = texture
-	sprite.modulate = Color(base_modulate.r, base_modulate.g, base_modulate.b, 0.0)
-	blend_tween = create_tween().set_parallel(true)
-	blend_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	blend_tween.tween_property(sprite, "modulate:a", base_modulate.a, duration)
-	blend_tween.tween_property(blend_sprite, "modulate:a", 0.0, duration)
-	blend_tween.finished.connect(_finish_crossfade)
-
-
-func _finish_crossfade() -> void:
-	if blend_sprite != null:
-		blend_sprite.visible = false
 	if sprite != null:
-		sprite.modulate = base_modulate
+		_render_pose()
 
 
-func _sync_blend_sprite_transform() -> void:
-	if sprite == null or blend_sprite == null or not blend_sprite.visible:
-		return
-	blend_sprite.position = sprite.position
-	blend_sprite.scale = sprite.scale
-	blend_sprite.rotation = sprite.rotation
-
-
-func _restore_visual() -> void:
-	if sprite == null:
-		return
-	if blend_tween != null and blend_tween.is_valid():
-		blend_tween.kill()
-	if blend_sprite != null:
-		blend_sprite.visible = false
+func _render_pose() -> void:
 	sprite.position = base_position
 	sprite.scale = base_scale
 	sprite.modulate = base_modulate
 	sprite.rotation = 0.0
+	var strike := 0.0
+	if current_animation == DEATH:
+		var death_progress := 1.0 if reduced_motion or death_finished else clampf(action_elapsed / DEATH_DURATION, 0.0, 1.0)
+		sprite.modulate.a = base_modulate.a * (1.0 - death_progress)
+		if not reduced_motion:
+			sprite.position.y += 3.0 * death_progress
+		if death_progress >= 1.0 and not death_finished:
+			death_finished = true
+			animation_finished.emit(DEATH)
+	elif not reduced_motion:
+		sprite.position.y -= absf(sin(gait_phase)) * float(profile.get("bob", 1.15)) * locomotion_weight
+		sprite.position.y += sin(idle_time * 2.4) * 0.45 * (1.0 - locomotion_weight)
+		sprite.rotation = sin(gait_phase) * 0.009 * locomotion_weight
+		if current_animation == ATTACK:
+			var phase := clampf(action_elapsed / float(profile.get("attack_duration", ATTACK_DURATION)), 0.0, 1.0)
+			# Combat has already emitted the impact. Recover smoothly from that pose.
+			var recovery := smoothstep(0.0, 0.08, phase) * (1.0 - smoothstep(0.08, 1.0, phase))
+			strike = recovery
+			sprite.position.x += facing * float(profile.get("attack_travel", 6.0)) * recovery
+			sprite.rotation += facing * 0.025 * recovery
+		if hit_remaining > 0.0:
+			sprite.position.x -= facing * sin(hit_remaining / HIT_DURATION * PI) * 1.8
+	if hit_remaining > 0.0 and current_animation != DEATH:
+		sprite.modulate = base_modulate.lerp(Color(1.0, 0.48, 0.38, base_modulate.a), hit_remaining / HIT_DURATION * 0.65)
+	motion_material.set_shader_parameter("phase", gait_phase)
+	motion_material.set_shader_parameter("movement", 0.0 if reduced_motion or current_animation == DEATH else locomotion_weight)
+	motion_material.set_shader_parameter("strike", strike)
+	var frames: Array = frame_sequences.get(current_animation, [])
+	if not frames.is_empty():
+		var progress := fmod(gait_phase / TAU, 1.0) if current_animation == MOVE else action_elapsed / float(profile.get("attack_duration", ATTACK_DURATION))
+		_set_texture(frames[mini(int(progress * frames.size()), frames.size() - 1)])
+
+
+func _finish_action(completed_animation: String) -> void:
+	current_animation = MOVE if observed_motion_grace > 0.0 else IDLE
+	action_elapsed = 0.0
+	_apply_state_texture(current_animation)
+	animation_finished.emit(completed_animation)
+
+
+func _apply_state_texture(animation_name: String) -> void:
+	if sprite != null:
+		_set_texture(state_textures.get(animation_name, base_texture))
+
+
+func _set_texture(texture: Texture2D) -> void:
+	if texture == null:
+		return
+	sprite.texture = texture
+	if not texture_bounds.has(texture):
+		var source := texture.get_image()
+		var bounds := Vector4(0.0, 0.0, 1.0, 1.0)
+		if source != null:
+			if source.is_compressed():
+				source.decompress()
+			var used := source.get_used_rect()
+			var dimensions := Vector2(source.get_size())
+			bounds = Vector4(used.position.x / dimensions.x, used.position.y / dimensions.y, used.size.x / dimensions.x, used.size.y / dimensions.y)
+		texture_bounds[texture] = bounds
+	motion_material.set_shader_parameter("body_bounds", texture_bounds[texture])

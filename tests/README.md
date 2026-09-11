@@ -1,5 +1,13 @@
 # NecroWorks Test Harnesses
 
+## Presentation v0.6.2
+
+`tests/ui/presentation_layout_runner.gd` validates the new menu and dashboard in EN/PT-BR/ES: production batches of ten, measured control bounds, separate resource values, metric columns, progress bars, zombie-only production and accessibility.
+
+`tests/visual/unit_animation_driver_runner.gd` checks continuous locomotion at 30/60/144 Hz, repeated move commands, independent hit feedback and terminal death. The sprite integration runner covers all eleven families. The synergy runner checks a clipped scroll area with all ten entries.
+
+For real rendered evidence, run `tools/capture_presentation.gd` without `--headless`; it uses disposable save/profile paths and writes menu/HUD captures plus motion phase comparisons under `artifacts/presentation/`. These captures are not runtime assets.
+
 ## Composition balance
 
 Runs three deterministic, upgrade-free armies against Wave 8 using the real runtime combat:
@@ -466,7 +474,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/c
 
 O cenário corrompe arquivos deliberadamente, valida recuperação pelo backup, rejeição de payload incompleto, falha de escrita sem fechar a run, proteção contra schema futuro e retomada sem ganhos parciais da Onda.
 
-A suíte atual contém 78 cenários `*_runner.gd` e 1.201 chamadas `assert()` identificadas estaticamente. Além das estratégias completas Bone e Flesh, ela cobre confiabilidade de save, recuperação/derrota, ambiente e buses, Fábrica, onze famílias visuais, seis resoluções, horda de 36 unidades e cinco perfis de build.
+A suíte atual contém 79 cenários `*_runner.gd`. Além das estratégias completas Bone e Flesh, cobre confiabilidade de save, recuperação/derrota, ambiente e buses, Fábrica, onze famílias visuais, seis resoluções, horda de 36 unidades, cinco perfis de build e a apresentação localizada da v0.6.2.
 
 ## Gate único
 

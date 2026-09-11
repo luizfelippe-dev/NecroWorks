@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.6.2] — 11/09/2026 — Apresentação industrial
+
+### Alterado
+
+- menu ilustrado com nova arte da fábrica, hierarquia de ações, Cinzel/Barlow e atmosfera compatível com Movimento Reduzido;
+- HUD com quatro cartões de recursos, símbolos econômicos, métricas em colunas, molduras e barras de progresso;
+- sinergias em área rolável, produção com ícones, rótulos compactos, quantidade/custo e dica explicando a fila;
+- driver de movimento contínuo ligado ao deslocamento, sem reiniciar a passada ou misturar silhuetas com transparência;
+- perfis e âncoras por família, resposta de dano independente do ataque e morte terminal mesmo ao alternar acessibilidade;
+- preservados combate, economia, cooldowns, saves e balanceamento.
+
+### Validação e limites
+
+- 79 runners aprovados, incluindo novo cenário de apresentação nos três idiomas;
+- ciclo do driver comparado a 30/60/144 Hz, onze famílias integradas, lotes de dez e dez sinergias verificados;
+- menu, HUD e fases do movimento renderizados para inspeção; Windows release exportado e iniciado;
+- licenças OFL incluídas; capturas e ferramentas excluídas do pacote;
+- smoke test Windows agora espera o executável gráfico encerrar e confere também erros de runtime;
+- movimento ainda procedural sobre poses V1: não foram adicionados frames desenhados de personagens. A naturalidade depende do próximo playtest.
+
 ## [0.6.1] — 11/09/2026 — Fluidez de combate
 
 ### Alterado

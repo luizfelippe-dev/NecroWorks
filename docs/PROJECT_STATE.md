@@ -2,7 +2,7 @@
 
 **Atualizado em:** 11/09/2026
 
-**Versão funcional:** v0.6.1 — vertical slice técnica com fluidez de combate revisada
+**Versão funcional:** v0.6.2 — apresentação industrial e continuidade de movimento
 
 **Engine:** Godot 4.7.1
 
@@ -61,7 +61,8 @@ O salvamento de pausa representa o início da onda atual. Ao continuar, a compos
 - VFX de ataque, dano, habilidade, morte, invocação e entrada de Chefe;
 - nove sinais SFX procedurais com dez vozes simultâneas, ambiente industrial e proteção contra repetição excessiva;
 - direção de arte consolidada e concept sheets de cinco estados para Guerreiro Esqueleto e Zumbi Tank;
-- contrato de animação com cinco estados e sequências de seis fases para caminhada e ataque, sem tocar na simulação;
+- cinco estados visuais, passada procedural contínua, âncoras por família e flash de dano independente, sem tocar na simulação;
+- menu ilustrado, tipografia Cinzel/Barlow, cartões de recursos, barras de progresso e sinergias roláveis;
 - Guerreiro Esqueleto com cinco poses de runtime, movimento, ataque, impacto e morte conectados;
 - Zumbi Tank com cinco poses de runtime, escala pesada e retirada visual conectadas;
 - Fantasma com identidade fabril própria, cinco poses e dissipação conectadas;
@@ -129,8 +130,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.6.1 mantém a vertical slice técnica concluída e acrescenta fluidez visual às onze famílias. Caminhada e ataque usam seis fases de pose; deslocamento, inclinação, antecipação, impacto e recuperação são interpolados pelo driver sem alterar a cadência real do combate. Onboarding, acessibilidade básica, Fábrica ilustrada, VFX, áudio procedural, ambiente, save transacional, recuperação e diagnóstico possuem regressão. O perfil v3 registra telemetria mecânica das vinte runs recentes, enquanto settings v3 guarda tutorial, acessibilidade e mixagem. O catálogo localizado possui 432 chaves completas em inglês, português do Brasil e espanhol. Projeto, checkpoint e metadados Windows compartilham a versão `0.6.1`, visível no menu principal.
+A v0.6.2 mantém o conteúdo da vertical slice e renova menu, HUD e driver visual. A passada usa deformação contínua sobre as poses V1, sem frames desenhados novos e sem mistura de transparência entre silhuetas. O dano não interrompe mais o ataque; morrer permanece terminal ao alternar acessibilidade. O perfil v3 e settings v3 não mudaram. O catálogo possui 433 chaves completas nos três idiomas. Projeto, checkpoint e metadados Windows compartilham `0.6.2`.
 
-O build local v0.6.1 validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 122.948.728 bytes e SHA-256 `D5A0391B207804C3342A36324E3219A0A7EC63E7A5CF1D4FC7752B37AC5A174D`. O gate aprovou 78 runners em 91,10 segundos antes da exportação e do smoke test. Fontes de conceito, documentação, testes e protótipos substituídos estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.2 está em `builds/windows/NecroWorks.exe`, fora do Git. O gate aprovou 79 runners em 101,80 segundos, exportação e smoke test. O executável tem 125.000.592 bytes e SHA-256 `ECD158932E17A8E68CA59D91DA5DD43883AE153090C87E6F1DD0D422B3FAEC7E`. Conceitos, documentação, testes, ferramentas e capturas ficam fora do pacote; avisos OFL acompanham as fontes. Os limites de validação artística estão em `PRESENTATION_UPDATE.md`.
 
 O próximo trabalho não deve ser confundido com mais uma correção automática: revisão editorial nativa, teste cego, perfil em hardware real, instalação limpa, direitos comerciais e Steamworks são gates externos. O acompanhamento está em `AUDIT_STATUS.md`; execução em `PLAYTEST_PROTOCOL.md` e `RELEASE_GATES.md`.

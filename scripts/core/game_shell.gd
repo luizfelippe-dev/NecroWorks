@@ -3,6 +3,8 @@ extends Node
 
 const GAME_SCENE: PackedScene = preload("res://scenes/world/gameplay.tscn")
 const APP_VERSION_DATA: Script = preload("res://scripts/core/app_version.gd")
+const UI_THEME: Script = preload("res://scripts/ui/necro_ui_theme.gd")
+const TITLE_ATMOSPHERE: Script = preload("res://scripts/visual/title_atmosphere.gd")
 const ACCENT: Color = Color("55d83e")
 const PANEL: Color = Color(0.018, 0.024, 0.022, 0.98)
 const BORDER: Color = Color(0.32, 0.31, 0.25, 1.0)
@@ -75,6 +77,9 @@ var profile: Dictionary = {}
 var profile_path: String = META_STORE.DEFAULT_PATH
 var run_save_path: String = RunSaveStore.DEFAULT_PATH
 var localized_buttons: Dictionary = {}
+var menu_eyebrow: Label
+var menu_atmosphere: Control
+var menu_content: VBoxContainer
 
 
 func _ready() -> void:
@@ -121,26 +126,52 @@ func build_interface() -> void:
 	add_child(ui_layer)
 
 	main_menu = create_screen("MainMenu", Color(0.002, 0.006, 0.005, 1.0))
-	var main_box := create_center_panel(main_menu, Vector2(620.0, 780.0))
-	title_label = create_label(42, ACCENT)
-	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	menu_atmosphere = TITLE_ATMOSPHERE.new()
+	main_menu.add_child(menu_atmosphere)
+	menu_atmosphere.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var main_box := VBoxContainer.new()
+	menu_content = main_box
+	main_menu.add_child(main_box)
+	main_box.position = Vector2(112.0, 158.0)
+	main_box.size = Vector2(620.0, 750.0)
+	main_box.add_theme_constant_override("separation", 18)
+	menu_eyebrow = create_label(17, UI_THEME.GREEN)
+	main_box.add_child(menu_eyebrow)
+	title_label = create_label(68, UI_THEME.IVORY)
+	title_label.add_theme_font_override("font", UI_THEME.DISPLAY_FONT)
+	title_label.add_theme_color_override("font_shadow_color", Color.BLACK)
+	title_label.add_theme_constant_override("shadow_offset_y", 4)
 	main_box.add_child(title_label)
-	subtitle_label = create_label(17, Color(0.78, 0.77, 0.67))
-	subtitle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle_label = create_label(22, UI_THEME.MUTED)
 	subtitle_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	subtitle_label.custom_minimum_size.y = 64.0
 	main_box.add_child(subtitle_label)
-	version_label = create_label(13, Color(0.48, 0.52, 0.47))
-	version_label.text = APP_VERSION_DATA.DISPLAY
-	version_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	main_box.add_child(version_label)
 	main_box.add_child(create_separator())
-	add_localized_button(main_box, "MENU_NEW_RUN", start_new_run)
+	var begin := add_localized_button(main_box, "MENU_NEW_RUN", start_new_run)
+	begin.custom_minimum_size.y = 72.0
+	begin.add_theme_font_size_override("font_size", 26)
+	begin.add_theme_stylebox_override("normal", UI_THEME.stylebox(Color("273820"), UI_THEME.GREEN, 2))
+	UI_THEME.decorate_panel(begin, UI_THEME.GREEN)
 	continue_button = add_localized_button(main_box, "MENU_CONTINUE", continue_run)
-	add_localized_button(main_box, "MENU_OPTIONS", open_options_from_main)
-	add_localized_button(main_box, "MENU_CODEX", show_codex)
-	add_localized_button(main_box, "MENU_RUN_HISTORY", show_run_history)
-	add_localized_button(main_box, "MENU_LOADOUT", show_loadout)
-	add_localized_button(main_box, "MENU_QUIT", quit_game)
+	var library := GridContainer.new()
+	library.columns = 2
+	library.add_theme_constant_override("h_separation", 14)
+	library.add_theme_constant_override("v_separation", 14)
+	main_box.add_child(library)
+	add_localized_button(library, "MENU_LOADOUT", show_loadout)
+	add_localized_button(library, "MENU_CODEX", show_codex)
+	add_localized_button(library, "MENU_RUN_HISTORY", show_run_history)
+	add_localized_button(library, "MENU_OPTIONS", open_options_from_main)
+	main_box.add_child(create_separator())
+	var quit_button := add_localized_button(main_box, "MENU_QUIT", quit_game)
+	quit_button.custom_minimum_size.y = 46.0
+	version_label = create_label(16, UI_THEME.MUTED)
+	version_label.text = APP_VERSION_DATA.DISPLAY
+	main_menu.add_child(version_label)
+	version_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	version_label.position = Vector2(112.0, 1000.0)
+	main_menu.resized.connect(_layout_title_screen)
+	_layout_title_screen()
 
 	prologue_menu = create_screen("PrologueMenu", Color(0.002, 0.006, 0.005, 1.0))
 	var prologue_box := create_center_panel(prologue_menu, Vector2(880.0, 660.0))
@@ -344,6 +375,9 @@ func create_center_panel(parent: Control, minimum_size: Vector2) -> VBoxContaine
 
 func create_label(font_size: int, color: Color = Color(0.9, 0.9, 0.84)) -> Label:
 	var label := Label.new()
+	label.add_theme_font_override("font", UI_THEME.BODY_FONT)
+	if font_size >= 28:
+		label.add_theme_font_override("font", UI_THEME.DISPLAY_FONT)
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", color)
 	return label
@@ -361,17 +395,23 @@ func create_wrapped_center_label(font_size: int, minimum_height: float) -> Label
 func create_separator() -> HSeparator:
 	var separator := HSeparator.new()
 	separator.custom_minimum_size.y = 12.0
+	var rule := StyleBoxLine.new()
+	rule.color = UI_THEME.BRONZE
+	rule.thickness = 1
+	separator.add_theme_stylebox_override("separator", rule)
 	return separator
 
 
 func add_localized_button(
-	parent: VBoxContainer,
+	parent: Container,
 	translation_key: String,
 	callback: Callable
 ) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = Vector2(0.0, 56.0)
-	button.add_theme_font_size_override("font_size", 18)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.add_theme_font_size_override("font_size", 21)
+	UI_THEME.style_button(button)
 	button.pressed.connect(callback)
 	parent.add_child(button)
 	localized_buttons[button] = translation_key
@@ -382,6 +422,7 @@ func refresh_localized_text() -> void:
 	if title_label == null:
 		return
 	title_label.text = tr("GAME_TITLE")
+	menu_eyebrow.text = tr("PROLOGUE_TITLE")
 	subtitle_label.text = tr("GAME_TAGLINE")
 	prologue_title.text = tr("PROLOGUE_TITLE")
 	prologue_body.text = tr("PROLOGUE_BODY")
@@ -858,7 +899,18 @@ func apply_shell_accessibility() -> void:
 	if ui_layer == null:
 		return
 	var high_contrast: bool = bool(settings.get("high_contrast", false))
+	if menu_atmosphere != null:
+		menu_atmosphere.set_reduced_motion(bool(settings.get("reduced_motion", false)))
 	apply_contrast_recursive(ui_layer, high_contrast)
+
+
+func _layout_title_screen() -> void:
+	if menu_content == null:
+		return
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	menu_content.position = Vector2(viewport_size.x * 0.058, viewport_size.y * 0.135)
+	menu_content.size = Vector2(minf(620.0, viewport_size.x * 0.36), 0.0)
+	version_label.position = Vector2(menu_content.position.x, viewport_size.y - 58.0)
 
 
 func apply_contrast_recursive(node: Node, enabled: bool) -> void:

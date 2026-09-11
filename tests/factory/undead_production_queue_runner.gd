@@ -85,7 +85,8 @@ func run_validation() -> void:
 
 
 	game.update_bones_ui()
-	assert(game.create_skeleton_button.text.contains("PRODUZIR ESQUELETO (FILA)"))
+	assert(game.create_skeleton_button.text.begins_with("ESQUELETO x"))
+	assert(game.create_skeleton_button.tooltip_text.contains("fila de produção"))
 	assert(game.production_queue_label.text.contains("Montador: 3"))
 
 

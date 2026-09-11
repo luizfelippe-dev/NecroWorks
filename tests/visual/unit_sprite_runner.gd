@@ -49,7 +49,9 @@ func run_validation() -> void:
 		assert(is_equal_approx(sprite.scale.x, sprite.scale.y))
 		var driver: Node = unit.get_node_or_null("AnimationDriver")
 		assert(driver != null)
-		assert(unit.get_node_or_null("FrameBlend") is Sprite2D)
+		assert(unit.get_node_or_null("FrameBlend") == null)
+		assert(sprite.material is ShaderMaterial)
+		assert(not (driver.get("profile") as Dictionary).is_empty())
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
 		var frame_sequences: Dictionary = driver.get("frame_sequences") as Dictionary
 		if visual_id in [
@@ -58,9 +60,7 @@ func run_validation() -> void:
 			"arcane_auditor", "foreman"
 		]:
 			assert(state_textures.size() == 5)
-			assert(frame_sequences.size() == 2)
-			assert((frame_sequences["move"] as Array).size() == 6)
-			assert((frame_sequences["attack"] as Array).size() == 6)
+			assert(frame_sequences.is_empty())
 			assert(sprite.texture == state_textures["idle"])
 			assert(sprite.scale.x > 0.20)
 			game.play_unit_move_animation(unit, 1.0)

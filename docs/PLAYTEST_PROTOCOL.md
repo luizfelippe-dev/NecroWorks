@@ -1,6 +1,6 @@
 # NecroWorks — Protocolo de Playtest
 
-**Atualizado em:** 08/09/2026
+**Atualizado em:** 11/09/2026
 
 ## Objetivo
 
@@ -25,6 +25,10 @@ Medir se uma pessoa nova entende o ciclo Cadáver → processamento → recursos
 - intenção de jogar outra run e de recomendar.
 
 O histórico local das vinte runs já registra a maior parte da telemetria mecânica. Observações e respostas devem ser coletadas com consentimento, sem dados pessoais desnecessários.
+
+## Foco visual da v0.6.2
+
+Observar marcha contínua, ataque sob dano simultâneo, diferenças entre famílias, legibilidade dos custos e entendimento da fila. Testar as dez sinergias com rolagem e os três idiomas. Registrar família, estado, resolução e trecho em vídeo quando houver rigidez, deslizamento ou deformação aparente. O shader atual não equivale a uma caminhada desenhada quadro a quadro.
 
 ## Perguntas sem indução
 

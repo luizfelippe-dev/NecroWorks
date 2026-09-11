@@ -26,6 +26,10 @@ Enemy
 
 ## Estado atual
 
+A versão atual é **v0.6.2**. Menu ilustrado, HUD industrial, cartões de recursos, métricas alinhadas e sinergias roláveis acompanham um driver de movimento contínuo. O ataque não é mais interrompido pelo flash de dano. A animação continua procedural sobre as poses V1, sem novos quadros desenhados; os limites e a próxima avaliação estão em [PRESENTATION_UPDATE.md](docs/PRESENTATION_UPDATE.md).
+
+A validação atual reúne 79 runners, exportação Windows e smoke test. Veja [BUILDING.md](docs/BUILDING.md) para o executável e seu hash.
+
 Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de entrada com Nova Partida, Continuar, Opções e Sair. `F6` sobre `scenes/world/gameplay.tscn` permanece disponível para testar diretamente o gameplay.
 
 O menu de pausa abre com `Esc`. Idioma, volume geral e tela cheia são persistidos em `user://necroworks_settings.cfg`; o checkpoint versionado de partida usa `user://necroworks_run.json` e restaura onda, recursos, exército, upgrades, Fábrica e Doutrina. A gravação JSON é transacional, mantém um backup anterior e nunca fecha a partida quando o disco recusa o salvamento.
@@ -321,7 +325,7 @@ O painel de Doutrina do Exército permite salvar composição-alvo, reservas mí
 
 A v0.4.0 formaliza Skeleton Warrior, Skeleton Archer, Zombie Tank, Ghost, Lich e Lich Thrall em um catálogo de receitas e no componente compartilhado `UndeadRuntimeUnit`. HP, tempo de ataque, habilidade, duração temporária e slot são sincronizados pelo runtime; os antigos dicionários permanecem somente como ponte compatível.
 
-A v0.6.1 preserva a vertical slice técnica e melhora a leitura do combate. As onze famílias usam cinco estados visuais e linhas do tempo com seis fases para caminhada e ataque, interpoladas sem interferir na simulação. O jogo possui perfil permanente, histórico, Codex, projetos, operadores, contratos, desafios, tutorial localizado, configurações schema v3 e acessibilidade básica. A Fábrica possui maquinário ilustrado, feedback físico, ambiente industrial e nove sinais SFX distribuídos entre volumes de Música, Efeitos e Interface. As 432 chaves do catálogo têm conteúdo completo nos três idiomas; a revisão editorial nativa pertence à validação da demo.
+A v0.6.2 preserva a vertical slice técnica e renova menu, HUD e movimento contínuo. As onze famílias mantêm cinco poses V1 animadas proceduralmente, sem novos frames desenhados. Perfil permanente, histórico, Codex, projetos, operadores, contratos, desafios, tutorial, configurações schema v3, VFX e áudio permanecem ativos. O catálogo tem 433 chaves completas nos três idiomas; revisão editorial nativa e validação de naturalidade pertencem ao playtest.
 
 Checkpoint e perfil usam gravação transacional, backup recuperável, validação defensiva e proteção contra schemas futuros. Derrota e possibilidade de recuperação possuem avaliadores únicos, com diagnóstico localizado no resumo. O comando `tools/validate_release.ps1` executa regressões, exportação e smoke test, enquanto o CI repete o gate no Windows. O estado da auditoria, os testes externos e os critérios de publicação estão em `docs/AUDIT_STATUS.md`, `docs/PLAYTEST_PROTOCOL.md` e `docs/RELEASE_GATES.md`.
 

@@ -4,13 +4,13 @@
 
 ## Estado atual
 
-A v0.6.1 preserva a vertical slice técnica, com 20 ondas, cinco famílias permanentes de mortos-vivos, três invasores, três chefes, Fábrica automatizada, progressão horizontal, narrativa, tutorial, localização, acessibilidade básica, arte por estados, VFX e áudio procedural. Caminhadas e ataques das onze famílias agora usam linhas do tempo de seis fases com movimento interpolado; a alteração é estritamente visual.
+A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial com cartões e métricas alinhadas, sinergias roláveis e movimento procedural contínuo nas onze famílias. O ataque não é mais cancelado pelo flash de dano. Não foram produzidos frames novos de personagens; o shader trabalha sobre as poses V1, e a naturalidade ainda precisa de avaliação em uma run manual. Regras, economia e balanceamento permanecem intactos.
 
 As correções internas da auditoria estão implementadas: save transacional, checkpoint de início de onda, validação defensiva, recuperação e diagnóstico centralizados, gate de release, CI, matriz de resoluções, estresse e cinco estratégias. O aceite está em `docs/VERTICAL_SLICE_ACCEPTANCE.md`; o quadro completo, em `docs/AUDIT_STATUS.md`.
 
 ## Ordem de continuação
 
-1. executar uma run manual completa no build gerado pelo gate;
+1. executar uma run manual completa na v0.6.2, observando caminhada/ataque, lotes e rolagem das sinergias;
 2. revisar PT-BR, inglês e espanhol com leitores nativos;
 3. testar escala do Windows e hardware mínimo/recomendado;
 4. conduzir a primeira rodada cega de 5–10 pessoas;
@@ -31,6 +31,7 @@ As correções internas da auditoria estão implementadas: save transacional, ch
 
 ## Documentos principais
 
+- `docs/PRESENTATION_UPDATE.md`: escopo, limitações e evidências da apresentação v0.6.2;
 - `docs/PROJECT_STATE.md`: estado técnico;
 - `docs/ROADMAP.md`: ordem e marcos;
 - `docs/GAME_DESIGN.md`: regras e balanceamento;

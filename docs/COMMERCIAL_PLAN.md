@@ -411,4 +411,4 @@ A próxima decisão comercial não é acrescentar dezenas de sistemas. É execut
 
 ## Vertical slice fechada
 
-A v0.6.1 é o build-base para validação externa. Ela preserva o conteúdo aceito na v0.6.0 e acrescenta o primeiro passe de fluidez comum às onze famílias. O número aparece no menu e acompanha checkpoint, projeto e executável, permitindo relacionar cada observação ao mesmo artefato. A partir daqui, qualquer mudança usada em playtest deve gerar novo commit, novo hash e nota curta de impacto.
+A v0.6.2 é o build-base para validação externa. Ela preserva o conteúdo aceito na v0.6.0 e revisa menu, HUD e continuidade de movimento. A apresentação dos personagens ainda usa poses V1 deformadas proceduralmente; não deve ser anunciada como animação final. O número aparece no menu e acompanha checkpoint, projeto e executável, permitindo relacionar cada observação ao mesmo artefato. A partir daqui, qualquer mudança usada em playtest deve gerar novo commit, novo hash e nota curta de impacto.

@@ -4,9 +4,13 @@
 
 ---
 
-## 11/09/2026 — Movimento interpolado sobre poses-chave V1
+## 11/09/2026 — Continuidade visual e interface industrial
 
-As onze famílias continuam usando seus cinco PNGs transparentes como fonte de identidade. Caminhada e ataque passaram a ser linhas do tempo de seis fases compostas por essas poses, acompanhadas por transição cruzada e interpolação contínua de posição e rotação. Essa solução corrige o aspecto travado imediatamente sem introduzir folhas inconsistentes ou fundos falsos. O catálogo pode substituir cada fase por frames desenhados no futuro sem mudar eventos de combate, saves ou regras.
+A abordagem de transição cruzada da v0.6.1 ficou aquém da qualidade pretendida: repetir poses não cria novas fases anatômicas. Na v0.6.2, retirei a mistura de silhuetas e usei um relógio contínuo, deslocamento observado, âncoras por família e deformação procedural localizada. O flash de dano não cancela mais um ataque. O contrato continua aceitando futuros frames próprios, sem interferir na simulação.
+
+O menu usa uma ilustração independente da HUD. Tipografia, molduras, cartões econômicos e métricas pertencem a componentes de apresentação, não às regras do combate. Sinergias longas usam rolagem em vez de forçar uma lista dentro de altura fixa.
+
+A solução atual ainda não é animação autoral quadro a quadro. O próximo investimento artístico deve validar uma família em movimento real antes de ampliar a produção para todo o elenco.
 
 ---
 

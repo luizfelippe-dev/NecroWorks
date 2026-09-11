@@ -1,6 +1,6 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 01/09/2026
+**Atualizado:** 11/09/2026 — v0.6.2
 
 # Stack
 
@@ -31,6 +31,8 @@ Repository layout:
 
 ```text
 assets/
+├── backgrounds/
+├── fonts/
 ├── reference/
 └── sprites/
     └── units/
@@ -65,7 +67,11 @@ scripts/
 │   ├── main_controller.gd
 │   └── run_director.gd
 ├── ui/
+│   ├── gameplay_dashboard.gd
+│   ├── industrial_panel_frame.gd
+│   ├── necro_ui_theme.gd
 │   ├── production_controls_factory.gd
+│   ├── resource_glyph.gd
 │   ├── run_summary_formatter.gd
 │   ├── upgrade_status_formatter.gd
 │   └── unit_health_bar.gd
@@ -74,7 +80,9 @@ scripts/
     ├── corpse_visual.gd
     ├── corpse_visual_catalog.gd
     ├── industrial_backdrop.gd
+    ├── title_atmosphere.gd
     ├── unit_animation_driver.gd
+    ├── unit_motion.gdshader
     └── unit_sprite_catalog.gd
 
 tests/
@@ -289,7 +297,11 @@ Combat-slot compaction keeps formations from leaving gaps after deaths.
 
 `CorpseVisualCatalog` classifica restos comuns em blindados, arcanos ou ágeis e reserva uma família para cada chefe. `CorpseVisual` mantém o `Button` como área clicável, mas apresenta sprite, tonalidade e rótulo próprios. O processamento continua usando os metadados econômicos já existentes.
 
-`UnitAnimationDriver` define cinco comandos estáveis: `idle`, `move`, `attack`, `hit` e `death`. As onze famílias consomem o contrato completo a partir de suas pastas V1, com escala de canvas própria para cada silhueta. `UnitSpriteCatalog` também fornece sequências de seis fases para caminhada e ataque. O driver percorre essas poses-chave, usa um `FrameBlend` transitório para suavizar a troca e interpola elevação, inclinação, antecipação, contato e recuperação; pedidos redundantes de caminhada não reiniciam o ciclo. A morte mantém o nó visível por 0,24 s, mas registro, slot, métricas e economia já foram resolvidos antes dessa espera visual.
+`UnitAnimationDriver` define cinco comandos estáveis: `idle`, `move`, `attack`, `hit` e `death`. As onze famílias conservam as texturas V1. Na v0.6.2, `UnitSpriteCatalog.get_motion_profile()` fornece direção, cadência, amplitude, peso e âncoras das pernas por família. O driver observa o deslocamento real, preserva a fase da passada e aproxima suavemente a intensidade da locomoção. `unit_motion.gdshader` aplica deslocamentos locais à textura para alternar os apoios e dar movimento próprio aos espectrais.
+
+O ataque usa sua pose V1 e uma curva contínua de avanço e recuperação depois do impacto já resolvido pela simulação. O feedback de dano é independente: receber `hit` durante movimento ou ataque acrescenta cor e recuo curto sem cancelar a ação principal. A v0.6.2 não acrescenta quadros desenhados de personagens, não cria `FrameBlend` e não repete texturas para simular uma sequência maior. A API de sequências permanece disponível para integração futura de quadros próprios; o catálogo atual devolve um conjunto vazio.
+
+A morte mantém o nó por até 0,24 s, com desaparecimento visual de 0,22 s. Registro, slot, métricas e economia são resolvidos antes dessa espera. Movimento Reduzido desliga a deformação e os deslocamentos decorativos sem mudar dano, cooldown ou produção. O resultado procedural precisa de avaliação em uma partida completa; testes de estado não certificam naturalidade de movimento.
 
 # Movement
 
@@ -337,16 +349,11 @@ finish_run(false)
 
 # UI
 
-Current runtime UI:
+`scripts/ui/gameplay_dashboard.gd` monta a apresentação da partida sobre os controles existentes. Os recursos aparecem em quatro cartões com símbolos, nome e valor; as métricas usam colunas alinhadas; botões de produção recebem retratos; Onda, processamento e produção recebem barras de progresso. Os valores e estados continuam vindo do controlador. Os rótulos agregados de recursos e métricas permanecem como compatibilidade, ocultos atrás da apresentação atual.
 
-- Resources block;
-- Create Skeleton button;
-- Create Zombie button;
-- Wave HUD;
-- Synergy HUD;
-- Upgrade UI;
-- Run End UI;
-- compact Debug HUD.
+`scripts/ui/necro_ui_theme.gd` concentra cores, fontes e estados de botão. `industrial_panel_frame.gd` desenha rebites e bordas internas, enquanto `resource_glyph.gd` desenha os quatro símbolos econômicos sem depender de imagens com texto. Títulos usam Cinzel; textos, números e métricas usam Barlow Medium. Barlow Condensed Medium permanece disponível no tema como alternativa compacta. Os arquivos e as licenças OFL ficam em `assets/fonts/`; o preset Windows inclui os avisos de licença.
+
+Fábrica, Doutrina, Rituais, Fusões, aprimoramentos e resumo mantêm os controles e as rotas de navegação existentes. Os textos continuam em PT-BR, inglês e espanhol. A área inferior conserva o limite de segurança para execução incorporada no editor; barras de progresso usam margens internas próprias para não aumentar a altura mínima dos controles.
 
 Debug:
 
@@ -508,11 +515,13 @@ Not required yet.
 
 `scenes/core/app.tscn` is the F5 application entry point. It owns `GameShell`, the Main Menu, Pause and Options overlays, and instantiates `scenes/world/gameplay.tscn` as the gameplay child. Keeping `scenes/world/gameplay.tscn` independent preserves direct F6 iteration and all gameplay runners.
 
+A tela inicial da v0.6.2 usa a ilustração `assets/backgrounds/necroworks_title_v2.png` e a camada `scripts/visual/title_atmosphere.gd`. A arte ocupa o fundo; um gradiente mantém a região dos controles legível. `GameShell` organiza Nova Partida e Continuar acima da grade de atalhos para loadout, Codex, histórico e opções. Títulos, botões e foco compartilham o tema da partida. Movimento Reduzido congela o deslocamento da arte. A imagem não contém os textos do menu: eles permanecem controles localizáveis.
+
 `SettingsStore` sanitiza e persiste idioma, volume, tela cheia, Movimento Reduzido, Alto Contraste e estado do tutorial em um `ConfigFile` v2. Arquivos v1 recebem os novos campos com defaults seguros em memória e são gravados no formato atual na próxima alteração. `RunSaveStore` grava checkpoints JSON v2 com versão da aplicação, tipo e data; versões desconhecidas são rejeitadas. `TransactionalJsonStore` escreve primeiro em `.tmp`, valida o JSON, move o arquivo anterior para `.bak` e só então promove o novo conteúdo. `MetaProgressionStore` compartilha essa fronteira e protege perfis de schemas futuros contra escrita. `scripts/game/main_controller.gd` continua responsável pelo estado da run, enquanto o shell controla disco, menus e ciclo da aplicação.
 
 Checkpoints automáticos são confirmados antes do início de cada Onda. Salvar e Voltar reutiliza exatamente esse estado seguro: carregar reinicia a Onda registrada com exército e economia anteriores ao combate, sem tentar serializar inimigos, dano, Cadáveres ou timers parciais. O shell somente fecha a run depois que o armazenamento confirma a gravação.
 
-`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/save_reliability_runner.gd` força corrupção, fallback, falha de escrita, payload inválido, schema futuro e descarte de ganhos parciais. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte atual contém 78 cenários, incluindo onze famílias animadas, recuperação, áudio, resoluções, estresse e matriz de builds.
+`tests/core/persistence_runner.gd` protege sanitização, round-trip e restauração. `tests/core/save_reliability_runner.gd` força corrupção, fallback, falha de escrita, payload inválido, schema futuro e descarte de ganhos parciais. `tests/core/game_shell_runner.gd` cobre navegação, pausa e textos; `tutorial_runner.gd` cobre o primeiro uso e sua persistência; `accessibility_runner.gd` protege a aplicação das preferências no runtime. A suíte também cobre as onze famílias animadas, recuperação, áudio, resoluções, estresse e matriz de builds. O resultado consolidado de cada versão pertence ao registro de validação correspondente.
 
 ## Onboarding e acessibilidade
 
@@ -582,4 +591,4 @@ O gameplay emite `meta_progress_reported` ao concluir uma Onda, processar um Cad
 
 Áudio obedece aos barramentos `Master`, `Music`, `SFX` e `UI`. A arte física da Fábrica é uma camada passiva atrás dos controles, sem assumir regras de produção. O gate em `tools/validate_release.ps1` descobre runners automaticamente e mantém logs/builds fora do Git.
 
-`scripts/core/app_version.gd` é a fonte única da versão de produto. O menu mostra `v0.6.1`; checkpoint, `project.godot` e teste do preset Windows precisam coincidir com ela antes de qualquer build aceito.
+`scripts/core/app_version.gd` é a fonte única da versão de produto. O menu mostra `v0.6.2`; checkpoint, `project.godot` e teste do preset Windows precisam coincidir com ela antes de qualquer build aceito. O escopo do passe de apresentação está em [PRESENTATION_UPDATE.md](PRESENTATION_UPDATE.md).

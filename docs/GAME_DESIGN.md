@@ -1,5 +1,11 @@
 # NecroWorks — Game Design Document
 
+## Apresentação — v0.6.2
+
+O passe de interface e animação não altera números de combate nem economia. Os botões da linha de produção mostram unidade, lote e custo; o clique continua reservando recursos para produção temporizada. Dicas explicam a fila, e as barras acompanham seus ciclos. Sinergias continuam com as mesmas regras, agora dentro de uma área rolável.
+
+As imagens de ataque e o movimento procedural são resposta aos eventos da simulação, nunca uma segunda fonte de dano ou cooldown. A avaliação visual está em `PRESENTATION_UPDATE.md`.
+
 ## High concept
 
 > Kill enemies. Recycle the corpses. Turn them into your army.

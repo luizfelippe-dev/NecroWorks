@@ -50,9 +50,17 @@ func run_validation() -> void:
 		game.metrics_label.position.y + game.metrics_label.size.y
 		<= metrics_panel.position.y + metrics_panel.size.y
 	)
-	assert(label.get_line_count() == synergy_ids.size() + 1)
+	assert(label.get_line_count() >= synergy_ids.size() + 1)
 	assert(label.size.y >= label.get_combined_minimum_size().y)
-	assert(label.position.y + label.size.y <= panel.position.y + panel.size.y)
+	var scroll: ScrollContainer = panel.get_node("SynergyScroll")
+	assert(label.get_parent() == scroll)
+	assert(scroll.clip_contents)
+	assert(panel.get_global_rect().encloses(scroll.get_global_rect()))
+	assert(scroll.vertical_scroll_mode == ScrollContainer.SCROLL_MODE_AUTO)
+	# Longer localized names may wrap; every entry stays reachable within the panel.
+	scroll.scroll_vertical = 10000
+	await process_frame
+	assert(scroll.scroll_vertical > 0)
 	print("SYNERGY PANEL BOUNDS VALIDATION: PASS")
 	game.queue_free()
 	quit()

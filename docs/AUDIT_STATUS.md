@@ -1,6 +1,6 @@
 # NecroWorks — Situação da Auditoria
 
-**Atualizado em:** 08/09/2026
+**Atualizado em:** 11/09/2026
 
 Este quadro separa correção de código, validação interna e dependências externas. Um item só recebe estado concluído quando existe implementação e evidência reproduzível.
 
@@ -19,7 +19,7 @@ Este quadro separa correção de código, validação interna e dependências ex
 
 **Milestone técnica:** concluída como v0.6.0 em 08/09/2026. O aceite não absorve gates humanos ou comerciais.
 
-**Build atual de playtest:** v0.6.1, validada em 11/09/2026 com o passe comum de fluidez de caminhada e ataque.
+**Build atual de playtest:** v0.6.2, com menu/HUD renovados, movimento contínuo e 79 regressões aprovadas. O passe v0.6.1 não encerrou o problema de naturalidade; a nova solução procedural segue sujeita à avaliação humana e não inclui frames desenhados novos.
 
 | Frente | Estado | Limite conhecido |
 |---|---|---|

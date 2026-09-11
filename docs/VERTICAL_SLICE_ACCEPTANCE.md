@@ -30,7 +30,11 @@ Uma run completa demonstra o diferencial de NecroWorks: invasores mortos viram C
 - catálogo localizado sem chave duplicada, ausente ou vazia;
 - build release inicia fora do editor e possui hash registrado.
 
-## Evidência final
+## Revisão posterior
+
+A v0.6.2 mantém este aceite de conteúdo, mas substitui a apresentação de movimento e renova menu/HUD. O gate atual possui 79 runners; evidência e hash atualizados ficam em `BUILDING.md`. A avaliação artística continua aberta, pois o movimento atual é procedural sobre as poses V1.
+
+## Evidência histórica da v0.6.0
 
 - Godot: `4.7.1.stable.official.a13da4feb`;
 - regressão: 78 runners aprovados em 73,22 segundos;
