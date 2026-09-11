@@ -49,22 +49,29 @@ func run_validation() -> void:
 		assert(is_equal_approx(sprite.scale.x, sprite.scale.y))
 		var driver: Node = unit.get_node_or_null("AnimationDriver")
 		assert(driver != null)
+		assert(unit.get_node_or_null("FrameBlend") is Sprite2D)
 		var state_textures: Dictionary = driver.get("state_textures") as Dictionary
+		var frame_sequences: Dictionary = driver.get("frame_sequences") as Dictionary
 		if visual_id in [
 			"skeleton", "skeleton_archer", "zombie", "ghost", "lich",
 			"human_warrior", "mage", "elf", "grave_marshal",
 			"arcane_auditor", "foreman"
 		]:
 			assert(state_textures.size() == 5)
+			assert(frame_sequences.size() == 2)
+			assert((frame_sequences["move"] as Array).size() == 6)
+			assert((frame_sequences["attack"] as Array).size() == 6)
 			assert(sprite.texture == state_textures["idle"])
 			assert(sprite.scale.x > 0.20)
 			game.play_unit_move_animation(unit, 1.0)
 			assert(sprite.texture == state_textures["move"])
-			await create_timer(0.25).timeout
+			await create_timer(0.50).timeout
 			assert(sprite.texture == state_textures["idle"])
 			game.play_unit_animation(unit, "attack", 1.0)
+			assert(str(driver.get("current_animation")) == "attack")
+			await create_timer(0.11).timeout
 			assert(sprite.texture == state_textures["attack"])
-			await create_timer(0.25).timeout
+			await create_timer(0.35).timeout
 			game.play_unit_animation(unit, "hit")
 			assert(sprite.texture == state_textures["hit"])
 			await create_timer(0.20).timeout

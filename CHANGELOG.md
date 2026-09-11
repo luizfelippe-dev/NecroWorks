@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.1] — 11/09/2026 — Fluidez de combate
+
+### Alterado
+
+- caminhada das onze famílias visuais passou a usar seis fases de pose em um ciclo de 0,32 s, com transição cruzada, oscilação e inclinação interpoladas;
+- ataques agora possuem antecipação, impacto sustentado e recuperação em seis fases ao longo de 0,28 s;
+- o driver ignora pedidos redundantes de movimento enquanto um ciclo já está em execução, evitando reinícios e travamentos aparentes;
+- a apresentação continua desacoplada de dano, alcance, cooldown, economia e balanceamento.
+
+### Validado
+
+- contrato de sequências rejeita estados, quantidades e tipos de frame inválidos;
+- regressão visual percorre caminhada, ataque, impacto e morte das onze famílias atuais;
+- versão de produto, projeto e metadados Windows avançados em conjunto para `0.6.1`.
+
 ## [0.6.0] — 08/09/2026 — Vertical Slice
 
 ### Added

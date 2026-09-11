@@ -300,6 +300,22 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 	return {}
 
 
+static func get_animation_sequences(visual_id: String) -> Dictionary:
+	var textures: Dictionary = get_animation_textures(visual_id)
+	if textures.is_empty():
+		return {}
+	return {
+		"move": [
+			textures["move"], textures["move"], textures["idle"],
+			textures["idle"], textures["move"], textures["move"],
+		],
+		"attack": [
+			textures["idle"], textures["idle"], textures["attack"],
+			textures["attack"], textures["attack"], textures["idle"],
+		],
+	}
+
+
 static func get_canvas_scale_multiplier(visual_id: String) -> float:
 	# Final state sources keep transparent safe areas around their silhouettes.
 	match visual_id:

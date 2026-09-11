@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 08/09/2026
+**Atualizado:** 11/09/2026
 
 ---
 
@@ -10,10 +10,11 @@
 2. [concluído] completar as onze famílias visuais atuais e a arte física da Fábrica;
 3. [concluído] integrar buses, volumes separados, sinais fabris e ambiente industrial V1;
 4. [concluído] medir seis resoluções, horda de 36 unidades e cinco perfis de build;
-5. executar QA manual em escala do Windows, hardware real e instalação limpa;
-6. realizar revisão editorial nativa de PT-BR, inglês e espanhol;
-7. realizar testes cegos conforme `PLAYTEST_PROTOCOL.md`;
-8. ajustar dificuldade e interface somente com a evidência coletada.
+5. [concluído] substituir impulsos rígidos por sequências interpoladas de caminhada e ataque nas onze famílias;
+6. executar QA manual em escala do Windows, hardware real e instalação limpa;
+7. realizar revisão editorial nativa de PT-BR, inglês e espanhol;
+8. realizar testes cegos conforme `PLAYTEST_PROTOCOL.md`;
+9. ajustar dificuldade e interface somente com a evidência coletada.
 
 This order is a dependency chain, not a promise that every item is equally sized. Each item must be validated before the next one expands its surface area.
 

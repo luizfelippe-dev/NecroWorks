@@ -1,5 +1,11 @@
 # NecroWorks — Devlog
 
+## 11/09/2026 — Passe de fluidez v0.6.1
+
+Reescrevi a apresentação de caminhada e ataque para abandonar o impulso de uma única pose. Todas as onze famílias percorrem seis fases com transição cruzada; a caminhada usa duas passadas com oscilação contínua, enquanto o ataque separa antecipação, contato sustentado e recuperação. O driver protege a sequência com uma geração de reprodução e não reinicia um ciclo de movimento que ainda está ativo. Dano, cadência, alvo, alcance e economia permaneceram intactos.
+
+Também ampliei as regressões do driver e do catálogo visual para validar as sequências, sua duração e entradas inválidas. A versão de produto avançou para `0.6.1`. O gate aprovou os 78 runners em 91,10 segundos; o release Windows abriu no smoke test com 122.948.728 bytes e SHA-256 `D5A0391B207804C3342A36324E3219A0A7EC63E7A5CF1D4FC7752B37AC5A174D`.
+
 ## 08/09/2026 — Vertical slice v0.6.0 fechada
 
 Transformei o conjunto aprovado pela auditoria em uma milestone identificável. `AppVersion` passou a ser a fonte de `0.6.0`, o menu mostra a versão e o gate confere checkpoint, projeto e metadados Windows. O documento de aceite fixa exatamente o que esta entrega prova e transfere revisão nativa, hardware real, áudio comercial, direitos e Steamworks para a validação da demo.

@@ -1,6 +1,12 @@
 # NecroWorks — Decisions
 
-**Atualizado:** 01/09/2026
+**Atualizado:** 11/09/2026
+
+---
+
+## 11/09/2026 — Movimento interpolado sobre poses-chave V1
+
+As onze famílias continuam usando seus cinco PNGs transparentes como fonte de identidade. Caminhada e ataque passaram a ser linhas do tempo de seis fases compostas por essas poses, acompanhadas por transição cruzada e interpolação contínua de posição e rotação. Essa solução corrige o aspecto travado imediatamente sem introduzir folhas inconsistentes ou fundos falsos. O catálogo pode substituir cada fase por frames desenhados no futuro sem mudar eventos de combate, saves ou regras.
 
 ---
 

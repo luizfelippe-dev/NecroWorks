@@ -23,7 +23,7 @@ func run_validation() -> void:
 	assert(shell.main_menu.visible)
 	assert(not shell.pause_menu.visible)
 	assert(shell.title_label.text == "NECROWORKS")
-	assert(shell.version_label.text == "v0.6.0")
+	assert(shell.version_label.text == "v0.6.1")
 	assert(shell.codex_content.text.contains("LOCKED RECORD"))
 	shell.profile.discoveries["grave_manifest"] = true
 	shell.show_codex()

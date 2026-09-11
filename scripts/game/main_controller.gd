@@ -6345,6 +6345,10 @@ func configure_unit_sprite(
 		"configure_state_textures",
 		UNIT_SPRITE_CATALOG.get_animation_textures(visual_id)
 	)
+	animation_driver.call(
+		"configure_frame_sequences",
+		UNIT_SPRITE_CATALOG.get_animation_sequences(visual_id)
+	)
 
 
 func ensure_unit_animation_driver(unit: Node2D, sprite: Sprite2D) -> Node:

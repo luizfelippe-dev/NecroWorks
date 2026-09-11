@@ -19,6 +19,8 @@ Este quadro separa correção de código, validação interna e dependências ex
 
 **Milestone técnica:** concluída como v0.6.0 em 08/09/2026. O aceite não absorve gates humanos ou comerciais.
 
+**Build atual de playtest:** v0.6.1, validada em 11/09/2026 com o passe comum de fluidez de caminhada e ataque.
+
 | Frente | Estado | Limite conhecido |
 |---|---|---|
 | Famílias visuais e três chefes | V1 concluída | revisão artística final continua antes da loja |

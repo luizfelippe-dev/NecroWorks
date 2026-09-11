@@ -1,10 +1,10 @@
 # NecroWorks — Continuidade do Desenvolvimento
 
-**Atualizado em:** 08/09/2026
+**Atualizado em:** 11/09/2026
 
 ## Estado atual
 
-A v0.6.0 está fechada como vertical slice técnica, com 20 ondas, cinco famílias permanentes de mortos-vivos, três invasores, três chefes, Fábrica automatizada, progressão horizontal, narrativa, tutorial, localização, acessibilidade básica, arte por estados, VFX e áudio procedural.
+A v0.6.1 preserva a vertical slice técnica, com 20 ondas, cinco famílias permanentes de mortos-vivos, três invasores, três chefes, Fábrica automatizada, progressão horizontal, narrativa, tutorial, localização, acessibilidade básica, arte por estados, VFX e áudio procedural. Caminhadas e ataques das onze famílias agora usam linhas do tempo de seis fases com movimento interpolado; a alteração é estritamente visual.
 
 As correções internas da auditoria estão implementadas: save transacional, checkpoint de início de onda, validação defensiva, recuperação e diagnóstico centralizados, gate de release, CI, matriz de resoluções, estresse e cinco estratégias. O aceite está em `docs/VERTICAL_SLICE_ACCEPTANCE.md`; o quadro completo, em `docs/AUDIT_STATUS.md`.
 

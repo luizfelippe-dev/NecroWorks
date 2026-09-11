@@ -5,8 +5,8 @@ O combate usa cinco estados visuais comuns. Cada unidade pode trocar a implement
 | Estado | Intenção | Duração-base do protótipo |
 |---|---|---:|
 | `idle` | manter a unidade viva e legível | contínua |
-| `move` | indicar deslocamento e direção | 0,16 s por impulso |
-| `attack` | antecipação curta e avanço no golpe | 0,18 s |
+| `move` | indicar deslocamento e direção | 0,32 s por ciclo |
+| `attack` | antecipação, impacto e recuperação | 0,28 s |
 | `hit` | confirmar dano recebido | 0,15 s |
 | `death` | retirar a unidade visualmente | 0,22 s |
 
@@ -21,11 +21,13 @@ O combate usa cinco estados visuais comuns. Cada unidade pode trocar a implement
 - a morte deve entregar o ponto exato usado para criar o Cadáver;
 - a animação não decide dano, cooldown, alvo ou recompensa.
 
-O componente atual fornece movimento procedural mínimo. Spritesheets finais serão conectados por trás desta interface durante o polimento da vertical slice.
+O componente atual reproduz poses-chave em seis fases, faz uma transição cruzada curta entre texturas e interpola o corpo a cada frame renderizado. A caminhada combina duas passadas, elevação e inclinação; o ataque separa antecipação, avanço, contato e recuperação. Spritesheets quadro a quadro ainda podem substituir as poses-chave por trás da mesma interface.
 
 ## Texturas por estado
 
-`UnitAnimationDriver.configure_state_textures()` aceita um dicionário parcial ou completo com os mesmos cinco nomes de estado. Ao iniciar uma ação, o driver troca a textura antes do tween; ao concluir `move`, `attack` ou `hit`, restaura `idle`. O estado `death` mantém sua textura até a unidade sair da árvore.
+`UnitAnimationDriver.configure_state_textures()` aceita um dicionário parcial ou completo com os mesmos cinco nomes de estado. `configure_frame_sequences()` recebe sequências com pelo menos duas texturas para `move` e `attack`; o catálogo atual fornece seis fases a todas as onze famílias. Ao concluir `move`, `attack` ou `hit`, o driver restaura transformação e `idle`. O estado `death` mantém sua textura até a unidade sair da árvore.
+
+Um pedido de `move` recebido durante um ciclo já ativo é aceito sem reiniciar a linha do tempo. Isso evita que chamadas frequentes da movimentação prendam a pose no primeiro frame. Cada reprodução recebe uma geração própria; impacto, ataque, morte ou Movimento Reduzido invalidam esperas anteriores sem permitir que uma ação velha restaure a textura depois da nova.
 
 Esse caminho permite integrar poses finais gradualmente. Uma unidade pode receber primeiro `idle` e `attack`, continuar usando a textura-base nos demais estados e completar o conjunto depois, sem alterar combate, dano ou cooldown.
 

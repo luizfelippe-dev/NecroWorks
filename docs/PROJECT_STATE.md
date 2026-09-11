@@ -1,8 +1,8 @@
 # NecroWorks — Estado do Projeto
 
-**Atualizado em:** 08/09/2026
+**Atualizado em:** 11/09/2026
 
-**Versão funcional:** v0.6.0 — vertical slice técnica concluída
+**Versão funcional:** v0.6.1 — vertical slice técnica com fluidez de combate revisada
 
 **Engine:** Godot 4.7.1
 
@@ -61,7 +61,7 @@ O salvamento de pausa representa o início da onda atual. Ao continuar, a compos
 - VFX de ataque, dano, habilidade, morte, invocação e entrada de Chefe;
 - nove sinais SFX procedurais com dez vozes simultâneas, ambiente industrial e proteção contra repetição excessiva;
 - direção de arte consolidada e concept sheets de cinco estados para Guerreiro Esqueleto e Zumbi Tank;
-- contrato de animação preparado para trocar texturas por estado sem tocar na simulação;
+- contrato de animação com cinco estados e sequências de seis fases para caminhada e ataque, sem tocar na simulação;
 - Guerreiro Esqueleto com cinco poses de runtime, movimento, ataque, impacto e morte conectados;
 - Zumbi Tank com cinco poses de runtime, escala pesada e retirada visual conectadas;
 - Fantasma com identidade fabril própria, cinco poses e dissipação conectadas;
@@ -129,8 +129,8 @@ Antes de publicar qualquer milestone:
 
 ## Próxima etapa
 
-A v0.6.0 está concluída como vertical slice técnica. Onboarding, acessibilidade básica, onze famílias animadas, Fábrica ilustrada, VFX, áudio procedural, ambiente, save transacional, recuperação e diagnóstico possuem regressão. O perfil v3 registra telemetria mecânica das vinte runs recentes, enquanto settings v3 guarda tutorial, acessibilidade e mixagem. O catálogo localizado possui 432 chaves completas em inglês, português do Brasil e espanhol. Projeto, checkpoint e metadados Windows compartilham a versão `0.6.0`, visível no menu principal.
+A v0.6.1 mantém a vertical slice técnica concluída e acrescenta fluidez visual às onze famílias. Caminhada e ataque usam seis fases de pose; deslocamento, inclinação, antecipação, impacto e recuperação são interpolados pelo driver sem alterar a cadência real do combate. Onboarding, acessibilidade básica, Fábrica ilustrada, VFX, áudio procedural, ambiente, save transacional, recuperação e diagnóstico possuem regressão. O perfil v3 registra telemetria mecânica das vinte runs recentes, enquanto settings v3 guarda tutorial, acessibilidade e mixagem. O catálogo localizado possui 432 chaves completas em inglês, português do Brasil e espanhol. Projeto, checkpoint e metadados Windows compartilham a versão `0.6.1`, visível no menu principal.
 
-O build local v0.6.0 validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 122.944.360 bytes e SHA-256 `7DBEAD6A35314013D62E60A08A22B8588EA0D84C63697186C9A82739E3498B13`. O gate aprovou 78 runners em 73,22 segundos antes da exportação e do smoke test. Fontes de conceito, documentação, testes e protótipos substituídos estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
+O build local v0.6.1 validado está em `builds/windows/NecroWorks.exe`, fora do Git, com 122.948.728 bytes e SHA-256 `D5A0391B207804C3342A36324E3219A0A7EC63E7A5CF1D4FC7752B37AC5A174D`. O gate aprovou 78 runners em 91,10 segundos antes da exportação e do smoke test. Fontes de conceito, documentação, testes e protótipos substituídos estão excluídos do pacote. Os templates oficiais Windows do Godot 4.7.1 permanecem instalados localmente.
 
 O próximo trabalho não deve ser confundido com mais uma correção automática: revisão editorial nativa, teste cego, perfil em hardware real, instalação limpa, direitos comerciais e Steamworks são gates externos. O acompanhamento está em `AUDIT_STATUS.md`; execução em `PLAYTEST_PROTOCOL.md` e `RELEASE_GATES.md`.

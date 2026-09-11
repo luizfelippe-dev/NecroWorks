@@ -289,7 +289,7 @@ Combat-slot compaction keeps formations from leaving gaps after deaths.
 
 `CorpseVisualCatalog` classifica restos comuns em blindados, arcanos ou ágeis e reserva uma família para cada chefe. `CorpseVisual` mantém o `Button` como área clicável, mas apresenta sprite, tonalidade e rótulo próprios. O processamento continua usando os metadados econômicos já existentes.
 
-`UnitAnimationDriver` define cinco comandos estáveis: `idle`, `move`, `attack`, `hit` e `death`. Guerreiro Esqueleto, Zumbi Tank, Fantasma, Guerreiro Humano e Mago consomem o contrato completo a partir de suas pastas V1, com escala de canvas própria para cada silhueta. Deslocamento, ataque e impacto combinam troca de textura com movimentos curtos de apresentação. A morte mantém o nó visível por 0,24 s, mas registro, slot, métricas e economia já foram resolvidos antes dessa espera visual. Famílias ainda incompletas continuam usando a apresentação procedural pela mesma interface.
+`UnitAnimationDriver` define cinco comandos estáveis: `idle`, `move`, `attack`, `hit` e `death`. As onze famílias consomem o contrato completo a partir de suas pastas V1, com escala de canvas própria para cada silhueta. `UnitSpriteCatalog` também fornece sequências de seis fases para caminhada e ataque. O driver percorre essas poses-chave, usa um `FrameBlend` transitório para suavizar a troca e interpola elevação, inclinação, antecipação, contato e recuperação; pedidos redundantes de caminhada não reiniciam o ciclo. A morte mantém o nó visível por 0,24 s, mas registro, slot, métricas e economia já foram resolvidos antes dessa espera visual.
 
 # Movement
 
@@ -574,7 +574,7 @@ O gameplay emite `meta_progress_reported` ao concluir uma Onda, processar um Cad
 
 `scripts/game/fusion_recipe_catalog.gd` owns immutable recipe IDs, costs, rewards and localization keys. `can_execute_fusion_recipe()` performs the complete preflight; `execute_fusion_recipe()` mutates state only after validation. The current recipes either grant Factory Points or create a free Ghost through the standard runtime path. `tests/economy/fusion_recipe_runner.gd` protects atomic failure, outputs, population pressure and localization.
 
-## Confiabilidade e operação da v0.6.0
+## Confiabilidade e operação da vertical slice
 
 `TransactionalJsonStore` é a fronteira comum de escrita temporária, releitura, backup e substituição de checkpoint e perfil. `RunSaveStore` valida schema, IDs, números, filas, capacidade e métricas antes que o payload toque a cena. `MetaProgressionStore` diferencia ausência, corrupção recuperável e schema futuro, evitando transformar incompatibilidade em perda silenciosa.
 
@@ -582,4 +582,4 @@ O gameplay emite `meta_progress_reported` ao concluir uma Onda, processar um Cad
 
 Áudio obedece aos barramentos `Master`, `Music`, `SFX` e `UI`. A arte física da Fábrica é uma camada passiva atrás dos controles, sem assumir regras de produção. O gate em `tools/validate_release.ps1` descobre runners automaticamente e mantém logs/builds fora do Git.
 
-`scripts/core/app_version.gd` é a fonte única da versão de produto. O menu mostra `v0.6.0`; checkpoint, `project.godot` e teste do preset Windows precisam coincidir com ela antes de qualquer build aceito.
+`scripts/core/app_version.gd` é a fonte única da versão de produto. O menu mostra `v0.6.1`; checkpoint, `project.godot` e teste do preset Windows precisam coincidir com ela antes de qualquer build aceito.
