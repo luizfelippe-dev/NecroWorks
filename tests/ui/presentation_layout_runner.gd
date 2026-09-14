@@ -32,6 +32,8 @@ func run_validation() -> void:
 	var game: Node = shell.current_game
 	game.set_process(false)
 	var dashboard: Node = game.get_node("GameplayDashboard")
+	assert(not game.has_node("BonesLabel"))
+	assert(not game.has_node("MetricsLabel"))
 	dashboard.set_process(false)
 	for locale: String in ["en", "pt_BR", "es"]:
 		LocalizationService.set_locale(locale)

@@ -18,9 +18,11 @@ Fábrica, rituais, doutrina, modificadores e loadout validam tipos e limites ant
 
 O shell informa perfil protegido/recuperado, checkpoint inválido/recuperado e falhas ao gravar run, perfil ou opções. O aviso oferece confirmação e nova tentativa; uma falha durante o combate pausa a partida, e confirmar não a retoma automaticamente. Histórico de conclusão não gravado permanece em memória; uma nova tentativa bem-sucedida limpa o checkpoint concluído. Arquivos protegidos não são sobrescritos.
 
-O campo opcional `processing_routes` preserva a distribuição no schema v2. Saves anteriores mantêm o total como rota não registrada, exibida no resumo e armazenada no histórico. A soma das rotas precisa corresponder ao total processado. O debug oculto não monta mais texto nem executa sua análise de recuperação. Ainda pendem consolidação de HUD, medições reais e as melhorias de experiência em `ROADMAP.md`.
+O campo opcional `processing_routes` preserva a distribuição no schema v2. Saves anteriores mantêm o total como rota não registrada, exibida no resumo e armazenada no histórico. A soma das rotas precisa corresponder ao total processado. O debug oculto não monta mais texto nem executa sua análise de recuperação. Ainda pendem extrações pontuais dos controles, medições em release/hardware definido e as melhorias de experiência em `ROADMAP.md`.
 
 Este arquivo concentra o estado técnico necessário para retomar o desenvolvimento. As decisões de produto ficam em `DECISIONS.md`, a visão de gameplay em `GAME_DESIGN.md`, a estrutura em `ARCHITECTURE.md` e o plano de entregas em `ROADMAP.md`.
+
+O HUD de recursos e métricas foi consolidado em `GameplayDashboard`, sem labels ocultas duplicadas. Textos fixos só mudam com o idioma e valores só são reescritos quando alterados. A comparação local renderizada na Intel UHD 630 está em `RENDERED_PROFILING.md`: amostra preliminar, não certificação de hardware mínimo. Os controles continuam funcionando pelos pontos de atualização existentes.
 
 ## Identidade
 

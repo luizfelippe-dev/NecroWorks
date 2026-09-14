@@ -42,14 +42,9 @@ func run_validation() -> void:
 		metrics_panel.position.y + metrics_panel.size.y
 		<= panel.position.y
 	)
-	assert(
-		game.metrics_label.size.y
-		>= game.metrics_label.get_combined_minimum_size().y
-	)
-	assert(
-		game.metrics_label.position.y + game.metrics_label.size.y
-		<= metrics_panel.position.y + metrics_panel.size.y
-	)
+	for value: Label in game.get_node("GameplayDashboard").metric_values:
+		assert(value.size.y >= value.get_combined_minimum_size().y)
+		assert(metrics_panel.get_global_rect().encloses(value.get_global_rect()))
 	assert(label.get_line_count() >= synergy_ids.size() + 1)
 	assert(label.size.y >= label.get_combined_minimum_size().y)
 	var scroll: ScrollContainer = panel.get_node("SynergyScroll")

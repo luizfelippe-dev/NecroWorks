@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Consolidação de HUD e medição renderizada
+
+- removidas labels ocultas de recursos/métricas e seus formatadores; dashboard passa a ser a única apresentação desses dados;
+- textos fixos traduzidos por mudança de idioma e valores reescritos apenas quando alterados;
+- regressões de tradução e limites verificam as labels visíveis, preservando controles de produção/processamento;
+- ferramenta de profiling com loop renderizado, aquecimento, percentis, memória estática e cenário com seed fixa;
+- comparação local registrada em `RENDERED_PROFILING.md`, sem prometer ganho consistente de FPS ou requisitos mínimos;
+- 82 runners aprovados, HUD renderizado em 720p, alias F6 iniciado e Windows exportado com smoke test. O teste de formatação de onda também foi reexecutado após remover as funções antigas.
+
 ### Avisos de persistência, rotas e ajustes de leitura
 
 - painel PT-BR/EN/ES para recuperação de backup, perfil protegido, checkpoint inválido e falhas de gravação de run/perfil/opções;

@@ -16,7 +16,8 @@ As tabelas seguintes preservam o fechamento histórico de 08–11/09. A nova aud
 | Evento inválido na retomada | Corrigida | ID/escolha anterior, tipos e escolha pertencente ao evento validados; backup e rejeição sem mutação cobertos pelo runner de integridade narrativa |
 | Subcampos de checkpoint | Corrigida | fábrica, rituais, doutrina, modificadores e loadout com tipos/limites; runner cobre capacidade, defaults legados, preservação do arquivo e fallback |
 | Feedback de persistência e métricas por rota | Corrigida | avisos localizados com nova tentativa; autosave falho pausa; distribuição persistida e legado identificado como desconhecido |
-| Debug oculto | Corrigida | não monta texto nem analisa recuperação até ficar visível; consolidação do HUD ainda pendente |
+| Debug oculto | Corrigida | não monta texto nem analisa recuperação até ficar visível |
+| HUD duplicado | Corrigida neste corte | labels e formatadores legados removidos; testes verificam dashboard visível; comparação renderizada documentada |
 | Ritmo, builds, chefes e automação | Pendente | preparação utilizável, escolhas distintas e metas por receita |
 | Animação, áudio, HUD e narrativa | Pendente | aprovação em movimento e sessão real, não somente poses/capturas |
 | Performance, resoluções e equilíbrio | Pendente | ampliar testes parciais com renderização, custos equivalentes e pessoas novas |

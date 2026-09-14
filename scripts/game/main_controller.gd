@@ -124,7 +124,6 @@ func refresh_world_localization() -> void:
 @onready var initial_skeleton: Node2D = $Skeleton
 @onready var initial_enemy: Node2D = $Enemy
 
-@onready var bones_label: Label = $BonesLabel
 @onready var create_skeleton_button: Button = $CreateSkeletonButton
 
 var create_zombie_button: Button = null
@@ -1716,7 +1715,6 @@ const COMBAT_ROW_ORDER: Array[int] = COMBAT_FORMATION_POLICY.COMBAT_ROW_ORDER
 var debug_label: Label = null
 var wave_label: Label = null
 var brand_label: Label = null
-var metrics_label: Label = null
 var factory_title_label: Label = null
 var processing_label: Label = null
 var resources_panel: Panel = null
@@ -8711,15 +8709,6 @@ func create_visual_shell() -> void:
 	tagline_label.add_theme_color_override("font_color", UI_GREEN)
 	add_child(tagline_label)
 
-	metrics_label = Label.new()
-	metrics_label.name = "MetricsLabel"
-	metrics_label.position = Vector2(1565.0, 35.0)
-	metrics_label.size = Vector2(305.0, 325.0)
-	metrics_label.z_index = 100
-	metrics_label.add_theme_font_size_override("font_size", 14)
-	metrics_label.add_theme_color_override("font_color", UI_TEXT)
-	add_child(metrics_label)
-
 	factory_title_label = Label.new()
 	factory_title_label.name = "FactoryTitleLabel"
 	factory_title_label.position = Vector2(390.0, 850.0)
@@ -10031,27 +10020,6 @@ func apply_button_style(button: Button, accent_color: Color) -> void:
 
 
 func update_metrics_ui() -> void:
-
-	if metrics_label == null:
-		return
-
-
-	metrics_label.text = GAMEPLAY_HUD_PRESENTER.format_metrics({
-		"enemies_killed": total_enemies_killed,
-		"corpses_processed": total_corpses_processed,
-		"skeletons_built": total_skeletons_created,
-		"skeletons_lost": total_skeletons_lost,
-		"zombies_built": total_zombies_created,
-		"zombies_lost": total_zombies_lost,
-		"ghosts_built": total_ghosts_created,
-		"ghosts_lost": total_ghosts_lost,
-		"liches_built": total_liches_created,
-		"liches_lost": total_liches_lost,
-		"thralls_active": get_temporary_thrall_count(),
-		"army_active": get_total_undead_count(),
-	}, Callable(self, "tr"))
-
-
 	if processing_label != null:
 		var directive_yield: Vector2i = get_processing_yield()
 		var directive_state: String = (
@@ -10089,28 +10057,6 @@ func update_metrics_ui() -> void:
 # =========================================================
 
 func configure_primary_hud_layout() -> void:
-
-	bones_label.position = Vector2(
-		45.0,
-		858.0
-	)
-
-	bones_label.size = Vector2(
-		280.0,
-		145.0
-	)
-	bones_label.z_index = 100
-
-	bones_label.add_theme_font_size_override(
-		"font_size",
-		16
-	)
-	bones_label.add_theme_color_override(
-		"font_color",
-		UI_TEXT
-	)
-
-
 	create_skeleton_button.position = Vector2(
 		390.0,
 		930.0
@@ -10259,21 +10205,6 @@ func update_debug_ui() -> void:
 # =========================================================
 
 func update_bones_ui() -> void:
-	if bones_label == null:
-		return
-
-	# v0.2.0 Resource Foundation:
-	# reutilizamos o BonesLabel atual como painel temporário
-	# de recursos. Depois ele será substituído pela UI final
-	# inspirada no target visual do NecroWorks.
-	bones_label.text = GAMEPLAY_HUD_PRESENTER.format_resources({
-		"bones": bones,
-		"flesh": flesh,
-		"blood": blood,
-		"souls": souls,
-	}, Callable(self, "tr"))
-
-
 	var quantity: int = get_selected_production_quantity()
 	var skeleton_batch_cost: int = quantity * skeleton_cost
 	var archer_batch_cost: int = quantity * skeleton_archer_cost

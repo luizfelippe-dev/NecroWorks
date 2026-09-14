@@ -1,6 +1,12 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 11/09/2026 — v0.6.2
+**Atualizado:** 14/09/2026 — consolidação pós-v0.6.2
+
+## HUD consolidado
+
+`GameplayDashboard` é a única apresentação de recursos e métricas. As labels legadas `BonesLabel` e `MetricsLabel` e seus formatadores foram removidos. Os textos fixos atualizam por notificação de idioma; os valores são amostrados a 10 Hz e só reescritos quando mudam; barras continuam acompanhando frames.
+
+Os métodos históricos `update_bones_ui` e `update_metrics_ui` permanecem como pontos de atualização dos controles de produção/processamento. Não formatam mais textos ocultos. `GameplayHudPresenter` mantém a formatação da onda. As extrações futuras devem preservar esses efeitos nos controles, em vez de simplesmente apagar os métodos.
 
 # Stack
 

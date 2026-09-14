@@ -30,7 +30,6 @@ func run_validation() -> void:
 		game.production_queue_label,
 		game.factory_title_label,
 		game.processing_label,
-		game.bones_label,
 		game.factory_nav_button,
 		game.doctrine_nav_button,
 		game.ritual_nav_button

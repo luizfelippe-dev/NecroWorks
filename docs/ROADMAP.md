@@ -31,9 +31,9 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [x] persistir métricas de processamento por rota, com compatibilidade para checkpoints anteriores;
   - `processing_routes` opcional no schema v2; totais antigos sem distribuição ficam como rota não registrada, sem inventar escolhas;
 - [x] acrescentar regressões de isolamento, corrupção semântica, falha de gravação e retomada para cada correção;
-- [ ] consolidar HUD duplicado e evitar atualização de debug oculto, medindo antes/depois;
+- [x] consolidar HUD duplicado e evitar atualização de debug oculto, medindo antes/depois;
   - [x] impedir montagem de texto e análise de recuperação quando o debug está oculto, com regressão de atualização ao exibir;
-  - [ ] consolidar labels legadas e medir o impacto em frames reais;
+  - [x] remover labels e formatadores legados; comparar cenário renderizado local antes/depois em `RENDERED_PROFILING.md`, sem extrapolar para hardware mínimo;
 - [ ] reduzir acoplamento do controlador por extrações pequenas ligadas às correções, sem reescrita geral.
 
 **Aceite:** pausa congela relógio, unidades, produção e reposição; menus continuam utilizáveis. Nenhum runner grava no save pessoal. Retomadas válidas preservam estado e as inválidas oferecem recuperação segura. Erros de persistência são visíveis.

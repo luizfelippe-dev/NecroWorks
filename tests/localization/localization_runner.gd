@@ -27,7 +27,7 @@ func run_validation() -> void:
 	LOCALIZATION_SERVICE.set_locale("pt-BR")
 	await process_frame
 	assert(TranslationServer.translate("HUD_RESOURCES") == "RECURSOS")
-	assert(game.bones_label.text.begins_with("RECURSOS"))
+	assert(game.get_node("GameplayDashboard").resources_title.text == "RECURSOS")
 	assert(game.factory_title_label.text == "LINHA DE PRODUÇÃO MORTA-VIVA")
 	assert(game.processing_label.text.begins_with("PROCESSAMENTO DE CADÁVERES"))
 	assert(game.wave_label.text.begins_with("ONDA 1"))
@@ -56,7 +56,7 @@ func run_validation() -> void:
 	LOCALIZATION_SERVICE.set_locale("es_MX")
 	await process_frame
 	assert(TranslationServer.translate("RESOURCE_BONES") == "HUESOS")
-	assert(game.bones_label.text.contains("HUESOS:"))
+	assert(game.get_node("GameplayDashboard").resource_names[0].text == "HUESOS")
 	assert(game.processing_label.text.begins_with("PROCESAMIENTO DE CADÁVERES"))
 	assert(game.wave_label.text.begins_with("OLEADA 1"))
 	assert(game.synergy_label.text.begins_with("SINERGIAS ACTIVAS"))

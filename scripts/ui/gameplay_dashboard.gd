@@ -22,6 +22,8 @@ var processing_progress: ProgressBar
 var metric_title: Label
 var resources_title: Label
 var refresh_time: float = 0.0
+var last_resources: Array = []
+var last_metrics: Array = []
 
 
 func bind(target: Node) -> void:
@@ -30,8 +32,6 @@ func bind(target: Node) -> void:
 		var panel: Control = game.get_node(panel_name)
 		panel.add_theme_stylebox_override("panel", UI.stylebox(Color("101714ed"), UI.BRONZE))
 		UI.decorate_panel(panel)
-	game.bones_label.visible = false
-	game.metrics_label.visible = false
 	_build_resources()
 	_build_metrics()
 	wave_progress = _bar(game.get_node("WavePanel"), Rect2(24, 119, 572, 7), UI.GREEN)
@@ -97,6 +97,7 @@ func bind(target: Node) -> void:
 	for navigation: Button in [game.factory_nav_button, game.doctrine_nav_button, game.ritual_nav_button, game.fusion_nav_button]:
 		navigation.add_theme_font_size_override("font_size", 20)
 		UI.decorate_panel(navigation)
+	_refresh_localization()
 	_refresh()
 
 
@@ -159,20 +160,35 @@ func _process(delta: float) -> void:
 
 
 func _refresh() -> void:
-	resources_title.text = tr("HUD_RESOURCES")
-	metric_title.text = tr("METRICS_TITLE")
-	for index: int in range(4):
-		resource_names[index].text = tr("RESOURCE_" + RESOURCE_IDS[index].to_upper())
-		resource_values[index].text = str(game.get(RESOURCE_IDS[index]))
+	var resources: Array = [game.bones, game.flesh, game.blood, game.souls]
+	if resources != last_resources:
+		for index: int in range(resources.size()):
+			resource_values[index].text = str(resources[index])
+		last_resources = resources
 	var values: Array = [
 		game.total_enemies_killed, game.total_corpses_processed, game.total_skeletons_created,
 		game.total_skeletons_lost, game.total_zombies_created, game.total_zombies_lost,
 		game.total_ghosts_created, game.total_ghosts_lost, game.total_liches_created,
 		game.total_liches_lost, game.get_temporary_thrall_count(), game.get_total_undead_count(),
 	]
-	for index: int in range(values.size()):
+	if values != last_metrics:
+		for index: int in range(values.size()):
+			metric_values[index].text = str(values[index])
+		last_metrics = values
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and resources_title != null:
+		_refresh_localization()
+
+
+func _refresh_localization() -> void:
+	resources_title.text = tr("HUD_RESOURCES")
+	metric_title.text = tr("METRICS_TITLE")
+	for index: int in range(RESOURCE_IDS.size()):
+		resource_names[index].text = tr("RESOURCE_" + RESOURCE_IDS[index].to_upper())
+	for index: int in range(METRIC_KEYS.size()):
 		metric_names[index].text = tr(METRIC_KEYS[index])
-		metric_values[index].text = str(values[index])
 	(game.get_node("TaglineLabel") as Label).text = tr("GAME_TAGLINE")
 	for button: Button in [game.create_skeleton_button, game.create_skeleton_archer_button, game.create_zombie_button]:
 		button.tooltip_text = tr("PRODUCTION_QUEUE_TOOLTIP")

@@ -14,6 +14,8 @@ Na v0.6.2, a suíte reúne 79 runners. O teste de apresentação cobre os três 
 
 ## Matriz manual antes da demo
 
+A medição com desenho real é descrita em `RENDERED_PROFILING.md`. Deve rodar fora do gate headless, sem outros testes em paralelo; registrar renderer, janela, viewport, seed e composição final junto aos percentis. A amostra local não define requisitos mínimos.
+
 A consolidação pós-auditoria acrescenta testes de pausa por frames, validação semântica e avisos de persistência. `tests/core/persistence_feedback_runner.gd` pode receber `-- --capture` em execução renderizada para gerar evidências dos avisos em `artifacts/presentation/`. Os arquivos de teste são isolados. A aprovação desses testes não substitui a matriz manual abaixo.
 
 - F5, F6, nova partida, continuar, pausa, reinício e saída;
