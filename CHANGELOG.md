@@ -2,6 +2,17 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Validação dos campos operacionais
+
+- fábrica e rituais rejeitam níveis inválidos e flags com tipos incorretos;
+- doutrina valida metas, capacidade combinada, reservas e prioridade; modificadores validam bônus e pressão por facção;
+- loadout rejeita IDs desconhecidos; versão/onda rejeitam tipos incorretos, frações e números não finitos;
+- restauração direta recusa campos operacionais inconsistentes antes de remover unidades;
+- campos opcionais ausentes continuam compatíveis com checkpoints anteriores;
+- nova regressão verifica que escrita recusada preserva o arquivo saudável e que um principal inválido recupera o backup.
+
+Validação: 81 runners aprovados com `-SkipExport`, incluindo migração v1→v2 e campos operacionais; importação headless do editor sem erros. Sem novo export e sem alteração de regras de combate/economia.
+
 ### Integridade narrativa dos checkpoints
 
 - eventos pendentes desconhecidos ou já concluídos, escolhas incompatíveis e tipos narrativos incorretos são rejeitados;

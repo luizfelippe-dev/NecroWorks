@@ -14,7 +14,9 @@ A v0.6.3 está em andamento sobre a base v0.6.2, sem nova versão de release dec
 
 A narrativa do checkpoint agora é validada contra o catálogo: evento desconhecido/já concluído, escolha incompatível e tipos inválidos são rejeitados. O carregamento tenta o backup; sem backup válido, preserva o arquivo e não oferece Continuar. Chamadas diretas de restauração recusam narrativa inconsistente antes de remover unidades. Decisões válidas reabrem sem conceder recompensa antecipada.
 
-Ainda pendem validação dos demais subcampos, feedback explícito de persistência, métricas por rota e as melhorias de experiência registradas em `ROADMAP.md`. Os gates históricos de CPU, resolução e bots têm escopo limitado: não substituem frames renderizados, QA manual nem equilíbrio humano.
+Fábrica, rituais, doutrina, modificadores e loadout validam tipos e limites antes da restauração. Metas combinadas não podem ultrapassar 36, níveis respeitam os máximos de cada sistema e flags exigem booleanos. Versão e onda não aceitam valores fracionários/não finitos. Campos opcionais ausentes mantêm os defaults dos saves antigos.
+
+Ainda pendem feedback explícito de persistência, métricas por rota e as melhorias de experiência registradas em `ROADMAP.md`. Os gates históricos de CPU, resolução e bots têm escopo limitado: não substituem frames renderizados, QA manual nem equilíbrio humano.
 
 Este arquivo concentra o estado técnico necessário para retomar o desenvolvimento. As decisões de produto ficam em `DECISIONS.md`, a visão de gameplay em `GAME_DESIGN.md`, a estrutura em `ARCHITECTURE.md` e o plano de entregas em `ROADMAP.md`.
 

@@ -10,14 +10,16 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
-1. ampliar validação dos subcampos de fábrica, rituais, doutrina e modificadores; a narrativa já rejeita eventos desconhecidos/repetidos, escolhas incompatíveis e tipos inválidos antes da restauração;
-2. expor falhas de persistência/perfil e preservar métricas por rota;
+1. expor falhas de persistência/perfil, recuperação por backup e indisponibilidade de Continuar;
+2. preservar métricas por rota na retomada, mantendo compatibilidade com saves anteriores;
 3. seguir v0.6.4: preparação entre ondas, tutorial e leitura de decisões;
 4. aprovar animação autoral de uma família e diferenciar os chefes;
 5. revisar cartas, automação e testes de equilíbrio com investimentos equivalentes;
 6. medir release real e conduzir teste cego antes da preparação Steam.
 
 ## Comandos
+
+Narrativa, fábrica, rituais, doutrina, modificadores e loadout já possuem validação defensiva antes da restauração. A suíte cobre tipos, limites, arquivo original preservado e fallback para backup; a migração v1→v2 continua necessária e não deve ser removida.
 
 ```powershell
 .\tools\validate_release.ps1 -GodotPath "C:\caminho\Godot_v4.7.1-stable_win64_console.exe"

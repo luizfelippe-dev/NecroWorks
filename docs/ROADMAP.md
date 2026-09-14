@@ -24,7 +24,8 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [x] fazer o botão Continuar respeitar o caminho injetado de checkpoint;
 - [x] validar semanticamente evento narrativo pendente, inclusive evento já escolhido, e recuperar checkpoint inválido sem softlock;
   - regressão cobre ID desconhecido, escolha incompatível, tipos incorretos, backup válido e ausência de backup; restauração direta rejeita narrativa inválida antes de remover unidades;
-- [ ] ampliar validação defensiva dos subcampos de fábrica, rituais, doutrina e modificadores;
+- [x] ampliar validação defensiva dos subcampos de fábrica, rituais, doutrina e modificadores;
+  - níveis/flags, reservas, capacidade combinada, prioridade, pressão de facção e IDs do loadout validados; campos opcionais ausentes preservam defaults legados;
 - [ ] informar perfil recuperado, incompatível ou protegido, falhas de progressão e autosave; preservar arquivos originais;
 - [ ] persistir métricas de processamento por rota, com compatibilidade para checkpoints anteriores;
 - [ ] acrescentar regressões de isolamento, corrupção semântica, falha de gravação e retomada para cada correção;

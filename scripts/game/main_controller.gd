@@ -8384,6 +8384,8 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	# Reject inconsistent events before removing units or replacing live state.
 	if not RunSaveStore.validate_narrative(state.get("narrative", {})):
 		return false
+	if not RunSaveStore.validate_runtime_fields(state):
+		return false
 	var saved_wave: int = int(state.get("wave", 0))
 	if saved_wave < 1:
 		return false
