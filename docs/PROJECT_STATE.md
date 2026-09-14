@@ -1,12 +1,18 @@
 # NecroWorks — Estado do Projeto
 
-**Atualizado em:** 11/09/2026
+**Atualizado em:** 14/09/2026
 
 **Versão funcional:** v0.6.2 — apresentação industrial e continuidade de movimento
 
 **Engine:** Godot 4.7.1
 
 **Branch principal:** `main`
+
+## Consolidação pós-auditoria
+
+A v0.6.3 está em andamento sobre a base v0.6.2, sem nova versão de release declarada. O gameplay agora usa processamento pausável explícito; os menus permanecem ativos, e temporizadores de reposição/desbloqueio respeitam a pausa. Os testes de shell/tutorial isolam seus três arquivos e verificam frames sem avanço e retomada. Continuar consulta o checkpoint injetado, não um caminho global.
+
+Ainda pendem validação semântica de eventos no save, feedback de persistência, métricas por rota e as melhorias de experiência registradas em `ROADMAP.md`. Os gates históricos de CPU, resolução e bots têm escopo limitado: não substituem frames renderizados, QA manual nem equilíbrio humano.
 
 Este arquivo concentra o estado técnico necessário para retomar o desenvolvimento. As decisões de produto ficam em `DECISIONS.md`, a visão de gameplay em `GAME_DESIGN.md`, a estrutura em `ARCHITECTURE.md` e o plano de entregas em `ROADMAP.md`.
 

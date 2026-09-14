@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
+
+- gameplay explicitamente pausável, preservando navegação do shell; reposição inimiga e aviso de desbloqueio também respeitam a pausa;
+- regressões de pausa/tutorial verificam relógio, posições e temporizador ao longo de frames, além da retomada;
+- checkpoints de shell/tutorial isolados do save pessoal, com limpeza dos backups de teste;
+- Continuar respeita o caminho de checkpoint configurado;
+- roadmap registra todas as frentes da auditoria com prioridades e critérios de aceite, sem equiparar testes técnicos à aprovação comercial.
+
+Validação: 79 runners aprovados com `validate_release.ps1 -SkipExport`; runner de shell reexecutado após acrescentar a verificação da fila de produção congelada. Não houve novo export Windows nem aceite visual/manual neste corte.
+
 ## [0.6.2] — 11/09/2026 — Apresentação industrial
 
 ### Alterado

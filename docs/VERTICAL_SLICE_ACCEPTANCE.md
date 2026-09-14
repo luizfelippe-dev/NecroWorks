@@ -2,6 +2,8 @@
 
 **Fechada em:** 08/09/2026
 
+**Revisão em 14/09/2026:** este documento registra o aceite técnico histórico, não uma autorização de lançamento. A nova auditoria reabriu pausa, persistência, qualidade de animação, profundidade e validação real. O estado vigente está em `AUDIT_STATUS.md` e no início de `ROADMAP.md`; concluir runners não encerra esses critérios comerciais.
+
 ## Promessa comprovada
 
 Uma run completa demonstra o diferencial de NecroWorks: invasores mortos viram Cadáveres, Cadáveres entram na Fábrica, recursos alimentam receitas e a composição produz uma resposta diferente para a onda seguinte.

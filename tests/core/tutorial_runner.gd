@@ -4,6 +4,7 @@ extends SceneTree
 const APP_SCENE: PackedScene = preload("res://scenes/core/app.tscn")
 const PROFILE_PATH: String = "user://necroworks_tutorial_profile.json"
 const SETTINGS_PATH: String = "user://necroworks_tutorial_settings.cfg"
+const RUN_PATH: String = "user://necroworks_tutorial_run.json"
 
 
 func _initialize() -> void:
@@ -15,12 +16,20 @@ func run_validation() -> void:
 	var shell: Node = APP_SCENE.instantiate()
 	shell.profile_path = PROFILE_PATH
 	shell.settings_path = SETTINGS_PATH
+	shell.run_save_path = RUN_PATH
 	root.add_child(shell)
 	await process_frame
 	shell.confirm_new_run()
 	await process_frame
 	assert(shell.tutorial_menu.visible)
 	assert(paused)
+	assert(not shell.current_game.can_process())
+	var elapsed_before: float = shell.current_game.run_elapsed_seconds
+	var position_before: Vector2 = shell.current_game.skeletons[0].position
+	for frame: int in range(60):
+		await process_frame
+	assert(shell.current_game.run_elapsed_seconds == elapsed_before)
+	assert(shell.current_game.skeletons[0].position == position_before)
 	assert(shell.tutorial_body.text.length() > 40)
 	assert_screen_panel_fits(shell.tutorial_menu)
 	for step: int in range(4):
@@ -30,6 +39,9 @@ func run_validation() -> void:
 	shell.advance_tutorial()
 	assert(not shell.tutorial_menu.visible)
 	assert(not paused)
+	await process_frame
+	await process_frame
+	assert(shell.current_game.run_elapsed_seconds > elapsed_before)
 	assert(bool(SettingsStore.load_settings(SETTINGS_PATH).tutorial_completed))
 	shell.reset_tutorial()
 	assert(shell.tutorial_menu.visible)
@@ -41,7 +53,8 @@ func run_validation() -> void:
 	assert_screen_panel_fits(shell.options_menu)
 	shell.queue_free()
 	await process_frame
-	for path: String in [PROFILE_PATH, SETTINGS_PATH]:
+	RunSaveStore.delete_checkpoint(RUN_PATH)
+	for path: String in [PROFILE_PATH, PROFILE_PATH + ".bak", PROFILE_PATH + ".tmp", SETTINGS_PATH]:
 		if FileAccess.file_exists(path):
 			assert(DirAccess.remove_absolute(ProjectSettings.globalize_path(path)) == OK)
 	print("FIRST-RUN TUTORIAL VALIDATION: PASS")

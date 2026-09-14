@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://b3mc2xhqnjki0" path="res://scripts/visual/industrial_backdrop.gd" id="4_backdrop"]
 
 [node name="Main" type="Node2D" unique_id=2065548651]
+process_mode = 1
 script = ExtResource("1_ig7tw")
 
 [node name="Background" type="ColorRect" parent="." unique_id=135240260]

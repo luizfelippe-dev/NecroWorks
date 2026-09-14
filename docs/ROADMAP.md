@@ -1,23 +1,96 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 11/09/2026
+**Atualizado:** 14/09/2026
 
 ---
 
 # Ordem imediata de execução
 
-1. [concluído] fechar confiabilidade de save, retomada, schema, derrota e gate de release;
-2. [concluído] completar as onze famílias visuais atuais e a arte física da Fábrica;
-3. [concluído] integrar buses, volumes separados, sinais fabris e ambiente industrial V1;
-4. [concluído] medir seis resoluções, horda de 36 unidades e cinco perfis de build;
-5. [concluído — v0.6.2] retirar a mistura de poses repetidas, manter passada contínua e feedback de dano independente; renovar menu e HUD;
-   - [pendente] validar naturalidade em gameplay e produzir animação autoral em uma família antes de expandir para todas;
-6. executar QA manual em escala do Windows, hardware real e instalação limpa;
-7. realizar revisão editorial nativa de PT-BR, inglês e espanhol;
-8. realizar testes cegos conforme `PLAYTEST_PROTOCOL.md`;
-9. ajustar dificuldade e interface somente com a evidência coletada.
+1. fechar a confiabilidade da pausa, do isolamento dos testes e da retomada;
+2. melhorar preparação entre ondas, tutorial e leitura das decisões;
+3. aprovar uma família de animação autoral e o feedback de combate antes de ampliar a produção visual;
+4. diferenciar chefes, revisar cartas e preservar composições na automação;
+5. validar builds, executável renderizado e compreensão com pessoas novas;
+6. preparar demo e presença Steam com evidências de qualidade e interesse.
 
-Esta ordem respeita as dependências do projeto. A aprovação técnica de um passe não encerra a revisão visual nem o playtest com pessoas.
+A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram implementação histórica, não aprovação comercial. Testes matemáticos de resolução, processamento parcial de CPU e vitórias de bots não comprovam legibilidade, FPS real ou balanceamento. A expansão do catálogo fica suspensa durante esta consolidação.
+
+## v0.6.3 — Confiabilidade pós-auditoria (em andamento)
+
+- [x] tornar o gameplay explicitamente pausável sem bloquear os menus do shell;
+- [x] interromper temporizadores de reposição inimiga e aviso de desbloqueio durante pausa;
+- [x] testar avanço real de frames na pausa/tutorial e retomada, além do booleano da árvore;
+- [x] isolar checkpoints dos runners de shell/tutorial e limpar seus backups;
+- [x] fazer o botão Continuar respeitar o caminho injetado de checkpoint;
+- [ ] validar semanticamente evento narrativo pendente, inclusive evento já escolhido, e recuperar checkpoint inválido sem softlock;
+- [ ] ampliar validação defensiva dos subcampos de fábrica, rituais, doutrina e modificadores;
+- [ ] informar perfil recuperado, incompatível ou protegido, falhas de progressão e autosave; preservar arquivos originais;
+- [ ] persistir métricas de processamento por rota, com compatibilidade para checkpoints anteriores;
+- [ ] acrescentar regressões de isolamento, corrupção semântica, falha de gravação e retomada para cada correção;
+- [ ] consolidar HUD duplicado e evitar atualização de debug oculto, medindo antes/depois;
+- [ ] reduzir acoplamento do controlador por extrações pequenas ligadas às correções, sem reescrita geral.
+
+**Aceite:** pausa congela relógio, unidades, produção e reposição; menus continuam utilizáveis. Nenhum runner grava no save pessoal. Retomadas válidas preservam estado e as inválidas oferecem recuperação segura. Erros de persistência são visíveis.
+
+## v0.6.4 — Ritmo, interface e aprendizagem
+
+- [ ] criar preparação entre ondas: carta/evento, ajustes da fábrica e comando explícito para iniciar;
+- [ ] definir se filas avançam na preparação e comunicar essa regra, evitando espera explorável;
+- [ ] anunciar próxima ameaça para permitir planejamento;
+- [ ] ensinar cadáver → processamento → recurso → tropa por ações, substituindo páginas iniciais extensas;
+- [ ] corrigir tutorial: chefes nas ondas 10, 15 e 20, não a cada dez ondas;
+- [ ] medir tempo até primeira decisão interessante e antecipar amostra de inimigo especial/build/automação;
+- [ ] priorizar capacidade, filas, gargalos, composição e ameaças no HUD; recolher métricas históricas;
+- [ ] permitir escala legível de interface e validar 720p, textos longos e três idiomas;
+- [ ] exibir requisitos, efeito e progresso das sinergias, com consulta durante a partida;
+- [ ] tornar visível o fluxo cadáver → máquina → recurso → tropa;
+- [ ] avaliar consolidar Fusões na fábrica/rituais ou justificar o painel com um resultado exclusivo.
+
+**Aceite:** jogadores novos completam o ciclo sem instrução verbal, entendem uma sinergia e ajustam a fábrica antes do combate. Medir confusão e tempo de decisão, sem usar apenas screenshots como aprovação.
+
+## v0.6.5 — Combate, apresentação e narrativa
+
+- [ ] produzir e aprovar uma família com caminhada e ataque autorais: apoio dos pés, antecipação, contato, recuperação e dano sincronizado;
+- [ ] expandir o padrão aprovado às onze famílias, sem tratar deformação de pose ou quadros duplicados como animação final;
+- [ ] verificar leitura de impacto/morte e movimento reduzido em vídeo a velocidade normal;
+- [ ] dar mecânica e resposta próprias a Marechal, Auditor e Capataz, com avisos legíveis e perda explicável;
+- [ ] produzir identidade sonora de máquinas, materiais e famílias e ambiente com variação de tensão;
+- [ ] proteger prioridade de alertas de chefe no pool de áudio e validar mixagem em sessão real;
+- [ ] antecipar a revelação do Diretor/Livro-Negro e entregar desfecho breve coerente após o Capataz;
+- [ ] criar consequências reconhecíveis entre eventos, sem exigir grandes blocos de exposição.
+
+**Aceite:** combate convincente em movimento, chefes exigem respostas diferentes, áudio informa ações e o arco central tem conclusão dentro do jogo. Revisão de direitos acompanha cada asset.
+
+## v0.6.6 — Estratégia, repetição e validação do produto
+
+- [ ] eliminar escolhas dominadas, começando por Stitched Hide (+30 PV) versus Rotten Bulk (+40 PV e sinergia);
+- [ ] revisar redundâncias de atributos e priorizar cartas que mudem comportamento;
+- [ ] avaliar ofertas com opção compatível com a build e alternativas de transição, sem retirar toda a incerteza;
+- [ ] automatizar metas por receita/papel, distinguindo arqueiros, guerreiros e servos temporários;
+- [ ] incluir tropas avançadas no planejamento com reservas, capacidade e prioridades explícitas;
+- [ ] variar encontros e contratos por regras significativas, mantendo ameaças anunciadas e dificuldade justa;
+- [ ] comparar builds com custo/progressão equivalentes, várias seeds, atrasos humanos de coleta e escolhas orientadas versus aleatórias;
+- [ ] medir perdas por chefe, recursos ociosos, gargalos e causas de derrota; não classificar vitória de bot como balanceamento aprovado;
+- [ ] medir frames renderizados, percentis de tempo, memória, áudio e shaders no export;
+- [ ] testar instalação limpa, sessões longas, saves, escala Windows e hardware mínimo/recomendado;
+- [ ] testar interface instanciada em resoluções reais, além da matemática de escala;
+- [ ] conduzir rodada cega inicial de 5–10 pessoas e nova rodada após correções, observando compreensão e repetição voluntária;
+- [ ] revisar PT-BR/EN/ES com leitores nativos e avaliar remapeamento/navegação conforme dispositivos suportados.
+
+**Aceite:** estratégias distintas viáveis dentro de investimentos comparáveis, escolhas compreensíveis e evidência externa de vontade de repetir. Definir requisitos de hardware somente após medição real.
+
+## Entrada na v0.7.0 — Condições comerciais
+
+- [ ] congelar demo curta representativa com diferencial apresentado cedo e um clímax;
+- [ ] posicionar o jogo para fãs de roguelite/autobattler/produção e validar a promessa com gameplay;
+- [ ] fechar proveniência, licenças, créditos e declaração correta de conteúdo gerado com IA;
+- [ ] preparar página, cápsula, trailer e screenshots representativos; não usar capturas de debug como evidência de balanceamento;
+- [ ] avaliar preço por qualidade, duração, repetição e comparáveis atuais, sem depender apenas de ser barato;
+- [ ] coletar sinais de interesse, wishlists e feedback de demo; não prometer conversão nem hype;
+- [ ] preparar Steam Playtest, clipes e contato com criadores do nicho;
+- [ ] escolher Next Fest quando a demo estiver pronta, considerando a participação única por título.
+
+O checklist detalhado da v0.7.0 abaixo continua válido. Estes critérios são pré-requisitos, não uma autorização para publicação automática.
 
 ---
 

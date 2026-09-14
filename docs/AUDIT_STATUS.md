@@ -1,8 +1,27 @@
 # NecroWorks — Situação da Auditoria
 
-**Atualizado em:** 11/09/2026
+**Atualizado em:** 14/09/2026
 
 Este quadro separa correção de código, validação interna e dependências externas. Um item só recebe estado concluído quando existe implementação e evidência reproduzível.
+
+## Reabertura — 14/09/2026
+
+As tabelas seguintes preservam o fechamento histórico de 08–11/09. A nova auditoria encontrou lacunas internas e reabre o aceite de confiabilidade e experiência. A ordem completa e os critérios estão em `ROADMAP.md`, v0.6.3–v0.6.6.
+
+| Frente | Estado atual | Evidência / próximo corte |
+|---|---|---|
+| Pausa e tutorial | Corrigida neste corte | gameplay pausável; relógio/posições congelados por frames e retomada verificados |
+| Reposição durante pausa | Corrigida neste corte | timer pausável permanece pendente e conclui após retomar |
+| Save pessoal nos testes de shell/tutorial | Corrigida neste corte | caminhos de perfil, settings e checkpoint separados; Continuar usa caminho injetado |
+| Evento inválido na retomada | Pendente | validar ID/escolha anterior, backup e ausência de softlock |
+| Feedback de persistência e métricas por rota | Pendente | recuperação explícita e histórico consistente após Continuar |
+| Ritmo, builds, chefes e automação | Pendente | preparação utilizável, escolhas distintas e metas por receita |
+| Animação, áudio, HUD e narrativa | Pendente | aprovação em movimento e sessão real, não somente poses/capturas |
+| Performance, resoluções e equilíbrio | Pendente | ampliar testes parciais com renderização, custos equivalentes e pessoas novas |
+
+Não há nova aprovação comercial nem fechamento da v0.6.3 neste corte.
+
+Validação do corte: 79 runners passaram no gate com `-SkipExport`; a regressão de shell passou novamente após incluir a fila de produção. Não foi gerado novo executável e ainda falta inspeção manual dos menus e da pausa.
 
 ## Fase A — Confiabilidade
 

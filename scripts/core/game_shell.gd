@@ -463,7 +463,7 @@ func show_main_menu() -> void:
 	history_menu.visible = false
 	loadout_menu.visible = false
 	tutorial_menu.visible = false
-	continue_button.disabled = not RunSaveStore.has_checkpoint()
+	continue_button.disabled = not RunSaveStore.has_checkpoint(run_save_path)
 
 
 func start_new_run() -> void:

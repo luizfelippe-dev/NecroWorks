@@ -1622,7 +1622,7 @@ func show_meta_unlock_feedback(unlock_ids: Array[String]) -> void:
 	meta_unlock_feedback_label.visible = true
 	meta_unlock_feedback_revision += 1
 	var revision: int = meta_unlock_feedback_revision
-	get_tree().create_timer(4.0).timeout.connect(func() -> void:
+	get_tree().create_timer(4.0, false).timeout.connect(func() -> void:
 		if revision == meta_unlock_feedback_revision and is_instance_valid(meta_unlock_feedback_label):
 			meta_unlock_feedback_label.visible = false
 	)
@@ -2875,7 +2875,7 @@ func schedule_enemy_refill() -> void:
 
 
 	await get_tree().create_timer(
-		enemy_spawn_delay
+		enemy_spawn_delay, false
 	).timeout
 
 

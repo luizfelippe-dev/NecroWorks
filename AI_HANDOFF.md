@@ -1,22 +1,21 @@
 # NecroWorks — Continuidade do Desenvolvimento
 
-**Atualizado em:** 11/09/2026
+**Atualizado em:** 14/09/2026
 
 ## Estado atual
 
 A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial com cartões e métricas alinhadas, sinergias roláveis e movimento procedural contínuo nas onze famílias. O ataque não é mais cancelado pelo flash de dano. Não foram produzidos frames novos de personagens; o shader trabalha sobre as poses V1, e a naturalidade ainda precisa de avaliação em uma run manual. Regras, economia e balanceamento permanecem intactos.
 
-As correções internas da auditoria estão implementadas: save transacional, checkpoint de início de onda, validação defensiva, recuperação e diagnóstico centralizados, gate de release, CI, matriz de resoluções, estresse e cinco estratégias. O aceite está em `docs/VERTICAL_SLICE_ACCEPTANCE.md`; o quadro completo, em `docs/AUDIT_STATUS.md`.
+A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
 
-1. executar uma run manual completa na v0.6.2, observando caminhada/ataque, lotes e rolagem das sinergias;
-2. revisar PT-BR, inglês e espanhol com leitores nativos;
-3. testar escala do Windows e hardware mínimo/recomendado;
-4. conduzir a primeira rodada cega de 5–10 pessoas;
-5. corrigir os três maiores problemas observados;
-6. congelar o escopo da demo e produzir áudio/arte finais com direitos revisados;
-7. preparar página, depot e Steam Playtest.
+1. validar evento pendente e subcampos do checkpoint para impedir softlock na retomada;
+2. expor falhas de persistência/perfil e preservar métricas por rota;
+3. seguir v0.6.4: preparação entre ondas, tutorial e leitura de decisões;
+4. aprovar animação autoral de uma família e diferenciar os chefes;
+5. revisar cartas, automação e testes de equilíbrio com investimentos equivalentes;
+6. medir release real e conduzir teste cego antes da preparação Steam.
 
 ## Comandos
 
