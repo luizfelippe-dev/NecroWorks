@@ -18,6 +18,7 @@ As tabelas seguintes preservam o fechamento histórico de 08–11/09. A nova aud
 | Feedback de persistência e métricas por rota | Corrigida | avisos localizados com nova tentativa; autosave falho pausa; distribuição persistida e legado identificado como desconhecido |
 | Debug oculto | Corrigida | não monta texto nem analisa recuperação até ficar visível |
 | HUD duplicado | Corrigida neste corte | labels e formatadores legados removidos; testes verificam dashboard visível; comparação renderizada documentada |
+| Acoplamento de apresentação | Extração pontual concluída | produção/processamento/filas recebem snapshots puros; custos, bloqueios, lotes e idiomas cobertos; sem reescrita geral do controlador |
 | Ritmo, builds, chefes e automação | Pendente | preparação utilizável, escolhas distintas e metas por receita |
 | Animação, áudio, HUD e narrativa | Pendente | aprovação em movimento e sessão real, não somente poses/capturas |
 | Performance, resoluções e equilíbrio | Pendente | ampliar testes parciais com renderização, custos equivalentes e pessoas novas |

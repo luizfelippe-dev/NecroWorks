@@ -14,6 +14,10 @@ Na v0.6.2, a suíte reúne 79 runners. O teste de apresentação cobre os três 
 
 ## Matriz manual antes da demo
 
+Na consolidação técnica v0.6.3, a suíte passa a 83 runners. O novo `production_controls_presenter_runner.gd` valida snapshots sem mutação, limites de recursos/capacidade/ordens, arqueiro bloqueado, fim de partida, lotes 1/10 e textos nos três idiomas. As regressões integradas de produção e layout continuam obrigatórias.
+
+Execução de 14/09 após a extração: 83/83 em 85,06 s, exportação e smoke test headless aprovados. Executável local: 125.010.512 bytes, SHA-256 `E5DC5982EF13369745B1A4E02D63F5622AE5052C1A240B3F31879468D9ADD9B2`. A exportação reflete o workspace, incluindo ajustes locais preexistentes em `main.tscn` e `project.godot`, que não fazem parte deste commit. Não é uma nova medição renderizada.
+
 A medição com desenho real é descrita em `RENDERED_PROFILING.md`. Deve rodar fora do gate headless, sem outros testes em paralelo; registrar renderer, janela, viewport, seed e composição final junto aos percentis. A amostra local não define requisitos mínimos.
 
 A consolidação pós-auditoria acrescenta testes de pausa por frames, validação semântica e avisos de persistência. `tests/core/persistence_feedback_runner.gd` pode receber `-- --capture` em execução renderizada para gerar evidências dos avisos em `artifacts/presentation/`. Os arquivos de teste são isolados. A aprovação desses testes não substitui a matriz manual abaixo.

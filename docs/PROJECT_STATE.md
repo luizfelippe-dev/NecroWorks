@@ -10,7 +10,7 @@
 
 ## Consolidação pós-auditoria
 
-A v0.6.3 está em andamento sobre a base v0.6.2, sem nova versão de release declarada. O gameplay agora usa processamento pausável explícito; os menus permanecem ativos, e temporizadores de reposição/desbloqueio respeitam a pausa. Os testes de shell/tutorial isolam seus três arquivos e verificam frames sem avanço e retomada. Continuar consulta o checkpoint injetado, não um caminho global.
+A implementação técnica da v0.6.3 está concluída sobre a base v0.6.2, ainda em Unreleased, sem nova versão de release declarada. O gameplay agora usa processamento pausável explícito; os menus permanecem ativos, e temporizadores de reposição/desbloqueio respeitam a pausa. Os testes de shell/tutorial isolam seus três arquivos e verificam frames sem avanço e retomada. Continuar consulta o checkpoint injetado, não um caminho global.
 
 A narrativa do checkpoint agora é validada contra o catálogo: evento desconhecido/já concluído, escolha incompatível e tipos inválidos são rejeitados. O carregamento tenta o backup; sem backup válido, preserva o arquivo e não oferece Continuar. Chamadas diretas de restauração recusam narrativa inconsistente antes de remover unidades. Decisões válidas reabrem sem conceder recompensa antecipada.
 
@@ -18,7 +18,7 @@ Fábrica, rituais, doutrina, modificadores e loadout validam tipos e limites ant
 
 O shell informa perfil protegido/recuperado, checkpoint inválido/recuperado e falhas ao gravar run, perfil ou opções. O aviso oferece confirmação e nova tentativa; uma falha durante o combate pausa a partida, e confirmar não a retoma automaticamente. Histórico de conclusão não gravado permanece em memória; uma nova tentativa bem-sucedida limpa o checkpoint concluído. Arquivos protegidos não são sobrescritos.
 
-O campo opcional `processing_routes` preserva a distribuição no schema v2. Saves anteriores mantêm o total como rota não registrada, exibida no resumo e armazenada no histórico. A soma das rotas precisa corresponder ao total processado. O debug oculto não monta mais texto nem executa sua análise de recuperação. Ainda pendem extrações pontuais dos controles, medições em release/hardware definido e as melhorias de experiência em `ROADMAP.md`.
+O campo opcional `processing_routes` preserva a distribuição no schema v2. Saves anteriores mantêm o total como rota não registrada, exibida no resumo e armazenada no histórico. A soma das rotas precisa corresponder ao total processado. O debug oculto não monta mais texto nem executa sua análise de recuperação. A extração pontual de apresentação dos controles foi concluída. Permanecem pendentes medições em release/hardware definido e as melhorias de experiência em `ROADMAP.md`.
 
 Este arquivo concentra o estado técnico necessário para retomar o desenvolvimento. As decisões de produto ficam em `DECISIONS.md`, a visão de gameplay em `GAME_DESIGN.md`, a estrutura em `ARCHITECTURE.md` e o plano de entregas em `ROADMAP.md`.
 

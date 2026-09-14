@@ -2,6 +2,16 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Fronteira de apresentação da produção
+
+- formatação de produção, processamento e status das filas extraída do controlador para funções puras;
+- snapshots explícitos, sem acesso à cena ou mutação de recursos e filas;
+- preservados custos, quantidade, capacidade, bloqueio de arqueiro, limite de ordens e fim de partida;
+- nova regressão cobre lotes 1/10, limites exatos, falta de recursos, fila cheia e tradução PT-BR/EN/ES;
+- implementação técnica da v0.6.3 concluída; próxima etapa: preparação entre ondas da v0.6.4. Sem nova versão pública nem mudança de balanceamento.
+
+Validação deste corte: 83 runners aprovados em 85,06 s; Windows exportado e iniciado em smoke test headless. Run manual e aprovação comercial permanecem etapas separadas.
+
 ### Consolidação de HUD e medição renderizada
 
 - removidas labels ocultas de recursos/métricas e seus formatadores; dashboard passa a ser a única apresentação desses dados;

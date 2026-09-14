@@ -6,7 +6,7 @@
 
 `GameplayDashboard` é a única apresentação de recursos e métricas. As labels legadas `BonesLabel` e `MetricsLabel` e seus formatadores foram removidos. Os textos fixos atualizam por notificação de idioma; os valores são amostrados a 10 Hz e só reescritos quando mudam; barras continuam acompanhando frames.
 
-Os métodos históricos `update_bones_ui` e `update_metrics_ui` permanecem como pontos de atualização dos controles de produção/processamento. Não formatam mais textos ocultos. `GameplayHudPresenter` mantém a formatação da onda. As extrações futuras devem preservar esses efeitos nos controles, em vez de simplesmente apagar os métodos.
+Os métodos históricos `update_bones_ui` e `update_metrics_ui` permanecem como pontos de atualização dos controles de produção/processamento. Não formatam mais textos ocultos. `GameplayHudPresenter` mantém a formatação da onda. `production_controls_presenter.gd` recebe snapshots explícitos e um tradutor para devolver textos, prefixos e estados dos botões. Não acessa a cena nem altera recursos/filas. O controlador coleta dados, aplica a apresentação e preserva as atualizações encadeadas de doutrina e rituais. Custos efetivamente cobrados e enfileiramento continuam nas políticas existentes.
 
 # Stack
 

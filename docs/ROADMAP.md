@@ -15,7 +15,7 @@
 
 A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram implementação histórica, não aprovação comercial. Testes matemáticos de resolução, processamento parcial de CPU e vitórias de bots não comprovam legibilidade, FPS real ou balanceamento. A expansão do catálogo fica suspensa durante esta consolidação.
 
-## v0.6.3 — Confiabilidade pós-auditoria (em andamento)
+## v0.6.3 — Confiabilidade pós-auditoria (implementação técnica concluída; unreleased)
 
 - [x] tornar o gameplay explicitamente pausável sem bloquear os menus do shell;
 - [x] interromper temporizadores de reposição inimiga e aviso de desbloqueio durante pausa;
@@ -34,7 +34,8 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [x] consolidar HUD duplicado e evitar atualização de debug oculto, medindo antes/depois;
   - [x] impedir montagem de texto e análise de recuperação quando o debug está oculto, com regressão de atualização ao exibir;
   - [x] remover labels e formatadores legados; comparar cenário renderizado local antes/depois em `RENDERED_PROFILING.md`, sem extrapolar para hardware mínimo;
-- [ ] reduzir acoplamento do controlador por extrações pequenas ligadas às correções, sem reescrita geral.
+- [x] reduzir acoplamento do controlador por extrações pequenas ligadas às correções, sem reescrita geral;
+  - apresentação de produção, processamento e filas extraída para funções puras com snapshots explícitos; regressão de custos, lotes, bloqueios e três idiomas. A execução das compras permanece nas políticas existentes.
 
 **Aceite:** pausa congela relógio, unidades, produção e reposição; menus continuam utilizáveis. Nenhum runner grava no save pessoal. Retomadas válidas preservam estado e as inválidas oferecem recuperação segura. Erros de persistência são visíveis.
 

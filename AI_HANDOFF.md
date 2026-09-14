@@ -10,9 +10,9 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
-1. concluir extrações pontuais dos controles de produção/processamento; o dashboard já é a única apresentação de recursos/métricas;
-2. revisar o aceite técnico da v0.6.3 sem tratar a amostra local de performance como requisito mínimo;
-3. seguir v0.6.4: preparação entre ondas, tutorial e leitura de decisões;
+1. seguir v0.6.4: preparação entre ondas com início explícito, tutorial e leitura de decisões;
+2. preservar a suíte de confiabilidade e as fronteiras de apresentação concluídas na v0.6.3;
+3. validar a experiência em run manual; o aceite técnico não certifica hardware mínimo nem prontidão comercial;
 4. aprovar animação autoral de uma família e diferenciar os chefes;
 5. revisar cartas, automação e testes de equilíbrio com investimentos equivalentes;
 6. medir release real e conduzir teste cego antes da preparação Steam.

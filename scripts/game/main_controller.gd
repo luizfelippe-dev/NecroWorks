@@ -251,6 +251,7 @@ const RUN_SUMMARY_FORMATTER: Script = preload(
 const UPGRADE_STATUS_FORMATTER: Script = preload(
 	"res://scripts/ui/upgrade_status_formatter.gd"
 )
+const PRODUCTION_CONTROLS_PRESENTER: Script = preload("res://scripts/ui/production_controls_presenter.gd")
 const PRODUCTION_CONTROLS_FACTORY: Script = preload(
 	"res://scripts/ui/production_controls_factory.gd"
 )
@@ -10021,34 +10022,14 @@ func apply_button_style(button: Button, accent_color: Color) -> void:
 
 func update_metrics_ui() -> void:
 	if processing_label != null:
-		var directive_yield: Vector2i = get_processing_yield()
-		var directive_state: String = (
-			tr("PROCESSING_LOCKED_WAVE")
-			if processing_directive_locked
-			else tr("PROCESSING_CHOOSE_NEXT")
-		)
-		processing_label.text = (
-			tr("PROCESSING_TITLE")
-			+ "\n" + tr("PROCESSING_MODE") + ": "
-			+ get_processing_directive_name()
-			+ "  |  "
-			+ directive_state
-			+ "  |  " + tr("PROCESSING_CORPSES") + ": "
-			+ str(corpses.size())
-			+ "\n" + tr("PROCESSING_YIELD") + ": +"
-			+ str(directive_yield.x)
-			+ " " + tr("RESOURCE_BONES") + "  /  +"
-			+ str(directive_yield.y)
-			+ " " + tr("RESOURCE_FLESH")
-			+ "\n" + tr("PROCESSOR_QUEUE") + ": "
-			+ str(corpse_processing_queue.size())
-			+ " / " + str(corpse_processor_capacity)
-			+ "  |  " + tr("PROCESSOR_THROUGHPUT") + ": "
-			+ str(corpse_processor_seconds_per_corpse)
-			+ tr("PROCESSOR_SECONDS_PER_CORPSE")
-		)
-
-
+		var yield_amount: Vector2i = get_processing_yield()
+		processing_label.text = PRODUCTION_CONTROLS_PRESENTER.processing({
+			"directive": get_processing_directive_name(),
+			"locked": processing_directive_locked, "corpses": corpses.size(),
+			"bones": yield_amount.x, "flesh": yield_amount.y,
+			"queued": corpse_processing_queue.size(), "capacity": corpse_processor_capacity,
+			"seconds": corpse_processor_seconds_per_corpse,
+		}, tr)
 	update_processing_directive_buttons()
 
 
@@ -10205,99 +10186,46 @@ func update_debug_ui() -> void:
 # =========================================================
 
 func update_bones_ui() -> void:
-	var quantity: int = get_selected_production_quantity()
-	var skeleton_batch_cost: int = quantity * skeleton_cost
-	var archer_batch_cost: int = quantity * skeleton_archer_cost
-	var zombie_batch_cost: int = quantity * zombie_cost
-	var has_batch_capacity: bool = (
-		quantity <= get_available_production_capacity()
-	)
-
-
+	var view: Dictionary = PRODUCTION_CONTROLS_PRESENTER.production({
+		"quantity": get_selected_production_quantity(), "finished": run_finished,
+		"capacity": get_available_production_capacity(), "max_orders": PRODUCTION_QUEUE_MAX_ORDERS,
+		"skeleton": {
+			"cost": skeleton_cost, "available": bones, "unlocked": true,
+			"orders": skeleton_production_queue.size(),
+			"title": "PRODUCTION_QUEUE_SKELETON", "resource": "RESOURCE_BONES",
+		},
+		"archer": {
+			"cost": skeleton_archer_cost, "available": bones, "unlocked": skeleton_archer_unlocked,
+			"orders": skeleton_production_queue.size(),
+			"title": "PRODUCTION_QUEUE_ARCHER", "resource": "RESOURCE_BONES",
+		},
+		"zombie": {
+			"cost": zombie_cost, "available": flesh, "unlocked": true,
+			"orders": zombie_production_queue.size(),
+			"title": "PRODUCTION_QUEUE_ZOMBIE", "resource": "RESOURCE_FLESH",
+		},
+	}, tr)
 	if production_quantity_selector != null:
-		production_quantity_selector.prefix = (
-			tr("PRODUCTION_QUANTITY") + ": "
-		)
-		production_quantity_selector.editable = not run_finished
-
-
-	create_skeleton_button.text = (
-		tr("PRODUCTION_QUEUE_SKELETON")
-		+ " x" + str(quantity)
-		+ "\n" + str(skeleton_batch_cost)
-		+ " " + tr("RESOURCE_BONES")
-	)
-
-
-	create_zombie_button.text = (
-		tr("PRODUCTION_QUEUE_ZOMBIE")
-		+ " x" + str(quantity)
-		+ "\n" + str(zombie_batch_cost)
-		+ " " + tr("RESOURCE_FLESH")
-	)
-
-
-	create_skeleton_archer_button.text = (
-		(
-			tr("PRODUCTION_QUEUE_ARCHER")
-			if skeleton_archer_unlocked
-			else tr("PRODUCTION_ARCHER_LOCKED")
-		)
-		+ " x" + str(quantity)
-		+ "\n" + str(archer_batch_cost)
-		+ " " + tr("RESOURCE_BONES")
-	)
-
-
-	if not skeleton_archer_unlocked:
-		create_skeleton_archer_button.text = tr("PRODUCTION_ARCHER_LOCKED")
-
-	create_skeleton_button.disabled = (
-		run_finished
-		or bones < skeleton_batch_cost
-		or not has_batch_capacity
-		or skeleton_production_queue.size() >= PRODUCTION_QUEUE_MAX_ORDERS
-	)
-
-
-	create_zombie_button.disabled = (
-		run_finished
-		or flesh < zombie_batch_cost
-		or not has_batch_capacity
-		or zombie_production_queue.size() >= PRODUCTION_QUEUE_MAX_ORDERS
-	)
-
-
-	create_skeleton_archer_button.disabled = (
-		run_finished
-		or not skeleton_archer_unlocked
-		or bones < archer_batch_cost
-		or not has_batch_capacity
-		or skeleton_production_queue.size() >= PRODUCTION_QUEUE_MAX_ORDERS
-	)
-
-
+		production_quantity_selector.prefix = view.prefix
+		production_quantity_selector.editable = view.editable
+	create_skeleton_button.text = view.skeleton.text
+	create_skeleton_button.disabled = view.skeleton.disabled
+	create_skeleton_archer_button.text = view.archer.text
+	create_skeleton_archer_button.disabled = view.archer.disabled
+	create_zombie_button.text = view.zombie.text
+	create_zombie_button.disabled = view.zombie.disabled
 	refresh_production_queue_status()
-
-
 	update_metrics_ui()
 	refresh_army_doctrine_status()
 	update_ritual_panel_ui()
 
 
 func refresh_production_queue_status() -> void:
-
 	if production_queue_label == null:
 		return
-
-
-	production_queue_label.text = tr("PRODUCTION_QUEUE_STATUS") % [
-		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
-			skeleton_production_queue
-		),
+	production_queue_label.text = PRODUCTION_CONTROLS_PRESENTER.queue_status([
+		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(skeleton_production_queue),
 		skeleton_assembler_timer,
-		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(
-			zombie_production_queue
-		),
-		flesh_vat_timer
-	]
+		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(zombie_production_queue),
+		flesh_vat_timer,
+	], tr)
