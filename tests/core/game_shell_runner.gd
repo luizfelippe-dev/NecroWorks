@@ -110,6 +110,7 @@ func run_validation() -> void:
 	shell.show_main_menu()
 	assert(not shell.continue_button.disabled)
 	var legacy_checkpoint: Dictionary = shell.current_game.build_checkpoint_state()
+	legacy_checkpoint.erase("processing_routes")
 	legacy_checkpoint["wave"] = 12
 	(legacy_checkpoint["metrics"] as Dictionary)["corpses_processed"] = 30
 	shell.profile = MetaProgressionStore.default_profile()

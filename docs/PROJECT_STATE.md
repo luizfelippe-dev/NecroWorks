@@ -16,7 +16,9 @@ A narrativa do checkpoint agora é validada contra o catálogo: evento desconhec
 
 Fábrica, rituais, doutrina, modificadores e loadout validam tipos e limites antes da restauração. Metas combinadas não podem ultrapassar 36, níveis respeitam os máximos de cada sistema e flags exigem booleanos. Versão e onda não aceitam valores fracionários/não finitos. Campos opcionais ausentes mantêm os defaults dos saves antigos.
 
-Ainda pendem feedback explícito de persistência, métricas por rota e as melhorias de experiência registradas em `ROADMAP.md`. Os gates históricos de CPU, resolução e bots têm escopo limitado: não substituem frames renderizados, QA manual nem equilíbrio humano.
+O shell informa perfil protegido/recuperado, checkpoint inválido/recuperado e falhas ao gravar run, perfil ou opções. O aviso oferece confirmação e nova tentativa; uma falha durante o combate pausa a partida, e confirmar não a retoma automaticamente. Histórico de conclusão não gravado permanece em memória; uma nova tentativa bem-sucedida limpa o checkpoint concluído. Arquivos protegidos não são sobrescritos.
+
+O campo opcional `processing_routes` preserva a distribuição no schema v2. Saves anteriores mantêm o total como rota não registrada, exibida no resumo e armazenada no histórico. A soma das rotas precisa corresponder ao total processado. O debug oculto não monta mais texto nem executa sua análise de recuperação. Ainda pendem consolidação de HUD, medições reais e as melhorias de experiência em `ROADMAP.md`.
 
 Este arquivo concentra o estado técnico necessário para retomar o desenvolvimento. As decisões de produto ficam em `DECISIONS.md`, a visão de gameplay em `GAME_DESIGN.md`, a estrutura em `ARCHITECTURE.md` e o plano de entregas em `ROADMAP.md`.
 

@@ -26,10 +26,14 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
   - regressão cobre ID desconhecido, escolha incompatível, tipos incorretos, backup válido e ausência de backup; restauração direta rejeita narrativa inválida antes de remover unidades;
 - [x] ampliar validação defensiva dos subcampos de fábrica, rituais, doutrina e modificadores;
   - níveis/flags, reservas, capacidade combinada, prioridade, pressão de facção e IDs do loadout validados; campos opcionais ausentes preservam defaults legados;
-- [ ] informar perfil recuperado, incompatível ou protegido, falhas de progressão e autosave; preservar arquivos originais;
-- [ ] persistir métricas de processamento por rota, com compatibilidade para checkpoints anteriores;
-- [ ] acrescentar regressões de isolamento, corrupção semântica, falha de gravação e retomada para cada correção;
+- [x] informar perfil recuperado, incompatível ou protegido, falhas de progressão e autosave; preservar arquivos originais;
+  - painel localizado com confirmação e nova tentativa; falhas durante a run pausam o gameplay; histórico de fim de run permanece em memória até nova gravação;
+- [x] persistir métricas de processamento por rota, com compatibilidade para checkpoints anteriores;
+  - `processing_routes` opcional no schema v2; totais antigos sem distribuição ficam como rota não registrada, sem inventar escolhas;
+- [x] acrescentar regressões de isolamento, corrupção semântica, falha de gravação e retomada para cada correção;
 - [ ] consolidar HUD duplicado e evitar atualização de debug oculto, medindo antes/depois;
+  - [x] impedir montagem de texto e análise de recuperação quando o debug está oculto, com regressão de atualização ao exibir;
+  - [ ] consolidar labels legadas e medir o impacto em frames reais;
 - [ ] reduzir acoplamento do controlador por extrações pequenas ligadas às correções, sem reescrita geral.
 
 **Aceite:** pausa congela relógio, unidades, produção e reposição; menus continuam utilizáveis. Nenhum runner grava no save pessoal. Retomadas válidas preservam estado e as inválidas oferecem recuperação segura. Erros de persistência são visíveis.
@@ -40,7 +44,7 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [ ] definir se filas avançam na preparação e comunicar essa regra, evitando espera explorável;
 - [ ] anunciar próxima ameaça para permitir planejamento;
 - [ ] ensinar cadáver → processamento → recurso → tropa por ações, substituindo páginas iniciais extensas;
-- [ ] corrigir tutorial: chefes nas ondas 10, 15 e 20, não a cada dez ondas;
+- [x] corrigir tutorial: chefes nas ondas 10, 15 e 20, não a cada dez ondas;
 - [ ] medir tempo até primeira decisão interessante e antecipar amostra de inimigo especial/build/automação;
 - [ ] priorizar capacidade, filas, gargalos, composição e ameaças no HUD; recolher métricas históricas;
 - [ ] permitir escala legível de interface e validar 720p, textos longos e três idiomas;

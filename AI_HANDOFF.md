@@ -10,8 +10,8 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
-1. expor falhas de persistência/perfil, recuperação por backup e indisponibilidade de Continuar;
-2. preservar métricas por rota na retomada, mantendo compatibilidade com saves anteriores;
+1. consolidar labels legadas do HUD e medir frames reais; a atualização do debug oculto já foi eliminada;
+2. concluir as extrações pontuais restantes da v0.6.3 sem reescrita geral;
 3. seguir v0.6.4: preparação entre ondas, tutorial e leitura de decisões;
 4. aprovar animação autoral de uma família e diferenciar os chefes;
 5. revisar cartas, automação e testes de equilíbrio com investimentos equivalentes;
@@ -19,7 +19,7 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Comandos
 
-Narrativa, fábrica, rituais, doutrina, modificadores e loadout já possuem validação defensiva antes da restauração. A suíte cobre tipos, limites, arquivo original preservado e fallback para backup; a migração v1→v2 continua necessária e não deve ser removida.
+Narrativa, fábrica, rituais, doutrina, modificadores e loadout já possuem validação defensiva antes da restauração. O shell informa recuperação/proteção e falhas de gravação em três idiomas, com nova tentativa e pausa em caso de falha durante a run. As métricas por rota persistem no checkpoint; distribuição desconhecida de saves antigos é identificada como tal. A migração v1→v2 continua necessária e não deve ser removida.
 
 ```powershell
 .\tools\validate_release.ps1 -GodotPath "C:\caminho\Godot_v4.7.1-stable_win64_console.exe"

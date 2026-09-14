@@ -15,7 +15,8 @@ As tabelas seguintes preservam o fechamento histórico de 08–11/09. A nova aud
 | Save pessoal nos testes de shell/tutorial | Corrigida neste corte | caminhos de perfil, settings e checkpoint separados; Continuar usa caminho injetado |
 | Evento inválido na retomada | Corrigida | ID/escolha anterior, tipos e escolha pertencente ao evento validados; backup e rejeição sem mutação cobertos pelo runner de integridade narrativa |
 | Subcampos de checkpoint | Corrigida | fábrica, rituais, doutrina, modificadores e loadout com tipos/limites; runner cobre capacidade, defaults legados, preservação do arquivo e fallback |
-| Feedback de persistência e métricas por rota | Pendente | recuperação explícita e histórico consistente após Continuar |
+| Feedback de persistência e métricas por rota | Corrigida | avisos localizados com nova tentativa; autosave falho pausa; distribuição persistida e legado identificado como desconhecido |
+| Debug oculto | Corrigida | não monta texto nem analisa recuperação até ficar visível; consolidação do HUD ainda pendente |
 | Ritmo, builds, chefes e automação | Pendente | preparação utilizável, escolhas distintas e metas por receita |
 | Animação, áudio, HUD e narrativa | Pendente | aprovação em movimento e sessão real, não somente poses/capturas |
 | Performance, resoluções e equilíbrio | Pendente | ampliar testes parciais com renderização, custos equivalentes e pessoas novas |
@@ -27,6 +28,8 @@ Validação do corte: 79 runners passaram no gate com `-SkipExport`; a regressã
 Validação do corte narrativo seguinte: 80 runners aprovados com `-SkipExport`, inclusive recuperação de JSON semanticamente inválido e migração v1→v2. Importação headless do editor aprovada; não houve novo export.
 
 Validação dos campos operacionais: 81 runners aprovados com `-SkipExport`, incluindo defaults legados, limites e preservação do arquivo saudável; importação headless aprovada. Avisos de persistência e métricas por rota continuam pendentes.
+
+O corte seguinte resolve esses avisos e métricas, chegando a 82 runners e 443 chaves localizadas. `persistence_feedback_runner.gd` cobre falha de autosave com pausa, nova tentativa, histórico em memória, perfil protegido, recuperação e rotas antigas. Capturas renderizadas em 1280×720 nos três idiomas ficam em `artifacts/presentation/persistence_*.png`. A consolidação das labels do HUD e a medição de frames reais permanecem abertas.
 
 ## Fase A — Confiabilidade
 

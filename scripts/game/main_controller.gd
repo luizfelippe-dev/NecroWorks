@@ -1140,6 +1140,7 @@ var corpses_processed_by_directive: Dictionary = {
 	PROCESSING_BONE_FOCUS: 0,
 	PROCESSING_FLESH_FOCUS: 0
 }
+var corpses_processed_route_unknown: int = 0
 
 var skeleton_cost: int = 5
 var skeleton_archer_cost: int = 8
@@ -8198,6 +8199,7 @@ func show_run_end_screen() -> void:
 			"balanced_processed": int(corpses_processed_by_directive[PROCESSING_BALANCED]),
 			"bone_processed": int(corpses_processed_by_directive[PROCESSING_BONE_FOCUS]),
 			"flesh_processed": int(corpses_processed_by_directive[PROCESSING_FLESH_FOCUS]),
+			"unknown_processed": corpses_processed_route_unknown,
 			"synergy_summary": get_run_synergy_summary(),
 			"result_message": get_run_result_message(),
 			"defeat_analysis": (
@@ -8320,6 +8322,7 @@ func build_checkpoint_state() -> Dictionary:
 			"modifier": selected_starting_modifier,
 		},
 		"processing_directive": processing_directive,
+		"processing_routes": get_processing_route_metrics(),
 		"rituals": {
 			"blood_extraction_level": blood_extraction_level,
 			"blood_infusion_level": blood_infusion_level,
@@ -8369,6 +8372,16 @@ func build_checkpoint_state() -> Dictionary:
 	}
 
 
+func get_processing_route_metrics() -> Dictionary:
+	var routes: Dictionary = corpses_processed_by_directive.duplicate(true)
+	var known: int = 0
+	for count: Variant in routes.values():
+		known += int(count)
+	# Older checkpoints retain the total but cannot reconstruct past choices.
+	routes["unknown"] = maxi(total_corpses_processed - known, 0)
+	return routes
+
+
 func capture_resume_checkpoint_state() -> Dictionary:
 	resume_checkpoint_state = build_checkpoint_state().duplicate(true)
 	return resume_checkpoint_state.duplicate(true)
@@ -8385,6 +8398,8 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	if not RunSaveStore.validate_narrative(state.get("narrative", {})):
 		return false
 	if not RunSaveStore.validate_runtime_fields(state):
+		return false
+	if not RunSaveStore.validate_processing_routes(state):
 		return false
 	var saved_wave: int = int(state.get("wave", 0))
 	if saved_wave < 1:
@@ -8492,6 +8507,10 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 	run_elapsed_seconds = maxf(float(metrics.get("elapsed_seconds", 0.0)), 0.0)
 	total_enemies_killed = maxi(int(metrics.get("enemies_killed", 0)), 0)
 	total_corpses_processed = maxi(int(metrics.get("corpses_processed", 0)), 0)
+	var saved_routes: Dictionary = state.get("processing_routes", {})
+	for route: String in corpses_processed_by_directive:
+		corpses_processed_by_directive[route] = int(saved_routes.get(route, 0))
+	corpses_processed_route_unknown = int(saved_routes.get("unknown", total_corpses_processed if not state.has("processing_routes") else 0))
 	total_skeletons_created = maxi(int(metrics.get("skeletons_created", 0)), 0)
 	total_skeletons_lost = maxi(int(metrics.get("skeletons_lost", 0)), 0)
 	total_skeletons_revived = maxi(int(metrics.get("skeletons_revived", 0)), 0)
@@ -10177,7 +10196,7 @@ func create_debug_hud() -> void:
 
 func update_debug_ui() -> void:
 
-	if debug_label == null:
+	if debug_label == null or not debug_label.visible:
 		return
 
 

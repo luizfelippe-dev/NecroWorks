@@ -49,14 +49,19 @@ static func save_checkpoint(
 
 
 static func load_checkpoint(path: String = DEFAULT_PATH) -> Dictionary:
+	return load_checkpoint_with_status(path).state
+
+
+static func load_checkpoint_with_status(path: String = DEFAULT_PATH) -> Dictionary:
 	for candidate: String in [path, path + TRANSACTION_STORE.BACKUP_SUFFIX]:
 		var parsed: Dictionary = TRANSACTION_STORE.load_dictionary(candidate)
 		if parsed.is_empty():
 			continue
 		var state: Dictionary = migrate_payload(parsed)
 		if validate_checkpoint(state):
-			return state
-	return {}
+			return {"state": state, "status": "loaded" if candidate == path else "recovered"}
+	var exists: bool = FileAccess.file_exists(path) or FileAccess.file_exists(path + TRANSACTION_STORE.BACKUP_SUFFIX)
+	return {"state": {}, "status": "invalid" if exists else "missing"}
 
 
 static func migrate_payload(payload: Dictionary) -> Dictionary:
@@ -135,7 +140,26 @@ static func validate_checkpoint(state: Dictionary) -> bool:
 	for metric_value: Variant in (state.metrics as Dictionary).values():
 		if not _is_bounded_number(metric_value, 0, 100000000):
 			return false
+	if not validate_processing_routes(state):
+		return false
 	return true
+
+
+static func validate_processing_routes(state: Dictionary) -> bool:
+	if not state.has("processing_routes"):
+		return true
+	if not state.processing_routes is Dictionary or not state.get("metrics", {}) is Dictionary:
+		return false
+	if not _is_bounded_integer(state.get("metrics", {}).get("corpses_processed", 0), 0, 100000000):
+		return false
+	var total: int = 0
+	for route: Variant in state.processing_routes:
+		if route not in PROCESSING_DIRECTIVES and route != "unknown":
+			return false
+		if not _is_bounded_integer(state.processing_routes[route], 0, 100000000):
+			return false
+		total += int(state.processing_routes[route])
+	return total == int(state.get("metrics", {}).get("corpses_processed", 0))
 
 
 static func validate_runtime_fields(state: Dictionary) -> bool:

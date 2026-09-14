@@ -1,6 +1,6 @@
 # NecroWorks — Gates de Release
 
-**Atualizado em:** 11/09/2026
+**Atualizado em:** 14/09/2026
 
 ## Gate automatizado
 
@@ -14,12 +14,16 @@ Na v0.6.2, a suíte reúne 79 runners. O teste de apresentação cobre os três 
 
 ## Matriz manual antes da demo
 
+A consolidação pós-auditoria acrescenta testes de pausa por frames, validação semântica e avisos de persistência. `tests/core/persistence_feedback_runner.gd` pode receber `-- --capture` em execução renderizada para gerar evidências dos avisos em `artifacts/presentation/`. Os arquivos de teste são isolados. A aprovação desses testes não substitui a matriz manual abaixo.
+
 - F5, F6, nova partida, continuar, pausa, reinício e saída;
 - PT-BR, inglês e espanhol;
 - 1280×720, 1600×900, 1920×1080, 16:10 e ultrawide;
 - escala de Windows em 100%, 125% e 150%;
 - Movimento Reduzido, Alto Contraste e volumes separados;
 - save novo, migrado, corrompido, backup e atualização entre builds;
+- falha de gravação: aviso, pausa, confirmação, nova tentativa e retorno ao jogo;
+- distribuição das rotas após Continuar e categoria desconhecida de checkpoints antigos;
 - cinco builds, três chefes, eventos, fusões e todos os finais;
 - instalação limpa em hardware mínimo e recomendado ainda a definir;
 - depot Steam, overlay, Cloud e controle somente quando implementados.

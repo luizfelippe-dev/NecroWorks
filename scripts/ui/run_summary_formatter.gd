@@ -56,6 +56,8 @@ static func build_build_summary(translate: Callable, state: Dictionary) -> Strin
 		str(state.get("result_message", "")),
 	]
 	var defeat_analysis: String = str(state.get("defeat_analysis", ""))
+	if int(state.get("unknown_processed", 0)) > 0:
+		lines.insert(10, _value_line(translate, "RUN_ROUTES_UNKNOWN", state.unknown_processed))
 	if not defeat_analysis.is_empty():
 		lines.append("")
 		lines.append(_t(translate, "RUN_DEFEAT_DIAGNOSIS"))

@@ -80,6 +80,10 @@ var localized_buttons: Dictionary = {}
 var menu_eyebrow: Label
 var menu_atmosphere: Control
 var menu_content: VBoxContainer
+var persistence_notice: Control
+var persistence_notice_body: Label
+var persistence_retry_button: Button
+var persistence_messages: Dictionary = {}
 
 
 func _ready() -> void:
@@ -89,6 +93,11 @@ func _ready() -> void:
 	build_interface()
 	refresh_localized_text()
 	show_main_menu()
+	match str(profile.get(META_STORE.LOAD_STATUS_MARKER, "")):
+		META_STORE.STATUS_RECOVERED:
+			report_persistence("profile_load", "PERSIST_PROFILE_RECOVERED")
+		META_STORE.STATUS_FUTURE, META_STORE.STATUS_CORRUPT:
+			report_persistence("profile_load", "PERSIST_PROFILE_PROTECTED")
 
 
 func _notification(what: int) -> void:
@@ -100,6 +109,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel"):
 		return
 	get_viewport().set_input_as_handled()
+	if persistence_notice.visible:
+		persistence_notice.hide()
+		return
 	if tutorial_menu != null and tutorial_menu.visible:
 		finish_tutorial()
 	elif options_menu.visible:
@@ -330,6 +342,13 @@ func build_interface() -> void:
 	tutorial_skip_button = add_localized_button(
 		tutorial_box, "TUTORIAL_SKIP", finish_tutorial
 	)
+	persistence_notice = create_screen("PersistenceNotice", Color(0, 0, 0, 0.9))
+	var notice_box: VBoxContainer = create_center_panel(persistence_notice, Vector2(840, 400))
+	persistence_notice_body = create_wrapped_center_label(20, 230)
+	notice_box.add_child(persistence_notice_body)
+	persistence_retry_button = add_localized_button(notice_box, "PERSIST_RETRY", retry_persistence)
+	add_localized_button(notice_box, "PERSIST_ACK", func() -> void: persistence_notice.hide())
+	persistence_notice.hide()
 
 	prologue_menu.visible = false
 	pause_menu.visible = false
@@ -427,6 +446,7 @@ func refresh_localized_text() -> void:
 	prologue_title.text = tr("PROLOGUE_TITLE")
 	prologue_body.text = tr("PROLOGUE_BODY")
 	pause_title.text = tr("PAUSE_TITLE")
+	refresh_persistence_notice()
 	if pause_status_label != null:
 		pause_status_label.text = tr("PAUSE_CHECKPOINT_NOTE")
 	options_title.text = tr("OPTIONS_TITLE")
@@ -463,7 +483,9 @@ func show_main_menu() -> void:
 	history_menu.visible = false
 	loadout_menu.visible = false
 	tutorial_menu.visible = false
-	continue_button.disabled = not RunSaveStore.has_checkpoint(run_save_path)
+	var result: Dictionary = RunSaveStore.load_checkpoint_with_status(run_save_path)
+	continue_button.disabled = result.state.is_empty()
+	report_checkpoint_status(result.status)
 
 
 func start_new_run() -> void:
@@ -569,7 +591,7 @@ func cycle_loadout_selection(available: Array[String], profile_key: String) -> v
 		return
 	var current_index: int = available.find(str(profile.get(profile_key, "")))
 	profile[profile_key] = available[(current_index + 1) % available.size()]
-	META_STORE.save_profile(profile, profile_path)
+	persist_profile(profile)
 	refresh_loadout_content()
 
 
@@ -620,11 +642,13 @@ func confirm_new_run() -> void:
 
 
 func continue_run() -> void:
-	var checkpoint: Dictionary = RunSaveStore.load_checkpoint(run_save_path)
+	var result: Dictionary = RunSaveStore.load_checkpoint_with_status(run_save_path)
+	var checkpoint: Dictionary = result.state
 	if checkpoint.is_empty():
 		show_main_menu()
 		return
 	start_game(checkpoint)
+	report_checkpoint_status(result.status)
 
 
 func start_game(checkpoint: Dictionary) -> void:
@@ -655,7 +679,7 @@ func start_game(checkpoint: Dictionary) -> void:
 			"highest_wave": int(checkpoint.get("wave", 0)),
 			"corpses_processed": int(checkpoint_metrics.get("corpses_processed", 0)),
 		})
-		META_STORE.save_profile(profile, profile_path)
+		persist_profile(profile)
 	if current_game.has_method("configure_meta_progression"):
 		var saved_loadout: Dictionary = checkpoint.get("meta_loadout", {}) as Dictionary
 		current_game.configure_meta_progression(
@@ -678,11 +702,13 @@ func start_game(checkpoint: Dictionary) -> void:
 func save_checkpoint(state: Dictionary) -> Error:
 	var checkpoint_error: Error = RunSaveStore.save_checkpoint(state, run_save_path)
 	if checkpoint_error != OK:
+		report_persistence("checkpoint", "PERSIST_CHECKPOINT_FAILED", checkpoint_error)
 		return checkpoint_error
+	persistence_messages.erase("checkpoint")
 	META_STORE.merge_discoveries(
 		profile, state.get("narrative", {}).get("discoveries", {}) as Dictionary
 	)
-	return META_STORE.save_profile(profile, profile_path)
+	return persist_profile(profile)
 
 
 func on_meta_progress_reported(event: Dictionary) -> void:
@@ -692,7 +718,7 @@ func on_meta_progress_reported(event: Dictionary) -> void:
 		or event.has("highest_wave")
 		or int(event.get("victories_delta", 0)) > 0
 	):
-		META_STORE.save_profile(profile, profile_path)
+		persist_profile(profile)
 	if is_instance_valid(current_game) and not newly_unlocked.is_empty():
 		current_game.update_meta_unlocks(profile.get("unlocks", {}) as Dictionary)
 	if not newly_unlocked.is_empty():
@@ -726,14 +752,14 @@ func on_run_completed(victory: bool) -> void:
 			"flesh_remaining": current_game.flesh,
 			"blood_remaining": current_game.blood,
 			"souls_remaining": current_game.souls,
-			"processing_routes": current_game.corpses_processed_by_directive.duplicate(true),
+			"processing_routes": current_game.get_processing_route_metrics(),
 			"defeat_reason": current_game.last_defeat_reason,
 			"operator": current_game.selected_operator,
 			"contract": current_game.selected_starting_modifier,
 			"progress_recorded_live": true,
 		})
-		if META_STORE.save_profile(completed_profile, profile_path) == OK:
-			profile = completed_profile
+		profile = completed_profile
+		if persist_profile(profile) == OK:
 			RunSaveStore.delete_checkpoint(run_save_path)
 
 
@@ -821,7 +847,7 @@ func apply_options() -> void:
 		"tutorial_completed": bool(settings.get("tutorial_completed", false)),
 	}
 	settings = SettingsStore.apply_settings(settings)
-	SettingsStore.save_settings(settings, settings_path)
+	persist_settings()
 	if is_instance_valid(current_game) and current_game.has_method("configure_accessibility"):
 		current_game.configure_accessibility(settings)
 	refresh_localized_text()
@@ -871,17 +897,96 @@ func advance_tutorial() -> void:
 func finish_tutorial() -> void:
 	tutorial_menu.visible = false
 	settings.tutorial_completed = true
-	SettingsStore.save_settings(settings, settings_path)
 	get_tree().paused = false
+	persist_settings()
 
 
 func reset_tutorial() -> void:
 	settings.tutorial_completed = false
 	settings.tutorial_enabled = true
 	tutorial_check.button_pressed = true
-	SettingsStore.save_settings(settings, settings_path)
+	persist_settings()
 	if current_game != null:
 		show_tutorial()
+
+
+func persist_profile(candidate: Dictionary) -> Error:
+	var error: Error = META_STORE.save_profile(candidate, profile_path)
+	if error != OK:
+		report_persistence("profile", "PERSIST_PROFILE_FAILED", error)
+	else:
+		persistence_messages.erase("profile")
+		refresh_persistence_notice()
+	return error
+
+
+func persist_settings() -> Error:
+	var error: Error = SettingsStore.save_settings(settings, settings_path)
+	if error != OK:
+		report_persistence("settings", "PERSIST_SETTINGS_FAILED", error)
+	else:
+		persistence_messages.erase("settings")
+		refresh_persistence_notice()
+	return error
+
+
+func report_checkpoint_status(status: String) -> void:
+	if status == "recovered":
+		report_persistence("checkpoint_load", "PERSIST_CHECKPOINT_RECOVERED")
+	elif status == "invalid":
+		report_persistence("checkpoint_load", "PERSIST_CHECKPOINT_INVALID")
+	else:
+		persistence_messages.erase("checkpoint_load")
+		refresh_persistence_notice()
+
+
+func report_persistence(category: String, message_key: String, error: int = -1) -> void:
+	var message: Dictionary = {"key": message_key, "error": error}
+	if persistence_messages.get(category, {}) == message:
+		return
+	persistence_messages[category] = message
+	refresh_persistence_notice()
+	persistence_notice.show()
+	if is_instance_valid(current_game) and not current_game.run_finished:
+		pause_game()
+
+
+func refresh_persistence_notice() -> void:
+	if persistence_notice_body == null:
+		return
+	var lines: PackedStringArray = []
+	for message: Dictionary in persistence_messages.values():
+		var line: String = tr(message.key)
+		if int(message.error) >= 0:
+			line = line % int(message.error)
+		lines.append(line)
+	persistence_notice_body.text = "\n\n".join(lines)
+	persistence_retry_button.disabled = not (
+		persistence_messages.has("profile") or persistence_messages.has("checkpoint")
+		or persistence_messages.has("settings")
+	)
+	if lines.is_empty():
+		persistence_notice.hide()
+
+
+func retry_persistence() -> void:
+	if is_instance_valid(current_game) and current_game.run_finished:
+		if persistence_messages.has("checkpoint") or persistence_messages.has("profile"):
+			if persist_profile(profile) == OK:
+				if RunSaveStore.delete_checkpoint(run_save_path) == OK:
+					persistence_messages.erase("checkpoint")
+		if persistence_messages.has("settings"):
+			persist_settings()
+		refresh_persistence_notice()
+		return
+	if persistence_messages.has("checkpoint") and is_instance_valid(current_game):
+		save_checkpoint(current_game.get_resume_checkpoint_state())
+	if persistence_messages.has("profile"):
+		if persist_profile(profile) == OK and is_instance_valid(current_game) and current_game.run_finished:
+			RunSaveStore.delete_checkpoint(run_save_path)
+	if persistence_messages.has("settings"):
+		persist_settings()
+	refresh_persistence_notice()
 
 
 func refresh_tutorial_content() -> void:

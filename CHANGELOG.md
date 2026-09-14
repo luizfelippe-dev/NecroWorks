@@ -2,6 +2,19 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Avisos de persistência, rotas e ajustes de leitura
+
+- painel PT-BR/EN/ES para recuperação de backup, perfil protegido, checkpoint inválido e falhas de gravação de run/perfil/opções;
+- nova tentativa de gravação sem reiniciar; falhas durante combate pausam a partida e avisos repetidos já confirmados não inundam a tela;
+- histórico de conclusão com falha de gravação permanece em memória e pode ser salvo novamente;
+- checkpoint preserva métricas por rota; legado sem distribuição recebe categoria explícita de rota não registrada no resumo/histórico;
+- validação confere tipos, IDs e soma das rotas; schema v2 e migração v1 continuam compatíveis;
+- debug oculto deixa de montar texto e consultar recuperação; mostrar F3 volta a atualizar;
+- tutorial corrigido para chefes nas ondas 10, 15 e 20 nos três idiomas;
+- regressão integrada de falha, nova tentativa, backup, proteção do perfil e métricas; captura renderizada dos avisos em três idiomas.
+
+Validação: 82 runners e 443 chaves nos três idiomas; avisos capturados em 1280×720 com OpenGL Compatibility. O gate também exporta e inicia o Windows release. Isso não substitui uma run manual completa nem medições de performance em hardware mínimo.
+
 ### Validação dos campos operacionais
 
 - fábrica e rituais rejeitam níveis inválidos e flags com tipos incorretos;
