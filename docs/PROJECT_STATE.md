@@ -12,7 +12,9 @@
 
 A v0.6.3 está em andamento sobre a base v0.6.2, sem nova versão de release declarada. O gameplay agora usa processamento pausável explícito; os menus permanecem ativos, e temporizadores de reposição/desbloqueio respeitam a pausa. Os testes de shell/tutorial isolam seus três arquivos e verificam frames sem avanço e retomada. Continuar consulta o checkpoint injetado, não um caminho global.
 
-Ainda pendem validação semântica de eventos no save, feedback de persistência, métricas por rota e as melhorias de experiência registradas em `ROADMAP.md`. Os gates históricos de CPU, resolução e bots têm escopo limitado: não substituem frames renderizados, QA manual nem equilíbrio humano.
+A narrativa do checkpoint agora é validada contra o catálogo: evento desconhecido/já concluído, escolha incompatível e tipos inválidos são rejeitados. O carregamento tenta o backup; sem backup válido, preserva o arquivo e não oferece Continuar. Chamadas diretas de restauração recusam narrativa inconsistente antes de remover unidades. Decisões válidas reabrem sem conceder recompensa antecipada.
+
+Ainda pendem validação dos demais subcampos, feedback explícito de persistência, métricas por rota e as melhorias de experiência registradas em `ROADMAP.md`. Os gates históricos de CPU, resolução e bots têm escopo limitado: não substituem frames renderizados, QA manual nem equilíbrio humano.
 
 Este arquivo concentra o estado técnico necessário para retomar o desenvolvimento. As decisões de produto ficam em `DECISIONS.md`, a visão de gameplay em `GAME_DESIGN.md`, a estrutura em `ARCHITECTURE.md` e o plano de entregas em `ROADMAP.md`.
 

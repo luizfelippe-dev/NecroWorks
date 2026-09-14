@@ -13,7 +13,7 @@ As tabelas seguintes preservam o fechamento histórico de 08–11/09. A nova aud
 | Pausa e tutorial | Corrigida neste corte | gameplay pausável; relógio/posições congelados por frames e retomada verificados |
 | Reposição durante pausa | Corrigida neste corte | timer pausável permanece pendente e conclui após retomar |
 | Save pessoal nos testes de shell/tutorial | Corrigida neste corte | caminhos de perfil, settings e checkpoint separados; Continuar usa caminho injetado |
-| Evento inválido na retomada | Pendente | validar ID/escolha anterior, backup e ausência de softlock |
+| Evento inválido na retomada | Corrigida | ID/escolha anterior, tipos e escolha pertencente ao evento validados; backup e rejeição sem mutação cobertos pelo runner de integridade narrativa |
 | Feedback de persistência e métricas por rota | Pendente | recuperação explícita e histórico consistente após Continuar |
 | Ritmo, builds, chefes e automação | Pendente | preparação utilizável, escolhas distintas e metas por receita |
 | Animação, áudio, HUD e narrativa | Pendente | aprovação em movimento e sessão real, não somente poses/capturas |
@@ -22,6 +22,8 @@ As tabelas seguintes preservam o fechamento histórico de 08–11/09. A nova aud
 Não há nova aprovação comercial nem fechamento da v0.6.3 neste corte.
 
 Validação do corte: 79 runners passaram no gate com `-SkipExport`; a regressão de shell passou novamente após incluir a fila de produção. Não foi gerado novo executável e ainda falta inspeção manual dos menus e da pausa.
+
+Validação do corte narrativo seguinte: 80 runners aprovados com `-SkipExport`, inclusive recuperação de JSON semanticamente inválido e migração v1→v2. Importação headless do editor aprovada; não houve novo export.
 
 ## Fase A — Confiabilidade
 

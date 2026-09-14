@@ -10,7 +10,7 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
-1. validar evento pendente e subcampos do checkpoint para impedir softlock na retomada;
+1. ampliar validação dos subcampos de fábrica, rituais, doutrina e modificadores; a narrativa já rejeita eventos desconhecidos/repetidos, escolhas incompatíveis e tipos inválidos antes da restauração;
 2. expor falhas de persistência/perfil e preservar métricas por rota;
 3. seguir v0.6.4: preparação entre ondas, tutorial e leitura de decisões;
 4. aprovar animação autoral de uma família e diferenciar os chefes;

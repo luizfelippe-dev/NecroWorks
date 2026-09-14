@@ -2,6 +2,18 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Integridade narrativa dos checkpoints
+
+- eventos pendentes desconhecidos ou já concluídos, escolhas incompatíveis e tipos narrativos incorretos são rejeitados;
+- restauração direta valida a narrativa antes de remover unidades ou substituir estado;
+- JSON semanticamente inválido passa a acionar a tentativa de backup; sem cópia válida, o arquivo original permanece intacto e Continuar fica indisponível;
+- regressão dedicada cobre rejeição, recuperação e reabertura de decisão válida sem recompensa antecipada;
+- avisos explícitos de recuperação/indisponibilidade ainda serão implementados no próximo corte de persistência.
+
+Validação deste corte: 80 runners aprovados com `-SkipExport`, incluindo integridade narrativa e migração v1→v2; importação headless do editor concluída sem erros. Sem novo executável ou alteração de balanceamento.
+
+### Pausa e isolamento dos testes
+
 - gameplay explicitamente pausável, preservando navegação do shell; reposição inimiga e aviso de desbloqueio também respeitam a pausa;
 - regressões de pausa/tutorial verificam relógio, posições e temporizador ao longo de frames, além da retomada;
 - checkpoints de shell/tutorial isolados do save pessoal, com limpeza dos backups de teste;

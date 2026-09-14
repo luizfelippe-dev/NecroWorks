@@ -10,6 +10,7 @@ const TRANSACTION_STORE: Script = preload(
 	"res://scripts/core/transactional_json_store.gd"
 )
 const UPGRADE_CATALOG: Script = preload("res://scripts/game/upgrade_catalog.gd")
+const NARRATIVE_CATALOG: Script = preload("res://scripts/game/narrative_event_catalog.gd")
 const REQUIRED_DICTIONARIES: Array[String] = [
 	"resources", "army", "upgrades", "factory", "production", "metrics",
 	"doctrine", "narrative", "run_modifiers", "rituals"
@@ -94,6 +95,10 @@ static func validate_checkpoint(state: Dictionary) -> bool:
 		state.processing_directive
 	) not in PROCESSING_DIRECTIVES:
 		return false
+	if not state.get("save_metadata", {}) is Dictionary:
+		return false
+	if not validate_narrative(state.narrative):
+		return false
 	var metadata: Dictionary = state.get("save_metadata", {}) as Dictionary
 	if str(metadata.get("checkpoint_kind", "")) != "between_wave":
 		return false
@@ -130,6 +135,33 @@ static func validate_checkpoint(state: Dictionary) -> bool:
 		if not _is_bounded_number(metric_value, 0, 100000000):
 			return false
 	return true
+
+
+static func validate_narrative(value: Variant) -> bool:
+	if not value is Dictionary:
+		return false
+	var narrative: Dictionary = value as Dictionary
+	if not narrative.get("choices", {}) is Dictionary:
+		return false
+	if not narrative.get("discoveries", {}) is Dictionary:
+		return false
+	if not narrative.get("pending_event", "") is String:
+		return false
+	var choices: Dictionary = narrative.get("choices", {}) as Dictionary
+	for event_id: Variant in choices:
+		if not event_id is String or not choices[event_id] is String:
+			return false
+		var event: Dictionary = NARRATIVE_CATALOG.get_event(event_id)
+		if event.is_empty() or choices[event_id] not in event.get("choices", []):
+			return false
+	for discovery: Variant in (narrative.get("discoveries", {}) as Dictionary).values():
+		if not discovery is bool:
+			return false
+	var pending: String = narrative.get("pending_event", "")
+	return pending.is_empty() or (
+		not NARRATIVE_CATALOG.get_event(pending).is_empty()
+		and not choices.has(pending)
+	)
 
 
 static func _validate_production_queue(queue: Array) -> bool:

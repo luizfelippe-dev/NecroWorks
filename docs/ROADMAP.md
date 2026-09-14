@@ -22,7 +22,8 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [x] testar avanço real de frames na pausa/tutorial e retomada, além do booleano da árvore;
 - [x] isolar checkpoints dos runners de shell/tutorial e limpar seus backups;
 - [x] fazer o botão Continuar respeitar o caminho injetado de checkpoint;
-- [ ] validar semanticamente evento narrativo pendente, inclusive evento já escolhido, e recuperar checkpoint inválido sem softlock;
+- [x] validar semanticamente evento narrativo pendente, inclusive evento já escolhido, e recuperar checkpoint inválido sem softlock;
+  - regressão cobre ID desconhecido, escolha incompatível, tipos incorretos, backup válido e ausência de backup; restauração direta rejeita narrativa inválida antes de remover unidades;
 - [ ] ampliar validação defensiva dos subcampos de fábrica, rituais, doutrina e modificadores;
 - [ ] informar perfil recuperado, incompatível ou protegido, falhas de progressão e autosave; preservar arquivos originais;
 - [ ] persistir métricas de processamento por rota, com compatibilidade para checkpoints anteriores;
