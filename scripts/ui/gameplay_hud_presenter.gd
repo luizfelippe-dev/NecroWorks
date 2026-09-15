@@ -11,6 +11,8 @@ static func format_wave(state: Dictionary, translate: Callable) -> String:
 	var title: String = str(state.get("title", ""))
 	if bool(state.get("event_pending", false)):
 		return title + "\n" + _text(translate, "EVENT_DECISION_PENDING")
+	if bool(state.get("preparation", false)):
+		return title + "\n" + _text(translate, "WAVE_PREPARATION_STATUS")
 	if bool(state.get("transition", false)):
 		return (
 			title + " " + _text(translate, "WAVE_COMPLETE") + "\n"

@@ -72,6 +72,7 @@ func refresh_localized_ui() -> void:
 	update_factory_panel_ui()
 	update_army_doctrine_ui()
 	refresh_narrative_event_ui()
+	refresh_wave_preparation_ui()
 	if run_end_panel != null and run_end_panel.visible:
 		show_run_end_screen()
 
@@ -1252,6 +1253,9 @@ var wave_in_progress: bool:
 var wave_transition_in_progress: bool:
 	get: return bool(run_director.wave_transition_in_progress)
 	set(value): run_director.wave_transition_in_progress = value
+var wave_preparation_in_progress: bool:
+	get: return bool(run_director.wave_preparation_in_progress)
+	set(value): run_director.wave_preparation_in_progress = value
 
 
 const BASE_ENEMIES_PER_WAVE: int = ENEMY_WAVE_POLICY.BASE_ENEMIES_PER_WAVE
@@ -1333,6 +1337,11 @@ var narrative_event_panel: ColorRect = null
 var narrative_event_title_label: Label = null
 var narrative_event_body_label: Label = null
 var narrative_event_buttons: Array[Button] = []
+var wave_preparation_panel: ColorRect = null
+var wave_preparation_title: Label = null
+var wave_preparation_threat: Label = null
+var wave_preparation_rule: Label = null
+var start_prepared_wave_button: Button = null
 
 
 # =========================================================
@@ -1796,6 +1805,7 @@ func _ready() -> void:
 	create_wave_hud()
 	create_upgrade_ui()
 	create_narrative_event_ui()
+	create_wave_preparation_ui()
 	create_synergy_hud()
 	create_run_end_ui()
 	create_factory_panel_ui()
@@ -1955,6 +1965,12 @@ func _process(delta: float) -> void:
 
 
 	if run_finished:
+		return
+	if (
+		wave_transition_in_progress
+		or event_decision_in_progress
+		or wave_preparation_in_progress
+	):
 		return
 	run_elapsed_seconds += maxf(delta, 0.0)
 
@@ -6751,6 +6767,135 @@ func create_narrative_event_ui() -> void:
 	narrative_event_panel.visible = false
 
 
+func create_wave_preparation_ui() -> void:
+	wave_preparation_panel = ColorRect.new()
+	wave_preparation_panel.name = "WavePreparationPanel"
+	wave_preparation_panel.position = Vector2(650.0, 245.0)
+	wave_preparation_panel.size = Vector2(620.0, 390.0)
+	wave_preparation_panel.color = Color(0.018, 0.024, 0.022, 0.985)
+	wave_preparation_panel.z_index = 460
+	wave_preparation_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(wave_preparation_panel)
+
+	wave_preparation_title = Label.new()
+	wave_preparation_title.name = "WavePreparationTitle"
+	wave_preparation_title.position = Vector2(35.0, 28.0)
+	wave_preparation_title.size = Vector2(550.0, 45.0)
+	wave_preparation_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	wave_preparation_title.add_theme_font_size_override("font_size", 27)
+	wave_preparation_title.add_theme_color_override("font_color", UI_GREEN)
+	wave_preparation_panel.add_child(wave_preparation_title)
+
+	wave_preparation_threat = Label.new()
+	wave_preparation_threat.name = "WavePreparationThreat"
+	wave_preparation_threat.position = Vector2(45.0, 95.0)
+	wave_preparation_threat.size = Vector2(530.0, 105.0)
+	wave_preparation_threat.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	wave_preparation_threat.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	wave_preparation_threat.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	wave_preparation_threat.add_theme_font_size_override("font_size", 18)
+	wave_preparation_threat.add_theme_color_override("font_color", UI_BONE)
+	wave_preparation_panel.add_child(wave_preparation_threat)
+
+	wave_preparation_rule = Label.new()
+	wave_preparation_rule.name = "WavePreparationRule"
+	wave_preparation_rule.position = Vector2(45.0, 205.0)
+	wave_preparation_rule.size = Vector2(530.0, 55.0)
+	wave_preparation_rule.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	wave_preparation_rule.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	wave_preparation_rule.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	wave_preparation_rule.add_theme_font_size_override("font_size", 14)
+	wave_preparation_rule.add_theme_color_override("font_color", UI_TEXT)
+	wave_preparation_panel.add_child(wave_preparation_rule)
+
+	start_prepared_wave_button = Button.new()
+	start_prepared_wave_button.name = "StartPreparedWaveButton"
+	start_prepared_wave_button.position = Vector2(155.0, 285.0)
+	start_prepared_wave_button.size = Vector2(310.0, 68.0)
+	start_prepared_wave_button.add_theme_font_size_override("font_size", 18)
+	start_prepared_wave_button.pressed.connect(start_prepared_wave)
+	apply_button_style(start_prepared_wave_button, UI_GREEN)
+	wave_preparation_panel.add_child(start_prepared_wave_button)
+	wave_preparation_panel.visible = false
+
+
+func refresh_wave_preparation_ui() -> void:
+	if wave_preparation_panel == null:
+		return
+	wave_preparation_panel.visible = wave_preparation_in_progress
+	if not wave_preparation_in_progress:
+		return
+	wave_preparation_title.text = tr("WAVE_PREPARATION_TITLE") % current_wave
+	wave_preparation_rule.text = tr("WAVE_PREPARATION_PAUSED_RULE")
+	start_prepared_wave_button.text = tr("WAVE_PREPARATION_START") % current_wave
+	var archetype: Dictionary = (
+		ENEMY_ARCHETYPE_CATALOG.get_boss_archetype(
+			str(get_boss_profile_for_wave(current_wave).get("id", "foreman"))
+		)
+		if is_boss_wave(current_wave)
+		else ENEMY_ARCHETYPE_CATALOG.get_archetype(current_wave, 0, BOSS_WAVE)
+	)
+	var archetype_id: String = str(archetype.get("id", "human_warrior"))
+	var base_hp: int = (
+		int(get_boss_profile_for_wave(current_wave).get("hp", BOSS_HP))
+		if is_boss_wave(current_wave) else get_enemy_hp_for_wave(current_wave)
+	)
+	var base_damage: int = (
+		int(get_boss_profile_for_wave(current_wave).get("damage", BOSS_DAMAGE))
+		if is_boss_wave(current_wave) else get_enemy_damage_for_wave(current_wave)
+	)
+	var predicted_hp: int = maxi(1, int(round(
+		float(base_hp) * float(archetype.get("hp_multiplier", 1.0))
+		* (1.0 + float(enemy_hp_run_percent_bonus) / 100.0)
+	)))
+	var predicted_damage: int = maxi(1, int(round(
+		float(base_damage) * float(archetype.get("damage_multiplier", 1.0))
+	))) + enemy_damage_run_bonus + get_faction_damage_bonus(archetype_id)
+	wave_preparation_threat.text = (
+		tr("WAVE_PREPARATION_NEXT_THREAT") + "\n"
+		+ get_enemy_display_name(archetype_id, is_elite_wave(current_wave))
+		+ "  |  " + tr("STAT_HP") + ": " + str(predicted_hp)
+		+ "  |  " + tr("STAT_DAMAGE") + ": " + str(predicted_damage)
+		+ "\n" + tr("WAVE_PREPARATION_COUNTS") % [
+			get_enemies_for_wave(current_wave), get_max_simultaneous_enemies(),
+		]
+	)
+	if not is_boss_wave(current_wave):
+		var roster: Array[String] = []
+		for spawn_index: int in range(get_enemies_for_wave(current_wave)):
+			var member: Dictionary = ENEMY_ARCHETYPE_CATALOG.get_archetype(
+				current_wave, spawn_index, BOSS_WAVE
+			)
+			var member_name: String = get_enemy_display_name(
+				str(member.get("id", "human_warrior")), is_elite_wave(current_wave)
+			)
+			if member_name not in roster:
+				roster.append(member_name)
+		wave_preparation_threat.text += (
+			"\n" + tr("WAVE_PREPARATION_ROSTER") % ", ".join(roster)
+		)
+
+
+func show_wave_preparation() -> void:
+	if not wave_preparation_in_progress or run_finished:
+		return
+	refresh_wave_preparation_ui()
+	update_wave_ui()
+	update_bones_ui()
+
+
+func start_prepared_wave() -> void:
+	if not wave_preparation_in_progress or run_finished:
+		return
+	# Grava também as decisões feitas no planejamento antes de liberar o combate.
+	var checkpoint: Dictionary = capture_resume_checkpoint_state()
+	run_checkpoint_requested.emit(checkpoint)
+	if not run_director.start_prepared_wave():
+		return
+	wave_preparation_panel.visible = false
+	start_wave(current_wave)
+
+
 func show_narrative_event(event_id: String) -> bool:
 	var event: Dictionary = NARRATIVE_EVENT_CATALOG.get_event(event_id)
 	if event.is_empty() or narrative_event_choices.has(event_id):
@@ -6865,9 +7010,15 @@ func select_narrative_event_choice(choice_id: String) -> bool:
 
 
 func continue_wave_after_transition() -> void:
+	if not wave_preparation_in_progress:
+		# Compatibilidade para chamadas diretas de eventos fora da transição.
+		var direct_checkpoint: Dictionary = capture_resume_checkpoint_state()
+		run_checkpoint_requested.emit(direct_checkpoint)
+		start_wave(current_wave)
+		return
+	show_wave_preparation()
 	var checkpoint: Dictionary = capture_resume_checkpoint_state()
 	run_checkpoint_requested.emit(checkpoint)
-	start_wave(current_wave)
 
 
 func get_upgrade_pool() -> Array[String]:
@@ -8296,6 +8447,7 @@ func build_checkpoint_state() -> Dictionary:
 
 	return {
 		"wave": current_wave,
+		"preparation_pending": wave_preparation_in_progress,
 		"resources": {
 			"bones": bones,
 			"flesh": flesh,
@@ -8539,10 +8691,17 @@ func restore_checkpoint_state(state: Dictionary) -> bool:
 		bool(doctrine.get("automation_enabled", false))
 	)
 
-	run_director.prepare_resume(saved_wave)
+	run_director.prepare_resume(
+		saved_wave, bool(state.get("preparation_pending", false))
+	)
 	var pending_event: String = str(narrative.get("pending_event", ""))
 	if not pending_event.is_empty():
+		# Checkpoints anteriores não possuíam o campo da preparação, mas uma
+		# decisão pendente sempre pertence ao intervalo entre duas ondas.
+		wave_preparation_in_progress = true
 		show_narrative_event(pending_event)
+	elif wave_preparation_in_progress:
+		show_wave_preparation()
 	else:
 		start_wave(saved_wave)
 	resume_checkpoint_state = state.duplicate(true)
@@ -8609,6 +8768,7 @@ func update_wave_ui() -> void:
 		"title": wave_title,
 		"event_pending": event_decision_in_progress,
 		"transition": wave_transition_in_progress,
+		"preparation": wave_preparation_in_progress,
 		"remaining": get_enemies_remaining(),
 		"total": enemies_total_this_wave,
 		"active": enemies.size(),

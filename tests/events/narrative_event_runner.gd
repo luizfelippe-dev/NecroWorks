@@ -90,7 +90,8 @@ func run_validation() -> void:
 	assert(restored_game.select_narrative_event_choice(EVENT_CATALOG.ARCANIST_SOULS))
 	assert(restored_game.souls == souls_before + 4)
 	assert(restored_game.current_wave == 13)
-	assert(restored_game.wave_in_progress)
+	assert(restored_game.wave_preparation_in_progress)
+	assert(not restored_game.wave_in_progress)
 
 	# Risk/reward consequence and both Boss Corpse branches remain permanent.
 	restored_game.event_decision_in_progress = false

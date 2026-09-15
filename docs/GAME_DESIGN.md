@@ -6,6 +6,12 @@ O passe de interface e animação não altera números de combate nem economia. 
 
 As imagens de ataque e o movimento procedural são resposta aos eventos da simulação, nunca uma segunda fonte de dano ou cooldown. A avaliação visual está em `PRESENTATION_UPDATE.md`.
 
+## Preparação entre ondas — v0.6.4
+
+Depois da carta de aprimoramento e de um eventual evento narrativo, a próxima onda entra em preparação. O painel antecipa o inimigo principal, a composição presente, PV, dano, tamanho total e limite de adversários simultâneos. O combate só começa por comando explícito.
+
+Do encerramento da onda até o próximo combate — incluindo carta, evento e preparação — relógio da run, processamento de cadáveres, linhas de produção e automações não avançam. Na preparação, o jogador pode mudar a diretriz, configurar produção e doutrina e enfileirar unidades. As ordens retomam junto com o combate; assim, planejar não exige pressa e esperar indefinidamente não produz vantagem.
+
 ## High concept
 
 > Kill enemies. Recycle the corpses. Turn them into your army.
@@ -81,6 +87,7 @@ Enemy
 → Bones + Flesh
 → Skeleton / Zombie
 → Upgrade
+→ Preparation / Threat preview
 → Synergy
 → Elite
 → The Foreman

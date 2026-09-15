@@ -15,6 +15,7 @@ func _initialize() -> void:
 	assert(wave.contains("WAVE_PRIMARY: MAGE"))
 	assert(PRESENTER.format_wave({"event_pending": true}, identity).contains("EVENT_DECISION_PENDING"))
 	assert(PRESENTER.format_wave({"transition": true}, identity).contains("WAVE_SELECT_UPGRADE"))
+	assert(PRESENTER.format_wave({"preparation": true}, identity).contains("WAVE_PREPARATION_STATUS"))
 	assert(PRESENTER.format_wave({"run_finished": true, "won": true}, identity).contains("RUN_VICTORY"))
 	assert(PRESENTER.format_wave({"run_finished": true, "won": false}, identity).contains("RUN_DEFEAT"))
 	print("GAMEPLAY HUD PRESENTER VALIDATION: PASS")

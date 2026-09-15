@@ -65,10 +65,13 @@ func run_validation() -> void:
 	assert(not game.wave_in_progress)
 	assert(game.bones == original.resources.bones)
 	game.select_narrative_event_choice_by_index(0)
-	assert(game.wave_in_progress)
+	assert(game.wave_preparation_in_progress)
+	assert(not game.wave_in_progress)
 	assert(not game.event_decision_in_progress)
 	assert(game.bones == original.resources.bones + 18)
 	assert(game.narrative_event_choices.grave_shipment == "grave_bones")
+	game.start_prepared_wave()
+	assert(game.wave_in_progress)
 
 	game.queue_free()
 	await process_frame

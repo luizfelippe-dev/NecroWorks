@@ -76,6 +76,12 @@ func run_validation() -> void:
 	maximum.doctrine.target_skeletons = 30
 	maximum.doctrine.target_zombies = 6
 	assert(RunSaveStore.validate_checkpoint(maximum))
+	var preparing: Dictionary = valid.duplicate(true)
+	preparing.preparation_pending = true
+	assert(RunSaveStore.validate_checkpoint(preparing))
+	var invalid_preparation: Dictionary = valid.duplicate(true)
+	invalid_preparation.preparation_pending = 1
+	assert(not RunSaveStore.validate_checkpoint(invalid_preparation))
 	# Invalid main file must fall back to the healthy copy, not enter runtime.
 	assert(TransactionalJsonStore.save_dictionary(over_capacity, PATH) == OK)
 	assert(RunSaveStore.load_checkpoint(PATH) == valid)

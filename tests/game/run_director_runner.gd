@@ -29,12 +29,17 @@ func _initialize() -> void:
 	assert(director.wave_transition_in_progress)
 	assert(not director.boss_active)
 	assert(director.advance_to_next_wave() == 11)
+	assert(director.wave_preparation_in_progress)
+	assert(director.start_prepared_wave())
+	assert(not director.wave_preparation_in_progress)
+	assert(not director.start_prepared_wave())
 
 	director.finish(true)
 	assert(director.run_finished and director.run_won)
-	director.prepare_resume(7)
+	director.prepare_resume(7, true)
 	assert(director.current_wave == 7)
 	assert(not director.run_finished and not director.run_won)
+	assert(director.wave_preparation_in_progress)
 
 	print("RUN DIRECTOR VALIDATION: PASS")
 	quit()

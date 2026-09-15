@@ -8,6 +8,7 @@ var enemies_spawned_this_wave: int = 0
 var enemy_refill_scheduled: bool = false
 var wave_in_progress: bool = false
 var wave_transition_in_progress: bool = false
+var wave_preparation_in_progress: bool = false
 var boss_active: bool = false
 var run_finished: bool = false
 var run_won: bool = false
@@ -21,6 +22,7 @@ func begin_wave(wave_number: int, enemy_total: int, is_boss: bool) -> void:
 	enemy_refill_scheduled = false
 	wave_in_progress = true
 	wave_transition_in_progress = false
+	wave_preparation_in_progress = false
 	boss_active = is_boss
 	run_finished = false
 	run_won = false
@@ -63,7 +65,15 @@ func complete_wave() -> void:
 func advance_to_next_wave() -> int:
 	wave_transition_in_progress = false
 	current_wave += 1
+	wave_preparation_in_progress = true
 	return current_wave
+
+
+func start_prepared_wave() -> bool:
+	if not wave_preparation_in_progress or run_finished:
+		return false
+	wave_preparation_in_progress = false
+	return true
 
 
 func finish(victory: bool) -> void:
@@ -72,14 +82,16 @@ func finish(victory: bool) -> void:
 	boss_active = false
 	wave_in_progress = false
 	wave_transition_in_progress = false
+	wave_preparation_in_progress = false
 	enemy_refill_scheduled = false
 
 
-func prepare_resume(wave_number: int) -> void:
+func prepare_resume(wave_number: int, preparation_pending: bool = false) -> void:
 	current_wave = maxi(wave_number, 1)
 	run_finished = false
 	run_won = false
 	wave_in_progress = false
 	wave_transition_in_progress = false
+	wave_preparation_in_progress = preparation_pending
 	boss_active = false
 	enemy_refill_scheduled = false

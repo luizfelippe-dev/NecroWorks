@@ -2,6 +2,16 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Preparação estratégica entre ondas
+
+- próxima onda aguarda comando explícito após o aprimoramento e o eventual evento narrativo;
+- painel localizado antecipa inimigo principal, PV, dano, total e limite simultâneo;
+- durante o planejamento, tempo da run, processamento, produção e automações ficam congelados; novas ordens podem ser configuradas para retomada no início do combate;
+- checkpoints novos reabrem a preparação, enquanto saves anteriores mantêm a retomada direta compatível;
+- fluxo protegido contra início duplo, com tutorial atualizado e regressões de estado, pausa dos relógios, tradução e restauração.
+
+Validação: 84 runners aprovados em 91,2 s, catálogo com 450 chaves nos três idiomas, captura renderizada em 1280×720 e Windows exportado/iniciado em smoke test. Nenhum número de combate ou economia foi alterado.
+
 ### Fronteira de apresentação da produção
 
 - formatação de produção, processamento e status das filas extraída do controlador para funções puras;

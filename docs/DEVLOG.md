@@ -673,3 +673,13 @@ O combate passou a mostrar direção do ataque, dano causado, habilidades, invoc
 Criei seis vozes SFX procedurais para validar a cadência antes da produção de áudio final. Dez players são reutilizados e golpes repetidos possuem cooldown sonoro. A camada visual mantém no máximo 48 transientes e reserva anéis para eventos importantes. As estratégias Bone e Flesh continuam vencendo sem mudança nos números de combate.
 
 O build Windows atualizado iniciou em smoke test headless, com 113.074.640 bytes e SHA-256 `98F9495A34D489D12153E34243D21FE0D02E47A9339550CB26AC0E44DDC2175B`.
+
+---
+
+## 15/09/2026 — Preparação estratégica da v0.6.4
+
+Depois de cada aprimoramento e evento narrativo, a próxima onda agora aguarda um comando explícito. O novo painel apresenta a família principal, a composição completa, PV, dano, quantidade total e limite simultâneo antes do spawn.
+
+Todo o intervalo pós-onda congela relógio, processamento, produção e automações. Ainda é possível ajustar a diretriz, as filas e a doutrina; as máquinas retomam junto com o combate. O checkpoint registra a entrada na preparação e as decisões confirmadas antes do início. Saves antigos e eventos narrativos pendentes continuam compatíveis.
+
+Uma captura renderizada em 1280×720 confirmou que o painel não cobre os controles estratégicos inferiores. A regressão dedicada verifica congelamento, retomada, três idiomas, composição mista, checkpoint e proteção contra clique duplo. As duas estratégias automatizadas continuam chegando ao Capataz sem tempo gratuito entre ondas.

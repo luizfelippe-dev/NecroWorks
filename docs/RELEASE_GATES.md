@@ -1,6 +1,6 @@
 # NecroWorks — Gates de Release
 
-**Atualizado em:** 14/09/2026
+**Atualizado em:** 15/09/2026
 
 ## Gate automatizado
 
@@ -13,6 +13,10 @@ O comando executa todos os runners em ordem estável, exige marcador `PASS`, rej
 Na v0.6.2, a suíte reúne 79 runners. O teste de apresentação cobre os três idiomas, lotes de produção e mínimos reais dos controles; a regressão de sinergias verifica rolagem dentro do painel. Capturas renderizadas são produzidas por `tools/capture_presentation.gd`, sem usar o perfil de quem joga. No Windows, o smoke test espera explicitamente o processo gráfico terminar e verifica seu código de saída e os logs de erro; iniciar o processo sem esperar não conta como aprovação.
 
 ## Matriz manual antes da demo
+
+O corte inicial da v0.6.4 acrescenta `wave_preparation_runner.gd`: a fase precisa sobreviver ao checkpoint, congelar relógios e filas, localizar o painel e rejeitar início duplicado. A suíte de run completa deve acionar o início explicitamente; vitória automática não pode depender de tempo gratuito na preparação.
+
+Execução de 15/09: 84/84 runners em 91,2 s; 450 chaves localizadas; exportação e smoke test aprovados. Executável com 125.015.424 bytes e SHA-256 `C144EA4F961DCD35512C47F18DF78F8DC64D5A2849569F90403AE70B2AFA10CC`. A inspeção renderizada da preparação foi feita em 1280×720; ainda não substitui a matriz manual nem um playtest externo.
 
 Na consolidação técnica v0.6.3, a suíte passa a 83 runners. O novo `production_controls_presenter_runner.gd` valida snapshots sem mutação, limites de recursos/capacidade/ordens, arqueiro bloqueado, fim de partida, lotes 1/10 e textos nos três idiomas. As regressões integradas de produção e layout continuam obrigatórias.
 

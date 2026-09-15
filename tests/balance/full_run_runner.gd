@@ -82,6 +82,10 @@ func run_strategy(strategy: String) -> Dictionary:
 			game.select_narrative_event_choice_by_index(event_choice_index)
 
 
+		if game.wave_preparation_in_progress:
+			game.start_prepared_wave()
+
+
 		var available_capacity: int = game.get_available_production_capacity()
 
 

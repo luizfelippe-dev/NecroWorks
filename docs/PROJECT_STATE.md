@@ -1,6 +1,6 @@
 # NecroWorks — Estado do Projeto
 
-**Atualizado em:** 14/09/2026
+**Atualizado em:** 15/09/2026
 
 **Versão funcional:** v0.6.2 — apresentação industrial e continuidade de movimento
 
@@ -9,6 +9,8 @@
 **Branch principal:** `main`
 
 ## Consolidação pós-auditoria
+
+O primeiro corte da v0.6.4 acrescenta preparação explícita entre ondas. Depois do aprimoramento e do evento, a próxima ameaça é apresentada antes do spawn. Produção, processamento, automações e tempo da run ficam congelados, embora o jogador possa ajustar diretriz, fábrica, filas e doutrina. O botão de início libera a onda uma única vez. Checkpoints novos retomam nessa preparação; saves antigos preservam o comportamento anterior.
 
 A implementação técnica da v0.6.3 está concluída sobre a base v0.6.2, ainda em Unreleased, sem nova versão de release declarada. O gameplay agora usa processamento pausável explícito; os menus permanecem ativos, e temporizadores de reposição/desbloqueio respeitam a pausa. Os testes de shell/tutorial isolam seus três arquivos e verificam frames sem avanço e retomada. Continuar consulta o checkpoint injetado, não um caminho global.
 

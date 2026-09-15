@@ -721,3 +721,9 @@ A matriz da Onda 12 não exige vitória de todos os arquétipos. Ela exige resol
 ## A versão do produto possui uma fonte única
 
 `AppVersion` define o número sem sufixo de desenvolvimento, a apresentação no menu e o formato de quatro partes do executável Windows. O gate verifica projeto, checkpoint e preset contra essa fonte. A v0.6.0 só foi fechada depois dessa convergência, evitando builds com identidade divergente.
+
+## Preparação não produz vantagem por espera
+
+O intervalo entre o fim de uma onda e o início da seguinte é uma fase estratégica sem limite de tempo. Carta, evento e preparação congelam relógio da run, processamento, linhas de produção e automações. O jogador ainda pode mudar diretriz, configurar fábrica e doutrina e registrar ordens; a execução recomeça somente ao iniciar o combate.
+
+O checkpoint é atualizado ao entrar na preparação e novamente ao confirmar o início, preservando as decisões feitas no painel. Saves antigos sem o novo campo continuam válidos, e uma decisão narrativa pendente é reconhecida como parte desse intervalo.

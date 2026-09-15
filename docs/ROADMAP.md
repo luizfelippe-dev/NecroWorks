@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 14/09/2026
+**Atualizado:** 15/09/2026
 
 ---
 
@@ -41,9 +41,11 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 
 ## v0.6.4 — Ritmo, interface e aprendizagem
 
-- [ ] criar preparação entre ondas: carta/evento, ajustes da fábrica e comando explícito para iniciar;
-- [ ] definir se filas avançam na preparação e comunicar essa regra, evitando espera explorável;
-- [ ] anunciar próxima ameaça para permitir planejamento;
+- [x] criar preparação entre ondas: carta/evento, ajustes da fábrica e comando explícito para iniciar;
+- [x] definir se filas avançam na preparação e comunicar essa regra, evitando espera explorável;
+  - da seleção da carta até o comando de início, relógio da run, processamento, produção e automações congelam; ordens podem ser configuradas e retomam somente no combate;
+- [x] anunciar próxima ameaça para permitir planejamento;
+  - painel mostra família principal, composição presente, PV, dano, total da onda e limite simultâneo; chefes usam o perfil próprio;
 - [ ] ensinar cadáver → processamento → recurso → tropa por ações, substituindo páginas iniciais extensas;
 - [x] corrigir tutorial: chefes nas ondas 10, 15 e 20, não a cada dez ondas;
 - [ ] medir tempo até primeira decisão interessante e antecipar amostra de inimigo especial/build/automação;

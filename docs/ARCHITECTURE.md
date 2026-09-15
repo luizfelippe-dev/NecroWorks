@@ -1,6 +1,12 @@
 # NecroWorks — Architecture
 
-**Atualizado:** 14/09/2026 — consolidação pós-v0.6.2
+**Atualizado:** 15/09/2026 — início da v0.6.4
+
+## Fase de preparação
+
+`RunDirector` mantém três estados distintos: combate, seleção pós-onda e preparação da próxima onda. `advance_to_next_wave()` abre a preparação, e `start_prepared_wave()` aceita o início uma única vez. O controlador interrompe os sistemas temporizados enquanto essa fase estiver ativa, mas mantém os controles de configuração utilizáveis.
+
+O checkpoint possui o campo opcional `preparation_pending`. Saves anteriores continuam iniciando a onda como antes; checkpoints novos reabrem o painel de planejamento sem gerar inimigos ou avançar filas. A validação rejeita tipos incorretos antes de alterar a cena.
 
 ## HUD consolidado
 

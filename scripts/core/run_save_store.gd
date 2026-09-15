@@ -164,6 +164,8 @@ static func validate_processing_routes(state: Dictionary) -> bool:
 
 static func validate_runtime_fields(state: Dictionary) -> bool:
 	# Missing optional fields keep the defaults used by older checkpoints.
+	if not state.get("preparation_pending", false) is bool:
+		return false
 	for section: String in ["factory", "rituals", "doctrine", "run_modifiers", "meta_loadout"]:
 		if not state.get(section, {}) is Dictionary:
 			return false
