@@ -420,6 +420,7 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/u
 
 ```powershell
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/tutorial_runner.gd
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/core/contextual_tutorial_runner.gd
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/visual/accessibility_runner.gd
 ```
 

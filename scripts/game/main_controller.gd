@@ -40,6 +40,8 @@ signal run_completed(victory: bool)
 signal meta_progress_reported(event: Dictionary)
 signal restart_requested
 signal return_to_menu_requested
+signal contextual_tutorial_completed
+signal contextual_tutorial_dismissed
 
 
 func _notification(what: int) -> void:
@@ -253,6 +255,9 @@ const UPGRADE_STATUS_FORMATTER: Script = preload(
 	"res://scripts/ui/upgrade_status_formatter.gd"
 )
 const PRODUCTION_CONTROLS_PRESENTER: Script = preload("res://scripts/ui/production_controls_presenter.gd")
+const GAMEPLAY_TUTORIAL_GUIDE: Script = preload(
+	"res://scripts/tutorial/gameplay_tutorial_guide.gd"
+)
 const PRODUCTION_CONTROLS_FACTORY: Script = preload(
 	"res://scripts/ui/production_controls_factory.gd"
 )
@@ -498,6 +503,7 @@ func enqueue_undead_production_order(
 
 
 	production_order_queued.emit(unit_type, quantity, total_cost)
+	notify_contextual_tutorial("production_queued")
 	update_bones_ui()
 	return true
 
@@ -563,6 +569,7 @@ func update_undead_production_queue(
 	var remaining: int = maxi(int(order["remaining"]) - 1, 0)
 	order["remaining"] = remaining
 	production_unit_completed.emit(queued_unit_type, remaining)
+	notify_contextual_tutorial("production_completed")
 	play_combat_sound("production")
 
 
@@ -1789,6 +1796,7 @@ var combat_feedback: Node2D = null
 var combat_audio_manager: Node = null
 var industrial_ambient_manager: Node = null
 var resume_checkpoint_state: Dictionary = {}
+var contextual_tutorial_guide: GameplayTutorialGuide = null
 
 
 # =========================================================
@@ -1812,6 +1820,7 @@ func _ready() -> void:
 	create_army_doctrine_ui()
 	create_ritual_panel_ui()
 	create_fusion_panel_ui()
+	create_contextual_tutorial_guide()
 	register_gameplay_panels()
 	var dashboard := preload("res://scripts/ui/gameplay_dashboard.gd").new()
 	dashboard.name = "GameplayDashboard"
@@ -1878,6 +1887,36 @@ func configure_accessibility(accessibility_settings: Dictionary) -> void:
 			"set_accessibility", reduced_motion_enabled, high_contrast_enabled
 		)
 	apply_accessibility_recursive(self)
+
+
+func create_contextual_tutorial_guide() -> void:
+	contextual_tutorial_guide = GAMEPLAY_TUTORIAL_GUIDE.new() as GameplayTutorialGuide
+	add_child(contextual_tutorial_guide)
+	contextual_tutorial_guide.completed.connect(
+		func() -> void: contextual_tutorial_completed.emit()
+	)
+	contextual_tutorial_guide.dismissed.connect(
+		func() -> void: contextual_tutorial_dismissed.emit()
+	)
+
+
+func configure_contextual_tutorial(enabled: bool) -> void:
+	if contextual_tutorial_guide == null:
+		return
+	contextual_tutorial_guide.configure(enabled, {
+		"enemies_defeated": total_enemies_killed,
+		"corpses_available": corpses.size(),
+		"corpses_queued": corpse_processing_queue.size() + soul_extraction_queue.size(),
+		"corpses_processed": total_corpses_processed,
+		"production_queued": get_total_queued_undead(),
+		"units_produced": total_skeletons_created + total_zombies_created
+			+ total_ghosts_created + total_liches_created,
+	})
+
+
+func notify_contextual_tutorial(event_id: String) -> void:
+	if contextual_tutorial_guide != null:
+		contextual_tutorial_guide.record_event(event_id)
 
 
 func create_combat_presentation() -> void:
@@ -4642,6 +4681,7 @@ func kill_enemy(target_enemy: Node2D = enemy) -> void:
 
 
 	total_enemies_killed += 1
+	notify_contextual_tutorial("enemy_defeated")
 
 
 	var defeated_boss: bool = boss_active
@@ -5091,6 +5131,7 @@ func enqueue_corpse_for_processing(corpse: Button) -> bool:
 			"directive": processing_directive
 		}
 	)
+	notify_contextual_tutorial("corpse_queued")
 	corpse.disabled = true
 	corpse.set_meta("processing_route", "material")
 	set_corpse_display_text(corpse, tr("CORPSE_QUEUED"))
@@ -5932,6 +5973,7 @@ func process_corpse(
 	total_flesh_earned += flesh_gained
 
 	total_corpses_processed += 1
+	notify_contextual_tutorial("corpse_processed")
 	meta_progress_reported.emit({"corpses_processed": total_corpses_processed})
 	corpses_processed_by_directive[directive] = (
 		int(

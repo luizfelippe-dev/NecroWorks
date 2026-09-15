@@ -23,6 +23,7 @@ func run_validation() -> void:
 		"high_contrast": true,
 		"tutorial_enabled": false,
 		"tutorial_completed": true,
+		"guided_cycle_completed": true,
 	}, SETTINGS_PATH)
 	var loaded_settings: Dictionary = SettingsStore.load_settings(SETTINGS_PATH)
 	assert(loaded_settings.locale == "pt_BR")
@@ -35,6 +36,7 @@ func run_validation() -> void:
 	assert(loaded_settings.high_contrast)
 	assert(not loaded_settings.tutorial_enabled)
 	assert(loaded_settings.tutorial_completed)
+	assert(loaded_settings.guided_cycle_completed)
 	var legacy_config := ConfigFile.new()
 	legacy_config.set_value("meta", "version", 1)
 	legacy_config.set_value("general", "locale", "es")
@@ -47,6 +49,7 @@ func run_validation() -> void:
 	assert(is_equal_approx(float(migrated_settings.music_volume), 0.65))
 	assert(not migrated_settings.reduced_motion)
 	assert(migrated_settings.tutorial_enabled)
+	assert(not migrated_settings.guided_cycle_completed)
 
 	var game: Node = MAIN_SCENE.instantiate()
 	root.add_child(game)

@@ -12,6 +12,12 @@ Depois da carta de aprimoramento e de um eventual evento narrativo, a próxima o
 
 Do encerramento da onda até o próximo combate — incluindo carta, evento e preparação — relógio da run, processamento de cadáveres, linhas de produção e automações não avançam. Na preparação, o jogador pode mudar a diretriz, configurar produção e doutrina e enfileirar unidades. As ordens retomam junto com o combate; assim, planejar não exige pressa e esperar indefinidamente não produz vantagem.
 
+## Primeiro ciclo guiado — v0.6.4
+
+As páginas iniciais apresentam a fantasia e os sistemas; o aprendizado prático acontece dentro do campo. Um cartão compacto acompanha cinco resultados confirmados pela simulação: derrotar um inimigo, enviar um cadáver ao processador, receber recursos, registrar uma ordem e ver a nova unidade entrar no exército.
+
+O guia não concede recursos, não altera o combate e aceita ações feitas antes da etapa correspondente. Introdução e prática têm conclusões independentes: fechar as páginas mantém a orientação no campo, enquanto “Pular tutorial” encerra ambas. A opção “Rever tutorial” reinicia o fluxo sem tocar no perfil nem no checkpoint.
+
 ## High concept
 
 > Kill enemies. Recycle the corpses. Turn them into your army.

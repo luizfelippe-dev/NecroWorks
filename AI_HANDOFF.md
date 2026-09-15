@@ -10,7 +10,7 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
-1. seguir v0.6.4 pelo tutorial jogável, hierarquia de decisões e leitura do fluxo cadáver → fábrica; a preparação explícita e a prévia da ameaça já estão implementadas;
+1. seguir v0.6.4 pela hierarquia de decisões, requisitos das sinergias e leitura de gargalos; preparação e primeiro ciclo jogável já estão implementados;
 2. preservar a suíte de confiabilidade e as fronteiras de apresentação concluídas na v0.6.3;
 3. validar a experiência em run manual; o aceite técnico não certifica hardware mínimo nem prontidão comercial;
 4. aprovar animação autoral de uma família e diferenciar os chefes;

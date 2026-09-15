@@ -28,7 +28,7 @@ Enemy
 
 A versão publicada no projeto continua **v0.6.2**, com a consolidação v0.6.3 concluída e a v0.6.4 em desenvolvimento na seção Unreleased. Menu ilustrado, HUD industrial, cartões de recursos, métricas alinhadas e sinergias roláveis acompanham um driver de movimento contínuo. O ataque não é mais interrompido pelo flash de dano. A animação continua procedural sobre as poses V1, sem novos quadros desenhados; os limites e a próxima avaliação estão em [PRESENTATION_UPDATE.md](docs/PRESENTATION_UPDATE.md).
 
-A validação atual reúne 84 runners, exportação Windows e smoke test. Veja [BUILDING.md](docs/BUILDING.md) para o executável e seu hash.
+A validação atual reúne 85 runners, exportação Windows e smoke test. Veja [BUILDING.md](docs/BUILDING.md) para o executável e seu hash.
 
 Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de entrada com Nova Partida, Continuar, Opções e Sair. `F6` sobre `scenes/world/gameplay.tscn` permanece disponível para testar diretamente o gameplay.
 
@@ -41,6 +41,8 @@ Nova Partida apresenta o primeiro prólogo narrativo localizado. A tela final ta
 Cinco incidentes narrativos aparecem entre as ondas 4 e 16. As escolhas incluem rotas econômicas, risco permanente e aproveitamento dos restos dos chefes intermediários. Decisões e modificadores são localizados e preservados no checkpoint.
 
 Depois de cada aprimoramento e evento, a próxima onda entra numa preparação explícita. A ameaça é antecipada e o jogador pode ajustar diretriz, filas e doutrina antes de iniciar. Os relógios da fábrica e da run ficam congelados nessa fase, evitando vantagem por espera.
+
+Na primeira run, um guia contextual acompanha o ciclo completo no campo: derrotar, enviar o cadáver ao processador, receber materiais, enfileirar uma tropa e vê-la entrar no exército. Ele pode ser dispensado e reativado nas Opções sem misturar progresso com o checkpoint da run.
 
 ### `v0.4.0 — Build Diversity & Content`
 

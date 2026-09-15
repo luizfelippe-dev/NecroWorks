@@ -2,7 +2,7 @@ class_name SettingsStore
 extends RefCounted
 
 
-const SETTINGS_VERSION: int = 3
+const SETTINGS_VERSION: int = 4
 const DEFAULT_PATH: String = "user://necroworks_settings.cfg"
 
 
@@ -19,6 +19,7 @@ static func get_defaults() -> Dictionary:
 		"high_contrast": false,
 		"tutorial_enabled": true,
 		"tutorial_completed": false,
+		"guided_cycle_completed": false,
 	}
 
 
@@ -57,6 +58,9 @@ static func load_settings(path: String = DEFAULT_PATH) -> Dictionary:
 	result.tutorial_completed = bool(
 		config.get_value("tutorial", "completed", result.tutorial_completed)
 	)
+	result.guided_cycle_completed = bool(config.get_value(
+		"tutorial", "guided_cycle_completed", result.guided_cycle_completed
+	))
 	return result
 
 
@@ -91,6 +95,9 @@ static func save_settings(
 	sanitized.tutorial_completed = bool(settings.get(
 		"tutorial_completed", sanitized.tutorial_completed
 	))
+	sanitized.guided_cycle_completed = bool(settings.get(
+		"guided_cycle_completed", sanitized.guided_cycle_completed
+	))
 
 	var config := ConfigFile.new()
 	config.set_value("meta", "version", SETTINGS_VERSION)
@@ -104,6 +111,9 @@ static func save_settings(
 	config.set_value("accessibility", "high_contrast", sanitized.high_contrast)
 	config.set_value("tutorial", "enabled", sanitized.tutorial_enabled)
 	config.set_value("tutorial", "completed", sanitized.tutorial_completed)
+	config.set_value(
+		"tutorial", "guided_cycle_completed", sanitized.guided_cycle_completed
+	)
 	return config.save(path)
 
 
@@ -137,6 +147,9 @@ static func apply_settings(
 	))
 	sanitized.tutorial_completed = bool(settings.get(
 		"tutorial_completed", sanitized.tutorial_completed
+	))
+	sanitized.guided_cycle_completed = bool(settings.get(
+		"guided_cycle_completed", sanitized.guided_cycle_completed
 	))
 
 	_apply_bus_volume("Master", float(sanitized.master_volume))

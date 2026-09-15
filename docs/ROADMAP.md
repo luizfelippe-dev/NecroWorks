@@ -46,13 +46,15 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
   - da seleção da carta até o comando de início, relógio da run, processamento, produção e automações congelam; ordens podem ser configuradas e retomam somente no combate;
 - [x] anunciar próxima ameaça para permitir planejamento;
   - painel mostra família principal, composição presente, PV, dano, total da onda e limite simultâneo; chefes usam o perfil próprio;
-- [ ] ensinar cadáver → processamento → recurso → tropa por ações, substituindo páginas iniciais extensas;
+- [x] ensinar cadáver → processamento → recurso → tropa por ações, substituindo páginas iniciais extensas;
+  - introdução continua como contexto resumido; guia contextual acompanha cinco ações reais, pode ser dispensado e não reaparece após conclusão;
 - [x] corrigir tutorial: chefes nas ondas 10, 15 e 20, não a cada dez ondas;
 - [ ] medir tempo até primeira decisão interessante e antecipar amostra de inimigo especial/build/automação;
 - [ ] priorizar capacidade, filas, gargalos, composição e ameaças no HUD; recolher métricas históricas;
 - [ ] permitir escala legível de interface e validar 720p, textos longos e três idiomas;
 - [ ] exibir requisitos, efeito e progresso das sinergias, com consulta durante a partida;
-- [ ] tornar visível o fluxo cadáver → máquina → recurso → tropa;
+- [x] tornar visível o fluxo cadáver → máquina → recurso → tropa;
+  - objetivo contextual acompanha o cadáver clicável, aguarda a conversão, aponta a linha inferior e conclui somente quando a unidade entra no exército;
 - [ ] avaliar consolidar Fusões na fábrica/rituais ou justificar o painel com um resultado exclusivo.
 
 **Aceite:** jogadores novos completam o ciclo sem instrução verbal, entendem uma sinergia e ajustam a fábrica antes do combate. Medir confusão e tempo de decisão, sem usar apenas screenshots como aprovação.

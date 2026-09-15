@@ -19,13 +19,13 @@ As tabelas seguintes preservam o fechamento histórico de 08–11/09. A nova aud
 | Debug oculto | Corrigida | não monta texto nem analisa recuperação até ficar visível |
 | HUD duplicado | Corrigida neste corte | labels e formatadores legados removidos; testes verificam dashboard visível; comparação renderizada documentada |
 | Acoplamento de apresentação | Extração pontual concluída | produção/processamento/filas recebem snapshots puros; custos, bloqueios, lotes e idiomas cobertos; sem reescrita geral do controlador |
-| Ritmo, builds, chefes e automação | Em andamento | preparação explícita, ameaça antecipada e relógios congelados concluídos; escolhas distintas e metas por receita pendentes |
-| Animação, áudio, HUD e narrativa | Pendente | aprovação em movimento e sessão real, não somente poses/capturas |
+| Ritmo, builds, chefes e automação | Em andamento | preparação e primeiro ciclo guiado concluídos; escolhas distintas e metas por receita pendentes |
+| Animação, áudio, HUD e narrativa | Em andamento | guia contextual reposicionado após captura; aprovação em sessão real e movimento continua pendente |
 | Performance, resoluções e equilíbrio | Pendente | ampliar testes parciais com renderização, custos equivalentes e pessoas novas |
 
 Não há nova aprovação comercial neste corte. A implementação técnica da v0.6.3 foi fechada; a experiência da v0.6.4 segue em andamento.
 
-Validação mais recente: 84 runners passaram no gate integral; o Windows release foi exportado e iniciado em smoke test. A preparação foi inspecionada em captura renderizada 1280×720. Ainda faltam run manual, hardware-alvo e teste externo.
+Validação mais recente: 85 runners passaram em 84,46 s no gate integral; o Windows release foi exportado e iniciado em smoke test. Preparação e primeiro ciclo guiado foram inspecionados em capturas renderizadas 1280×720. Ainda faltam run manual, hardware-alvo e teste externo.
 
 Validação do corte narrativo seguinte: 80 runners aprovados com `-SkipExport`, inclusive recuperação de JSON semanticamente inválido e migração v1→v2. Importação headless do editor aprovada; não houve novo export.
 

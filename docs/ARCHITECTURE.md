@@ -8,6 +8,12 @@
 
 O checkpoint possui o campo opcional `preparation_pending`. Saves anteriores continuam iniciando a onda como antes; checkpoints novos reabrem o painel de planejamento sem gerar inimigos ou avançar filas. A validação rejeita tipos incorretos antes de alterar a cena.
 
+## Tutorial contextual
+
+`GameplayTutorialGuide` mantém somente o estado de apresentação dos cinco marcos do primeiro ciclo. O controlador informa eventos já resolvidos — abate, fila de cadáver, processamento, ordem e unidade concluída — sem delegar regra de combate ao tutorial. Eventos fora de ordem ficam registrados para evitar travar a orientação quando uma ação já tiver acontecido.
+
+O shell decide se o guia deve aparecer e persiste `guided_cycle_completed` no settings v4. Introdução e ciclo jogável têm conclusões independentes: fechar a orientação inicial mantém o guia; “Pular tutorial” encerra ambos. Configurações v1–v3 recebem o novo campo com default seguro, sem perder preferências existentes.
+
 ## HUD consolidado
 
 `GameplayDashboard` é a única apresentação de recursos e métricas. As labels legadas `BonesLabel` e `MetricsLabel` e seus formatadores foram removidos. Os textos fixos atualizam por notificação de idioma; os valores são amostrados a 10 Hz e só reescritos quando mudam; barras continuam acompanhando frames.

@@ -12,6 +12,16 @@
 
 Validação: 84 runners aprovados em 91,2 s, catálogo com 450 chaves nos três idiomas, captura renderizada em 1280×720 e Windows exportado/iniciado em smoke test. Nenhum número de combate ou economia foi alterado.
 
+### Primeiro ciclo jogável
+
+- guia contextual acompanha abate → cadáver → processamento → ordem → unidade produzida usando eventos reais da partida;
+- progresso se recupera de ações fora de ordem e de checkpoints com ciclo parcialmente avançado;
+- introdução e guia possuem conclusão separada; dispensar tudo, rever e desativar nas opções atualizam a orientação imediatamente;
+- settings v4 lê versões anteriores com defaults seguros e preserva a conclusão do novo ciclo;
+- cartão localizado em PT-BR/EN/ES foi reposicionado após captura renderizada para não cobrir o primeiro aliado.
+
+Validação: 85 runners aprovados em 84,46 s, catálogo com 461 chaves nos três idiomas, captura do guia em 1280×720 e Windows exportado/iniciado em smoke test. Executável com 125.023.248 bytes e SHA-256 `B35972084EF8E14F0EE19D871A4AC417E90C1738386FE5184AA8BF159D4DF93F`.
+
 ### Fronteira de apresentação da produção
 
 - formatação de produção, processamento e status das filas extraída do controlador para funções puras;

@@ -43,10 +43,16 @@ func run_validation() -> void:
 	await process_frame
 	assert(shell.current_game.run_elapsed_seconds > elapsed_before)
 	assert(bool(SettingsStore.load_settings(SETTINGS_PATH).tutorial_completed))
+	assert(not bool(SettingsStore.load_settings(SETTINGS_PATH).guided_cycle_completed))
 	shell.reset_tutorial()
 	assert(shell.tutorial_menu.visible)
 	assert(not bool(SettingsStore.load_settings(SETTINGS_PATH).tutorial_completed))
 	shell.finish_tutorial()
+	assert(shell.current_game.contextual_tutorial_guide.visible)
+	shell.reset_tutorial()
+	shell.skip_tutorial()
+	assert(not shell.current_game.contextual_tutorial_guide.visible)
+	assert(bool(SettingsStore.load_settings(SETTINGS_PATH).guided_cycle_completed))
 	shell.return_to_menu()
 	shell.open_options_from_main()
 	await process_frame

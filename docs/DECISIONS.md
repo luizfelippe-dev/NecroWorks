@@ -688,7 +688,7 @@ Isso evita a situação em que a interface promete “concluir a Onda 5”, mas 
 
 ## Tutorial pertence às configurações, não ao perfil
 
-A conclusão da orientação é uma preferência local. Ela fica no settings v3 ao lado de idioma, acessibilidade e volumes por barramento, sem entrar no checkpoint nem no perfil de progressão. Nova Partida respeita essa preferência; Continue nunca interrompe uma run carregada com onboarding. Rever o tutorial não apaga nenhum progresso.
+A conclusão da orientação é uma preferência local. O settings v4 guarda separadamente a introdução e o primeiro ciclo jogável, ao lado de idioma, acessibilidade e volumes por barramento, sem entrar no checkpoint nem no perfil de progressão. Nova Partida respeita essas preferências; Continue nunca interrompe uma run carregada com páginas de onboarding. Rever o tutorial reinicia as duas etapas sem apagar progresso.
 
 ## Movimento reduzido não altera a simulação
 
@@ -727,3 +727,9 @@ A matriz da Onda 12 não exige vitória de todos os arquétipos. Ela exige resol
 O intervalo entre o fim de uma onda e o início da seguinte é uma fase estratégica sem limite de tempo. Carta, evento e preparação congelam relógio da run, processamento, linhas de produção e automações. O jogador ainda pode mudar diretriz, configurar fábrica e doutrina e registrar ordens; a execução recomeça somente ao iniciar o combate.
 
 O checkpoint é atualizado ao entrar na preparação e novamente ao confirmar o início, preservando as decisões feitas no painel. Saves antigos sem o novo campo continuam válidos, e uma decisão narrativa pendente é reconhecida como parte desse intervalo.
+
+## Separar introdução de aprendizado jogável
+
+As cinco páginas iniciais contextualizam sistemas e chefes, mas não comprovam que o ciclo central foi entendido. A primeira run mantém um guia curto baseado em ações reais. Sua conclusão é uma preferência própria: avançar ou fechar a introdução não elimina a prática; “Pular tutorial” e desativar a opção removem ambas.
+
+O guia observa resultados confirmados pela simulação e não concede recursos, força cliques nem altera timers. Marcos fora de ordem são lembrados para que uma ação antecipada não cause bloqueio artificial.

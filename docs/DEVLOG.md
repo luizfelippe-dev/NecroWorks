@@ -683,3 +683,11 @@ Depois de cada aprimoramento e evento narrativo, a próxima onda agora aguarda u
 Todo o intervalo pós-onda congela relógio, processamento, produção e automações. Ainda é possível ajustar a diretriz, as filas e a doutrina; as máquinas retomam junto com o combate. O checkpoint registra a entrada na preparação e as decisões confirmadas antes do início. Saves antigos e eventos narrativos pendentes continuam compatíveis.
 
 Uma captura renderizada em 1280×720 confirmou que o painel não cobre os controles estratégicos inferiores. A regressão dedicada verifica congelamento, retomada, três idiomas, composição mista, checkpoint e proteção contra clique duplo. As duas estratégias automatizadas continuam chegando ao Capataz sem tempo gratuito entre ondas.
+
+### Primeiro ciclo dentro do campo
+
+A orientação deixou de depender apenas das páginas iniciais. Um cartão localizado acompanha cinco resultados reais: primeiro abate, cadáver enfileirado, recurso processado, ordem registrada e unidade entregue. O guia não altera regras nem concede recursos; somente reage a eventos confirmados pela simulação.
+
+Introdução e prática possuem conclusão independente no settings v4. Fechar as páginas mantém o ciclo guiado, enquanto “Pular tutorial” desativa os dois. O progresso pode ser revisto nas Opções e aceita ações antecipadas sem travar. A primeira captura posicionava o cartão sobre o aliado; a inspeção em 1280×720 levou o painel para a área inferior esquerda, acima das abas e fora das formações.
+
+O gate integral aprovou 85 runners em 84,46 segundos. O catálogo soma 461 chaves completas em PT-BR, inglês e espanhol. O Windows release abriu no smoke test com 125.023.248 bytes e SHA-256 `B35972084EF8E14F0EE19D871A4AC417E90C1738386FE5184AA8BF159D4DF93F`.

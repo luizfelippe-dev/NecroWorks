@@ -16,7 +16,9 @@ Na v0.6.2, a suíte reúne 79 runners. O teste de apresentação cobre os três 
 
 O corte inicial da v0.6.4 acrescenta `wave_preparation_runner.gd`: a fase precisa sobreviver ao checkpoint, congelar relógios e filas, localizar o painel e rejeitar início duplicado. A suíte de run completa deve acionar o início explicitamente; vitória automática não pode depender de tempo gratuito na preparação.
 
-Execução de 15/09: 84/84 runners em 91,2 s; 450 chaves localizadas; exportação e smoke test aprovados. Executável com 125.015.424 bytes e SHA-256 `C144EA4F961DCD35512C47F18DF78F8DC64D5A2849569F90403AE70B2AFA10CC`. A inspeção renderizada da preparação foi feita em 1280×720; ainda não substitui a matriz manual nem um playtest externo.
+`contextual_tutorial_runner.gd` executa o primeiro ciclo usando ações reais, verifica persistência/retorno, três idiomas, descarte e evento antecipado. A captura renderizada deve confirmar que o cartão não cobre aliado, cadáver nem controles necessários ao objetivo atual.
+
+Execução mais recente de 15/09: 85/85 runners em 84,46 s; 461 chaves localizadas; exportação e smoke test aprovados. Executável com 125.023.248 bytes e SHA-256 `B35972084EF8E14F0EE19D871A4AC417E90C1738386FE5184AA8BF159D4DF93F`. Preparação e primeiro ciclo guiado foram inspecionados em 1280×720; isso ainda não substitui a matriz manual nem um playtest externo.
 
 Na consolidação técnica v0.6.3, a suíte passa a 83 runners. O novo `production_controls_presenter_runner.gd` valida snapshots sem mutação, limites de recursos/capacidade/ordens, arqueiro bloqueado, fim de partida, lotes 1/10 e textos nos três idiomas. As regressões integradas de produção e layout continuam obrigatórias.
 

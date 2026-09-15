@@ -12,6 +12,8 @@
 
 O primeiro corte da v0.6.4 acrescenta preparação explícita entre ondas. Depois do aprimoramento e do evento, a próxima ameaça é apresentada antes do spawn. Produção, processamento, automações e tempo da run ficam congelados, embora o jogador possa ajustar diretriz, fábrica, filas e doutrina. O botão de início libera a onda uma única vez. Checkpoints novos retomam nessa preparação; saves antigos preservam o comportamento anterior.
 
+O ciclo inicial agora também é ensinado por ações reais dentro do campo. Um cartão acompanha primeiro abate, envio do cadáver, conversão em recursos, ordem de produção e entrada da unidade. A conclusão é independente das páginas introdutórias e persiste no settings v4; o guia pode ser dispensado ou reativado por “Rever tutorial”.
+
 A implementação técnica da v0.6.3 está concluída sobre a base v0.6.2, ainda em Unreleased, sem nova versão de release declarada. O gameplay agora usa processamento pausável explícito; os menus permanecem ativos, e temporizadores de reposição/desbloqueio respeitam a pausa. Os testes de shell/tutorial isolam seus três arquivos e verificam frames sem avanço e retomada. Continuar consulta o checkpoint injetado, não um caminho global.
 
 A narrativa do checkpoint agora é validada contra o catálogo: evento desconhecido/já concluído, escolha incompatível e tipos inválidos são rejeitados. O carregamento tenta o backup; sem backup válido, preserva o arquivo e não oferece Continuar. Chamadas diretas de restauração recusam narrativa inconsistente antes de remover unidades. Decisões válidas reabrem sem conceder recompensa antecipada.
@@ -43,7 +45,7 @@ A direção visual oficial está em `assets/reference/necrodesignv2.png`: horror
 - `Esc`: pausa durante a partida.
 - `F3`: alterna o painel de depuração.
 
-Configurações são gravadas em `user://necroworks_settings.cfg`, agora com schema v3 e migração transparente, incluindo volumes de Música, Efeitos e Interface. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, com schema v3 e migração automática dos perfis v1 e v2. Os dois arquivos JSON passam por escrita temporária, validação, substituição atômica e backup anterior. Um checkpoint corrompido recupera o `.bak`; um perfil de versão futura permanece intacto e protegido contra sobrescrita.
+Configurações são gravadas em `user://necroworks_settings.cfg`, agora com schema v4 e migração transparente, incluindo volumes de Música, Efeitos e Interface e conclusão separada do ciclo guiado. O checkpoint da run usa `user://necroworks_run.json` com schema v2 e migração automática de saves v1. Descobertas, projetos, desafios, loadout e histórico ficam em `user://necroworks_profile.json`, com schema v3 e migração automática dos perfis v1 e v2. Os dois arquivos JSON passam por escrita temporária, validação, substituição atômica e backup anterior. Um checkpoint corrompido recupera o `.bak`; um perfil de versão futura permanece intacto e protegido contra sobrescrita.
 
 O salvamento de pausa representa o início da onda atual. Ao continuar, a composição, a economia e as escolhas confirmadas voltam ao ponto seguro anterior ao combate; mortes, dano, Cadáveres e recompensas parciais da onda são descartados. Se a gravação falhar, a partida não é fechada.
 

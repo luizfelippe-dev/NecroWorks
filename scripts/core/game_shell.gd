@@ -340,7 +340,7 @@ func build_interface() -> void:
 		tutorial_box, "TUTORIAL_NEXT", advance_tutorial
 	)
 	tutorial_skip_button = add_localized_button(
-		tutorial_box, "TUTORIAL_SKIP", finish_tutorial
+		tutorial_box, "TUTORIAL_SKIP", skip_tutorial
 	)
 	persistence_notice = create_screen("PersistenceNotice", Color(0, 0, 0, 0.9))
 	var notice_box: VBoxContainer = create_center_panel(persistence_notice, Vector2(840, 400))
@@ -663,6 +663,8 @@ func start_game(checkpoint: Dictionary) -> void:
 	current_game.meta_progress_reported.connect(on_meta_progress_reported)
 	current_game.restart_requested.connect(restart_game)
 	current_game.return_to_menu_requested.connect(return_to_menu)
+	current_game.contextual_tutorial_completed.connect(on_contextual_tutorial_completed)
+	current_game.contextual_tutorial_dismissed.connect(on_contextual_tutorial_dismissed)
 	main_menu.visible = false
 	prologue_menu.visible = false
 	pause_menu.visible = false
@@ -697,6 +699,10 @@ func start_game(checkpoint: Dictionary) -> void:
 		current_game.restore_checkpoint_state(checkpoint)
 	else:
 		save_checkpoint(current_game.get_resume_checkpoint_state())
+	current_game.configure_contextual_tutorial(
+		bool(settings.get("tutorial_enabled", true))
+		and not bool(settings.get("guided_cycle_completed", false))
+	)
 
 
 func save_checkpoint(state: Dictionary) -> Error:
@@ -845,11 +851,17 @@ func apply_options() -> void:
 		"high_contrast": high_contrast_check.button_pressed,
 		"tutorial_enabled": tutorial_check.button_pressed,
 		"tutorial_completed": bool(settings.get("tutorial_completed", false)),
+		"guided_cycle_completed": bool(settings.get("guided_cycle_completed", false)),
 	}
 	settings = SettingsStore.apply_settings(settings)
 	persist_settings()
 	if is_instance_valid(current_game) and current_game.has_method("configure_accessibility"):
 		current_game.configure_accessibility(settings)
+	if is_instance_valid(current_game):
+		current_game.configure_contextual_tutorial(
+			bool(settings.tutorial_enabled)
+			and not bool(settings.guided_cycle_completed)
+		)
 	refresh_localized_text()
 
 
@@ -901,12 +913,34 @@ func finish_tutorial() -> void:
 	persist_settings()
 
 
+func skip_tutorial() -> void:
+	tutorial_menu.visible = false
+	settings.tutorial_completed = true
+	settings.guided_cycle_completed = true
+	get_tree().paused = false
+	if is_instance_valid(current_game):
+		current_game.configure_contextual_tutorial(false)
+	persist_settings()
+
+
+func on_contextual_tutorial_completed() -> void:
+	settings.guided_cycle_completed = true
+	persist_settings()
+
+
+func on_contextual_tutorial_dismissed() -> void:
+	settings.guided_cycle_completed = true
+	persist_settings()
+
+
 func reset_tutorial() -> void:
 	settings.tutorial_completed = false
+	settings.guided_cycle_completed = false
 	settings.tutorial_enabled = true
 	tutorial_check.button_pressed = true
 	persist_settings()
 	if current_game != null:
+		current_game.configure_contextual_tutorial(true)
 		show_tutorial()
 
 

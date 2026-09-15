@@ -449,3 +449,14 @@ WAVE_PREPARATION_COUNTS,%d enemies · up to %d active,%d inimigos · até %d ati
 WAVE_PREPARATION_ROSTER,Formation: %s,Formação: %s,Formación: %s
 WAVE_PREPARATION_PAUSED_RULE,"Configure production and doctrine below. Queues and automation resume when combat starts.","Configure produção e doutrina abaixo. Filas e automação retomam quando o combate começar.","Configura producción y doctrina abajo. Las colas y la automatización continúan al iniciar el combate."
 WAVE_PREPARATION_START,START WAVE %d,INICIAR ONDA %d,INICIAR OLEADA %d
+CONTEXT_TUTORIAL_TITLE,FIRST PRODUCTION CYCLE,PRIMEIRO CICLO DE PRODUÇÃO,PRIMER CICLO DE PRODUCCIÓN
+CONTEXT_TUTORIAL_PROGRESS,OBJECTIVE %d OF %d,OBJETIVO %d DE %d,OBJETIVO %d DE %d
+CONTEXT_TUTORIAL_STEP_1,Let the army defeat its first enemy.,Deixe o exército derrotar o primeiro inimigo.,Deja que el ejército derrote a su primer enemigo.
+CONTEXT_TUTORIAL_STEP_2,Click the fallen corpse to send it to processing.,Clique no cadáver caído para enviá-lo ao processamento.,Haz clic en el cadáver caído para enviarlo al procesamiento.
+CONTEXT_TUTORIAL_STEP_3,Wait for the processor to convert the corpse into Bones and Flesh.,Aguarde o processador converter o cadáver em Ossos e Carne.,Espera a que el procesador convierta el cadáver en Huesos y Carne.
+CONTEXT_TUTORIAL_STEP_4,Use the production line below to queue a Skeleton or Zombie.,Use a linha de produção abaixo para enfileirar um Esqueleto ou Zumbi.,Usa la línea de producción inferior para poner en cola un Esqueleto o Zombi.
+CONTEXT_TUTORIAL_STEP_5,Keep the line running until the new unit joins the army.,Mantenha a linha ativa até a nova unidade entrar no exército.,Mantén la línea activa hasta que la nueva unidad se una al ejército.
+CONTEXT_TUTORIAL_COMPLETE_TITLE,CYCLE COMPLETE,CICLO CONCLUÍDO,CICLO COMPLETADO
+CONTEXT_TUTORIAL_COMPLETE_BODY,You turned an enemy into production. Repeat the cycle and shape your build.,Você transformou um inimigo em produção. Repita o ciclo e construa sua estratégia.,Convertiste un enemigo en producción. Repite el ciclo y construye tu estrategia.
+CONTEXT_TUTORIAL_DISMISS,DISMISS GUIDE,DISPENSAR GUIA,CERRAR GUÍA
+CONTEXT_TUTORIAL_CLOSE,CLOSE,FECHAR,CERRAR
