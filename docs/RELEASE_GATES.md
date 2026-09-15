@@ -18,7 +18,9 @@ O corte inicial da v0.6.4 acrescenta `wave_preparation_runner.gd`: a fase precis
 
 `contextual_tutorial_runner.gd` executa o primeiro ciclo usando ações reais, verifica persistência/retorno, três idiomas, descarte e evento antecipado. A captura renderizada deve confirmar que o cartão não cobre aliado, cadáver nem controles necessários ao objetivo atual.
 
-Execução mais recente de 15/09: 85/85 runners em 84,46 s; 461 chaves localizadas; exportação e smoke test aprovados. Executável com 125.023.248 bytes e SHA-256 `B35972084EF8E14F0EE19D871A4AC417E90C1738386FE5184AA8BF159D4DF93F`. Preparação e primeiro ciclo guiado foram inspecionados em 1280×720; isso ainda não substitui a matriz manual nem um playtest externo.
+`decision_clarity_runner.gd` protege a ordenação e os requisitos das dez sinergias e percorre os diagnósticos de fluxo com snapshots puros. `synergy_bounds_runner.gd`, localização e layout continuam obrigatórios para comprovar rolagem, textos traduzidos e separação da barra inferior.
+
+Execução mais recente de 15/09: 86/86 runners em 89,33 s; 485 chaves localizadas; exportação e smoke test aprovados. Executável com 125.031.320 bytes e SHA-256 `8A2B1E5930C5B3449E91CB54687A15A81DB214ADE65D00742FC892FC6EC89A04`. Preparação, primeiro ciclo e consulta de sinergias foram inspecionados em 1280×720; isso ainda não substitui a matriz manual nem um playtest externo.
 
 Na consolidação técnica v0.6.3, a suíte passa a 83 runners. O novo `production_controls_presenter_runner.gd` valida snapshots sem mutação, limites de recursos/capacidade/ordens, arqueiro bloqueado, fim de partida, lotes 1/10 e textos nos três idiomas. As regressões integradas de produção e layout continuam obrigatórias.
 

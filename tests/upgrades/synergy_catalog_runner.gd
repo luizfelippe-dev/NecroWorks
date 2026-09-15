@@ -13,6 +13,11 @@ func _initialize() -> void:
 		assert(CATALOG.is_known(synergy_id))
 		assert(not CATALOG.get_name_key(synergy_id).is_empty())
 		assert(not CATALOG.get_description_key(synergy_id).is_empty())
+		var requirements: Array[Dictionary] = CATALOG.get_requirements(synergy_id)
+		assert(requirements.size() >= 2)
+		for requirement: Dictionary in requirements:
+			assert(not str(requirement.name_key).is_empty())
+			assert(int(requirement.target) >= 1)
 	assert(not CATALOG.is_known("invalid_synergy"))
 	assert(CATALOG.get_name_key("invalid_synergy").is_empty())
 	_validate_unlock_rules()
@@ -39,6 +44,10 @@ func _validate_unlock_rules() -> void:
 	assert(CATALOG.OVERCLOCKED_OSSUARY in unlockable)
 	assert(CATALOG.OSSUARY_BALLISTICS in unlockable)
 	assert(not CATALOG.CRIMSON_ASSEMBLY in unlockable)
+	var ballistic_progress: Dictionary = CATALOG.get_requirement_progress(
+		CATALOG.OSSUARY_BALLISTICS, state
+	)
+	assert(ballistic_progress.completed == 3 and ballistic_progress.total == 3)
 
 	state["active_synergies"] = {CATALOG.RECYCLING_PLANT: true}
 	state["blood_extraction_level"] = 1
@@ -52,3 +61,8 @@ func _validate_unlock_rules() -> void:
 	assert(CATALOG.CRIMSON_ASSEMBLY in unlockable)
 	assert(CATALOG.PHANTOM_CONDUIT in unlockable)
 	assert(CATALOG.DARK_REFINERY in unlockable)
+	var refinery_progress: Dictionary = CATALOG.get_requirement_progress(
+		CATALOG.DARK_REFINERY, state
+	)
+	assert(refinery_progress.completed == 2)
+	assert(refinery_progress.entries[1].current == 2)

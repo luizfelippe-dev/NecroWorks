@@ -255,6 +255,8 @@ const UPGRADE_STATUS_FORMATTER: Script = preload(
 	"res://scripts/ui/upgrade_status_formatter.gd"
 )
 const PRODUCTION_CONTROLS_PRESENTER: Script = preload("res://scripts/ui/production_controls_presenter.gd")
+const SYNERGY_STATUS_PRESENTER: Script = preload("res://scripts/ui/synergy_status_presenter.gd")
+const FACTORY_FLOW_PRESENTER: Script = preload("res://scripts/ui/factory_flow_presenter.gd")
 const GAMEPLAY_TUTORIAL_GUIDE: Script = preload(
 	"res://scripts/tutorial/gameplay_tutorial_guide.gd"
 )
@@ -7823,6 +7825,7 @@ func check_synergy_unlocks() -> void:
 		get_synergy_evaluation_state()
 	):
 		unlock_synergy(synergy_id)
+	update_synergy_ui()
 
 
 func check_factory_synergy_unlocks() -> void:
@@ -7940,36 +7943,9 @@ func update_synergy_ui() -> void:
 		return
 
 
-	var text_value: String = tr("SYNERGIES_ACTIVE")
-
-
-	if active_synergies.is_empty():
-
-		text_value += "\n" + tr("COMMON_NONE")
-
-	else:
-
-		var synergy_order: Array[String] = SYNERGY_CATALOG.ALL_SYNERGIES
-
-
-		for synergy_id: String in synergy_order:
-
-			if not has_synergy(
-				synergy_id
-			):
-
-				continue
-
-
-			text_value += (
-				"\n- "
-				+ get_synergy_name(
-					synergy_id
-				)
-			)
-
-
-	synergy_label.text = text_value
+	synergy_label.text = SYNERGY_STATUS_PRESENTER.format(
+		get_synergy_evaluation_state(), Callable(self, "tr")
+	)
 
 
 # =========================================================
@@ -10425,9 +10401,25 @@ func update_bones_ui() -> void:
 func refresh_production_queue_status() -> void:
 	if production_queue_label == null:
 		return
-	production_queue_label.text = PRODUCTION_CONTROLS_PRESENTER.queue_status([
+	var queue_status: String = PRODUCTION_CONTROLS_PRESENTER.queue_status([
 		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(skeleton_production_queue),
 		skeleton_assembler_timer,
 		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(zombie_production_queue),
 		flesh_vat_timer,
 	], tr)
+	var flow_status: String = FACTORY_FLOW_PRESENTER.format({
+		"finished": run_finished,
+		"available_capacity": get_available_production_capacity(),
+		"corpses": corpses.size(),
+		"processor_queued": corpse_processing_queue.size(),
+		"processor_capacity": corpse_processor_capacity,
+		"skeleton_orders": skeleton_production_queue.size(),
+		"zombie_orders": zombie_production_queue.size(),
+		"max_orders": PRODUCTION_QUEUE_MAX_ORDERS,
+		"auto_collection": automatic_corpse_collection_enabled,
+		"bones": bones,
+		"flesh": flesh,
+		"skeleton_cost": skeleton_cost,
+		"zombie_cost": zombie_cost,
+	}, Callable(self, "tr"))
+	production_queue_label.text = queue_status + "  |  " + flow_status

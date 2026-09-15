@@ -32,8 +32,9 @@ func run_validation() -> void:
 	assert(game.processing_label.text.begins_with("PROCESSAMENTO DE CADÁVERES"))
 	assert(game.wave_label.text.begins_with("ONDA 1"))
 	assert(game.wave_label.text.contains("Inimigos Restantes"))
-	assert(game.synergy_label.text.begins_with("SINERGIAS ATIVAS"))
-	assert(game.synergy_label.text.contains("Nenhuma"))
+	assert(game.synergy_label.text.begins_with("SINERGIAS 0 / 10"))
+	assert(game.synergy_label.text.contains("EM PROGRESSO"))
+	assert(game.synergy_label.text.contains("REQUISITOS"))
 	assert(
 		game.initial_enemy.get_node("IdentityLabel").text
 		== "GUERREIRO HUMANO"
@@ -59,7 +60,8 @@ func run_validation() -> void:
 	assert(game.get_node("GameplayDashboard").resource_names[0].text == "HUESOS")
 	assert(game.processing_label.text.begins_with("PROCESAMIENTO DE CADÁVERES"))
 	assert(game.wave_label.text.begins_with("OLEADA 1"))
-	assert(game.synergy_label.text.begins_with("SINERGIAS ACTIVAS"))
+	assert(game.synergy_label.text.begins_with("SINERGIAS 0 / 10"))
+	assert(game.synergy_label.text.contains("EN PROGRESO"))
 	assert(
 		game.initial_enemy.get_node("IdentityLabel").text
 		== "GUERRERO HUMANO"

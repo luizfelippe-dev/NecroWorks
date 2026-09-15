@@ -51,7 +51,7 @@ func bind(target: Node) -> void:
 	game.wave_label.add_theme_color_override("font_color", UI.IVORY)
 	game.wave_label.size.y = 94.0
 	game.synergy_label.add_theme_font_override("font", UI.BODY_FONT)
-	game.synergy_label.add_theme_font_size_override("font_size", 21)
+	game.synergy_label.add_theme_font_size_override("font_size", 17)
 	game.synergy_label.add_theme_color_override("font_color", UI.IVORY)
 	var synergy_scroll := ScrollContainer.new()
 	synergy_scroll.name = "SynergyScroll"
@@ -74,7 +74,8 @@ func bind(target: Node) -> void:
 	game.production_queue_label.add_theme_font_override("font", UI.BODY_FONT)
 	game.production_queue_label.add_theme_font_size_override("font_size", 14)
 	game.production_queue_label.position.y = 986.0
-	game.production_queue_label.size.y = 17.0
+	game.production_queue_label.size.y = 18.0
+	game.production_queue_label.add_theme_font_size_override("font_size", 13)
 	var buttons: Array = [game.create_skeleton_button, game.create_skeleton_archer_button, game.create_zombie_button]
 	var ids: Array[String] = ["skeleton", "skeleton_archer", "zombie"]
 	for index: int in range(buttons.size()):

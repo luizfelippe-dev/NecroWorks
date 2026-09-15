@@ -313,6 +313,8 @@ Names and exact values are provisional.
 
 # Synergies
 
+O painel durante a run funciona como catálogo de construção, não apenas como lista de recompensas já obtidas. Sinergias ativas aparecem primeiro, seguidas das prontas para desbloquear e das combinações com maior progresso. Cada entrada mostra o efeito e marca requisitos concluídos ou pendentes. Assim, escolher uma carta pode responder a uma intenção de build sem revelar uma combinação somente depois que ela acontece.
+
 Current Bone-oriented synergies:
 
 - Overclocked Ossuary;
@@ -345,7 +347,11 @@ Zombie dies
 → leaves Flesh / generates production value
 ```
 
-Do not lock final implementation yet.
+Novas sinergias devem entrar pelo mesmo catálogo de requisitos; o HUD não pode manter uma segunda versão dessas regras.
+
+## Leitura do fluxo da fábrica
+
+A linha inferior apresenta um diagnóstico operacional curto ao lado das filas. A prioridade distingue capacidade total atingida, processador ou produção saturados, cadáveres sem coleta, recursos ociosos, máquinas trabalhando e ausência de matéria-prima. O diagnóstico explica o estado atual sem recomendar uma única build nem decidir pelo jogador.
 
 ---
 

@@ -46,6 +46,8 @@ func run_validation() -> void:
 		assert(value.size.y >= value.get_combined_minimum_size().y)
 		assert(metrics_panel.get_global_rect().encloses(value.get_global_rect()))
 	assert(label.get_line_count() >= synergy_ids.size() + 1)
+	assert(label.text.contains(tr("SYNERGY_EFFECT")))
+	assert(label.text.contains(tr("SYNERGY_REQUIREMENTS")))
 	assert(label.size.y >= label.get_combined_minimum_size().y)
 	var scroll: ScrollContainer = panel.get_node("SynergyScroll")
 	assert(label.get_parent() == scroll)

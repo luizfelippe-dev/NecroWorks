@@ -732,4 +732,8 @@ O checkpoint é atualizado ao entrar na preparação e novamente ao confirmar o 
 
 As cinco páginas iniciais contextualizam sistemas e chefes, mas não comprovam que o ciclo central foi entendido. A primeira run mantém um guia curto baseado em ações reais. Sua conclusão é uma preferência própria: avançar ou fechar a introdução não elimina a prática; “Pular tutorial” e desativar a opção removem ambas.
 
+## Uma única fonte para requisitos de sinergia
+
+O catálogo define componentes e metas de cada combinação. A mesma estrutura decide o desbloqueio e alimenta o painel de consulta; a interface não reescreve requisitos em condicionais próprias. Sinergias ativas, prontas e mais próximas recebem prioridade visual. O diagnóstico de fluxo segue a mesma fronteira: interpreta um snapshot operacional, mas não modifica filas, recursos ou automações.
+
 O guia observa resultados confirmados pela simulação e não concede recursos, força cliques nem altera timers. Marcos fora de ordem são lembrados para que uma ação antecipada não cause bloqueio artificial.

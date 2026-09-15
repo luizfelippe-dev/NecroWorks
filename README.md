@@ -28,7 +28,7 @@ Enemy
 
 A versão publicada no projeto continua **v0.6.2**, com a consolidação v0.6.3 concluída e a v0.6.4 em desenvolvimento na seção Unreleased. Menu ilustrado, HUD industrial, cartões de recursos, métricas alinhadas e sinergias roláveis acompanham um driver de movimento contínuo. O ataque não é mais interrompido pelo flash de dano. A animação continua procedural sobre as poses V1, sem novos quadros desenhados; os limites e a próxima avaliação estão em [PRESENTATION_UPDATE.md](docs/PRESENTATION_UPDATE.md).
 
-A validação atual reúne 85 runners, exportação Windows e smoke test. Veja [BUILDING.md](docs/BUILDING.md) para o executável e seu hash.
+A validação atual reúne 86 runners, exportação Windows e smoke test. Veja [BUILDING.md](docs/BUILDING.md) para o executável e seu hash.
 
 Ao executar o projeto com `F5`, a aplicação agora abre um fluxo completo de entrada com Nova Partida, Continuar, Opções e Sair. `F6` sobre `scenes/world/gameplay.tscn` permanece disponível para testar diretamente o gameplay.
 
@@ -234,7 +234,7 @@ O catálogo possui 30 opções distribuídas entre Esqueletos, Arqueiros, Zumbis
 
 ## Sinergias atuais
 
-O catálogo possui 10 sinergias cobrindo processamento, Esqueletos, Zumbis, Blood, Souls, Arqueiros, Liches e Fábrica. O painel lateral usa área própria e permanece dentro do viewport mesmo com todas ativas.
+O catálogo possui 10 sinergias cobrindo processamento, Esqueletos, Zumbis, Blood, Souls, Arqueiros, Liches e Fábrica. O painel lateral ordena combinações ativas, prontas e em progresso, mostra efeito e requisitos e mantém todo o conteúdo acessível por rolagem. A linha inferior também sinaliza o gargalo operacional atual da fábrica.
 
 ## Direção visual oficial
 

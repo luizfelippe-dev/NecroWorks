@@ -340,6 +340,12 @@ Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/u
 Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/upgrades/upgrade_status_formatter_runner.gd
 ```
 
+`decision_clarity_runner.gd` valida a ordenação ativa/pronta/progresso, efeito, requisitos e os estados de gargalo sem instanciar ou alterar a simulação:
+
+```powershell
+Godot_v4.7.1-stable_win64_console.exe --headless --path . --script res://tests/ui/decision_clarity_runner.gd
+```
+
 ## v0.4.1 Factory and UI policies
 
 Valida custos, capacidade, ciclos das máquinas e a construção independente dos controles básicos de produção:

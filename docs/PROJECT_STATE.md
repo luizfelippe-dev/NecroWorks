@@ -14,6 +14,8 @@ O primeiro corte da v0.6.4 acrescenta preparação explícita entre ondas. Depoi
 
 O ciclo inicial agora também é ensinado por ações reais dentro do campo. Um cartão acompanha primeiro abate, envio do cadáver, conversão em recursos, ordem de produção e entrada da unidade. A conclusão é independente das páginas introdutórias e persiste no settings v4; o guia pode ser dispensado ou reativado por “Rever tutorial”.
 
+O painel lateral de sinergias agora expõe as dez combinações durante a partida, ordenando ativas, prontas e mais próximas. Efeito e requisitos usam a mesma fonte das regras de desbloqueio. A linha de produção também resume o gargalo atual — capacidade, coleta, filas, recursos ou máquina em operação — sem interferir na simulação.
+
 A implementação técnica da v0.6.3 está concluída sobre a base v0.6.2, ainda em Unreleased, sem nova versão de release declarada. O gameplay agora usa processamento pausável explícito; os menus permanecem ativos, e temporizadores de reposição/desbloqueio respeitam a pausa. Os testes de shell/tutorial isolam seus três arquivos e verificam frames sem avanço e retomada. Continuar consulta o checkpoint injetado, não um caminho global.
 
 A narrativa do checkpoint agora é validada contra o catálogo: evento desconhecido/já concluído, escolha incompatível e tipos inválidos são rejeitados. O carregamento tenta o backup; sem backup válido, preserva o arquivo e não oferece Continuar. Chamadas diretas de restauração recusam narrativa inconsistente antes de remover unidades. Decisões válidas reabrem sem conceder recompensa antecipada.

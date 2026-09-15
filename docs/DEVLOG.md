@@ -678,6 +678,14 @@ O build Windows atualizado iniciou em smoke test headless, com 113.074.640 bytes
 
 ## 15/09/2026 — Preparação estratégica da v0.6.4
 
+### Decisões legíveis
+
+O quadro de sinergias deixou de esconder combinações ainda incompletas. As dez receitas são consultáveis durante a run, com ativas e prontas no topo, efeito separado e marcação individual de cada requisito. A regra e o texto leem o mesmo catálogo, eliminando divergência entre o que a interface promete e o que realmente desbloqueia.
+
+A linha de produção ganhou um diagnóstico curto do fluxo. Ela diferencia exército lotado, filas saturadas, cadáveres sem coleta, recursos parados, máquinas trabalhando e falta de matéria-prima. O diagnóstico é calculado por uma camada pura de apresentação e não automatiza escolhas. A captura em 1280×720 levou a tipografia do catálogo de 14 para 17 pontos lógicos e manteve todo o conteúdo acessível por rolagem.
+
+O gate aprovou 86 runners em 89,33 segundos e 485 chaves localizadas nos três idiomas. O Windows release abriu no smoke test com 125.031.320 bytes e SHA-256 `8A2B1E5930C5B3449E91CB54687A15A81DB214ADE65D00742FC892FC6EC89A04`.
+
 Depois de cada aprimoramento e evento narrativo, a próxima onda agora aguarda um comando explícito. O novo painel apresenta a família principal, a composição completa, PV, dano, quantidade total e limite simultâneo antes do spawn.
 
 Todo o intervalo pós-onda congela relógio, processamento, produção e automações. Ainda é possível ajustar a diretriz, as filas e a doutrina; as máquinas retomam junto com o combate. O checkpoint registra a entrada na preparação e as decisões confirmadas antes do início. Saves antigos e eventos narrativos pendentes continuam compatíveis.

@@ -51,8 +51,11 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [x] corrigir tutorial: chefes nas ondas 10, 15 e 20, não a cada dez ondas;
 - [ ] medir tempo até primeira decisão interessante e antecipar amostra de inimigo especial/build/automação;
 - [ ] priorizar capacidade, filas, gargalos, composição e ameaças no HUD; recolher métricas históricas;
+  - [x] diagnóstico operacional aponta capacidade cheia, cadáver aguardando, filas saturadas, material pronto ou máquina trabalhando sem alterar a simulação;
+  - [ ] consolidar composição e ameaça com histórico de perdas/ociosidade medido em runs reais;
 - [ ] permitir escala legível de interface e validar 720p, textos longos e três idiomas;
-- [ ] exibir requisitos, efeito e progresso das sinergias, com consulta durante a partida;
+- [x] exibir requisitos, efeito e progresso das sinergias, com consulta durante a partida;
+  - catálogo rolável ordena sinergias ativas, prontas e mais próximas; cada entrada identifica efeito e componentes concluídos/pendentes nos três idiomas;
 - [x] tornar visível o fluxo cadáver → máquina → recurso → tropa;
   - objetivo contextual acompanha o cadáver clicável, aguarda a conversão, aponta a linha inferior e conclui somente quando a unidade entra no exército;
 - [ ] avaliar consolidar Fusões na fábrica/rituais ou justificar o painel com um resultado exclusivo.

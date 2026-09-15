@@ -460,3 +460,27 @@ CONTEXT_TUTORIAL_COMPLETE_TITLE,CYCLE COMPLETE,CICLO CONCLUÍDO,CICLO COMPLETADO
 CONTEXT_TUTORIAL_COMPLETE_BODY,You turned an enemy into production. Repeat the cycle and shape your build.,Você transformou um inimigo em produção. Repita o ciclo e construa sua estratégia.,Convertiste un enemigo en producción. Repite el ciclo y construye tu estrategia.
 CONTEXT_TUTORIAL_DISMISS,DISMISS GUIDE,DISPENSAR GUIA,CERRAR GUÍA
 CONTEXT_TUTORIAL_CLOSE,CLOSE,FECHAR,CERRAR
+SYNERGIES_OVERVIEW,SYNERGIES %d / %d,SINERGIAS %d / %d,SINERGIAS %d / %d
+SYNERGY_STATUS_ACTIVE,ACTIVE,ATIVA,ACTIVA
+SYNERGY_STATUS_READY,READY,PRONTA,LISTA
+SYNERGY_STATUS_PROGRESS,IN PROGRESS,EM PROGRESSO,EN PROGRESO
+SYNERGY_EFFECT,EFFECT,EFEITO,EFECTO
+SYNERGY_REQUIREMENTS,REQUIREMENTS,REQUISITOS,REQUISITOS
+SYNERGY_REQ_ARCHER_BLUEPRINT,Skeleton Archer blueprint,Projeto do Esqueleto Arqueiro,Plano del Arquero Esqueleto
+SYNERGY_REQ_HEMATIC_EXTRACTION,Hematic Extraction,Extração Hemática,Extracción Hemática
+SYNERGY_REQ_CRIMSON_INFUSION,Crimson Infusion,Infusão Carmesim,Infusión Carmesí
+SYNERGY_REQ_SPECTRAL_FOCUS,Spectral Focus,Foco Espectral,Foco Espectral
+SYNERGY_REQ_ETHEREAL_ANCHOR,Ethereal Anchor,Âncora Etérea,Ancla Etérea
+SYNERGY_REQ_HEMATIC_PRESS,Hematic Press,Prensa Hemática,Prensa Hemática
+SYNERGY_REQ_INDUSTRIAL_EFFICIENCY,Industrial Efficiency,Eficiência Industrial,Eficiencia Industrial
+FACTORY_FLOW_LABEL,FLOW,FLOW,FLUJO
+FACTORY_FLOW_PAUSED,run complete,partida encerrada,partida terminada
+FACTORY_FLOW_ARMY_FULL,army capacity reached,capacidade do exército atingida,capacidad del ejército alcanzada
+FACTORY_FLOW_PROCESSOR_FULL,processor queue full,fila do processador cheia,cola del procesador llena
+FACTORY_FLOW_PRODUCTION_FULL,production queues full,filas de produção cheias,colas de producción llenas
+FACTORY_FLOW_CORPSES_WAITING,corpses awaiting collection,cadáveres aguardando coleta,cadáveres esperando recolección
+FACTORY_FLOW_PRODUCTION_IDLE,resources ready — production idle,recursos prontos — produção ociosa,recursos listos — producción inactiva
+FACTORY_FLOW_PROCESSING,processing corpses,cadáveres em processamento,cadáveres en procesamiento
+FACTORY_FLOW_PRODUCING,units in production,unidades em produção,unidades en producción
+FACTORY_FLOW_AWAITING_CORPSE,awaiting raw material,aguardando matéria-prima,esperando materia prima
+FACTORY_FLOW_STABLE,stable flow,fluxo estável,flujo estable

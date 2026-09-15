@@ -20,6 +20,8 @@ O shell decide se o guia deve aparecer e persiste `guided_cycle_completed` no se
 
 Os métodos históricos `update_bones_ui` e `update_metrics_ui` permanecem como pontos de atualização dos controles de produção/processamento. Não formatam mais textos ocultos. `GameplayHudPresenter` mantém a formatação da onda. `production_controls_presenter.gd` recebe snapshots explícitos e um tradutor para devolver textos, prefixos e estados dos botões. Não acessa a cena nem altera recursos/filas. O controlador coleta dados, aplica a apresentação e preserva as atualizações encadeadas de doutrina e rituais. Custos efetivamente cobrados e enfileiramento continuam nas políticas existentes.
 
+`SynergyCatalog` é a fonte única dos requisitos mecânicos. `SynergyStatusPresenter` transforma esse estado em consulta ordenada por ativa, pronta e progresso, sem duplicar regras de desbloqueio no HUD. `FactoryFlowPresenter` recebe um snapshot de capacidade, cadáveres, filas e recursos e devolve somente o diagnóstico localizado. Ambos são puros; nenhuma apresentação compra, produz ou processa conteúdo.
+
 # Stack
 
 - Godot 4.7.1

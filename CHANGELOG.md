@@ -2,6 +2,16 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Clareza de decisões e fluxo
+
+- painel rolável consulta as dez sinergias, ordenadas por ativas, prontas e maior progresso;
+- efeito e requisitos concluídos/pendentes aparecem em PT-BR, inglês e espanhol;
+- requisitos mecânicos foram centralizados no catálogo usado tanto pelo desbloqueio quanto pela apresentação;
+- linha de produção identifica capacidade cheia, filas saturadas, cadáver aguardando, recurso ocioso, processamento e produção em andamento;
+- diagnóstico e formatação usam snapshots puros, sem alterar custos, recompensas, cadência ou automação.
+
+Validação: 86 runners aprovados em 89,33 s, catálogo com 485 chaves completas nos três idiomas, inspeção renderizada em 1280×720 e Windows exportado/iniciado em smoke test. Executável com 125.031.320 bytes e SHA-256 `8A2B1E5930C5B3449E91CB54687A15A81DB214ADE65D00742FC892FC6EC89A04`.
+
 ### Preparação estratégica entre ondas
 
 - próxima onda aguarda comando explícito após o aprimoramento e o eventual evento narrativo;
