@@ -473,7 +473,7 @@ SYNERGY_REQ_SPECTRAL_FOCUS,Spectral Focus,Foco Espectral,Foco Espectral
 SYNERGY_REQ_ETHEREAL_ANCHOR,Ethereal Anchor,Âncora Etérea,Ancla Etérea
 SYNERGY_REQ_HEMATIC_PRESS,Hematic Press,Prensa Hemática,Prensa Hemática
 SYNERGY_REQ_INDUSTRIAL_EFFICIENCY,Industrial Efficiency,Eficiência Industrial,Eficiencia Industrial
-FACTORY_FLOW_LABEL,FLOW,FLOW,FLUJO
+FACTORY_FLOW_LABEL,FLOW,FLUXO,FLUJO
 FACTORY_FLOW_PAUSED,run complete,partida encerrada,partida terminada
 FACTORY_FLOW_ARMY_FULL,army capacity reached,capacidade do exército atingida,capacidad del ejército alcanzada
 FACTORY_FLOW_PROCESSOR_FULL,processor queue full,fila do processador cheia,cola del procesador llena
@@ -484,3 +484,13 @@ FACTORY_FLOW_PROCESSING,processing corpses,cadáveres em processamento,cadávere
 FACTORY_FLOW_PRODUCING,units in production,unidades em produção,unidades en producción
 FACTORY_FLOW_AWAITING_CORPSE,awaiting raw material,aguardando matéria-prima,esperando materia prima
 FACTORY_FLOW_STABLE,stable flow,fluxo estável,flujo estable
+FACTORY_FLOW_PLANNING,planning — machines paused,planejamento — máquinas pausadas,planificación — máquinas pausadas
+FACTORY_FLOW_SOULS,extracting souls,extraindo almas,extrayendo almas
+SYNERGY_CARD_UNLOCK,ACTIVATES: %s (%d/%d),ATIVA: %s (%d/%d),ACTIVA: %s (%d/%d)
+SYNERGY_CARD_PROGRESS,BUILD PATH: %s (%d/%d),COMBINAÇÃO: %s (%d/%d),COMBINACIÓN: %s (%d/%d)
+HUD_SHOW_HISTORY,OPERATIONS · View history,OPERAÇÃO · Ver histórico,OPERACIÓN · Ver historial
+HUD_SHOW_OPERATIONS,HISTORY · View operations,HISTÓRICO · Ver operação,HISTORIAL · Ver operación
+HUD_OPERATION_ARMY,Army: %d/%d · Queued: %d,Exército: %d/%d · Na fila: %d,Ejército: %d/%d · En cola: %d
+HUD_OPERATION_COMPOSITION,Warriors %d · Archers %d\nZombies %d · Ghosts %d\nLiches %d · Thralls %d,Guerreiros %d · Arqueiros %d\nZumbis %d · Fantasmas %d\nLiches %d · Servos %d,Guerreros %d · Arqueros %d\nZombis %d · Fantasmas %d\nLiches %d · Siervos %d
+HUD_OPERATION_PROCESSOR,Processor: %d/%d\nAwaiting collection: %d,Processador: %d/%d\nAguardando coleta: %d,Procesador: %d/%d\nEsperando recolección: %d
+HUD_OPERATION_SOULS,Soul extraction: %d,Extração de almas: %d,Extracción de almas: %d

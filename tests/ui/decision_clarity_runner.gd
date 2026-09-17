@@ -25,6 +25,11 @@ func _initialize() -> void:
 		assert(text.contains("[x]") and text.contains("[ ]"))
 
 	state.active_synergies = {CATALOG.RECYCLING_PLANT: true}
+	var original: Dictionary = state.duplicate(true)
+	var preview: String = SYNERGY_PRESENTER.upgrade_preview(UPGRADE.MASS_PRODUCTION, state, translate)
+	assert(preview.contains("2/2") and preview.contains("ACTIVA"))
+	assert(state == original, "Preview must not buy the upgrade or alter the match")
+	assert(SYNERGY_PRESENTER.upgrade_preview(UPGRADE.EFFICIENT_RECYCLING, state, translate).is_empty())
 	state.upgrade_counts[UPGRADE.BONE_HARVEST] = 1
 	var prioritized: String = SYNERGY_PRESENTER.format(state, translate)
 	assert(prioritized.begins_with("SINERGIAS 1 / 10"))
@@ -51,5 +56,15 @@ func _initialize() -> void:
 	assert(FLOW_PRESENTER.status_key(base_flow) == "FACTORY_FLOW_PRODUCING")
 	base_flow.available_capacity = 0
 	assert(FLOW_PRESENTER.status_key(base_flow) == "FACTORY_FLOW_ARMY_FULL")
+	base_flow.preparation = true
+	assert(FLOW_PRESENTER.status_key(base_flow) == "FACTORY_FLOW_PLANNING")
+	base_flow.preparation = false
+	base_flow.available_capacity = 5
+	base_flow.skeleton_orders = 0
+	base_flow.bones = 0
+	base_flow.corpses = 1
+	base_flow.waiting_corpses = 0
+	base_flow.soul_queued = 1
+	assert(FLOW_PRESENTER.status_key(base_flow) == "FACTORY_FLOW_SOULS")
 	print("DECISION CLARITY VALIDATION: PASS")
 	quit()

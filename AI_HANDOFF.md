@@ -1,6 +1,6 @@
 # NecroWorks — Continuidade do Desenvolvimento
 
-**Atualizado em:** 15/09/2026
+**Atualizado em:** 17/09/2026
 
 ## Estado atual
 
@@ -9,6 +9,8 @@ A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu il
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+O painel operacional, a alternância com histórico e as prévias de sinergia nas cartas já foram implementados em 17/09. O diagnóstico considera preparação e cadáveres reservados para extração. Não marcar escala configurável, medição da primeira decisão ou aprovação com jogadores como concluídas por essas mudanças.
 
 1. seguir v0.6.4 por escala de interface e medição da primeira decisão; preparação, primeiro ciclo, consulta de sinergias e diagnóstico de gargalos já estão implementados;
 2. preservar a suíte de confiabilidade e as fronteiras de apresentação concluídas na v0.6.3;

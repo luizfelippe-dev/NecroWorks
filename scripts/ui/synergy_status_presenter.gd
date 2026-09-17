@@ -29,8 +29,9 @@ static func format(state: Dictionary, translate: Callable) -> String:
 			"SYNERGY_STATUS_READY" if row.ready else "SYNERGY_STATUS_PROGRESS"
 		)
 		lines.append("")
-		lines.append("[%s] %s" % [
+		lines.append("[%s %d/%d] %s" % [
 			str(translate.call(status_key)),
+			row.total if row.active else row.completed, row.total,
 			str(translate.call(CATALOG.get_name_key(row.id))),
 		])
 		var description: String = str(translate.call(CATALOG.get_description_key(row.id)))
@@ -58,8 +59,10 @@ static func _higher_priority(left: Dictionary, right: Dictionary) -> bool:
 	var right_rank: int = _rank(right)
 	if left_rank != right_rank:
 		return left_rank < right_rank
-	if int(left.completed) != int(right.completed):
-		return int(left.completed) > int(right.completed)
+	var left_fraction: float = float(left.completed) / maxf(1.0, float(left.total))
+	var right_fraction: float = float(right.completed) / maxf(1.0, float(right.total))
+	if not is_equal_approx(left_fraction, right_fraction):
+		return left_fraction > right_fraction
 	return CATALOG.ALL_SYNERGIES.find(left.id) < CATALOG.ALL_SYNERGIES.find(right.id)
 
 
@@ -69,3 +72,27 @@ static func _rank(row: Dictionary) -> int:
 	if bool(row.ready):
 		return 1
 	return 2
+
+
+static func upgrade_preview(upgrade_id: String, state: Dictionary, translate: Callable) -> String:
+	var next_state: Dictionary = state.duplicate(true)
+	var counts: Dictionary = next_state.get("upgrade_counts", {}).duplicate()
+	counts[upgrade_id] = int(counts.get(upgrade_id, 0)) + 1
+	next_state["upgrade_counts"] = counts
+	var active: Dictionary = state.get("active_synergies", {})
+	var best: String = ""
+	var best_fraction: float = -1.0
+	for id: String in CATALOG.ALL_SYNERGIES:
+		if bool(active.get(id, false)):
+			continue
+		var before: Dictionary = CATALOG.get_requirement_progress(id, state)
+		var after: Dictionary = CATALOG.get_requirement_progress(id, next_state)
+		if int(after.completed) <= int(before.completed):
+			continue
+		var fraction: float = float(after.completed) / float(after.total)
+		if fraction <= best_fraction:
+			continue
+		best_fraction = fraction
+		var key: String = "SYNERGY_CARD_UNLOCK" if after.completed == after.total else "SYNERGY_CARD_PROGRESS"
+		best = str(translate.call(key)) % [str(translate.call(CATALOG.get_name_key(id))), after.completed, after.total]
+	return best

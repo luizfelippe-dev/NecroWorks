@@ -2,6 +2,8 @@
 
 **Atualizado em:** 15/09/2026
 
+Atualização de 17/09: 86/86 runners em 110,46 s; exportação e smoke test aprovados. Build: 125.035.880 bytes, SHA-256 `550FBCE17665586410935A5B6E762784091DAFAE2F9F440D3A54E5CC23CC1C45`. HUD e cartas capturados nos três idiomas a 1280×720; alternância operação/histórico, preparação e prévias sem mutação cobertas pelas regressões. Os números de 15/09 abaixo são históricos.
+
 ## Gate automatizado
 
 ```powershell

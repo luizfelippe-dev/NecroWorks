@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 17/09/2026 — Operação em primeiro plano
+
+Validação final: 86 runners aprovados em 110,46 s; exportação e smoke test Windows aprovados. Build com 125.035.880 bytes e SHA-256 `550FBCE17665586410935A5B6E762784091DAFAE2F9F440D3A54E5CC23CC1C45`.
+
+Troquei a lista histórica sempre aberta por uma leitura operacional: capacidade, reservas, composição, coleta e máquinas. O histórico permanece disponível por botão. O alerta ganhou uma área própria e a barra inferior voltou a mostrar apenas as filas. Corrigi a leitura de máquinas durante preparação e de cadáveres reservados para extração de almas.
+
+As cartas agora antecipam combinações, incluindo o momento em que completam uma sinergia. A avaliação usa uma cópia do estado; testes verificam que consultar uma carta não modifica a partida. O catálogo mostra progresso numérico e ordena pela proporção cumprida. Capturei o HUD e a escolha de cartas em 720p nos três idiomas.
+
 ## 11/09/2026 — Apresentação industrial v0.6.2
 
 O passe anterior continuou artificial. Retirei a transição cruzada entre poses repetidas e mantive um relógio de passada independente das chamadas de movimento. A região das pernas agora recebe deformação contínua com âncoras específicas; o dano funciona como camada separada, sem cancelar golpes. Não acrescentei quadros desenhados: o próximo salto artístico ainda depende de animação própria validada em gameplay.

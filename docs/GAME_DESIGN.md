@@ -351,7 +351,9 @@ Novas sinergias devem entrar pelo mesmo catálogo de requisitos; o HUD não pode
 
 ## Leitura do fluxo da fábrica
 
-A linha inferior apresenta um diagnóstico operacional curto ao lado das filas. A prioridade distingue capacidade total atingida, processador ou produção saturados, cadáveres sem coleta, recursos ociosos, máquinas trabalhando e ausência de matéria-prima. O diagnóstico explica o estado atual sem recomendar uma única build nem decidir pelo jogador.
+O painel operacional apresenta capacidade, composição, reservas de produção e processamento. O histórico da run fica acessível por botão. O diagnóstico ocupa uma área própria: preparação pausada, capacidade atingida, filas saturadas, coleta, recursos ociosos ou máquinas trabalhando. Cadáveres já destinados à extração não contam como coleta pendente.
+
+Cada carta antecipa a combinação mais próxima que sua aquisição avança ou completa. A fração indica requisitos atendidos após a escolha. Repetir uma carta já possuída não anuncia avanço de sinergia quando seu requisito já foi cumprido.
 
 ---
 

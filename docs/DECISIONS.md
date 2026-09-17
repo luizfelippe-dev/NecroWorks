@@ -734,6 +734,8 @@ As cinco páginas iniciais contextualizam sistemas e chefes, mas não comprovam 
 
 ## Uma única fonte para requisitos de sinergia
 
+Desde 17/09, a carta consulta essa mesma fonte para antecipar a combinação mais próxima que será avançada. A avaliação usa uma cópia do estado; a seleção continua sendo o único ponto que concede o upgrade. O HUD principal prioriza operação, mantendo histórico acessível por botão, e reserva uma área legível ao gargalo.
+
 O catálogo define componentes e metas de cada combinação. A mesma estrutura decide o desbloqueio e alimenta o painel de consulta; a interface não reescreve requisitos em condicionais próprias. Sinergias ativas, prontas e mais próximas recebem prioridade visual. O diagnóstico de fluxo segue a mesma fronteira: interpreta um snapshot operacional, mas não modifica filas, recursos ou automações.
 
 O guia observa resultados confirmados pela simulação e não concede recursos, força cliques nem altera timers. Marcos fora de ordem são lembrados para que uma ação antecipada não cause bloqueio artificial.

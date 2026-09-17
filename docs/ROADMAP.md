@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 15/09/2026
+**Atualizado:** 17/09/2026
 
 ---
 
@@ -53,9 +53,11 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [ ] priorizar capacidade, filas, gargalos, composição e ameaças no HUD; recolher métricas históricas;
   - [x] diagnóstico operacional aponta capacidade cheia, cadáver aguardando, filas saturadas, material pronto ou máquina trabalhando sem alterar a simulação;
   - [ ] consolidar composição e ameaça com histórico de perdas/ociosidade medido em runs reais;
+  - painel operacional assume a área principal com capacidade, unidades enfileiradas, seis papéis de tropa, coleta e extração; histórico disponível por botão. Medição temporal de perdas/ociosidade permanece pendente;
 - [ ] permitir escala legível de interface e validar 720p, textos longos e três idiomas;
 - [x] exibir requisitos, efeito e progresso das sinergias, com consulta durante a partida;
   - catálogo rolável ordena sinergias ativas, prontas e mais próximas; cada entrada identifica efeito e componentes concluídos/pendentes nos três idiomas;
+  - cartas antecipam a combinação mais próxima que a escolha avança ou ativa; progresso exibido em fração e ordenado proporcionalmente;
 - [x] tornar visível o fluxo cadáver → máquina → recurso → tropa;
   - objetivo contextual acompanha o cadáver clicável, aguarda a conversão, aponta a linha inferior e conclui somente quando a unidade entra no exército;
 - [ ] avaliar consolidar Fusões na fábrica/rituais ou justificar o painel com um resultado exclusivo.

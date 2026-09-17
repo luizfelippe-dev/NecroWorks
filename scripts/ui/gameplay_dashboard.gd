@@ -24,6 +24,10 @@ var resources_title: Label
 var refresh_time: float = 0.0
 var last_resources: Array = []
 var last_metrics: Array = []
+var history_visible: bool = false
+var history_toggle: Button
+var operations_label: Label
+var flow_label: Label
 
 
 func bind(target: Node) -> void:
@@ -34,6 +38,7 @@ func bind(target: Node) -> void:
 		UI.decorate_panel(panel)
 	_build_resources()
 	_build_metrics()
+	_build_operations()
 	wave_progress = _bar(game.get_node("WavePanel"), Rect2(24, 119, 572, 7), UI.GREEN)
 	production_progress = _bar(game.get_node("ProductionPanel"), Rect2(24, 163, 652, 4), UI.GREEN)
 	processing_progress = _bar(game.get_node("ProcessingPanel"), Rect2(24, 160, 767, 4), UI.SOUL)
@@ -161,6 +166,7 @@ func _process(delta: float) -> void:
 
 
 func _refresh() -> void:
+	_refresh_operations()
 	var resources: Array = [game.bones, game.flesh, game.blood, game.souls]
 	if resources != last_resources:
 		for index: int in range(resources.size()):
@@ -186,6 +192,7 @@ func _notification(what: int) -> void:
 func _refresh_localization() -> void:
 	resources_title.text = tr("HUD_RESOURCES")
 	metric_title.text = tr("METRICS_TITLE")
+	_refresh_operations()
 	for index: int in range(RESOURCE_IDS.size()):
 		resource_names[index].text = tr("RESOURCE_" + RESOURCE_IDS[index].to_upper())
 	for index: int in range(METRIC_KEYS.size()):
@@ -193,6 +200,53 @@ func _refresh_localization() -> void:
 	(game.get_node("TaglineLabel") as Label).text = tr("GAME_TAGLINE")
 	for button: Button in [game.create_skeleton_button, game.create_skeleton_archer_button, game.create_zombie_button]:
 		button.tooltip_text = tr("PRODUCTION_QUEUE_TOOLTIP")
+
+
+func _build_operations() -> void:
+	var panel: Control = game.get_node("MetricsPanel")
+	metric_title.hide()
+	history_toggle = Button.new()
+	panel.add_child(history_toggle)
+	history_toggle.position = Vector2(18, 10)
+	history_toggle.size = Vector2(319, 36)
+	history_toggle.add_theme_font_override("font", UI.BODY_FONT)
+	history_toggle.add_theme_font_size_override("font_size", 18)
+	UI.style_button(history_toggle, UI.BRONZE)
+	history_toggle.pressed.connect(func() -> void:
+		history_visible = not history_visible
+		_refresh_operations()
+	)
+	operations_label = _label(panel, Rect2(23, 57, 302, 200), 21, UI.IVORY)
+	operations_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	flow_label = _label(panel, Rect2(23, 262, 302, 84), 20, UI.GREEN)
+	flow_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	flow_label.clip_text = true
+	_refresh_operations()
+
+
+func _refresh_operations() -> void:
+	if operations_label == null:
+		return
+	history_toggle.text = tr("HUD_SHOW_OPERATIONS" if history_visible else "HUD_SHOW_HISTORY")
+	for label: Label in metric_names + metric_values:
+		label.visible = history_visible
+	operations_label.visible = not history_visible
+	flow_label.visible = not history_visible
+	if history_visible:
+		return
+	var state: Dictionary = game.get_factory_flow_snapshot()
+	var text: String = tr("HUD_OPERATION_ARMY") % [game.get_total_undead_count(), game.MAX_UNDEAD, game.get_total_queued_undead()]
+	text += "\n" + tr("HUD_OPERATION_COMPOSITION") % [
+		game.skeletons.size() - game.get_skeleton_archer_count(), game.get_skeleton_archer_count(),
+		game.zombies.size(), game.ghosts.size(), game.liches.size(), game.get_temporary_thrall_count(),
+	]
+	text += "\n" + tr("HUD_OPERATION_PROCESSOR") % [state.processor_queued, state.processor_capacity, state.waiting_corpses]
+	text += "\n" + tr("HUD_OPERATION_SOULS") % [state.soul_queued]
+	if operations_label.text != text:
+		operations_label.text = text
+	var flow: String = game.FACTORY_FLOW_PRESENTER.format(state, Callable(self, "tr"))
+	if flow_label.text != flow:
+		flow_label.text = flow
 
 
 func _bar(parent: Control, rect: Rect2, tint: Color) -> ProgressBar:

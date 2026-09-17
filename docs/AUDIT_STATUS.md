@@ -2,6 +2,8 @@
 
 **Atualizado em:** 15/09/2026
 
+Atualização de 17/09: painel operacional e prévias de combinações entregues. Gate integral aprovado com 86 runners em 110,46 s, exportação Windows e smoke test. HUD e cartas capturados em 720p nos três idiomas. Escala configurável, medição temporal das decisões e sessão com jogadores permanecem abertas.
+
 Este quadro separa correção de código, validação interna e dependências externas. Um item só recebe estado concluído quando existe implementação e evidência reproduzível.
 
 ## Reabertura — 14/09/2026

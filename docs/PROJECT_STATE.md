@@ -10,6 +10,8 @@
 
 ## Consolidação pós-auditoria
 
+Em 17/09, o HUD passou a priorizar a operação atual, com histórico acessível por botão. O alerta de fluxo tem área própria e identifica corretamente preparação e extração de almas. As cartas antecipam a sinergia que avançam ou ativam. Escala configurável e medição com jogadores continuam abertas no roadmap.
+
 O primeiro corte da v0.6.4 acrescenta preparação explícita entre ondas. Depois do aprimoramento e do evento, a próxima ameaça é apresentada antes do spawn. Produção, processamento, automações e tempo da run ficam congelados, embora o jogador possa ajustar diretriz, fábrica, filas e doutrina. O botão de início libera a onda uma única vez. Checkpoints novos retomam nessa preparação; saves antigos preservam o comportamento anterior.
 
 O ciclo inicial agora também é ensinado por ações reais dentro do campo. Um cartão acompanha primeiro abate, envio do cadáver, conversão em recursos, ordem de produção e entrada da unidade. A conclusão é independente das páginas introdutórias e persiste no settings v4; o guia pode ser dispensado ou reativado por “Rever tutorial”.

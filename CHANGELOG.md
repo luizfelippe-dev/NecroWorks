@@ -2,6 +2,17 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Painel operacional e escolhas antecipadas — 17/09
+
+- capacidade, reservas de produção, composição e processamento passam a ocupar o painel principal; métricas históricas continuam disponíveis por botão;
+- aviso de fluxo recebe espaço próprio com quebra de linha; temporizadores voltam a ter uma linha exclusiva;
+- preparação informa máquinas pausadas; cadáveres já destinados à extração de almas deixam de aparecer como coleta pendente;
+- cartas mostram qual combinação avançam ou ativam, usando uma cópia do estado sem conceder o benefício antecipadamente;
+- sinergias exibem fração de requisitos e são ordenadas pelo progresso proporcional;
+- capturas de cartas incluídas na ferramenta de apresentação em PT-BR, inglês e espanhol.
+
+Validação: 86/86 runners em 110,46 s, exportação Windows e smoke test aprovados. Capturas de HUD e cartas em 1280×720. Tamanho e hash do build atual em `docs/BUILDING.md`.
+
 ### Clareza de decisões e fluxo
 
 - painel rolável consulta as dez sinergias, ordenadas por ativas, prontas e maior progresso;

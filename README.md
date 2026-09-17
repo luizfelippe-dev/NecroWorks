@@ -234,6 +234,8 @@ O catálogo possui 30 opções distribuídas entre Esqueletos, Arqueiros, Zumbis
 
 ## Sinergias atuais
 
+As cartas mostram a combinação que a escolha pode avançar ou ativar. O painel operacional prioriza capacidade, composição e filas; use seu botão para consultar as métricas históricas da partida.
+
 O catálogo possui 10 sinergias cobrindo processamento, Esqueletos, Zumbis, Blood, Souls, Arqueiros, Liches e Fábrica. O painel lateral ordena combinações ativas, prontas e em progresso, mostra efeito e requisitos e mantém todo o conteúdo acessível por rolagem. A linha inferior também sinaliza o gargalo operacional atual da fábrica.
 
 ## Direção visual oficial

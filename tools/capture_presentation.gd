@@ -40,6 +40,16 @@ func capture() -> void:
 		LocalizationService.set_locale(locale)
 		await create_timer(0.2).timeout
 		await save_frame("hud_" + locale)
+	game.active_synergies.clear()
+	game.upgrade_counts[game.UPGRADE_EFFICIENT_RECYCLING] = 1
+	game.current_upgrade_choices.assign([
+		game.UPGRADE_BONE_HARVEST, game.UPGRADE_MASS_PRODUCTION, game.UPGRADE_HEAVY_BONES,
+	])
+	game.upgrade_panel.show()
+	for locale: String in ["pt-BR", "en", "es"]:
+		LocalizationService.set_locale(locale)
+		game.update_upgrade_ui()
+		await save_frame("upgrade_preview_" + locale)
 	shell.queue_free()
 	await process_frame
 	await capture_motion()

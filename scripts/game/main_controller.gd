@@ -7239,7 +7239,7 @@ func get_upgrade_card_text(
 	upgrade_id: String
 ) -> String:
 
-	return (
+	var card_text: String = (
 		get_upgrade_name(
 			upgrade_id
 		)
@@ -7259,6 +7259,12 @@ func get_upgrade_card_text(
 			)
 		)
 	)
+
+
+	var preview: String = SYNERGY_STATUS_PRESENTER.upgrade_preview(
+		upgrade_id, get_synergy_evaluation_state(), Callable(self, "tr")
+	)
+	return card_text + ("\n\n" + preview if not preview.is_empty() else "")
 
 
 func get_upgrade_count(
@@ -10407,10 +10413,17 @@ func refresh_production_queue_status() -> void:
 		UNDEAD_PRODUCTION_POLICY.get_queued_unit_count(zombie_production_queue),
 		flesh_vat_timer,
 	], tr)
-	var flow_status: String = FACTORY_FLOW_PRESENTER.format({
+	production_queue_label.text = queue_status
+
+
+func get_factory_flow_snapshot() -> Dictionary:
+	return {
 		"finished": run_finished,
+		"preparation": wave_transition_in_progress or event_decision_in_progress or wave_preparation_in_progress,
 		"available_capacity": get_available_production_capacity(),
 		"corpses": corpses.size(),
+		"waiting_corpses": maxi(corpses.size() - corpse_processing_queue.size() - soul_extraction_queue.size(), 0),
+		"soul_queued": soul_extraction_queue.size(),
 		"processor_queued": corpse_processing_queue.size(),
 		"processor_capacity": corpse_processor_capacity,
 		"skeleton_orders": skeleton_production_queue.size(),
@@ -10421,5 +10434,4 @@ func refresh_production_queue_status() -> void:
 		"flesh": flesh,
 		"skeleton_cost": skeleton_cost,
 		"zombie_cost": zombie_cost,
-	}, Callable(self, "tr"))
-	production_queue_label.text = queue_status + "  |  " + flow_status
+	}
