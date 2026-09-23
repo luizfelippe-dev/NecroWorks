@@ -46,6 +46,12 @@ func capture() -> void:
 		await create_timer(0.2).timeout
 		await save_frame("hud_" + locale)
 	game.active_synergies.clear()
+	if "--boss-warnings" in OS.get_cmdline_user_args():
+		for locale: String in ["pt-BR", "en", "es"]:
+			LocalizationService.set_locale(locale)
+			for warning: String in ["BOSS_FRONT_WARNING", "BOSS_REAR_WARNING", "BOSS_CLUSTER_WARNING"]:
+				game.combat_feedback.show_boss_banner(tr(warning), Color.ORANGE)
+				await save_frame(warning.to_lower() + "_" + locale)
 	game.upgrade_counts[game.UPGRADE_EFFICIENT_RECYCLING] = 1
 	game.current_upgrade_choices.assign([
 		game.UPGRADE_BONE_HARVEST, game.UPGRADE_MASS_PRODUCTION, game.UPGRADE_HEAVY_BONES,

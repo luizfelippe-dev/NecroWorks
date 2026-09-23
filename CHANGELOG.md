@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Ameaças dos chefes — 23/09
+
+Gate: 86/86 runners em 94,54 s; exportação Windows e smoke test aprovados. Capturas dos avisos geradas em 720p nos três idiomas, com inspeção de PT-BR, EN e ES. SHA-256 do executável: `9CD976868368217899C9C3359DEE080DB5F071E8A19D408CF964EBF37D7A457A`.
+
+- Marechal atinge até três tropas mais próximas; Auditor prioriza até quatro mais distantes; Capataz atinge até seis tropas no agrupamento mais denso em um raio de 180 unidades.
+- Aviso traduzido antecede o especial em pelo menos um segundo de simulação, inclusive após um frame longo. Pausa e preparação continuam congelando o combate.
+- Banners têm quebra de linha e prioridade sobre efeitos comuns; movimento reduzido não encurta a leitura.
+- PV, dano por alvo e intervalos-base preservados. A distribuição de perdas mudou: equilíbrio e compreensão ainda precisam de playtest, sem declarar a v0.6.5 concluída.
+
 ### Leitura ampliada e observação — 23/09
 
 Validação final: 86/86 runners em 91,27 s, exportação e smoke test Windows aprovados. Capturas 720p de Opções, HUD e cartas nos três idiomas; textos táticos a 130%. v0.6.4 e v0.6.5 continuam abertas conforme o roadmap.

@@ -1312,6 +1312,7 @@ var boss_active: bool:
 	get: return bool(run_director.boss_active)
 	set(value): run_director.boss_active = value
 var boss_special_attack_timer: float = 0.0
+var boss_special_warning_shown: bool = false
 
 
 # =========================================================
@@ -2069,10 +2070,16 @@ func _process(delta: float) -> void:
 
 	if boss_active:
 
-		boss_special_attack_timer = maxf(
-			boss_special_attack_timer - delta,
-			0.0
-		)
+		boss_special_attack_timer = maxf(boss_special_attack_timer - delta, 0.0)
+		if boss_special_attack_timer <= 1.0 and not boss_special_warning_shown:
+			boss_special_warning_shown = true
+			# Keep a full warning interval even after a long frame.
+			boss_special_attack_timer = 1.0
+			if combat_feedback != null:
+				combat_feedback.call("show_boss_banner", tr(str(
+					get_boss_profile_for_wave(current_wave).get("warning_key", "BOSS_WARNING")
+				)), Color(1.0, 0.65, 0.3))
+			play_combat_sound("boss")
 
 
 		if (
@@ -2081,6 +2088,7 @@ func _process(delta: float) -> void:
 		):
 
 			boss_special_attack()
+			boss_special_warning_shown = false
 
 			boss_special_attack_timer = float(
 				get_boss_profile_for_wave(current_wave).get(
@@ -2485,6 +2493,7 @@ func start_wave(
 	if boss_active:
 		var boss_profile: Dictionary = get_boss_profile_for_wave(current_wave)
 		enemy_max_hp = int(boss_profile.get("hp", BOSS_HP))
+		boss_special_warning_shown = false
 		enemy_damage = int(boss_profile.get("damage", BOSS_DAMAGE))
 		boss_special_attack_timer = float(
 			boss_profile.get("special_interval", BOSS_SPECIAL_ATTACK_INTERVAL)
@@ -4977,7 +4986,7 @@ func boss_special_attack() -> void:
 		return
 
 
-	valid_targets.shuffle()
+	valid_targets = ENEMY_WAVE_POLICY.select_special_targets(current_wave, enemy.position, valid_targets)
 
 
 	var boss_profile: Dictionary = get_boss_profile_for_wave(current_wave)
@@ -5011,7 +5020,7 @@ func boss_special_attack() -> void:
 	print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	print(
 		get_current_boss_name(),
-		" USED INDUSTRIAL CRUSH!"
+		" USED SPECIAL: ", boss_profile.get("id", "boss")
 	)
 	print(
 		"Targets: ",

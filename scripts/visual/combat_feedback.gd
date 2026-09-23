@@ -101,11 +101,16 @@ func show_impact(
 
 
 func show_boss_banner(message: String, color: Color) -> void:
+	for child: Node in get_children():
+		if child is Label and child.name == "BossBanner":
+			child.free()
 	trim_transients()
 	var banner := Label.new()
 	banner.name = "BossBanner"
 	banner.position = Vector2(560.0, 222.0)
 	banner.size = Vector2(800.0, 58.0)
+	banner.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	banner.set_meta("priority_feedback", true)
 	banner.text = message
 	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -117,7 +122,7 @@ func show_boss_banner(message: String, color: Color) -> void:
 	add_child(banner)
 	feedback_created += 1
 	var tween: Tween = banner.create_tween()
-	tween.tween_interval(0.65 if reduced_motion else 1.15)
+	tween.tween_interval(1.15)
 	tween.set_parallel(true)
 	if not reduced_motion:
 		tween.tween_property(banner, "position:y", 205.0, 0.45)
@@ -128,6 +133,14 @@ func show_boss_banner(message: String, color: Color) -> void:
 func trim_transients() -> void:
 	var active: Array[Node] = get_children()
 	while active.size() >= MAX_TRANSIENTS:
-		var oldest: Node = active.pop_front()
+		var removable: int = -1
+		for index: int in range(active.size()):
+			if not active[index].has_meta("priority_feedback"):
+				removable = index
+				break
+		if removable < 0:
+			break
+		var oldest: Node = active[removable]
+		active.remove_at(removable)
 		if is_instance_valid(oldest):
 			oldest.free()

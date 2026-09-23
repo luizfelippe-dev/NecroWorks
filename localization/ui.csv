@@ -1,4 +1,7 @@
 keys,en,pt_BR,es
+BOSS_FRONT_WARNING,FRONTAL SLAM — protect the frontline,IMPACTO FRONTAL — proteja a linha de frente,GOLPE FRONTAL — protege la primera línea
+BOSS_REAR_WARNING,ARCANE AUDIT — reinforce the rearguard,AUDITORIA ARCANA — reforce a retaguarda,AUDITORÍA ARCANA — refuerza la retaguardia
+BOSS_CLUSTER_WARNING,INDUSTRIAL CRUSH — clustered troops at risk,ESMAGAMENTO INDUSTRIAL — tropas agrupadas em risco,APLASTAMIENTO INDUSTRIAL — tropas agrupadas en riesgo
 PERSIST_ACK,UNDERSTOOD,ENTENDIDO,ENTENDIDO
 PERSIST_RETRY,RETRY SAVING,TENTAR SALVAR NOVAMENTE,REINTENTAR GUARDADO
 PERSIST_PROFILE_RECOVERED,Profile recovered from backup. Recent progress may be missing.,Perfil recuperado do backup. O progresso mais recente pode não estar presente.,Perfil recuperado de la copia de seguridad. Puede faltar el progreso más reciente.

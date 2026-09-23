@@ -1,5 +1,11 @@
 # NecroWorks — Game Design Document
 
+## Chefes — revisão de 23/09/2026
+
+O especial do Marechal seleciona as três tropas mais próximas (20 de dano por alvo); o Auditor seleciona as quatro mais distantes (28); o Capataz busca o agrupamento mais denso em raio de 180 unidades e atinge até seis integrantes (35). O último não preenche a cota com tropas fora do raio. Intervalos-base: 5 / 4,5 / 4 segundos. O aviso reserva pelo menos um segundo de simulação antes do impacto e não causa dano.
+
+A seleção acontece no impacto. Não há esquiva manual: composição, resistência e reposição são as ferramentas existentes. As regras tornam as ameaças distintas, mas sua qualidade estratégica e a distribuição de perdas ainda precisam de avaliação humana; não equivalem ao aceite completo da v0.6.5.
+
 ## Apresentação — v0.6.2
 
 O passe de interface e animação não altera números de combate nem economia. Os botões da linha de produção mostram unidade, lote e custo; o clique continua reservando recursos para produção temporizada. Dicas explicam a fila, e as barras acompanham seus ciclos. Sinergias continuam com as mesmas regras, agora dentro de uma área rolável.

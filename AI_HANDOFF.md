@@ -10,6 +10,8 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
+Novo corte de 23/09: especiais deixaram de escolher alvos aleatórios. Marechal pressiona proximidade, Auditor distância e Capataz agrupamento de raio 180. Avisos têm antecedência mínima de um segundo e proteção contra saturação de feedback. Não há esquiva manual: revisar composição, reposição e perdas em uma run humana antes de aprovar contrajogo/balanceamento. Os alvos são determinados no impacto, não travados no aviso. A v0.6.5 continua aberta.
+
 Em 23/09 entraram escala de textos táticos (settings v5), medição opcional por segmento e prioridade de áudio de chefe. Ambas as versões 0.6.4 e 0.6.5 seguem abertas: não confundir instrumentação com medição humana concluída nem escala de alguns textos com toda a interface. Próximo trabalho: ritmo inicial, escala dos demais controles, mecânicas próprias dos chefes e produção/aprovação de uma família de animação.
 
 O painel operacional, a alternância com histórico e as prévias de sinergia nas cartas já foram implementados em 17/09. O diagnóstico considera preparação e cadáveres reservados para extração. Não marcar escala configurável, medição da primeira decisão ou aprovação com jogadores como concluídas por essas mudanças.
@@ -17,7 +19,7 @@ O painel operacional, a alternância com histórico e as prévias de sinergia na
 1. seguir v0.6.4 por escala de interface e medição da primeira decisão; preparação, primeiro ciclo, consulta de sinergias e diagnóstico de gargalos já estão implementados;
 2. preservar a suíte de confiabilidade e as fronteiras de apresentação concluídas na v0.6.3;
 3. validar a experiência em run manual; o aceite técnico não certifica hardware mínimo nem prontidão comercial;
-4. aprovar animação autoral de uma família e diferenciar os chefes;
+4. aprovar animação autoral de uma família e validar as novas ameaças espaciais dos chefes;
 5. revisar cartas, automação e testes de equilíbrio com investimentos equivalentes;
 6. medir release real e conduzir teste cego antes da preparação Steam.
 

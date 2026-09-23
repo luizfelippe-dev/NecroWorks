@@ -4,6 +4,8 @@
 
 ## Fase de preparação
 
+Os especiais dos chefes usam `EnemyWavePolicy.select_special_targets`: ordenação espacial determinística, com desempate por identidade, sem consumir o sorteio de upgrades. Capataz escolhe o centro com mais vizinhos em raio 180 e limita a seis vítimas dentro desse raio. O controlador mantém a antecedência mínima de um segundo e reinicia o aviso a cada onda/ataque. Alvos são consultados no impacto; não ficam referências pendentes de tropas mortas durante o aviso. O banner não é removido pela saturação dos efeitos comuns.
+
 `RunDirector` mantém três estados distintos: combate, seleção pós-onda e preparação da próxima onda. `advance_to_next_wave()` abre a preparação, e `start_prepared_wave()` aceita o início uma única vez. O controlador interrompe os sistemas temporizados enquanto essa fase estiver ativa, mas mantém os controles de configuração utilizáveis.
 
 O checkpoint possui o campo opcional `preparation_pending`. Saves anteriores continuam iniciando a onda como antes; checkpoints novos reabrem o painel de planejamento sem gerar inimigos ou avançar filas. A validação rejeita tipos incorretos antes de alterar a cena.

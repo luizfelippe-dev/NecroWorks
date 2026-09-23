@@ -6,6 +6,8 @@
 
 **Engine:** Godot 4.7.1
 
+**Corte de 23/09 — chefes:** especiais por proximidade (Marechal), retaguarda (Auditor) e agrupamento (Capataz), com aviso traduzido e protegido de saturação. Valores-base preservados; nova distribuição de perdas ainda requer aprovação manual. Não encerra a v0.6.5.
+
 **Branch principal:** `main`
 
 ## Consolidação pós-auditoria

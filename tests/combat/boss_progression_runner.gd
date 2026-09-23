@@ -34,12 +34,30 @@ func run_validation() -> void:
 	var mutable_profile: Dictionary = game.get_boss_profile_for_wave(10)
 	mutable_profile.hp = 1
 	assert(game.get_boss_profile_for_wave(10).hp == 1050)
+	var candidates: Array[Node2D] = []
+	for location: Vector2 in [Vector2(10, 0), Vector2(400, 0), Vector2(410, 0), Vector2(420, 0), Vector2(900, 0)]:
+		var unit := Node2D.new()
+		unit.position = location
+		candidates.append(unit)
+	assert(WAVE_POLICY.select_special_targets(10, Vector2.ZERO, candidates)[0] == candidates[0])
+	assert(WAVE_POLICY.select_special_targets(15, Vector2.ZERO, candidates)[0] == candidates[4])
+	var clustered: Array[Node2D] = WAVE_POLICY.select_special_targets(20, Vector2.ZERO, candidates)
+	assert(clustered.size() == 3)
+	assert(not clustered.has(candidates[0]) and not clustered.has(candidates[4]))
+	var empty_candidates: Array[Node2D] = []
+	assert(WAVE_POLICY.select_special_targets(20, Vector2.ZERO, empty_candidates).is_empty())
+	for unit: Node2D in candidates:
+		unit.free()
 
 	game.start_wave(10)
 	await process_frame
 	game.set_process(false)
 	assert(game.boss_active and game.enemies.size() == 1)
 	assert(game.enemy_types[game.enemies[0]] == "grave_marshal")
+	game.boss_special_attack_timer = 0.0
+	game._process(0.0)
+	assert(game.boss_special_warning_shown)
+	assert(is_equal_approx(game.boss_special_attack_timer, 1.0))
 	game.kill_enemy(game.enemies[0])
 	assert(not game.run_finished)
 	assert(game.wave_transition_in_progress)
@@ -53,6 +71,7 @@ func run_validation() -> void:
 	game.set_process(false)
 	assert(game.boss_active and game.enemies.size() == 1)
 	assert(game.enemy_types[game.enemies[0]] == "arcane_auditor")
+	assert(not game.boss_special_warning_shown)
 	game.kill_enemy(game.enemies[0])
 	assert(not game.run_finished)
 	assert(game.wave_transition_in_progress)

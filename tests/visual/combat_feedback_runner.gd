@@ -47,6 +47,11 @@ func run_validation() -> void:
 	for index: int in range(70):
 		game.combat_feedback.call("show_damage", Vector2(600.0, 500.0), index, true)
 	assert(game.combat_feedback.get_child_count() <= 48)
+	game.combat_feedback.call("show_boss_banner", "WARNING", Color.ORANGE)
+	for index: int in range(70):
+		game.combat_feedback.call("show_damage", Vector2.ZERO, index, true)
+	assert(game.combat_feedback.has_node("BossBanner"))
+	assert(game.combat_feedback.get_child_count() <= 48)
 	game.free()
 	feedback.free()
 	print("COMBAT FEEDBACK V1 VALIDATION: PASS")

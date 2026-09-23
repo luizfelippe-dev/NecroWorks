@@ -73,6 +73,7 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [ ] expandir o padrão aprovado às onze famílias, sem tratar deformação de pose ou quadros duplicados como animação final;
 - [ ] verificar leitura de impacto/morte e movimento reduzido em vídeo a velocidade normal;
 - [ ] dar mecânica e resposta próprias a Marechal, Auditor e Capataz, com avisos legíveis e perda explicável;
+  - seleção por proximidade, retaguarda e agrupamento implementada em 23/09, com aviso mínimo de um segundo; validar contrajogo e perdas em partidas humanas antes de fechar o item;
 - [ ] produzir identidade sonora de máquinas, materiais e famílias e ambiente com variação de tensão;
 - [ ] proteger prioridade de alertas de chefe no pool de áudio e validar mixagem em sessão real;
   - voz SFX exclusiva protege o alerta contra roubo pelos dez canais comuns; regressão cobre saturação por 30 efeitos; mixagem subjetiva permanece pendente;
