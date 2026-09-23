@@ -52,8 +52,17 @@ func run_validation() -> void:
 		assert(not dashboard.history_visible)
 		assert(dashboard.operations_label.is_visible_in_tree())
 		assert(not dashboard.metric_names[0].is_visible_in_tree())
-		assert(dashboard.operations_label.get_global_rect().end.y <= dashboard.flow_label.position.y + game.get_node("MetricsPanel").position.y)
-		assert(game.get_node("MetricsPanel").get_global_rect().encloses(dashboard.flow_label.get_global_rect()))
+		assert(game.get_node("MetricsPanel").get_global_rect().encloses(dashboard.operations_scroll.get_global_rect()))
+		for reading_scale: float in [1.0, 1.15, 1.3]:
+			dashboard.configure_reading_scale(reading_scale)
+			await process_frame
+			await process_frame
+			assert(dashboard.operations_scroll.clip_contents)
+			assert(dashboard.operations_label.size.x <= dashboard.operations_scroll.size.x)
+			dashboard.operations_scroll.scroll_vertical = 10000
+			await process_frame
+			assert(dashboard.flow_label.get_global_rect().end.y <= dashboard.operations_scroll.get_global_rect().end.y + 1.0)
+		dashboard.configure_reading_scale(1.0)
 		dashboard.history_toggle.pressed.emit()
 		assert(dashboard.history_visible and dashboard.metric_names[0].is_visible_in_tree())
 		assert(not dashboard.operations_label.is_visible_in_tree())

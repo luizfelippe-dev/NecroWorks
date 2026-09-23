@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+Em 23/09, a regressão de persistência cobre settings v5 e escala inválida/legada. O layout percorre os três níveis de texto nos três idiomas e confere que a rolagem alcança o diagnóstico. O teste de áudio protege a voz de chefe durante saturação do pool; `decision_clarity_runner.gd` verifica a observação temporal sem contabilizar planejamento como ociosidade.
+
 ## Presentation v0.6.2
 
 `tests/ui/presentation_layout_runner.gd` validates the new menu and dashboard in EN/PT-BR/ES: production batches of ten, measured control bounds, separate resource values, metric columns, progress bars, zombie-only production and accessibility.

@@ -16,6 +16,8 @@ O shell decide se o guia deve aparecer e persiste `guided_cycle_completed` no se
 
 ## HUD consolidado
 
+Settings v5 acrescenta `reading_scale` (100/115/130%), com default 100% nos arquivos anteriores e sanitização de valores inválidos. O shell reaplica a preferência na cena atual e em novas runs. `RunObservation` mede um segmento apenas quando `--measure-run` está presente; seu relatório local é escrito na tela final. A observação não faz parte do checkpoint. O gerenciador de áudio tem uma voz exclusiva de chefe além do pool comum.
+
 O dashboard abre em operação: capacidade, produção reservada, composição, coleta, processador e extração de almas. Um botão alterna para as métricas históricas. O diagnóstico recebe `get_factory_flow_snapshot()`, incluindo preparação e cadáveres ainda sem destino. O texto só é substituído quando muda. A prévia de sinergias nas cartas avalia uma cópia profunda dos requisitos, sem aplicar upgrades ao jogo.
 
 `GameplayDashboard` é a única apresentação de recursos e métricas. As labels legadas `BonesLabel` e `MetricsLabel` e seus formatadores foram removidos. Os textos fixos atualizam por notificação de idioma; os valores são amostrados a 10 Hz e só reescritos quando mudam; barras continuam acompanhando frames.

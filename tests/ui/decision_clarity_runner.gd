@@ -8,6 +8,19 @@ const UPGRADE: Script = preload("res://scripts/game/upgrade_catalog.gd")
 
 
 func _initialize() -> void:
+	var observer: RefCounted = preload("res://scripts/game/run_observation.gd").new()
+	var sample := {"orders": 0, "upgrades": 0, "directive": "balanced", "automation": false, "losses": 0, "idle": true}
+	observer.observe(sample, 0.0)
+	observer.observe(sample, 2.0)
+	sample.orders = 1
+	sample.planning = true
+	observer.observe(sample, 3.0)
+	assert(observer.report().combat_seconds == 2.0)
+	assert(observer.report().production_idle_seconds == 2.0)
+	assert(observer.report().first_observed_changes.orders == 5.0)
+	sample.finished = true
+	observer.observe(sample, 20.0)
+	assert(observer.report().seconds_excluding_pause == 5.0)
 	var translate := func(key: String) -> String: return TranslationServer.translate(key)
 	var state: Dictionary = {
 		"upgrade_counts": {UPGRADE.EFFICIENT_RECYCLING: 1},

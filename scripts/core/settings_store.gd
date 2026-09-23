@@ -2,13 +2,14 @@ class_name SettingsStore
 extends RefCounted
 
 
-const SETTINGS_VERSION: int = 4
+const SETTINGS_VERSION: int = 5
 const DEFAULT_PATH: String = "user://necroworks_settings.cfg"
 
 
 static func get_defaults() -> Dictionary:
 	return {
 		"version": SETTINGS_VERSION,
+		"reading_scale": 1.0,
 		"locale": LocalizationService.DEFAULT_LOCALE,
 		"master_volume": 0.8,
 		"music_volume": 0.65,
@@ -35,6 +36,7 @@ static func load_settings(path: String = DEFAULT_PATH) -> Dictionary:
 	result.locale = LocalizationService.normalize_locale(
 		str(config.get_value("general", "locale", result.locale))
 	)
+	result.reading_scale = sanitize_reading_scale(config.get_value("display", "reading_scale", 1.0))
 	result.master_volume = clampf(
 		float(config.get_value("audio", "master_volume", result.master_volume)),
 		0.0,
@@ -69,6 +71,7 @@ static func save_settings(
 	path: String = DEFAULT_PATH
 ) -> Error:
 	var sanitized: Dictionary = get_defaults()
+	sanitized.reading_scale = sanitize_reading_scale(settings.get("reading_scale", 1.0))
 	sanitized.locale = LocalizationService.normalize_locale(
 		str(settings.get("locale", sanitized.locale))
 	)
@@ -101,6 +104,7 @@ static func save_settings(
 
 	var config := ConfigFile.new()
 	config.set_value("meta", "version", SETTINGS_VERSION)
+	config.set_value("display", "reading_scale", sanitized.reading_scale)
 	config.set_value("general", "locale", sanitized.locale)
 	config.set_value("audio", "master_volume", sanitized.master_volume)
 	config.set_value("audio", "music_volume", sanitized.music_volume)
@@ -122,6 +126,7 @@ static func apply_settings(
 	apply_display: bool = true
 ) -> Dictionary:
 	var sanitized: Dictionary = get_defaults()
+	sanitized.reading_scale = sanitize_reading_scale(settings.get("reading_scale", 1.0))
 	sanitized.locale = LocalizationService.set_locale(
 		str(settings.get("locale", sanitized.locale))
 	)
@@ -169,6 +174,15 @@ static func apply_settings(
 
 static func _read_volume(config: ConfigFile, key: String, fallback: float) -> float:
 	return clampf(float(config.get_value("audio", key, fallback)), 0.0, 1.0)
+
+
+static func sanitize_reading_scale(value: Variant) -> float:
+	if value is not float and value is not int:
+		return 1.0
+	var numeric: float = float(value)
+	if not is_finite(numeric):
+		return 1.0
+	return 1.0 + clampf(roundf((numeric - 1.0) / 0.15), 0.0, 2.0) * 0.15
 
 
 static func _sanitize_volume(settings: Dictionary, key: String, fallback: float) -> float:

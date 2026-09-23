@@ -15,6 +15,10 @@ Medir se uma pessoa nova entende o ciclo Cadáver → processamento → recursos
 
 ## Registro mínimo
 
+Para instrumentar uma sessão, execute `NecroWorks.exe -- --measure-run`. Ao chegar à tela final, `user://playtest_latest.json` recebe o relatório local; a próxima sessão medida substitui esse arquivo. Sem a flag não há gravação. O relatório registra tempo sem pausa, combate, ociosidade de produção com recursos disponíveis, perdas e primeira mudança observada em ordens, aprimoramentos, diretriz e automação. Ordens automáticas também contam: não interpretar esse campo isoladamente como decisão humana interessante.
+
+O escopo é o segmento da sessão atual. Continuar uma run não recupera tempos anteriores; o campo `scope` torna essa limitação explícita. Copie o relatório junto ao hash do build e às observações da pessoa. Uma saída antes da tela final não exporta relatório. A avaliação qualitativa da primeira decisão continua sendo feita pelo observador.
+
 - versão e hash do build;
 - duração, onda alcançada e resultado;
 - inimigos derrotados e Cadáveres processados;

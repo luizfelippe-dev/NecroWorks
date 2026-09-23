@@ -10,9 +10,15 @@ var next_player: int = 0
 var hit_cooldown: float = 0.0
 var attack_cooldown: float = 0.0
 var played_events: Dictionary = {}
+var boss_voice: AudioStreamPlayer
 
 
 func _ready() -> void:
+	boss_voice = AudioStreamPlayer.new()
+	boss_voice.name = "BossWarningVoice"
+	boss_voice.bus = &"SFX"
+	boss_voice.volume_db = -6.0
+	add_child(boss_voice)
 	sounds = {
 		"attack": create_tone(320.0, 180.0, 0.08, 0.18, 0.34),
 		"hit": create_tone(150.0, 92.0, 0.07, 0.56, 0.42),
@@ -49,8 +55,9 @@ func play_event(event_id: String) -> bool:
 		hit_cooldown = 0.045
 	if event_id == "attack":
 		attack_cooldown = 0.035
-	var player: AudioStreamPlayer = players[next_player]
-	next_player = (next_player + 1) % players.size()
+	var player: AudioStreamPlayer = boss_voice if event_id == "boss" else players[next_player]
+	if event_id != "boss":
+		next_player = (next_player + 1) % players.size()
 	player.stream = sounds[event_id] as AudioStream
 	player.pitch_scale = 0.96 + float(int(played_events.get(event_id, 0)) % 5) * 0.02
 	if not DisplayServer.get_name().to_lower().contains("headless"):

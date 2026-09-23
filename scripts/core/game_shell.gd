@@ -49,6 +49,7 @@ var high_contrast_check: CheckButton
 var tutorial_check: CheckButton
 var tutorial_reset_button: Button
 var language_option: OptionButton
+var reading_option: OptionButton
 var volume_slider: HSlider
 var music_volume_slider: HSlider
 var sfx_volume_slider: HSlider
@@ -233,6 +234,9 @@ func build_interface() -> void:
 	language_option.add_item("Português (Brasil)", 1)
 	language_option.add_item("Español", 2)
 	options_box.add_child(language_option)
+	reading_option = OptionButton.new()
+	reading_option.custom_minimum_size.y = 32.0
+	options_box.add_child(reading_option)
 	volume_label = create_label(18)
 	options_box.add_child(volume_label)
 	volume_slider = HSlider.new()
@@ -450,6 +454,12 @@ func refresh_localized_text() -> void:
 	if pause_status_label != null:
 		pause_status_label.text = tr("PAUSE_CHECKPOINT_NOTE")
 	options_title.text = tr("OPTIONS_TITLE")
+	if reading_option != null:
+		var selected: int = maxi(reading_option.selected, 0)
+		reading_option.clear()
+		for percent: int in [100, 115, 130]:
+			reading_option.add_item(tr("OPTIONS_READING_SCALE") % percent)
+		reading_option.select(selected)
 	codex_title.text = tr("CODEX_TITLE")
 	history_title.text = tr("RUN_HISTORY_TITLE")
 	loadout_title.text = tr("LOADOUT_TITLE")
@@ -836,11 +846,13 @@ func open_options() -> void:
 	reduced_motion_check.button_pressed = bool(settings.reduced_motion)
 	high_contrast_check.button_pressed = bool(settings.high_contrast)
 	tutorial_check.button_pressed = bool(settings.tutorial_enabled)
+	reading_option.select(int(round((float(settings.get("reading_scale", 1.0)) - 1.0) / 0.15)))
 
 
 func apply_options() -> void:
 	var locales: PackedStringArray = ["en", "pt_BR", "es"]
 	settings = {
+		"reading_scale": 1.0 + float(reading_option.selected) * 0.15,
 		"locale": locales[language_option.selected],
 		"master_volume": volume_slider.value,
 		"music_volume": music_volume_slider.value,

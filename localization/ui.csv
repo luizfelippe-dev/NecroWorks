@@ -494,3 +494,4 @@ HUD_OPERATION_ARMY,Army: %d/%d · Queued: %d,Exército: %d/%d · Na fila: %d,Ej�
 HUD_OPERATION_COMPOSITION,Warriors %d · Archers %d\nZombies %d · Ghosts %d\nLiches %d · Thralls %d,Guerreiros %d · Arqueiros %d\nZumbis %d · Fantasmas %d\nLiches %d · Servos %d,Guerreros %d · Arqueros %d\nZombis %d · Fantasmas %d\nLiches %d · Siervos %d
 HUD_OPERATION_PROCESSOR,Processor: %d/%d\nAwaiting collection: %d,Processador: %d/%d\nAguardando coleta: %d,Procesador: %d/%d\nEsperando recolección: %d
 HUD_OPERATION_SOULS,Soul extraction: %d,Extração de almas: %d,Extracción de almas: %d
+OPTIONS_READING_SCALE,Tactical text: %d%%,Textos táticos: %d%%,Textos tácticos: %d%%

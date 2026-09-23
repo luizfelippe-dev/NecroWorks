@@ -732,6 +732,14 @@ O checkpoint é atualizado ao entrar na preparação e novamente ao confirmar o 
 
 As cinco páginas iniciais contextualizam sistemas e chefes, mas não comprovam que o ciclo central foi entendido. A primeira run mantém um guia curto baseado em ações reais. Sua conclusão é uma preferência própria: avançar ou fechar a introdução não elimina a prática; “Pular tutorial” e desativar a opção removem ambas.
 
+## Leitura tática e Fusões — 23/09/2026
+
+Textos do painel operacional, sinergias e cartas podem crescer para 115% ou 130%. O tamanho da arena permanece estável; a preferência fica no settings v5. O painel operacional usa rolagem para acomodar a leitura ampliada.
+
+Fusões permanece separado por oferecer conversão cruzada com uma saída exclusiva: Ossos e Carne viram Pontos de Fábrica na Liga do Ossuário. A Reunião Vinculada converte Sangue e Almas em um Fantasma. Essa justificativa funcional não substitui observar a descoberta do painel no playtest.
+
+Alertas de chefe recebem um canal SFX exclusivo. Efeitos comuns não podem substituí-los no pool; continuam respeitando volume e pausa do jogo.
+
 ## Uma única fonte para requisitos de sinergia
 
 Desde 17/09, a carta consulta essa mesma fonte para antecipar a combinação mais próxima que será avançada. A avaliação usa uma cópia do estado; a seleção continua sendo o único ponto que concede o upgrade. O HUD principal prioriza operação, mantendo histórico acessível por botão, e reserva uma área legível ao gargalo.

@@ -39,10 +39,10 @@ Godot_v4.7.1-stable_win64_console.exe `
 ## Build validado
 
 - arquivo local: `builds/windows/NecroWorks.exe`;
-- tamanho: 125.035.880 bytes;
-- SHA-256: `550FBCE17665586410935A5B6E762784091DAFAE2F9F440D3A54E5CC23CC1C45`;
-- exportação da base v0.6.2 com mudanças Unreleased da v0.6.4 e inicialização headless aprovadas em 17/09/2026;
-- gate integral aprovado com 86 runners em 110,46 segundos antes da exportação;
+- tamanho: 125.040.272 bytes;
+- SHA-256: `3016BE1280839C8A3EFAFE65097731828961CBA3DC208396D31DCF93EF10DA7D`;
+- exportação da base v0.6.2 com mudanças Unreleased e inicialização headless aprovadas em 23/09/2026;
+- gate integral aprovado com 86 runners em 91,27 segundos antes da exportação;
 - fontes em `assets/reference/`, `assets/sprites/animation_concepts/`, `docs/` e `tests/` ficam fora do pacote;
 - os antigos `arcane_auditor_prototype.png`, `grave_marshal_prototype.png`, `foreman_prototype.png`, `elf_prototype.png`, `human_warrior_prototype.png`, `mage_prototype.png`, `skeleton_prototype.png` e `zombie_prototype.png` permanecem como referências no repositório, mas não entram no executável;
 - ferramentas de desenvolvimento e capturas em `artifacts/` ficam fora do pacote;

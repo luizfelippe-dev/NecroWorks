@@ -2,6 +2,16 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Leitura ampliada e observação — 23/09
+
+Validação final: 86/86 runners em 91,27 s, exportação e smoke test Windows aprovados. Capturas 720p de Opções, HUD e cartas nos três idiomas; textos táticos a 130%. v0.6.4 e v0.6.5 continuam abertas conforme o roadmap.
+
+- opções de textos táticos em 100%, 115% e 130%, persistidas no settings v5 com compatibilidade para versões anteriores;
+- operação com rolagem; escala aplicada às sinergias e às cartas;
+- instrumentação opcional `--measure-run`: primeiras mudanças, tempo sem pausa, combate, ociosidade e perdas no segmento atual;
+- voz exclusiva para alerta de chefe, protegida da substituição por efeitos comuns;
+- decisão de manter Fusões documentada pela conversão exclusiva de recursos em Pontos de Fábrica.
+
 ### Painel operacional e escolhas antecipadas — 17/09
 
 - capacidade, reservas de produção, composição e processamento passam a ocupar o painel principal; métricas históricas continuam disponíveis por botão;

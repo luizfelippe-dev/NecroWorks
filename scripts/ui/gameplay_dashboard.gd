@@ -28,6 +28,8 @@ var history_visible: bool = false
 var history_toggle: Button
 var operations_label: Label
 var flow_label: Label
+var operations_scroll: ScrollContainer
+var reading_scale: float = 1.0
 
 
 func bind(target: Node) -> void:
@@ -221,6 +223,21 @@ func _build_operations() -> void:
 	flow_label = _label(panel, Rect2(23, 262, 302, 84), 20, UI.GREEN)
 	flow_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	flow_label.clip_text = true
+	operations_scroll = ScrollContainer.new()
+	panel.add_child(operations_scroll)
+	operations_scroll.position = Vector2(20, 54)
+	operations_scroll.size = Vector2(315, 292)
+	operations_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var content := VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation", 12)
+	operations_scroll.add_child(content)
+	for label: Label in [operations_label, flow_label]:
+		label.reparent(content, false)
+		label.position = Vector2.ZERO
+		label.size = Vector2.ZERO
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.clip_text = false
 	_refresh_operations()
 
 
@@ -228,6 +245,7 @@ func _refresh_operations() -> void:
 	if operations_label == null:
 		return
 	history_toggle.text = tr("HUD_SHOW_OPERATIONS" if history_visible else "HUD_SHOW_HISTORY")
+	operations_scroll.visible = not history_visible
 	for label: Label in metric_names + metric_values:
 		label.visible = history_visible
 	operations_label.visible = not history_visible
@@ -247,6 +265,15 @@ func _refresh_operations() -> void:
 	var flow: String = game.FACTORY_FLOW_PRESENTER.format(state, Callable(self, "tr"))
 	if flow_label.text != flow:
 		flow_label.text = flow
+
+
+func configure_reading_scale(value: float) -> void:
+	reading_scale = SettingsStore.sanitize_reading_scale(value)
+	operations_label.add_theme_font_size_override("font_size", roundi(21 * reading_scale))
+	flow_label.add_theme_font_size_override("font_size", roundi(20 * reading_scale))
+	game.synergy_label.add_theme_font_size_override("font_size", roundi(17 * reading_scale))
+	for button: Button in game.upgrade_buttons:
+		button.add_theme_font_size_override("font_size", roundi(17 * reading_scale))
 
 
 func _bar(parent: Control, rect: Rect2, tint: Color) -> ProgressBar:

@@ -13,6 +13,7 @@ func _initialize() -> void:
 
 func run_validation() -> void:
 	SettingsStore.save_settings({
+		"reading_scale": 1.3,
 		"locale": "pt-BR",
 		"master_volume": 1.7,
 		"music_volume": 0.35,
@@ -27,6 +28,9 @@ func run_validation() -> void:
 	}, SETTINGS_PATH)
 	var loaded_settings: Dictionary = SettingsStore.load_settings(SETTINGS_PATH)
 	assert(loaded_settings.locale == "pt_BR")
+	assert(is_equal_approx(loaded_settings.reading_scale, 1.3))
+	assert(SettingsStore.sanitize_reading_scale(NAN) == 1.0)
+	assert(SettingsStore.sanitize_reading_scale("bad") == 1.0)
 	assert(is_equal_approx(float(loaded_settings.master_volume), 1.0))
 	assert(is_equal_approx(float(loaded_settings.music_volume), 0.35))
 	assert(is_equal_approx(float(loaded_settings.sfx_volume), 0.55))
@@ -45,6 +49,7 @@ func run_validation() -> void:
 	assert(legacy_config.save(LEGACY_SETTINGS_PATH) == OK)
 	var migrated_settings: Dictionary = SettingsStore.load_settings(LEGACY_SETTINGS_PATH)
 	assert(migrated_settings.locale == "es")
+	assert(migrated_settings.reading_scale == 1.0)
 	assert(is_equal_approx(float(migrated_settings.master_volume), 0.45))
 	assert(is_equal_approx(float(migrated_settings.music_volume), 0.65))
 	assert(not migrated_settings.reduced_motion)

@@ -505,6 +505,7 @@ func enqueue_undead_production_order(
 
 
 	production_order_queued.emit(unit_type, quantity, total_cost)
+	observed_production_orders += 1
 	notify_contextual_tutorial("production_queued")
 	update_bones_ui()
 	return true
@@ -1799,6 +1800,8 @@ var combat_audio_manager: Node = null
 var industrial_ambient_manager: Node = null
 var resume_checkpoint_state: Dictionary = {}
 var contextual_tutorial_guide: GameplayTutorialGuide = null
+var run_observation: RefCounted = preload("res://scripts/game/run_observation.gd").new()
+var observed_production_orders: int = 0
 
 
 # =========================================================
@@ -1879,6 +1882,9 @@ func _ready() -> void:
 
 
 func configure_accessibility(accessibility_settings: Dictionary) -> void:
+	var dashboard: Node = get_node_or_null("GameplayDashboard")
+	if dashboard != null:
+		dashboard.configure_reading_scale(float(accessibility_settings.get("reading_scale", 1.0)))
 	reduced_motion_enabled = bool(accessibility_settings.get("reduced_motion", false))
 	high_contrast_enabled = bool(accessibility_settings.get("high_contrast", false))
 	var backdrop: Node = get_node_or_null("IndustrialBackdrop")
@@ -2000,7 +2006,20 @@ func register_gameplay_panels() -> void:
 # LOOP PRINCIPAL
 # =========================================================
 
+func observe_run_segment(delta: float) -> void:
+	if "--measure-run" in OS.get_cmdline_user_args():
+		run_observation.observe({
+			"finished": run_finished,
+			"planning": wave_transition_in_progress or wave_preparation_in_progress or event_decision_in_progress,
+			"idle": FACTORY_FLOW_PRESENTER.status_key(get_factory_flow_snapshot()) == "FACTORY_FLOW_PRODUCTION_IDLE",
+			"orders": observed_production_orders, "upgrades": total_upgrades_selected,
+			"directive": processing_directive, "automation": army_doctrine_automation_enabled,
+			"losses": total_skeletons_lost + total_zombies_lost + total_ghosts_lost + total_liches_lost,
+		}, delta)
+
+
 func _process(delta: float) -> void:
+	observe_run_segment(delta)
 
 	update_debug_ui()
 
@@ -8303,6 +8322,13 @@ func finish_run(
 
 
 func show_run_end_screen() -> void:
+	observe_run_segment(0.0)
+	if "--measure-run" in OS.get_cmdline_user_args():
+		var report_file := FileAccess.open("user://playtest_latest.json", FileAccess.WRITE)
+		if report_file != null:
+			report_file.store_string(JSON.stringify(run_observation.report(), "\t"))
+		else:
+			push_warning("Could not write playtest_latest.json")
 
 	if run_end_panel == null:
 		return

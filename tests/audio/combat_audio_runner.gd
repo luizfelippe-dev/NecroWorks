@@ -29,6 +29,12 @@ func run_validation() -> void:
 	assert(not audio.call("play_event", "attack"))
 	assert(audio.call("play_event", "ability"))
 	assert(not audio.call("play_event", "missing"))
+	assert(audio.call("play_event", "boss"))
+	var boss_stream: AudioStream = audio.boss_voice.stream
+	for _index: int in range(30):
+		assert(audio.call("play_event", "production"))
+	assert(audio.boss_voice.stream == boss_stream)
+	assert(audio.boss_voice not in players, "Regular effects must never steal the boss voice")
 	assert(int((audio.get("played_events") as Dictionary).get("attack", 0)) == 1)
 	await create_timer(0.7).timeout
 	for player_value: Variant in players:

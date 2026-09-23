@@ -22,11 +22,16 @@ func capture() -> void:
 	for locale: String in ["pt-BR", "en", "es"]:
 		LocalizationService.set_locale(locale)
 		await save_frame("menu_" + locale)
+		shell.open_options_from_main()
+		await save_frame("options_" + locale)
+		shell.close_options()
 	LocalizationService.set_locale("pt-BR")
 	shell.start_game({})
 	await process_frame
 	var game: Node = shell.current_game
 	game.set_process(false)
+	if "--large-text" in OS.get_cmdline_user_args():
+		game.configure_accessibility({"reading_scale": 1.3})
 	game.bones = 123
 	game.flesh = 42
 	game.blood = 12

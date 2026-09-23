@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 17/09/2026
+**Atualizado:** 23/09/2026
 
 ---
 
@@ -50,17 +50,20 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
   - introdução continua como contexto resumido; guia contextual acompanha cinco ações reais, pode ser dispensado e não reaparece após conclusão;
 - [x] corrigir tutorial: chefes nas ondas 10, 15 e 20, não a cada dez ondas;
 - [ ] medir tempo até primeira decisão interessante e antecipar amostra de inimigo especial/build/automação;
+  - instrumentação local opcional `--measure-run` registra primeiras mudanças e ociosidade; medição com jogadores e alteração do ritmo inicial continuam pendentes;
 - [ ] priorizar capacidade, filas, gargalos, composição e ameaças no HUD; recolher métricas históricas;
   - [x] diagnóstico operacional aponta capacidade cheia, cadáver aguardando, filas saturadas, material pronto ou máquina trabalhando sem alterar a simulação;
   - [ ] consolidar composição e ameaça com histórico de perdas/ociosidade medido em runs reais;
   - painel operacional assume a área principal com capacidade, unidades enfileiradas, seis papéis de tropa, coleta e extração; histórico disponível por botão. Medição temporal de perdas/ociosidade permanece pendente;
 - [ ] permitir escala legível de interface e validar 720p, textos longos e três idiomas;
+  - escala de textos táticos 100/115/130% persistida nas Opções, painéis roláveis e cartas validados em 720p; ampliação de toda a interface ainda não foi implementada;
 - [x] exibir requisitos, efeito e progresso das sinergias, com consulta durante a partida;
   - catálogo rolável ordena sinergias ativas, prontas e mais próximas; cada entrada identifica efeito e componentes concluídos/pendentes nos três idiomas;
   - cartas antecipam a combinação mais próxima que a escolha avança ou ativa; progresso exibido em fração e ordenado proporcionalmente;
 - [x] tornar visível o fluxo cadáver → máquina → recurso → tropa;
   - objetivo contextual acompanha o cadáver clicável, aguarda a conversão, aponta a linha inferior e conclui somente quando a unidade entra no exército;
-- [ ] avaliar consolidar Fusões na fábrica/rituais ou justificar o painel com um resultado exclusivo.
+- [x] avaliar consolidar Fusões na fábrica/rituais ou justificar o painel com um resultado exclusivo.
+  - Fusões permanece como conversão cruzada: Liga do Ossuário transforma Ossos+Carne em Pontos de Fábrica; Reunião Vinculada troca Sangue+Almas por um Fantasma. A primeira receita oferece saída exclusiva para investimento industrial;
 
 **Aceite:** jogadores novos completam o ciclo sem instrução verbal, entendem uma sinergia e ajustam a fábrica antes do combate. Medir confusão e tempo de decisão, sem usar apenas screenshots como aprovação.
 
@@ -72,6 +75,7 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [ ] dar mecânica e resposta próprias a Marechal, Auditor e Capataz, com avisos legíveis e perda explicável;
 - [ ] produzir identidade sonora de máquinas, materiais e famílias e ambiente com variação de tensão;
 - [ ] proteger prioridade de alertas de chefe no pool de áudio e validar mixagem em sessão real;
+  - voz SFX exclusiva protege o alerta contra roubo pelos dez canais comuns; regressão cobre saturação por 30 efeitos; mixagem subjetiva permanece pendente;
 - [ ] antecipar a revelação do Diretor/Livro-Negro e entregar desfecho breve coerente após o Capataz;
 - [ ] criar consequências reconhecíveis entre eventos, sem exigir grandes blocos de exposição.
 

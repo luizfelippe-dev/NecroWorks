@@ -1,5 +1,13 @@
 # NecroWorks — Devlog
 
+## 23/09/2026 — Leitura ampliada e base de medição
+
+Validação: 86 runners em 91,27 s; exportação e smoke test aprovados. Build: 125.040.272 bytes, SHA-256 `3016BE1280839C8A3EFAFE65097731828961CBA3DC208396D31DCF93EF10DA7D`.
+
+Adicionei escala de textos táticos às Opções, com persistência e rolagem da operação. Capturei HUD, cartas e Opções em 720p nos três idiomas, incluindo 130%. A observação opcional registra um segmento da sessão em arquivo local ao terminar a run. Ela permite estudar tempo de decisão e ociosidade sem atribuir significado humano automaticamente aos eventos.
+
+Separei a voz do alerta de chefe do pool comum e testei sua preservação durante trinta efeitos consecutivos. A decisão sobre Fusões foi registrada com a conversão exclusiva da Liga do Ossuário. Os marcos permanecem abertos para os itens listados no roadmap.
+
 ## 17/09/2026 — Operação em primeiro plano
 
 Validação final: 86 runners aprovados em 110,46 s; exportação e smoke test Windows aprovados. Build com 125.035.880 bytes e SHA-256 `550FBCE17665586410935A5B6E762784091DAFAE2F9F440D3A54E5CC23CC1C45`.
