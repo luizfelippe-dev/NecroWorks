@@ -14,8 +14,17 @@ New-Item -ItemType Directory -Force -Path $logRoot | Out-Null
 # Resolve it, wait for each process and use Godot's own log file instead of stdout.
 $godotCommand = Get-Command $GodotPath -ErrorAction Stop
 $godotFile = Get-Item -LiteralPath $godotCommand.Source
-if ($godotFile.LinkType) { $godotFile = $godotFile.ResolveLinkTarget($true) }
+if ($godotFile.LinkType -eq 'SymbolicLink') {
+    $resolvedGodot = $godotFile.ResolveLinkTarget($true)
+    if ($null -ne $resolvedGodot) { $godotFile = $resolvedGodot }
+}
 $GodotPath = $godotFile.FullName
+if ($godotFile.Extension -ne '.exe') {
+    # setup-godot uses an extensionless hard link on Windows. Windows process
+    # creation needs the executable suffix; a private copy preserves the tool.
+    $GodotPath = Join-Path $validationRoot 'godot-runner.exe'
+    Copy-Item -LiteralPath $godotFile.FullName -Destination $GodotPath -Force
+}
 
 function Invoke-GodotLogged {
     param([string[]]$EngineArguments, [string]$LogPath)
