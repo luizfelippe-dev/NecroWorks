@@ -1,5 +1,9 @@
 # NecroWorks — Game Design Document
 
+## Hipótese de experiência — 01/10/2026
+
+A produção deve ser visível e criar decisões sob pressão. O primeiro corte torna a conversão de materiais legível por entrada, prensagem e saída, sem alterar ciclos/recompensas. A revisão do roadmap propõe três setores e contratos opcionais para testar variedade; ainda não estão implementados. Repetição deve vir de composições e condições diferentes, não de alongar a mesma onda ou aumentar a quantidade de desbloqueios.
+
 ## Narrativa jogável — 01/10/2026
 
 Os incidentes existentes entregam a origem do Diretor antes da onda 20. O relato após o Marechal muda conforme a escolha sobre o sabotador; o núcleo do Auditor reconhece a extração da alma do Arcanista. Não há bônus ocultos novos: são consequências narrativas das regras existentes. A vitória fecha o arco de autonomia com um epílogo curto e uma variante do destino do núcleo, no topo da coluna de build. A derrota não recebe esse desfecho. Ambas as colunas finais são roláveis.

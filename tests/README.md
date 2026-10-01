@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+`material_processor_visual_runner.gd` cobre fases ligadas ao timer real, pausa de planejamento, modo reduzido e ausência de concessão de recursos pela apresentação. O teste de cadáveres verifica poses `death.png`, cache e largura dentro do botão. `capture_presentation.gd -- --factory-process` captura três fases com os seis arquétipos de restos. O gate Windows também foi exercitado por hardlink sem extensão como no CI.
+
 Em 01/10, o runner narrativo verifica falas condicionais, fallback sem histórico, variantes do epílogo nos três idiomas, ausência na derrota e alcance do fim das colunas roláveis. A captura `--narrative` gera exemplos renderizados do incidente e do desfecho. Persistência e recompensas seguem cobertas pelos runners existentes.
 
 O corte de chefes de 23/09 amplia `boss_progression_runner.gd`: proximidade, distância, limite espacial do agrupamento, lista vazia, antecedência do aviso e reinicialização na próxima onda. `combat_feedback_runner.gd` verifica que 70 efeitos comuns não expulsam o banner. Esses testes não substituem avaliação humana de contrajogo e equilíbrio.

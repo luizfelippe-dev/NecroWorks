@@ -1829,6 +1829,10 @@ func _ready() -> void:
 	create_contextual_tutorial_guide()
 	register_gameplay_panels()
 	var dashboard := preload("res://scripts/ui/gameplay_dashboard.gd").new()
+	var processor_visual := preload("res://scripts/visual/material_processor_visual.gd").new()
+	processor_visual.name = "MaterialProcessorVisual"
+	add_child(processor_visual)
+	processor_visual.bind(self)
 	dashboard.name = "GameplayDashboard"
 	add_child(dashboard)
 	dashboard.bind(self)
@@ -5966,6 +5970,8 @@ func process_corpse(
 		corpse.global_position
 		+ corpse.size * 0.5
 	)
+	if corpse.get_meta("processing_route", "") == "material":
+		feedback_origin = preload("res://scripts/visual/material_processor_visual.gd").OUTPUT
 	var directive_yield: Vector2i = get_processing_yield(directive)
 	var bones_gained: int = directive_yield.x
 

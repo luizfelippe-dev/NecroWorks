@@ -10,6 +10,8 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
+Novo corte de 01/10: CI corrigido e execução remota 36925391852 aprovada. O gate resolve hardlinks sem extensão e usa logs nativos após importação. Cadáveres agora usam `death.png` com AtlasTexture cacheada. `MaterialProcessorVisual` lê a fila real e anima entrada/prensa/saída com arte própria; não altera economia. Falta transferência física (o corpo ainda fica marcado em fila no campo), arte/animação de outras máquinas, família de animação aprovada e cenários distintos. A revisão de experiência no topo do roadmap passa a orientar os próximos cortes.
+
 Em 01/10, a narrativa da v0.6.5 entrou nos cinco eventos existentes: revelação antecipada, falas condicionadas às escolhas e epílogo de vitória com variante do núcleo. Catálogo deriva as falas do histórico já salvo; nenhum schema novo. As duas colunas do fim de run têm rolagem. Próximos focos: animação autoral, identidade sonora e avaliação humana de ritmo/chefes. Não declarar v0.6.4 ou v0.6.5 completas.
 
 Novo corte de 23/09: especiais deixaram de escolher alvos aleatórios. Marechal pressiona proximidade, Auditor distância e Capataz agrupamento de raio 180. Avisos têm antecedência mínima de um segundo e proteção contra saturação de feedback. Não há esquiva manual: revisar composição, reposição e perdas em uma run humana antes de aprovar contrajogo/balanceamento. Os alvos são determinados no impacto, não travados no aviso. A v0.6.5 continua aberta.

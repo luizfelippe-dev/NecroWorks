@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 01/10/2026 — Da fila à prensa
+
+Investiguei os logs vazios do GitHub e corrigi a execução do Godot gráfico e o hardlink sem extensão usado pelo instalador. A execução remota 36925391852 passou. No jogo, conectei os cadáveres às artes de morte existentes e acrescentei uma prensa ilustrada, com fases regidas pelo timer real. Registrei a origem da nova imagem. O foco seguinte deixa de ser quantidade de sistemas: animação convincente, cenários distintos e decisões que sustentem vontade de jogar outra run.
+
 ## 01/10/2026 — A primeira ordem
 
 Trouxe a identidade coletiva do Diretor para os incidentes da partida e fechei o confronto com o Capataz com um epílogo breve. Os relatos reconhecem o sabotador e o Arcanista, e o destino do núcleo muda a última passagem. Mantive recompensas e saves compatíveis. As capturas também expuseram o excesso de altura das estatísticas finais; agora as duas colunas têm rolagem independente. Aprovação de animação, som e experiência com jogadores continua no roadmap.

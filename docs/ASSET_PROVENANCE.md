@@ -6,6 +6,17 @@ Este registro acompanha os assets visuais criados especificamente para o projeto
 
 ## Referências de direção
 
+### Prensa de materiais — 01/10/2026
+
+- Arquivo: `assets/sprites/factory/material_press_v1.png`.
+- Gerado pela ferramenta integrada de imagens da OpenAI, fundo transparente, sem imagens externas fornecidas nesta geração. Fonte copiada sem alterações de pixels; o jogo dimensiona o sprite.
+- Carcaça estática; esteira, pistão, carga e saída são animações de código sincronizadas com a simulação. Não se trata de uma sequência desenhada quadro a quadro.
+- Revisão comercial de proveniência e declaração de conteúdo gerado permanece parte do gate de publicação.
+
+Prompt utilizado:
+
+> Use case: stylized-concept. Asset type: single transparent sprite of an industrial necromantic material-processing press housing for a 2D side-view game NecroWorks. Create a richly detailed game-ready machine chassis, horizontal 3:1 silhouette, worn black iron, dull brass rivets, ivory bone fittings, tiny green status lamps. Orthographic straight side view, no perspective floor, no background, actual transparent alpha. Composition: a horizontal low conveyor bed extends from left edge to right edge in lower quarter; two vertical massive metal support pillars at 36% and 70% of width support an upper hydraulic cylinder housing. In the center between pillars is a completely EMPTY transparent working chamber from 30% to 70% height where the game will animate a descending ram and a corpse payload. Do not paint any ram or piston into this open chamber; no character, no body, no blood, no products, no text or symbols. A few pipes and gears on the sides, strong legible silhouette, hand-painted crisp dark fantasy pixel-art-inspired details matching a gothic industrial factory, readable at 300x120 game units. Chassis itself remains stationary: moving belt slats and ram will be drawn by the game. Keep everything fully inside canvas with minimal transparent margin. This is one finished machine asset, not a sprite sheet or concept panel.
+
 - `assets/reference/necrodesign.png` — referência visual inicial;
 - `assets/reference/necrodesignv2.png` — direção principal de horror industrial, metal escuro e energia necromântica verde.
 

@@ -46,6 +46,18 @@ func capture() -> void:
 		await create_timer(0.2).timeout
 		await save_frame("hud_" + locale)
 	game.active_synergies.clear()
+	if "--factory-process" in OS.get_cmdline_user_args():
+		var index: int = 0
+		for archetype: String in ["human_warrior", "mage", "elf", "grave_marshal", "arcane_auditor", "foreman"]:
+			game.spawn_corpse(Vector2(550 + index * 150, 590), archetype, false, index >= 3)
+			index += 1
+		game.enqueue_corpse_for_processing(game.corpses[0])
+		var processor: Node = game.get_node("MaterialProcessorVisual")
+		processor.set_process(false)
+		for fraction: float in [0.1, 0.5, 0.9]:
+			game.corpse_processor_timer = game.corpse_processor_seconds_per_corpse * (1.0 - fraction)
+			processor.sync_state()
+			await save_frame("processor_phase_" + str(int(fraction * 100)))
 	if "--narrative" in OS.get_cmdline_user_args():
 		for locale: String in ["pt-BR", "en", "es"]:
 			LocalizationService.set_locale(locale)

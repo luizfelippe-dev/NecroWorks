@@ -1,5 +1,9 @@
 # Direção de Arte
 
+## Prioridade de sensação — 01/10/2026
+
+Cadáveres precisam parecer restos no chão, não miniaturas em pé. A pose de morte existente agora alimenta o coletável sem dessaturação pesada. A prensa de materiais combina carcaça ilustrada com partes móveis e fases ligadas à fila real. É a primeira máquina desse novo passe; transferência física e outras rotas continuam pendentes. Movimento de câmera, partículas ou tintas não substituem animação de personagem aprovada nem ambientes realmente diferentes.
+
 **Atualizado em:** 11/09/2026 — v0.6.2
 
 NecroWorks combina horror industrial, fantasia sombria e leitura de autobattler. A arte precisa vender a fantasia de uma fábrica que transforma derrota em produção: ferro oxidado, latão gasto, osso, couro, vidro químico e energia necromântica verde.

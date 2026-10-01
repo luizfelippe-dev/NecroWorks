@@ -30,7 +30,10 @@ func configure_visual(
 	unit_sprite.rotation = float(profile.get("rotation", -0.12))
 	var texture_height: float = maxf(float(unit_sprite.texture.get_height()), 1.0)
 	var target_height: float = float(profile.get("target_height", 58.0))
-	unit_sprite.scale = Vector2.ONE * (target_height / texture_height)
+	unit_sprite.scale = Vector2.ONE * minf(
+		target_height / texture_height,
+		110.0 / maxf(float(unit_sprite.texture.get_width()), 1.0)
+	)
 	set_meta("visual_family", str(profile.get("family", "armored")))
 
 

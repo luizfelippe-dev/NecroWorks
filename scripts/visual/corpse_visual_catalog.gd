@@ -2,22 +2,36 @@ extends RefCounted
 
 
 const UNIT_SPRITES: Script = preload("res://scripts/visual/unit_sprite_catalog.gd")
+static var death_regions: Dictionary = {}
 
 
 static func get_profile(
 	source_archetype: String, source_elite: bool, source_boss: bool
 ) -> Dictionary:
 	var family: String = get_family(source_archetype, source_boss)
-	var tint: Color = _get_family_tint(family)
+	var tint: Color = Color(0.92, 0.90, 0.87, 1.0)
 	if source_elite:
 		tint = tint.lerp(Color(0.78, 0.48, 0.22, 1.0), 0.25)
 	return {
 		"family": family,
-		"texture": UNIT_SPRITES.get_texture(source_archetype),
+		"texture": get_death_texture(source_archetype),
 		"tint": tint,
 		"target_height": 78.0 if source_boss else 58.0,
-		"rotation": -0.22 if source_boss else -0.12,
+		"rotation": 0.0,
 	}
+
+
+static func get_death_texture(archetype: String) -> Texture2D:
+	if death_regions.has(archetype):
+		return death_regions[archetype] as Texture2D
+	var texture: Texture2D = UNIT_SPRITES.get_animation_textures(archetype).get("death")
+	if texture == null:
+		texture = UNIT_SPRITES.get_texture(archetype)
+	var region := AtlasTexture.new()
+	region.atlas = texture
+	region.region = texture.get_image().get_used_rect()
+	death_regions[archetype] = region
+	return region
 
 
 static func get_family(source_archetype: String, source_boss: bool = false) -> String:

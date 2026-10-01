@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Processamento visual — 01/10/2026
+
+`CorpseVisualCatalog` cacheia AtlasTextures das poses de morte, removendo apenas margens transparentes na região de leitura. `MaterialProcessorVisual` é uma apresentação somente leitura: consulta fila, timer, pausa e acessibilidade; os estágios são entrada (0–30%), prensa (30–75%) e saída (75–100%). Em movimento reduzido, o transporte e partículas cessam; texto/progresso continuam refletindo o processamento. A economia permanece em `update_corpse_processor`/`process_corpse`. A saída visual é o ponto de origem do feedback de recursos da rota material.
+
 ## Narrativa contextual — 01/10/2026
 
 `NarrativeEventCatalog.get_body_key` seleciona a fala por evento e histórico de escolhas sem alterar recompensas. `build_epilogue` é uma composição pura localizada; somente vitória a envia ao `RunSummaryFormatter`. Saves antigos usam a fala-base quando não há escolha anterior. As colunas da tela final usam `ScrollContainer` para manter os botões fora do conteúdo extenso.

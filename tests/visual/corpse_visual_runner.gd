@@ -18,6 +18,11 @@ func _initialize() -> void:
 		== "arcane_auditor_remains"
 	)
 	assert(CATALOG.get_family("foreman", true) == "foreman_remains")
+	for archetype: String in ["human_warrior", "mage", "elf", "grave_marshal", "arcane_auditor", "foreman"]:
+		var texture: AtlasTexture = CATALOG.get_death_texture(archetype) as AtlasTexture
+		assert(texture != null and texture.region.has_area())
+		assert(texture.atlas.resource_path.ends_with("/death.png"))
+		assert(texture == CATALOG.get_death_texture(archetype))
 
 	var corpse: Button = CORPSE_SCENE.instantiate() as Button
 	root.add_child(corpse)
@@ -26,6 +31,7 @@ func _initialize() -> void:
 	var sprite: Sprite2D = corpse.get_node_or_null("CorpseSprite") as Sprite2D
 	var label: Label = corpse.get_node_or_null("IdentityLabel") as Label
 	assert(sprite != null and sprite.texture != null)
+	assert(sprite.texture.get_width() * sprite.scale.x <= 110.01)
 	assert(label != null and label.text == "ARCANE REMAINS")
 	assert(str(corpse.get_meta("visual_family")) == "arcane_auditor_remains")
 	corpse.free()

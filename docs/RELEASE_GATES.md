@@ -1,5 +1,7 @@
 # NecroWorks — Gates de Release
 
+Gate mais recente, 01/10 — prensa: 87/87 runners em 93,85 s, exercitando hardlink sem extensão; exportação e smoke Windows aprovados. Build: 126.436.704 bytes, SHA-256 `CEAB6E1F991AFFCB98A28F464DB5559DC20730FFD72EBDE0C491BF08E9D0BF7A`. Três fases da prensa capturadas a 1028×578. A correção de CI já passou remotamente em 36925391852; o resultado abaixo antecede este corte. Testes técnicos não aprovam diversão nem encerram animação autoral.
+
 Validação atual de 01/10: 86/86 runners em 96,13 s; exportação e smoke test Windows aprovados. Executável com 125.048.192 bytes e SHA-256 `62BB73449F4D698ECBF09F77B12416594F192EA2B5FBF960F0362081D6909422`. Incidente contextual e epílogo capturados em 720p nos três idiomas; regressão narrativa reexecutada após ajuste de atualização visual na troca de idioma. Aceite completo de v0.6.4/v0.6.5 continua aberto. As notas datadas abaixo são históricas.
 
 **Atualizado em:** 15/09/2026

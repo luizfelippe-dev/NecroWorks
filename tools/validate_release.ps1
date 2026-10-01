@@ -22,7 +22,9 @@ $GodotPath = $godotFile.FullName
 if ($godotFile.Extension -ne '.exe') {
     # setup-godot uses an extensionless hard link on Windows. Windows process
     # creation needs the executable suffix; a private copy preserves the tool.
-    $GodotPath = Join-Path $validationRoot 'godot-runner.exe'
+    $toolRoot = Join-Path $projectRoot 'artifacts\tool-runtime'
+    New-Item -ItemType Directory -Force -Path $toolRoot | Out-Null
+    $GodotPath = Join-Path $toolRoot 'godot-runner.exe'
     Copy-Item -LiteralPath $godotFile.FullName -Destination $GodotPath -Force
 }
 

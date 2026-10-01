@@ -2,6 +2,16 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### CI reproduzível e processamento em cena — 01/10
+
+Validação local: 87/87 runners em 93,85 s com hardlink sem extensão; exportação e smoke Windows aprovados. Capturas das fases a 1028×578. CI da correção confirmado em 36925391852.
+
+- Corrigido o Release Gate: importação prévia, espera explícita, log nativo e suporte ao hardlink sem extensão do setup-godot. Execução remota 36925391852 aprovada.
+- Cadáveres coletáveis usam a arte de queda de cada arquétipo, com região transparente aparada em memória e proporção preservada; não mais a pose em pé cinzenta.
+- Prensa ilustrada com esteira, pistão e saída ligados ao progresso real da fila de materiais; recursos continuam creditados pela simulação. Efeito de ganho dessa rota parte da saída da máquina.
+- Pausa de planejamento e movimento reduzido respeitados; roteiro de captura das três fases e teste dedicado sem mutação econômica.
+- Roadmap prioriza animação aprovada, três setores distintos, decisões de produção e vontade de repetir, sem fechar artificialmente v0.6.5.
+
 ### Identidade do Diretor e desfecho — 01/10
 
 Validação: 86/86 runners em 96,13 s; exportação e smoke test Windows aprovados. Capturas 720p nos três idiomas e regressão narrativa adicional após o ajuste de troca de idioma.
