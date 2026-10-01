@@ -8,6 +8,8 @@ Atualização de 17/09: 86/86 runners em 110,46 s; exportação e smoke test apr
 
 ## Gate automatizado
 
+Correção de CI em 01/10: a execução 36923892079 produziu 86 logs vazios usando o atalho para o Godot gráfico. O gate agora resolve o executável, aguarda cada processo, registra pelo `--log-file`, limita cada etapa a dez minutos e importa o projeto antes da regressão. A correção foi exercitada localmente com o executável gráfico, não apenas com o console. Log ausente/vazio interrompe o gate com diagnóstico da ferramenta.
+
 ```powershell
 .\tools\validate_release.ps1 -GodotPath "C:\caminho\Godot_v4.7.1-stable_win64_console.exe"
 ```
