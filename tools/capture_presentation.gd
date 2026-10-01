@@ -46,6 +46,20 @@ func capture() -> void:
 		await create_timer(0.2).timeout
 		await save_frame("hud_" + locale)
 	game.active_synergies.clear()
+	if "--narrative" in OS.get_cmdline_user_args():
+		for locale: String in ["pt-BR", "en", "es"]:
+			LocalizationService.set_locale(locale)
+			game.narrative_event_choices["saboteur_offer"] = "buy_silence"
+			game.show_narrative_event("marshal_remains")
+			await save_frame("narrative_consequence_" + locale)
+			game.narrative_event_panel.hide()
+			game.run_won = true
+			game.narrative_event_choices["auditor_core"] = "bind_resonance"
+			game.show_run_end_screen()
+			await save_frame("epilogue_" + locale)
+			game.run_end_panel.hide()
+		game.event_decision_in_progress = false
+		game.run_won = false
 	if "--boss-warnings" in OS.get_cmdline_user_args():
 		for locale: String in ["pt-BR", "en", "es"]:
 			LocalizationService.set_locale(locale)

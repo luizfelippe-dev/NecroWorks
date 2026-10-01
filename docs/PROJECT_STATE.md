@@ -1,5 +1,7 @@
 # NecroWorks — Estado do Projeto
 
+**01/10/2026 — narrativa da v0.6.5:** revelação gradual nos incidentes existentes, reconhecimento de decisões anteriores e epílogo após o Capataz. A conclusão não acrescenta escolhas finais ou recompensas; falas derivam do histórico persistido. Resumo final rolável nas duas colunas. Animação, som e avaliação humana continuam pendentes.
+
 **Atualizado em:** 15/09/2026
 
 **Versão funcional:** v0.6.2 — apresentação industrial e continuidade de movimento

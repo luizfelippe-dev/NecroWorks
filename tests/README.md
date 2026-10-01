@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+Em 01/10, o runner narrativo verifica falas condicionais, fallback sem histórico, variantes do epílogo nos três idiomas, ausência na derrota e alcance do fim das colunas roláveis. A captura `--narrative` gera exemplos renderizados do incidente e do desfecho. Persistência e recompensas seguem cobertas pelos runners existentes.
+
 O corte de chefes de 23/09 amplia `boss_progression_runner.gd`: proximidade, distância, limite espacial do agrupamento, lista vazia, antecedência do aviso e reinicialização na próxima onda. `combat_feedback_runner.gd` verifica que 70 efeitos comuns não expulsam o banner. Esses testes não substituem avaliação humana de contrajogo e equilíbrio.
 
 Em 23/09, a regressão de persistência cobre settings v5 e escala inválida/legada. O layout percorre os três níveis de texto nos três idiomas e confere que a rolagem alcança o diagnóstico. O teste de áudio protege a voz de chefe durante saturação do pool; `decision_clarity_runner.gd` verifica a observação temporal sem contabilizar planejamento como ociosidade.

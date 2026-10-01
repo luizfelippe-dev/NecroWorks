@@ -1,5 +1,9 @@
 # NecroWorks — Game Design Document
 
+## Narrativa jogável — 01/10/2026
+
+Os incidentes existentes entregam a origem do Diretor antes da onda 20. O relato após o Marechal muda conforme a escolha sobre o sabotador; o núcleo do Auditor reconhece a extração da alma do Arcanista. Não há bônus ocultos novos: são consequências narrativas das regras existentes. A vitória fecha o arco de autonomia com um epílogo curto e uma variante do destino do núcleo, no topo da coluna de build. A derrota não recebe esse desfecho. Ambas as colunas finais são roláveis.
+
 ## Chefes — revisão de 23/09/2026
 
 O especial do Marechal seleciona as três tropas mais próximas (20 de dano por alvo); o Auditor seleciona as quatro mais distantes (28); o Capataz busca o agrupamento mais denso em raio de 180 unidades e atinge até seis integrantes (35). O último não preenche a cota com tropas fora do raio. Intervalos-base: 5 / 4,5 / 4 segundos. O aviso reserva pelo menos um segundo de simulação antes do impacto e não causa dano.

@@ -1,6 +1,6 @@
 # NecroWorks — Gates de Release
 
-Validação atual de 23/09: 86/86 runners em 91,27 s, exportação e smoke test aprovados. Executável com 125.040.272 bytes e SHA-256 `3016BE1280839C8A3EFAFE65097731828961CBA3DC208396D31DCF93EF10DA7D`. Opções, HUD e cartas capturados em 720p nos três idiomas com textos táticos a 130%. As notas datadas abaixo preservam execuções anteriores; o aceite completo de v0.6.4/v0.6.5 permanece aberto.
+Validação atual de 01/10: 86/86 runners em 96,13 s; exportação e smoke test Windows aprovados. Executável com 125.048.192 bytes e SHA-256 `62BB73449F4D698ECBF09F77B12416594F192EA2B5FBF960F0362081D6909422`. Incidente contextual e epílogo capturados em 720p nos três idiomas; regressão narrativa reexecutada após ajuste de atualização visual na troca de idioma. Aceite completo de v0.6.4/v0.6.5 continua aberto. As notas datadas abaixo são históricas.
 
 **Atualizado em:** 15/09/2026
 

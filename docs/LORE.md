@@ -86,7 +86,11 @@ As fusões mostram a lógica moral da planta: nenhuma fronteira entre matéria, 
 6. O Auditor tenta confiscar o arquivo de Almas e deixa um núcleo que reage ao Diretor.
 7. Registros incompletos revelam que o Diretor não é uma única pessoa.
 8. O Capataz desperta para eliminar a consciência considerada ilegal pela própria NecroWorks.
-9. A vitória encerra o bloqueio e abre o Livro-Negro, mas deixa para o jogador a pergunta central: libertar as Almas, destruir a planta ou reconstruir a empresa.
+9. A vitória encerra o bloqueio. O Diretor recusa a próxima meta compulsória e abre o registro dos operários: os antigos recursos recuperam seus nomes. O destino de longo prazo da empresa permanece aberto, mas o arco deste turno termina com a conquista de autonomia.
+
+### Em jogo — 01/10/2026
+
+A assinatura anterior ao despertar aparece no incidente do sabotador; o Arcanista revela a identidade coletiva; o núcleo do Auditor anuncia a ordem de eliminação pelo Capataz. O relato do Marechal reconhece exposição ou compra do silêncio, e o Auditor reconhece a memória do Arcanista extraído. A vitória contém um epílogo breve; vincular o núcleo preserva vozes nas máquinas, enquanto desmontar seu relé permite reconstruir os registros com instrumentos. São variações narrativas das escolhas existentes, não novos finais selecionáveis nem recompensas adicionais.
 
 ## Tom e regras de escrita
 

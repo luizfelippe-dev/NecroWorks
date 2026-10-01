@@ -1,6 +1,6 @@
 # NecroWorks — Continuidade do Desenvolvimento
 
-**Atualizado em:** 23/09/2026
+**Atualizado em:** 01/10/2026
 
 ## Estado atual
 
@@ -9,6 +9,8 @@ A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu il
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+Em 01/10, a narrativa da v0.6.5 entrou nos cinco eventos existentes: revelação antecipada, falas condicionadas às escolhas e epílogo de vitória com variante do núcleo. Catálogo deriva as falas do histórico já salvo; nenhum schema novo. As duas colunas do fim de run têm rolagem. Próximos focos: animação autoral, identidade sonora e avaliação humana de ritmo/chefes. Não declarar v0.6.4 ou v0.6.5 completas.
 
 Novo corte de 23/09: especiais deixaram de escolher alvos aleatórios. Marechal pressiona proximidade, Auditor distância e Capataz agrupamento de raio 180. Avisos têm antecedência mínima de um segundo e proteção contra saturação de feedback. Não há esquiva manual: revisar composição, reposição e perdas em uma run humana antes de aprovar contrajogo/balanceamento. Os alvos são determinados no impacto, não travados no aviso. A v0.6.5 continua aberta.
 

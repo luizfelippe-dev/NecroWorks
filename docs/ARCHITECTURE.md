@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Narrativa contextual — 01/10/2026
+
+`NarrativeEventCatalog.get_body_key` seleciona a fala por evento e histórico de escolhas sem alterar recompensas. `build_epilogue` é uma composição pura localizada; somente vitória a envia ao `RunSummaryFormatter`. Saves antigos usam a fala-base quando não há escolha anterior. As colunas da tela final usam `ScrollContainer` para manter os botões fora do conteúdo extenso.
+
 **Atualizado:** 15/09/2026 — início da v0.6.4
 
 ## Fase de preparação

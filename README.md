@@ -7,6 +7,8 @@
 
 ## High concept
 
+O corte narrativo de 01/10/2026 acrescenta revelações durante os incidentes, consequências de escolhas no texto e um epílogo após o Capataz, nos três idiomas. v0.6.4/v0.6.5 ainda têm critérios de apresentação e playtest em aberto no roadmap.
+
 > **Kill enemies. Recycle the corpses. Turn them into your army.**
 
 Loop central:

@@ -19,6 +19,16 @@ func run_validation() -> void:
 	assert(EVENT_CATALOG.get_event_id_for_wave(11) == EVENT_CATALOG.MARSHAL_REMAINS)
 	assert(EVENT_CATALOG.get_event_id_for_wave(16) == EVENT_CATALOG.AUDITOR_CORE)
 	assert(EVENT_CATALOG.EVENT_DATA.size() == 5)
+	assert(EVENT_CATALOG.get_body_key(EVENT_CATALOG.MARSHAL_REMAINS, {}) == "EVENT_MARSHAL_BODY")
+	assert(EVENT_CATALOG.get_body_key(EVENT_CATALOG.MARSHAL_REMAINS, {
+		EVENT_CATALOG.SABOTEUR_OFFER: EVENT_CATALOG.BUY_SILENCE
+	}) == "EVENT_MARSHAL_BREACH")
+	assert(EVENT_CATALOG.get_body_key(EVENT_CATALOG.MARSHAL_REMAINS, {
+		EVENT_CATALOG.SABOTEUR_OFFER: EVENT_CATALOG.EXPOSE_SPIES
+	}) == "EVENT_MARSHAL_EXPOSED")
+	assert(EVENT_CATALOG.get_body_key(EVENT_CATALOG.AUDITOR_CORE, {
+		EVENT_CATALOG.BOUND_ARCANIST: EVENT_CATALOG.ARCANIST_SOULS
+	}) == "EVENT_AUDITOR_VOICES")
 	var discovery_ids: Dictionary = {}
 	for choice_id_value: Variant in EVENT_CATALOG.CHOICE_DATA:
 		var choice_data: Dictionary = EVENT_CATALOG.get_choice(str(choice_id_value))
@@ -119,6 +129,31 @@ func run_validation() -> void:
 
 	for locale: String in ["en", "pt_BR", "es"]:
 		TranslationServer.set_locale(locale)
+		var choices: Dictionary = {EVENT_CATALOG.AUDITOR_CORE: EVENT_CATALOG.BIND_RESONANCE}
+		var epilogue: String = EVENT_CATALOG.build_epilogue(Callable(game, "tr"), choices)
+		assert(epilogue.contains(TranslationServer.translate("EPILOGUE_RESONANCE")))
+		assert(not epilogue.contains(TranslationServer.translate("EPILOGUE_RELAY")))
+		choices[EVENT_CATALOG.AUDITOR_CORE] = EVENT_CATALOG.SALVAGE_RELAY
+		assert(EVENT_CATALOG.build_epilogue(Callable(game, "tr"), choices).contains(
+			TranslationServer.translate("EPILOGUE_RELAY")
+		))
+		game.run_won = true
+		game.show_run_end_screen()
+		assert(game.run_end_build_label.text.begins_with(TranslationServer.translate("EPILOGUE_TITLE")))
+		assert(game.run_end_build_label.get_parent() is ScrollContainer)
+		assert(game.run_end_summary_label.get_parent() is ScrollContainer)
+		await process_frame
+		await process_frame
+		for column: Label in [game.run_end_build_label, game.run_end_summary_label]:
+			var scroll: ScrollContainer = column.get_parent() as ScrollContainer
+			assert(scroll.position.y + scroll.size.y < game.restart_run_button.position.y)
+			scroll.scroll_vertical = 10000
+			await process_frame
+			assert(column.get_global_rect().end.y <= scroll.get_global_rect().end.y + 2.0)
+			scroll.scroll_vertical = 0
+		game.run_won = false
+		game.show_run_end_screen()
+		assert(not game.run_end_build_label.text.contains(TranslationServer.translate("EPILOGUE_TITLE")))
 		for key: String in [
 			"EVENT_SABOTEUR_TITLE", "EVENT_MARSHAL_TITLE",
 			"EVENT_AUDITOR_TITLE", "EVENT_MARSHAL_PLATE",

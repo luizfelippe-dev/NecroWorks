@@ -62,6 +62,9 @@ static func build_build_summary(translate: Callable, state: Dictionary) -> Strin
 		lines.append("")
 		lines.append(_t(translate, "RUN_DEFEAT_DIAGNOSIS"))
 		lines.append(defeat_analysis)
+	var epilogue: String = str(state.get("epilogue", ""))
+	if not epilogue.is_empty():
+		lines.insert(0, _t(translate, "EPILOGUE_TITLE") + "\n\n" + epilogue + "\n")
 	return "\n".join(lines)
 
 

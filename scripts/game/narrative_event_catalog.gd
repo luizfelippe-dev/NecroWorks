@@ -35,12 +35,12 @@ const EVENT_DATA: Dictionary = {
 	},
 	BOUND_ARCANIST: {
 		"title_key": "EVENT_ARCANIST_TITLE",
-		"body_key": "EVENT_ARCANIST_BODY",
+		"body_key": "EVENT_ARCANIST_REVELATION",
 		"choices": [ARCANIST_SOULS, ARCANIST_TOOLS],
 	},
 	SABOTEUR_OFFER: {
 		"title_key": "EVENT_SABOTEUR_TITLE",
-		"body_key": "EVENT_SABOTEUR_BODY",
+		"body_key": "EVENT_SABOTEUR_LEDGER",
 		"choices": [EXPOSE_SPIES, BUY_SILENCE],
 	},
 	MARSHAL_REMAINS: {
@@ -50,7 +50,7 @@ const EVENT_DATA: Dictionary = {
 	},
 	AUDITOR_CORE: {
 		"title_key": "EVENT_AUDITOR_TITLE",
-		"body_key": "EVENT_AUDITOR_BODY",
+		"body_key": "EVENT_AUDITOR_REVELATION",
 		"choices": [BIND_RESONANCE, SALVAGE_RELAY],
 	},
 }
@@ -127,3 +127,23 @@ static func get_choice(choice_id: String) -> Dictionary:
 static func is_choice_for_event(event_id: String, choice_id: String) -> bool:
 	var event: Dictionary = get_event(event_id)
 	return choice_id in (event.get("choices", []) as Array)
+
+
+static func get_body_key(event_id: String, choices: Dictionary) -> String:
+	if event_id == MARSHAL_REMAINS:
+		if choices.get(SABOTEUR_OFFER, "") == BUY_SILENCE:
+			return "EVENT_MARSHAL_BREACH"
+		if choices.get(SABOTEUR_OFFER, "") == EXPOSE_SPIES:
+			return "EVENT_MARSHAL_EXPOSED"
+	if event_id == AUDITOR_CORE and choices.get(BOUND_ARCANIST, "") == ARCANIST_SOULS:
+		return "EVENT_AUDITOR_VOICES"
+	return str(get_event(event_id).get("body_key", ""))
+
+
+static func build_epilogue(translate: Callable, choices: Dictionary) -> String:
+	var text: String = str(translate.call("EPILOGUE_CONTROL"))
+	if choices.get(AUDITOR_CORE, "") == BIND_RESONANCE:
+		text += "\n\n" + str(translate.call("EPILOGUE_RESONANCE"))
+	elif choices.get(AUDITOR_CORE, "") == SALVAGE_RELAY:
+		text += "\n\n" + str(translate.call("EPILOGUE_RELAY"))
+	return text

@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Identidade do Diretor e desfecho — 01/10
+
+Validação: 86/86 runners em 96,13 s; exportação e smoke test Windows aprovados. Capturas 720p nos três idiomas e regressão narrativa adicional após o ajuste de troca de idioma.
+
+- Eventos revelam a origem coletiva do Diretor e o motivo do confronto com o Capataz antes da onda final.
+- Falas do Marechal e do Auditor reconhecem decisões anteriores, reutilizando o histórico salvo e preservando recompensas.
+- Vitória recebe epílogo curto com variação conforme o destino do núcleo; derrota mantém seu diagnóstico sem texto de vitória.
+- Resumo final com duas colunas roláveis; textos em PT-BR, EN e ES.
+
 ### Ameaças dos chefes — 23/09
 
 Gate: 86/86 runners em 94,54 s; exportação Windows e smoke test aprovados. Capturas dos avisos geradas em 720p nos três idiomas, com inspeção de PT-BR, EN e ES. SHA-256 do executável: `9CD976868368217899C9C3359DEE080DB5F071E8A19D408CF964EBF37D7A457A`.

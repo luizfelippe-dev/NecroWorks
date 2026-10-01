@@ -6989,7 +6989,9 @@ func refresh_narrative_event_ui() -> void:
 	if event.is_empty():
 		return
 	narrative_event_title_label.text = tr(str(event.get("title_key", "")))
-	narrative_event_body_label.text = tr(str(event.get("body_key", "")))
+	narrative_event_body_label.text = tr(NARRATIVE_EVENT_CATALOG.get_body_key(
+		current_narrative_event_id, narrative_event_choices
+	))
 	var choice_ids: Array = event.get("choices", []) as Array
 	for index: int in range(narrative_event_buttons.size()):
 		var button: Button = narrative_event_buttons[index]
@@ -8219,6 +8221,26 @@ func create_run_end_ui() -> void:
 		UI_TEXT
 	)
 	run_end_panel.add_child(run_end_build_label)
+	var build_scroll := ScrollContainer.new()
+	build_scroll.name = "RunEndBuildScroll"
+	build_scroll.position = Vector2(1030.0, 205.0)
+	build_scroll.size = Vector2(600.0, 590.0)
+	build_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	run_end_panel.add_child(build_scroll)
+	run_end_build_label.reparent(build_scroll)
+	run_end_build_label.position = Vector2.ZERO
+	run_end_build_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	run_end_build_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var statistics_scroll := ScrollContainer.new()
+	statistics_scroll.name = "RunEndStatisticsScroll"
+	statistics_scroll.position = Vector2(330.0, 205.0)
+	statistics_scroll.size = Vector2(600.0, 590.0)
+	statistics_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	run_end_panel.add_child(statistics_scroll)
+	run_end_summary_label.reparent(statistics_scroll)
+	run_end_summary_label.position = Vector2.ZERO
+	run_end_summary_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	run_end_summary_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 
 	restart_run_button = Button.new()
@@ -8370,6 +8392,9 @@ func show_run_end_screen() -> void:
 		)
 
 
+	# Rebuild shaped lines when switching locale while the summary is open.
+	run_end_summary_label.text = ""
+	run_end_build_label.text = ""
 	run_end_summary_label.text = RUN_SUMMARY_FORMATTER.build_statistics(
 		Callable(self, "tr"),
 		{
@@ -8403,6 +8428,9 @@ func show_run_end_screen() -> void:
 		Callable(self, "tr"),
 		{
 			"army_remaining": get_total_undead_count(),
+			"epilogue": NARRATIVE_EVENT_CATALOG.build_epilogue(
+				Callable(self, "tr"), narrative_event_choices
+			) if run_won else "",
 			"upgrades_selected": total_upgrades_selected,
 			"synergies_unlocked": active_synergies.size(),
 			"balanced_processed": int(corpses_processed_by_directive[PROCESSING_BALANCED]),

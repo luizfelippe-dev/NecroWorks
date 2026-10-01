@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 23/09/2026
+**Atualizado:** 01/10/2026
 
 ---
 
@@ -77,8 +77,10 @@ A auditoria de 14/09 reabre os critérios abaixo. Os marcos antigos registram im
 - [ ] produzir identidade sonora de máquinas, materiais e famílias e ambiente com variação de tensão;
 - [ ] proteger prioridade de alertas de chefe no pool de áudio e validar mixagem em sessão real;
   - voz SFX exclusiva protege o alerta contra roubo pelos dez canais comuns; regressão cobre saturação por 30 efeitos; mixagem subjetiva permanece pendente;
-- [ ] antecipar a revelação do Diretor/Livro-Negro e entregar desfecho breve coerente após o Capataz;
-- [ ] criar consequências reconhecíveis entre eventos, sem exigir grandes blocos de exposição.
+- [x] antecipar a revelação do Diretor/Livro-Negro e entregar desfecho breve coerente após o Capataz;
+  - assinatura anterior ao despertar no sabotador; identidade coletiva no Arcanista; ordem de eliminação no Auditor; epílogo na vitória com variante do núcleo;
+- [x] criar consequências reconhecíveis entre eventos, sem exigir grandes blocos de exposição;
+  - Marechal reconhece exposição/suborno do sabotador; Auditor reconhece a extração do Arcanista. Recompensas e schema preservados. Compreensão e impacto narrativo ainda dependem de playtest.
 
 **Aceite:** combate convincente em movimento, chefes exigem respostas diferentes, áudio informa ações e o arco central tem conclusão dentro do jogo. Revisão de direitos acompanha cada asset.
 

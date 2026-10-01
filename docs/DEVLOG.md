@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 01/10/2026 — A primeira ordem
+
+Trouxe a identidade coletiva do Diretor para os incidentes da partida e fechei o confronto com o Capataz com um epílogo breve. Os relatos reconhecem o sabotador e o Arcanista, e o destino do núcleo muda a última passagem. Mantive recompensas e saves compatíveis. As capturas também expuseram o excesso de altura das estatísticas finais; agora as duas colunas têm rolagem independente. Aprovação de animação, som e experiência com jogadores continua no roadmap.
+
 ## 23/09/2026 — Leitura ampliada e base de medição
 
 Validação: 86 runners em 91,27 s; exportação e smoke test aprovados. Build: 125.040.272 bytes, SHA-256 `3016BE1280839C8A3EFAFE65097731828961CBA3DC208396D31DCF93EF10DA7D`.
