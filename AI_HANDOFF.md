@@ -10,6 +10,8 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
+02/10 — refinaria: `RareRefineryVisual` apresenta Sangue e Almas a partir dos timers reais. Indicadores procedurais só aparecem após desbloqueio, respeitam preparação e movimento reduzido, sem escrever em economia ou saves. Capturas `--refinery` usam perfil descartável com desbloqueios explícitos; gameplay normal conserva a progressão. CI 37010427159 do commit 615aaaf aprovado. Este corte é funcional, não arte final das máquinas; transporte arcano e confirmação de saída ainda pendentes.
+
 02/10 — oficina de tropas integrada por `UndeadWorkshopVisual`: lê filas, receitas e timers; anima montagem e cuba, confirma unidade criada sem alterar economia ou saves. Capturas 1280×720 verificadas e regressão dedicada. CI anterior 37009011996 confirmado como sucesso. Próximos cortes: Sangue/Almas, animação de personagem aprovada e setores distintos. Não declarar a revisão de experiência encerrada.
 
 02/10: confirmado sucesso remoto do commit 6e8d823 (run 36926406429). Transferência visual de materiais integrada: cabeça da fila sai visualmente do campo, percorre a entrada e é prensada sem duplicação. Visibilidade restaurada ao retirar reserva/apresentador. Pausa, modo reduzido, proporção da carga e sucessão da fila cobertos. O ciclo não ganhou tempo extra: upgrades rápidos encurtam também a animação. Próximos cortes continuam sendo outras rotas, animação de personagem aprovada e setores distintos; não confundir trajetória de sprite com animação final de coletor físico.

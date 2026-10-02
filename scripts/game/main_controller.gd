@@ -1837,6 +1837,10 @@ func _ready() -> void:
 	workshop_visual.name = "UndeadWorkshopVisual"
 	add_child(workshop_visual)
 	workshop_visual.bind(self)
+	var refinery_visual := preload("res://scripts/visual/rare_refinery_visual.gd").new()
+	refinery_visual.name = "RareRefineryVisual"
+	add_child(refinery_visual)
+	refinery_visual.bind(self)
 	dashboard.name = "GameplayDashboard"
 	add_child(dashboard)
 	dashboard.bind(self)

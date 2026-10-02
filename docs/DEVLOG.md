@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 02/10/2026 — Sangue e Almas visíveis
+
+Liguei dois indicadores de refinaria às filas reais, sem mudar a economia. Eles aparecem ao desbloquear a máquina e distinguem preparação, trabalho e ociosidade. Corrigi o espaço das legendas após conferir a captura. O acabamento é procedural e provisório; ainda preciso integrar arte final e transporte arcano.
+
 ## 02/10/2026 — A produção ganha uma oficina
 
 Acrescentei montagem óssea e incubação de zumbis à lateral da fábrica. A tropa toma forma conforme a ordem avança; a conclusão sinaliza sua chegada ao campo. Preservei custos e tempos. A carcaça foi gerada para este projeto; partes móveis são procedurais, não frames novos de personagens. Sangue, Almas e avaliação em run humana ficam para os próximos cortes.

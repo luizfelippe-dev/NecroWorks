@@ -46,6 +46,22 @@ func capture() -> void:
 		await create_timer(0.2).timeout
 		await save_frame("hud_" + locale)
 	game.active_synergies.clear()
+	if "--refinery" in OS.get_cmdline_user_args():
+		game.factory_points = 20
+		# Disposable presentation fixture bypasses profile progression, not gameplay.
+		game.hematic_press_unlocked = true
+		game.soul_extractor_unlocked = true
+		game.enqueue_hematic_press()
+		game.spawn_corpse(Vector2(850, 550), "mage")
+		game.enqueue_corpse_for_soul_extraction(game.corpses[0])
+		var refinery: Node = game.get_node("RareRefineryVisual")
+		refinery.set_process(false)
+		for locale: String in ["pt-BR", "en", "es"]:
+			LocalizationService.set_locale(locale)
+			game.hematic_press_timer = game.HEMATIC_PRESS_CYCLE_SECONDS * 0.25
+			game.soul_extractor_timer = game.get_soul_extractor_cycle_seconds() * 0.25
+			refinery.sync_state()
+			await save_frame("refinery_" + locale)
 	if "--workshop" in OS.get_cmdline_user_args():
 		game.enqueue_skeleton_production(1)
 		game.enqueue_zombie_production(1)

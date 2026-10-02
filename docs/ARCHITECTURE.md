@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Refinaria — 02/10/2026
+
+`RareRefineryVisual` observa desbloqueios, contagem, timers e pausa das rotas hemática/arcana. Não possui relógio próprio nem conexão que credite recursos. O desenho vetorial muda por snapshot; movimento reduzido remove a órbita, preservando a medida de progresso. Fim de run deixa apresentação inativa. Labels ignoram mouse. A posição fica acima das abas inferiores.
+
 ## Oficina de tropas — 02/10/2026
 
 `UndeadWorkshopVisual` lê filas, receitas, timers, capacidade, preparação e movimento reduzido. Não escreve na simulação. Usa AtlasTexture cacheada e carcaça transparente; redesenha quando o snapshot muda. `production_unit_completed` ocorre após criação real e aponta o efeito à última unidade do grupo correspondente. Estado reconstruído na retomada, sem schema novo.

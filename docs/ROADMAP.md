@@ -8,6 +8,8 @@
 
 ## Revisão de experiência — 01/10/2026
 
+Avanço adicional de 02/10: Sangue/Almas possuem indicadores procedurais ligados ao progresso real. A expansão visual permanece aberta: acabamento ilustrado, transferência arcana e confirmação da saída ainda faltam. Não considerar esses medidores equivalentes à máquina final.
+
 Avanço de 02/10: montagem óssea (guerreiro/arqueiro) e cuba de zumbis representadas em cena com progresso real, acessibilidade e confirmação da produção. O item de expansão abaixo permanece aberto para Sangue e Almas; avaliação de legibilidade em movimento ainda necessária.
 
 A base funcional ainda não entrega o impacto visual nem a variedade desejados. A meta não é alongar a run artificialmente: cada etapa precisa trazer uma ameaça, decisão ou transformação perceptível. A ordem abaixo detalha os itens já abertos de apresentação e repetição.

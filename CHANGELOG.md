@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Indicadores de refinaria — 02/10
+
+Validação: 89/89 runners, exportação e smoke Windows aprovados. Capturas PT-BR/EN/ES em 1280×720; margem inferior ajustada após inspeção.
+
+- Prensa hemática e extrator representados por vasos procedurais com enchimento/concentração ligados às filas reais.
+- Exibição após desbloqueio, estados de preparação/ociosidade em três idiomas e movimento reduzido.
+- Regressão de ausência de mutações, conclusão real e identidade das rotas; captura integrada `--refinery`.
+- Arte final, transporte arcano e efeitos de saída continuam abertos; custos e tempos inalterados.
+
 ### Oficina de tropas — 02/10
 
 Validação: 88/88 runners aprovados, exportação e smoke Windows aprovados; três estágios capturados em 1280×720.

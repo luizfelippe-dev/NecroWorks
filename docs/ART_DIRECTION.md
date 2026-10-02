@@ -1,5 +1,9 @@
 # Direção de Arte
 
+## Refinaria procedural — 02/10/2026
+
+Vermelho diferencia o enchimento hemático; violeta, a concentração de almas. Dois vasos geométricos com tubos e medidor fornecem a leitura funcional. Não equivalem ao acabamento ilustrado da oficina e não encerram a arte da fábrica. A apresentação arcana ainda não transporta o corpo nem representa a saída até o HUD.
+
 ## Oficina V1 — 02/10/2026
 
 Montador e cuba compartilham ferro escuro, latão e luz verde da prensa. Câmaras abertas recebem a pose da receita revelada pelo timer; braço e bolhas comunicam trabalho. Apresentação procedural sobre arte estática, não animação quadro a quadro. Captura integrada em 1280×720 verificada.
