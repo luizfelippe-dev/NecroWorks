@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+Em 02/10, a regressão da prensa passa a cobrir duas reservas, exclusividade do corpo transportado, origem do trajeto, troca para o próximo corpo, cancelamento da apresentação, saída da árvore e comportamento sem viagem no modo reduzido. A economia e o tamanho da fila não podem mudar ao sincronizar o visual.
+
 `material_processor_visual_runner.gd` cobre fases ligadas ao timer real, pausa de planejamento, modo reduzido e ausência de concessão de recursos pela apresentação. O teste de cadáveres verifica poses `death.png`, cache e largura dentro do botão. `capture_presentation.gd -- --factory-process` captura três fases com os seis arquétipos de restos. O gate Windows também foi exercitado por hardlink sem extensão como no CI.
 
 Em 01/10, o runner narrativo verifica falas condicionais, fallback sem histórico, variantes do epílogo nos três idiomas, ausência na derrota e alcance do fim das colunas roláveis. A captura `--narrative` gera exemplos renderizados do incidente e do desfecho. Persistência e recompensas seguem cobertas pelos runners existentes.

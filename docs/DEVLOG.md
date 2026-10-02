@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 02/10/2026 — O corpo chega à máquina
+
+Liguei o transporte ao ciclo existente: só o primeiro corpo da fila deixa o campo, percorre a entrada e chega à prensa. O restante aguarda. A apresentação recupera a visibilidade ao ser removida e não toca na economia. Em movimento reduzido, a carga aparece na câmara sem viajar. Ainda preciso validar o ritmo em vídeo e expandir a linguagem para as outras rotas; este corte não substitui a animação autoral dos personagens.
+
 ## 01/10/2026 — Da fila à prensa
 
 Investiguei os logs vazios do GitHub e corrigi a execução do Godot gráfico e o hardlink sem extensão usado pelo instalador. A execução remota 36925391852 passou. No jogo, conectei os cadáveres às artes de morte existentes e acrescentei uma prensa ilustrada, com fases regidas pelo timer real. Registrei a origem da nova imagem. O foco seguinte deixa de ser quantidade de sistemas: animação convincente, cenários distintos e decisões que sustentem vontade de jogar outra run.

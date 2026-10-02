@@ -1,6 +1,6 @@
 # NecroWorks — Continuidade do Desenvolvimento
 
-**Atualizado em:** 01/10/2026
+**Atualizado em:** 02/10/2026
 
 ## Estado atual
 
@@ -9,6 +9,8 @@ A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu il
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+02/10: confirmado sucesso remoto do commit 6e8d823 (run 36926406429). Transferência visual de materiais integrada: cabeça da fila sai visualmente do campo, percorre a entrada e é prensada sem duplicação. Visibilidade restaurada ao retirar reserva/apresentador. Pausa, modo reduzido, proporção da carga e sucessão da fila cobertos. O ciclo não ganhou tempo extra: upgrades rápidos encurtam também a animação. Próximos cortes continuam sendo outras rotas, animação de personagem aprovada e setores distintos; não confundir trajetória de sprite com animação final de coletor físico.
 
 Novo corte de 01/10: CI corrigido e execução remota 36925391852 aprovada. O gate resolve hardlinks sem extensão e usa logs nativos após importação. Cadáveres agora usam `death.png` com AtlasTexture cacheada. `MaterialProcessorVisual` lê a fila real e anima entrada/prensa/saída com arte própria; não altera economia. Falta transferência física (o corpo ainda fica marcado em fila no campo), arte/animação de outras máquinas, família de animação aprovada e cenários distintos. A revisão de experiência no topo do roadmap passa a orientar os próximos cortes.
 

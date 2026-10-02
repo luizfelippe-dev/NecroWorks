@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Transporte para a prensa — 02/10
+
+Validação: 87/87 runners em 122,71 s, exportação e smoke Windows aprovados; capturas de coleta e prensa conferidas em 1280×720.
+
+- Cadáver ativo percorre uma trajetória até a entrada, sem cópia visível no campo; os demais aguardam em suas posições.
+- Coleta, esteira, prensa e saída dividem o ciclo real, sem atrasos adicionais ou crédito antecipado de recursos.
+- Visibilidade original restaurada se a reserva for removida ou o apresentador destruído; modo reduzido apresenta a carga diretamente na câmara.
+- Proporção da carga preservada e compressão ancorada à esteira; estado de coleta traduzido em PT-BR, EN e ES.
+
 ### CI reproduzível e processamento em cena — 01/10
 
 Validação local: 87/87 runners em 93,85 s com hardlink sem extensão; exportação e smoke Windows aprovados. Capturas das fases a 1028×578. CI da correção confirmado em 36925391852.

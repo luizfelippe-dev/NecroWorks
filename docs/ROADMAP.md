@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 01/10/2026
+**Atualizado:** 02/10/2026
 
 ---
 
@@ -10,7 +10,7 @@
 
 A base funcional ainda não entrega o impacto visual nem a variedade desejados. A meta não é alongar a run artificialmente: cada etapa precisa trazer uma ameaça, decisão ou transformação perceptível. A ordem abaixo detalha os itens já abertos de apresentação e repetição.
 
-1. **Fábrica palpável:** [x] ligar restos às poses de morte; [x] mostrar entrada, prensa e saída sincronizadas com a fila de materiais; [ ] animar coleta/transferência física sem duplicar o corpo no campo; [ ] estender a linguagem a Sangue, Almas e montagem de tropas; [ ] validar legibilidade em movimento. A prensa V1 é um corte inicial, não toda a fábrica finalizada.
+1. **Fábrica palpável:** [x] ligar restos às poses de morte; [x] mostrar entrada, prensa e saída sincronizadas com a fila de materiais; [x] animar transferência visual sem duplicar o corpo no campo; [ ] estender a linguagem a Sangue, Almas e montagem de tropas; [ ] validar legibilidade em movimento. Transferência integrada em 02/10: somente a cabeça da fila viaja, sem alterar o tempo de processamento. A prensa V1 é um corte inicial, não toda a fábrica finalizada.
 2. **Uma família de animação aprovada:** [ ] produzir caminhada com contatos alternados dos pés e ataque com antecipação/contato/recuperação; [ ] comparar em vídeo a velocidade normal antes de replicar para as onze famílias. Poses deformadas não encerram este item.
 3. **Três setores da planta:** [ ] pátio de recepção, fundição e núcleo espectral com arte e som próprios; [ ] transições nos intervalos; [ ] uma regra de encontro por setor anunciada antes do combate. Trocar apenas a cor do mesmo fundo não conta como cenário novo.
 4. **Decisões que mudam a run:** [ ] prototipar contratos opcionais de produção sob pressão e rotas de recompensa; [ ] dar função diferente às composições; [ ] comparar com a run atual antes de ampliar catálogo. Hipótese: a fábrica deve ser uma ferramenta tática, não apenas um menu de compras.

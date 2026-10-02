@@ -1,5 +1,7 @@
 # NecroWorks — Estado do Projeto
 
+**02/10 — transporte de materiais:** o primeiro corpo reservado sai visualmente do campo e entra na prensa. Os demais permanecem aguardando. A apresentação respeita o ciclo existente e recupera visibilidade quando removida. Movimento reduzido elimina a viagem, não a informação. Outras máquinas e animação autoral continuam abertas.
+
 **01/10 — retorno de experiência:** CI remoto voltou a passar; restos usam poses de queda e a fila de materiais tem prensa ilustrada sincronizada. Este é um passe funcional de apresentação, não conclusão artística. Cenários distintos, animação autoral convincente, transferência de cadáveres e variedade estratégica continuam abertos na revisão prioritária do roadmap.
 
 **01/10/2026 — narrativa da v0.6.5:** revelação gradual nos incidentes existentes, reconhecimento de decisões anteriores e epílogo após o Capataz. A conclusão não acrescenta escolhas finais ou recompensas; falas derivam do histórico persistido. Resumo final rolável nas duas colunas. Animação, som e avaliação humana continuam pendentes.

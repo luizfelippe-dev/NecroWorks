@@ -2,7 +2,7 @@
 
 ## Processamento visual — 01/10/2026
 
-`CorpseVisualCatalog` cacheia AtlasTextures das poses de morte, removendo apenas margens transparentes na região de leitura. `MaterialProcessorVisual` é uma apresentação somente leitura: consulta fila, timer, pausa e acessibilidade; os estágios são entrada (0–30%), prensa (30–75%) e saída (75–100%). Em movimento reduzido, o transporte e partículas cessam; texto/progresso continuam refletindo o processamento. A economia permanece em `update_corpse_processor`/`process_corpse`. A saída visual é o ponto de origem do feedback de recursos da rota material.
+`CorpseVisualCatalog` cacheia AtlasTextures das poses de morte, removendo apenas margens transparentes na região de leitura. `MaterialProcessorVisual` consulta fila, timer, pausa e acessibilidade sem escrever na economia. Desde 02/10, os estágios são transferência (0–25%), esteira (25–40%), prensa (40–80%) e saída (80–100%). O apresentador oculta apenas o cadáver ativo e desenha sua representação no trajeto; restaura a visibilidade original quando a reserva termina ou o apresentador sai da árvore. Corpos aguardando não são ocultados. A trajetória usa coordenadas locais calculadas a partir da posição global do corpo. Em movimento reduzido, a carga é mostrada diretamente na câmara, sem transporte ou partículas. A economia permanece em `update_corpse_processor`/`process_corpse`; o efeito de recursos parte da saída da máquina.
 
 ## Narrativa contextual — 01/10/2026
 
