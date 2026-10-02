@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 02/10/2026 — Máquinas como interface, não adereços soltos
+
+A perspectiva frontal das máquinas destoava do campo. Reuni a produção num monitor da HUD que abre e fecha, mantendo o combate livre por padrão. Substituí também os vasos simples por uma carcaça ilustrada. No guerreiro esqueleto integrei oito desenhos de marcha e três de recuperação; descartei recortes que cruzavam quadros vizinhos e mantive o impacto sincronizado ao dano. Ainda falta validar a naturalidade em movimento e migrar as demais famílias.
+
 ## 02/10/2026 — Da essência ao estoque
 
 Conectei o corpo arcano ao extrator com um trajeto regido pelo processamento. A confirmação de Sangue e Almas agora chega ao painel de recursos apenas depois do crédito real. Mantive o corpo no campo até o consumo e removi viagens no movimento reduzido. O teste de cancelamento encontrou uma referência destruída; corrigi a validação antes de converter o objeto. Ainda falta acabamento ilustrado.

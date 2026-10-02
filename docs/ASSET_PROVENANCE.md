@@ -1,5 +1,21 @@
 # Proveniência dos Assets
 
+## Refinaria e guerreiro V2 — 02/10/2026
+
+Gerados com a ferramenta integrada de imagens da OpenAI, alpha preservado e arquivos originais copiados sem edição de pixels. Referência de identidade do guerreiro: `assets/sprites/units/skeleton_warrior_v1/idle.png`. Não são desenhos manuais. Revisão comercial de termos e divulgação de conteúdo gerado continua obrigatória antes da Steam.
+
+- `assets/sprites/factory/rare_refinery_v1.png`: carcaça única, duas metades consultadas por região para preservar desbloqueios separados.
+- `assets/sprites/units/skeleton_warrior_v2/walk_sheet.png`: oito células 4×2, recortes deslocados 16 px proporcionais dentro das margens transparentes para evitar resíduos vizinhos.
+- `assets/sprites/units/skeleton_warrior_v2/recovery_sheet.png`: somente células 5, 6 e 7 usadas, após impacto antigo; restantes não aprovadas para runtime. Segunda tentativa de folha 2×2 foi descartada por ultrapassar células e não integra o projeto.
+
+### Prompts usados nos assets integrados
+
+Refinaria: “Use case: stylized-concept. Create a single 2D game asset: two connected gothic industrial refinery vessels side by side, front view, aspect ratio 3:1, transparent background. Left blood distillation pressure vessel, right arcane soul condenser. Aged brass pipes, riveted black iron, small gauges, skull reliefs, left tiny red indicator and right violet indicator. Detailed painted pixel-art-inspired style for NecroWorks. Each vessel has a large EMPTY TRANSPARENT rectangular front chamber. Left window spans x 13%-35%, y 20%-80%; right window x 65%-87%, y20%-80%. These are holes, no fill or contents: engine adds fluid and energy behind them. Common low iron base, all silhouette within image, no text or labels, no characters, no floor, no backdrop. Readable at 290x90 pixels.”
+
+Caminhada: “Use case: stylized-concept. Reference is character identity only. Produce a transparent animation sprite sheet, exactly 4 columns by 2 rows of equal square cells, 8 full body frames total, read left to right then next row. Same skeleton warrior, sword held forward in right hand, round skull shield in left, green backpack, facing RIGHT in all frames. A continuous in-place WALK CYCLE: contact right foot forward, down, passing, up, contact left foot forward, down, passing, up. Clearly alternate leg poses; bend knees and lift trailing foot. Same skull, equipment, proportions, lighting and scale every cell. Pelvis at same cell center, feet ground line at 88% cell height, crown at20%. Keep sword and shield within each cell, no clipping, no extra limbs, no text, no grid lines, no background. Crisp detailed pixel-art-inspired painted style matching reference. All eight characters equally sized and centered independently. This is animation production, not eight copies of the same stance.”
+
+Recuperação: “Use case: stylized-concept. Character reference only. Transparent sprite sheet of this SAME skeleton warrior sword and skull shield, green backpack, facing RIGHT. Exactly 4 columns x 2 rows, eight full-body animation frames in equal square cells. ATTACK AND RECOVERY: frame1 sword extended forward at impact, frame2 follow-through downward, frame3 low follow-through, frame4 retract elbow, frame5 raise sword to guard, frame6 settle shield, frame7 balanced guard, frame8 same guard as reference. Keep skull identity armor shield sword constant. Actual joint articulation, no motion blur, no trails, no text, no grid, no floor. All bodies identical height, pelvis centered at same cell coordinate, feet on same ground line at88% cell height. Entire sword and body inside each cell with generous margins. Detailed painted pixel-art-inspired game art. Frame1 already hits because gameplay damage is instantaneous; this sheet must not delay impact.”
+
 **Atualizado em:** 11/09/2026 — v0.6.2
 
 Este registro acompanha os assets visuais criados especificamente para o projeto e evita dúvidas futuras durante a preparação comercial.

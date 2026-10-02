@@ -46,6 +46,7 @@ func capture() -> void:
 		await create_timer(0.2).timeout
 		await save_frame("hud_" + locale)
 	game.active_synergies.clear()
+	game.get_node("FactoryLiveDock").set_expanded(true)
 	if "--refinery" in OS.get_cmdline_user_args():
 		game.factory_points = 20
 		# Disposable presentation fixture bypasses profile progression, not gameplay.
@@ -119,6 +120,7 @@ func capture() -> void:
 	shell.queue_free()
 	await process_frame
 	await capture_motion()
+	await capture_skeleton_sequence()
 	for suffix: String in ["profile.json", "settings.cfg", "run.json", "run.json.bak"]:
 		var path := TEST_PATH + suffix
 		if FileAccess.file_exists(path):
@@ -160,6 +162,7 @@ func capture_motion() -> void:
 				host.add_child(driver)
 				driver.bind(sprite)
 				driver.configure_state_textures(catalog.get_animation_textures(visual_id))
+				driver.configure_frame_sequences(catalog.get_animation_sequences(visual_id))
 				driver.configure_motion(catalog.get_motion_profile(visual_id))
 				driver.play("move")
 				driver.set_process(false)
@@ -170,6 +173,36 @@ func capture_motion() -> void:
 		gallery.queue_free()
 		await process_frame
 
+
+func capture_skeleton_sequence() -> void:
+	var catalog := preload("res://scripts/visual/unit_sprite_catalog.gd")
+	var gallery := Node2D.new()
+	root.add_child(gallery)
+	var background := ColorRect.new()
+	background.size = Vector2(1920, 1080)
+	background.color = Color("121916")
+	gallery.add_child(background)
+	for index: int in range(12):
+		var host := Node2D.new()
+		host.position = Vector2(240 + (index % 4) * 460, 165 + (index / 4) * 345)
+		gallery.add_child(host)
+		var sprite := Sprite2D.new()
+		sprite.texture = catalog.get_texture("skeleton")
+		sprite.scale = Vector2.ONE * 260.0 / sprite.texture.get_height()
+		host.add_child(sprite)
+		var driver := preload("res://scripts/visual/unit_animation_driver.gd").new()
+		host.add_child(driver)
+		driver.bind(sprite)
+		driver.configure_state_textures(catalog.get_animation_textures("skeleton"))
+		driver.configure_frame_sequences(catalog.get_animation_sequences("skeleton"))
+		driver.set_process(false)
+		driver.play("move" if index < 8 else "attack")
+		driver.gait_phase = TAU * (index + 0.1) / 8
+		driver.action_elapsed = (index - 8 + 0.1) / 4.0 * driver.ATTACK_DURATION if index >= 8 else 0
+		driver._render_pose()
+	await save_frame("skeleton_sequence")
+	gallery.queue_free()
+	await process_frame
 
 func save_frame(label: String) -> void:
 	await process_frame

@@ -4,11 +4,13 @@
 
 ## Estado atual
 
-A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial com cartões e métricas alinhadas, sinergias roláveis e movimento procedural contínuo nas onze famílias. O ataque não é mais cancelado pelo flash de dano. Não foram produzidos frames novos de personagens; o shader trabalha sobre as poses V1, e a naturalidade ainda precisa de avaliação em uma run manual. Regras, economia e balanceamento permanecem intactos.
+A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial e monitor de produção recolhível. O esqueleto guerreiro tem um piloto de oito quadros novos de caminhada e três de recuperação; as outras dez famílias seguem com poses V1 e movimento procedural. O ataque não é cancelado pelo flash de dano. Naturalidade e antecipação ainda precisam de avaliação em run manual. Regras, economia e balanceamento permanecem intactos.
 
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+02/10 — revisão de integração: máquinas saíram da composição do cenário e passaram ao `FactoryLiveDock`, monitor recolhível da HUD (fechado por padrão). Fechar restaura corpo transportado; efeitos continuam apontando ao painel de recursos. Refinaria recebeu carcaça ilustrada com câmaras transparentes. Esqueleto guerreiro ganhou 8 quadros de caminhada e 3 poses novas de recuperação após impacto V1, sem shader de deformação nos quadros. Demais dez famílias ainda não migradas; antecipação pré-impacto e aprovação humana continuam abertas. Proveniência e prompts em `docs/ASSET_PROVENANCE.md`.
 
 02/10 — essência arcana: a cabeça da fila emite uma esfera até o extrator usando o timer existente (trajeto até 65%, concentração no restante). O corpo não é ocultado. Sinais de conclusão confirmam Sangue/Almas no painel de recursos, sem crédito adicional. Movimento reduzido dispensa viagens. Regressão cobre referência destruída, sucessão, preparação e reconstrução do apresentador. Arte final das máquinas e animação de personagens continuam abertas.
 

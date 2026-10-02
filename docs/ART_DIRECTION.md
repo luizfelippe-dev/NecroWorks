@@ -1,5 +1,9 @@
 # Direção de Arte
 
+## HUD industrial e piloto por quadros — 02/10/2026
+
+A vista frontal das máquinas não corresponde à perspectiva do chão. A solução adotada é um monitor recolhível de operação, com fundo opaco e moldura, não sombras falsas tentando simular objetos no cenário. Carcaça ilustrada nova da refinaria mantém líquido e energia em runtime. Caminhada do guerreiro tem oito desenhos distintos. Ataque reaproveita impacto V1 e três recuperações isoladas; folhas com quadros sobrepostos foram rejeitadas parcial ou integralmente. Não declarar animação autoral manual nem pacote completo de personagens.
+
 ## Essência arcana — 02/10/2026
 
 Anel discreto marca apenas a origem ativa; uma esfera violeta segue arco até o vaso durante os primeiros 65% do ciclo. O restante concentra energia. É extração de essência, não deslocamento do cadáver. Confirmação de saída reaproveita o efeito até recursos, com texto próprio. Movimento reduzido omite deslocamentos. Arte ilustrada permanece pendente.

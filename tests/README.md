@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+`factory_live_dock_runner.gd` cobre estado fechado inicial, abrir/fechar, restauração de corpo reservado, processamento com painel fechado e tradução. `skeleton_sequence_runner.gd` cobre 8 quadros de marcha, recuperação, shader desligado durante quadros, hit sem cancelar ataque e modo reduzido. `unit_sprite_runner.gd` distingue sequências reais do fallback V1; `capture_presentation.gd` inclui galeria dos 12 estados do piloto e monitor aberto.
+
 Ampliação de 02/10: a refinaria testa exclusividade da origem, sucessão da fila, referência destruída, ausência de crédito adicional, confirmação no alvo correto, preparação estável e reconstrução sem replay. `--refinery` também captura o trajeto a 30% do ciclo. Os testes de feedback material preservam a compatibilidade do texto opcional.
 
 `rare_refinery_visual_runner.gd` cobre bloqueio/desbloqueio, timers reais, sincronização sem mutações, preparação, modo reduzido, localização, conclusão e fim da run. `capture_presentation.gd -- --refinery` usa desbloqueios explícitos apenas no perfil descartável e captura PT-BR/EN/ES. Conferir margem acima das abas.

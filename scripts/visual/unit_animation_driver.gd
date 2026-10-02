@@ -191,9 +191,22 @@ func _render_pose() -> void:
 	motion_material.set_shader_parameter("movement", 0.0 if reduced_motion or current_animation == DEATH else locomotion_weight)
 	motion_material.set_shader_parameter("strike", strike)
 	var frames: Array = frame_sequences.get(current_animation, [])
-	if not frames.is_empty():
+	sprite.material = null if not frames.is_empty() else motion_material
+	if not frames.is_empty() and not reduced_motion:
 		var progress := fmod(gait_phase / TAU, 1.0) if current_animation == MOVE else action_elapsed / float(profile.get("attack_duration", ATTACK_DURATION))
 		_set_texture(frames[mini(int(progress * frames.size()), frames.size() - 1)])
+		if sprite.texture is AtlasTexture:
+			# Sheet cells have a shared ground line. Never stretch each pose separately.
+			var ratio: float = base_texture.get_height() / float(sprite.texture.get_height()) * 0.85
+			sprite.scale = base_scale * ratio
+			sprite.rotation = 0.0
+		var rest_bounds: Vector4 = texture_bounds[base_texture]
+		var frame_bounds: Vector4 = texture_bounds[sprite.texture]
+		var rest_floor: float = (rest_bounds.y + rest_bounds.w - 0.5) * base_texture.get_height() * base_scale.y
+		var frame_floor: float = (frame_bounds.y + frame_bounds.w - 0.5) * sprite.texture.get_height() * sprite.scale.y
+		sprite.position.y = base_position.y + rest_floor - frame_floor
+	elif not frames.is_empty():
+		_apply_state_texture(current_animation)
 
 
 func _finish_action(completed_animation: String) -> void:

@@ -11,6 +11,7 @@ var source_valid: bool = false
 var completion_count: int = 0
 const SOUL_CENTER := Vector2(220, 44)
 const FEEDBACK := preload("res://scripts/visual/corpse_processing_feedback.gd")
+const HOUSING := preload("res://assets/sprites/factory/rare_refinery_v1.png")
 
 func bind(target: Node) -> void:
 	game = target
@@ -47,7 +48,8 @@ func confirm_output(index: int, amount: int) -> void:
 	game.add_child(effect)
 	effect.set_reduced_motion(game.reduced_motion_enabled)
 	var tint := Color("bb5650") if index == 0 else Color("b994e0")
-	effect.play(to_global(Vector2(70 + index * 150, 44)), game.RESOURCE_FEEDBACK_TARGET,
+	var origin: Vector2 = to_global(Vector2(70 + index * 150, 44)) if visible else Vector2(200, 263)
+	effect.play(origin, game.RESOURCE_FEEDBACK_TARGET,
 		0, 0, tint, tr("REFINERY_GAIN_BLOOD" if index == 0 else "REFINERY_GAIN_SOUL") % amount)
 	game.pulse_resources_panel(tint)
 
@@ -109,16 +111,11 @@ func _draw() -> void:
 			continue
 		var x: float = index * 150.0
 		var tint := Color("bb5650") if index == 0 else Color("b994e0")
-		# Closed vessels, pipes and gauge are code-native vector artwork.
-		draw_rect(Rect2(x + 10, 78, 120, 12), Color("292f29"))
-		draw_rect(Rect2(x + 34, 8, 72, 73), Color("0c1414"))
-		draw_rect(Rect2(x + 34, 8, 72, 73), Color("8b7c56"), false, 3)
-		draw_line(Vector2(x + 15, 19), Vector2(x + 34, 19), Color("8b7c56"), 5)
-		draw_line(Vector2(x + 106, 66), Vector2(x + 129, 66), Color("8b7c56"), 5)
+		draw_rect(Rect2(x + 39, 23, 57, 45), Color("0c1414"))
 		var progress: float = state.progress
 		if state.active:
 			if index == 0:
-				draw_rect(Rect2(x + 39, 76 - progress * 62, 62, progress * 62), tint.darkened(0.35))
+				draw_rect(Rect2(x + 39, 68 - progress * 45, 57, progress * 45), tint.darkened(0.35))
 			else:
 				var center := Vector2(x + 70, 44)
 				draw_circle(center, 10 + progress * 13, Color(tint, 0.25))
@@ -127,7 +124,7 @@ func _draw() -> void:
 					for mote: int in range(3):
 						var angle: float = progress * TAU + mote * TAU / 3
 						draw_circle(center + Vector2.from_angle(angle) * 25, 2, tint)
-		for y: int in [15, 73]:
-			for offset: int in [28, 112]:
-				draw_circle(Vector2(x + offset, y), 3, Color("756949"))
+		# Separate halves preserve independent unlocks; chamber contents stay behind art.
+		var half: Vector2 = HOUSING.get_size() * Vector2(0.5, 1)
+		draw_texture_rect_region(HOUSING, Rect2(x, 0, 145, 90), Rect2(Vector2(index * half.x, 0), half))
 		draw_rect(Rect2(x + 15, 87, 110 * progress, 3), tint)

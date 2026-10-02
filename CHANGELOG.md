@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Monitor industrial e quadros de esqueleto — 02/10
+
+Validação: 91/91 runners, exportação e smoke Windows aprovados; monitor e galeria de quadros conferidos em 1280×720. Fluidez artística em vídeo e run humana ainda não aprovada.
+
+- Máquinas reunidas em monitor recolhível da HUD, fechado inicialmente, com fundo/moldura próprios. Produção continua fechada; corpo reservado volta a aparecer.
+- Carcaça ilustrada da refinaria substitui os vasos geométricos; mantém janelas de líquido/energia e desbloqueios separados.
+- Esqueleto guerreiro: 8 quadros novos de caminhada e 3 poses de recuperação, mantendo impacto V1 síncrono ao dano. Recortes cacheados, escala e linha do chão alinhadas, sem shader deformador durante sequências.
+- Testes atualizados para o contrato de quadros, modo reduzido e abrir/fechar monitor. Outros personagens ainda não migrados.
+
 ### Transporte de essência e confirmação de recursos — 02/10
 
 Validação: 89/89 runners, exportação e smoke Windows aprovados; trajeto conferido em captura 1280×720. CI da entrega anterior (37013566291) confirmado como sucesso.

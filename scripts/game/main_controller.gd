@@ -1841,6 +1841,10 @@ func _ready() -> void:
 	refinery_visual.name = "RareRefineryVisual"
 	add_child(refinery_visual)
 	refinery_visual.bind(self)
+	var live_dock := preload("res://scripts/ui/factory_live_dock.gd").new()
+	live_dock.name = "FactoryLiveDock"
+	add_child(live_dock)
+	live_dock.bind(self)
 	dashboard.name = "GameplayDashboard"
 	add_child(dashboard)
 	dashboard.bind(self)
@@ -5979,7 +5983,8 @@ func process_corpse(
 		+ corpse.size * 0.5
 	)
 	if corpse.get_meta("processing_route", "") == "material":
-		feedback_origin = preload("res://scripts/visual/material_processor_visual.gd").OUTPUT
+		var processor: Node2D = get_node("MaterialProcessorVisual")
+		feedback_origin = processor.to_global(Vector2(260, 84)) if processor.visible else Vector2(200, 263)
 	var directive_yield: Vector2i = get_processing_yield(directive)
 	var bones_gained: int = directive_yield.x
 

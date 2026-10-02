@@ -8,6 +8,8 @@
 
 ## Revisão de experiência — 01/10/2026
 
+Revisão visual de 02/10: máquinas frontalizadas passam ao monitor recolhível da HUD, não ao chão em perspectiva. Carcaça ilustrada da refinaria integrada. Piloto do esqueleto guerreiro: marcha com 8 quadros e impacto existente + 3 recuperações; não encerra o item de animação aprovada. Antecipação, revisão de naturalidade e migração das demais famílias permanecem pendentes.
+
 Avanço de 02/10 (trajeto): essência arcana e confirmação de saída de Sangue/Almas integradas ao ciclo real. Acabamento ilustrado e avaliação em movimento numa run humana continuam pendentes; os registros abaixo descrevem cortes anteriores.
 
 Avanço adicional de 02/10: Sangue/Almas possuem indicadores procedurais ligados ao progresso real. A expansão visual permanece aberta: acabamento ilustrado, transferência arcana e confirmação da saída ainda faltam. Não considerar esses medidores equivalentes à máquina final.

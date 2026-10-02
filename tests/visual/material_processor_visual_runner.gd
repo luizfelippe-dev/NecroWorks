@@ -10,6 +10,7 @@ func validate() -> void:
 	root.add_child(game)
 	await process_frame
 	game.set_process(false)
+	game.get_node("FactoryLiveDock").set_expanded(true)
 	var visual: Node2D = game.get_node("MaterialProcessorVisual")
 	visual.set_process(false)
 	visual.sync_state()

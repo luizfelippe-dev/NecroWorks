@@ -60,17 +60,17 @@ func run_validation() -> void:
 			"arcane_auditor", "foreman"
 		]:
 			assert(state_textures.size() == 5)
-			assert(frame_sequences.is_empty())
+			assert(frame_sequences.size() == 2 if visual_id == "skeleton" else frame_sequences.is_empty())
 			assert(sprite.texture == state_textures["idle"])
 			assert(sprite.scale.x > 0.20)
 			game.play_unit_move_animation(unit, 1.0)
-			assert(sprite.texture == state_textures["move"])
+			assert(sprite.texture in frame_sequences.move if visual_id == "skeleton" else sprite.texture == state_textures["move"])
 			await create_timer(0.50).timeout
 			assert(sprite.texture == state_textures["idle"])
 			game.play_unit_animation(unit, "attack", 1.0)
 			assert(str(driver.get("current_animation")) == "attack")
 			await create_timer(0.11).timeout
-			assert(sprite.texture == state_textures["attack"])
+			assert(sprite.texture in frame_sequences.attack if visual_id == "skeleton" else sprite.texture == state_textures["attack"])
 			await create_timer(0.35).timeout
 			game.play_unit_animation(unit, "hit")
 			assert(sprite.texture == state_textures["hit"])

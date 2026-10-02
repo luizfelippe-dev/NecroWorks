@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Monitor e sequências — 02/10/2026
+
+`FactoryLiveDock` posiciona os três apresentadores dentro de um painel recolhível da HUD. Não altera filas nem persiste preferência; nasce fechado. Apresentadores continuam filhos do gameplay, usam coordenadas globais para efeitos e ficam abaixo dos modais. Prensa libera a visibilidade do corpo ao fechar. Efeitos partem do botão quando fechado. `UnitSpriteCatalog` cacheia AtlasTexture das folhas do guerreiro; `UnitAnimationDriver` desliga shader nos quadros reais e alinha o pé à pose-base sem redimensionar cada pose pelo conteúdo. Modo reduzido mantém imagens de estado. Impacto não é atrasado.
+
 ## Trajeto arcano e conclusão — 02/10/2026
 
 `RareRefineryVisual` resolve a cabeça da fila com validação de instância antes do cast. A posição da essência deriva exclusivamente do timer e da posição local do corpo; nenhuma escrita em visibilidade ou economia. O apresentador escuta os sinais já existentes de conclusão. `CorpseProcessingFeedback.play` aceita texto opcional, preservando chamadas de Ossos/Carne; o novo uso informa Sangue/Almas e mantém alvo e pausa herdada. Recriar o apresentador não repete sinais passados.

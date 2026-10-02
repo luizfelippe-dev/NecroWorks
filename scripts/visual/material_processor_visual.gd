@@ -56,6 +56,9 @@ func _process(_delta: float) -> void:
 func sync_state() -> void:
 	if not is_instance_valid(game):
 		return
+	if not is_visible_in_tree():
+		release_transport()
+		return
 	active = not game.corpse_processing_queue.is_empty() and not game.run_finished
 	reduced_motion = game.reduced_motion_enabled
 	progress = clampf(1.0 - game.corpse_processor_timer / maxf(game.corpse_processor_seconds_per_corpse, 0.001), 0.0, 1.0) if active else 0.0

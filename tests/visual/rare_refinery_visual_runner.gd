@@ -50,6 +50,9 @@ func validate() -> void:
 	var restored: Node = preload("res://scripts/visual/rare_refinery_visual.gd").new()
 	game.add_child(restored)
 	restored.bind(game)
+	restored.position = visual.position
+	restored.scale = visual.scale
+	restored.sync_state()
 	assert(restored.essence_position() == paused_position)
 	assert(restored.completion_count == 0)
 	restored.free()

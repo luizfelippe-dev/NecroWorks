@@ -75,6 +75,8 @@ func _on_completed(recipe: String, _remaining: int) -> void:
 	completion_count += 1
 	var destination: Vector2 = units.back().global_position
 	var source: Vector2 = to_global(Vector2(248 if recipe == "zombie" else 86, 110))
+	if not visible:
+		source = Vector2(200, 263)
 	var tint := Color("cf976f") if recipe == "zombie" else Color("c7d992")
 	# Confirmation only: the unit is already alive. No duplicated sprite or delay.
 	if not game.reduced_motion_enabled:
