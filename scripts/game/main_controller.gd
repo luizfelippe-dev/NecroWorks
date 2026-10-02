@@ -1833,6 +1833,10 @@ func _ready() -> void:
 	processor_visual.name = "MaterialProcessorVisual"
 	add_child(processor_visual)
 	processor_visual.bind(self)
+	var workshop_visual := preload("res://scripts/visual/undead_workshop_visual.gd").new()
+	workshop_visual.name = "UndeadWorkshopVisual"
+	add_child(workshop_visual)
+	workshop_visual.bind(self)
 	dashboard.name = "GameplayDashboard"
 	add_child(dashboard)
 	dashboard.bind(self)

@@ -2,6 +2,12 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Oficina de tropas — 02/10
+
+Validação: 88/88 runners aprovados, exportação e smoke Windows aprovados; três estágios capturados em 1280×720.
+
+Montador ósseo e cuba de carne ilustrados em cena. Formação acompanha o timer real, incluindo arqueiros; conclusão aponta para a unidade criada, sem duplicação ou atraso. Estados localizados e movimento reduzido. Custos e balanceamento intactos. Regressão dedicada e capturas `--workshop`.
+
 ### Transporte para a prensa — 02/10
 
 Validação: 87/87 runners em 122,71 s, exportação e smoke Windows aprovados; capturas de coleta e prensa conferidas em 1280×720.

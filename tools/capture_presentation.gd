@@ -46,6 +46,16 @@ func capture() -> void:
 		await create_timer(0.2).timeout
 		await save_frame("hud_" + locale)
 	game.active_synergies.clear()
+	if "--workshop" in OS.get_cmdline_user_args():
+		game.enqueue_skeleton_production(1)
+		game.enqueue_zombie_production(1)
+		var workshop: Node = game.get_node("UndeadWorkshopVisual")
+		workshop.set_process(false)
+		for fraction: float in [0.15, 0.5, 0.9]:
+			game.skeleton_assembler_timer = game.SKELETON_ASSEMBLER_BASE_SECONDS * (1.0 - fraction)
+			game.flesh_vat_timer = game.FLESH_VAT_BASE_SECONDS * (1.0 - fraction)
+			workshop.sync_state()
+			await save_frame("workshop_" + str(int(fraction * 100)))
 	if "--factory-process" in OS.get_cmdline_user_args():
 		var index: int = 0
 		for archetype: String in ["human_warrior", "mage", "elf", "grave_marshal", "arcane_auditor", "foreman"]:

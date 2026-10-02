@@ -1,5 +1,9 @@
 # Direção de Arte
 
+## Oficina V1 — 02/10/2026
+
+Montador e cuba compartilham ferro escuro, latão e luz verde da prensa. Câmaras abertas recebem a pose da receita revelada pelo timer; braço e bolhas comunicam trabalho. Apresentação procedural sobre arte estática, não animação quadro a quadro. Captura integrada em 1280×720 verificada.
+
 ## Prioridade de sensação — 01/10/2026
 
 Cadáveres precisam parecer restos no chão, não miniaturas em pé. A pose de morte existente agora alimenta o coletável sem dessaturação pesada. A prensa de materiais combina carcaça ilustrada com partes móveis e fases ligadas à fila real. É a primeira máquina desse novo passe; transferência física e outras rotas continuam pendentes. Movimento de câmera, partículas ou tintas não substituem animação de personagem aprovada nem ambientes realmente diferentes.

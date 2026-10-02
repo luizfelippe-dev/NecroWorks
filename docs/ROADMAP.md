@@ -8,6 +8,8 @@
 
 ## Revisão de experiência — 01/10/2026
 
+Avanço de 02/10: montagem óssea (guerreiro/arqueiro) e cuba de zumbis representadas em cena com progresso real, acessibilidade e confirmação da produção. O item de expansão abaixo permanece aberto para Sangue e Almas; avaliação de legibilidade em movimento ainda necessária.
+
 A base funcional ainda não entrega o impacto visual nem a variedade desejados. A meta não é alongar a run artificialmente: cada etapa precisa trazer uma ameaça, decisão ou transformação perceptível. A ordem abaixo detalha os itens já abertos de apresentação e repetição.
 
 1. **Fábrica palpável:** [x] ligar restos às poses de morte; [x] mostrar entrada, prensa e saída sincronizadas com a fila de materiais; [x] animar transferência visual sem duplicar o corpo no campo; [ ] estender a linguagem a Sangue, Almas e montagem de tropas; [ ] validar legibilidade em movimento. Transferência integrada em 02/10: somente a cabeça da fila viaja, sem alterar o tempo de processamento. A prensa V1 é um corte inicial, não toda a fábrica finalizada.

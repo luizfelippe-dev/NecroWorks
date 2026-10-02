@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Oficina de tropas — 02/10/2026
+
+`UndeadWorkshopVisual` lê filas, receitas, timers, capacidade, preparação e movimento reduzido. Não escreve na simulação. Usa AtlasTexture cacheada e carcaça transparente; redesenha quando o snapshot muda. `production_unit_completed` ocorre após criação real e aponta o efeito à última unidade do grupo correspondente. Estado reconstruído na retomada, sem schema novo.
+
 ## Processamento visual — 01/10/2026
 
 `CorpseVisualCatalog` cacheia AtlasTextures das poses de morte, removendo apenas margens transparentes na região de leitura. `MaterialProcessorVisual` consulta fila, timer, pausa e acessibilidade sem escrever na economia. Desde 02/10, os estágios são transferência (0–25%), esteira (25–40%), prensa (40–80%) e saída (80–100%). O apresentador oculta apenas o cadáver ativo e desenha sua representação no trajeto; restaura a visibilidade original quando a reserva termina ou o apresentador sai da árvore. Corpos aguardando não são ocultados. A trajetória usa coordenadas locais calculadas a partir da posição global do corpo. Em movimento reduzido, a carga é mostrada diretamente na câmara, sem transporte ou partículas. A economia permanece em `update_corpse_processor`/`process_corpse`; o efeito de recursos parte da saída da máquina.

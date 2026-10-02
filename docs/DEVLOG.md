@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 02/10/2026 — A produção ganha uma oficina
+
+Acrescentei montagem óssea e incubação de zumbis à lateral da fábrica. A tropa toma forma conforme a ordem avança; a conclusão sinaliza sua chegada ao campo. Preservei custos e tempos. A carcaça foi gerada para este projeto; partes móveis são procedurais, não frames novos de personagens. Sangue, Almas e avaliação em run humana ficam para os próximos cortes.
+
 ## 02/10/2026 — O corpo chega à máquina
 
 Liguei o transporte ao ciclo existente: só o primeiro corpo da fila deixa o campo, percorre a entrada e chega à prensa. O restante aguarda. A apresentação recupera a visibilidade ao ser removida e não toca na economia. Em movimento reduzido, a carga aparece na câmara sem viajar. Ainda preciso validar o ritmo em vídeo e expandir a linguagem para as outras rotas; este corte não substitui a animação autoral dos personagens.

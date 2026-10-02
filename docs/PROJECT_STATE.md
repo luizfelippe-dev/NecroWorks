@@ -1,5 +1,7 @@
 # NecroWorks — Estado do Projeto
 
+**02/10 — oficina de tropas:** montagem óssea e cuba aparecem em cena, sincronizadas às filas existentes. Arqueiro usa sua própria pose. Custos, tempos e saves permanecem iguais. Sangue/Almas e animação autoral continuam pendentes.
+
 **02/10 — transporte de materiais:** o primeiro corpo reservado sai visualmente do campo e entra na prensa. Os demais permanecem aguardando. A apresentação respeita o ciclo existente e recupera visibilidade quando removida. Movimento reduzido elimina a viagem, não a informação. Outras máquinas e animação autoral continuam abertas.
 
 **01/10 — retorno de experiência:** CI remoto voltou a passar; restos usam poses de queda e a fila de materiais tem prensa ilustrada sincronizada. Este é um passe funcional de apresentação, não conclusão artística. Cenários distintos, animação autoral convincente, transferência de cadáveres e variedade estratégica continuam abertos na revisão prioritária do roadmap.

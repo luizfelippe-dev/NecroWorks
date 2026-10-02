@@ -253,6 +253,12 @@ O conjunto preserva o supervisor vivo integrado à armadura: barba, charuto, cap
 
 Esses assets são V1 de produção interna, não uma declaração automática de direitos para distribuição. Antes da Steam, os termos aplicáveis, a declaração de conteúdo gerado, créditos e qualquer material derivado precisam constar da revisão comercial final.
 
+## Oficina de tropas V1 — 02/10/2026
+
+`assets/sprites/factory/undead_workshop_v1.png`: criada com geração de imagens integrada da OpenAI para NecroWorks, fundo transparente, sem referência externa. Carcaça estática com duas câmaras vazias; unidades, braço, bolhas e progresso desenhados em runtime. Integração inspecionada em captura 1280×720. Não é arte desenhada manualmente nem spritesheet de animação. Revisão de termos e declaração de conteúdo gerado seguem no gate comercial.
+
+Prompt: “Use case: stylized-concept. Asset type: one transparent 2D game sprite of a dual-module undead production workshop, straight-on side view, aspect 2:1, for NecroWorks gothic industrial factory. Black iron and aged brass with tiny sickly green indicator lamps, hand painted detailed pixel-art-inspired finish, readable at 320x160 game units. Left half: tall mechanical bone-assembly rack with a fully EMPTY open central chamber, from 15% to 36% canvas width and 25% to 75% canvas height; jointed tools folded at its sides. Right half: cylindrical flesh incubation vat with an EMPTY transparent front window from 63% to 82% canvas width and 25% to 75% height. Heavy riveted rims, copper pipes connect the two modules on a shared iron base. Both chambers remain transparent so game sprites can be drawn inside and animated. No characters, no corpses, no bones floating inside, no gore, no lettering, no logos, no background or floor. Keep entire connected workshop within canvas, minimal transparent margins. This is a single stationary chassis; the game adds moving tools, fluid, sparks and units.”
+
 ## Áudio procedural V1 — 02/09/2026
 
 Os nove efeitos atuais são sintetizados em runtime por `scripts/audio/combat_audio_manager.gd`, e o ambiente industrial é sintetizado por `scripts/audio/industrial_ambient_manager.gd`. Não usam gravações, samples ou bibliotecas externas. Essa camada serve para validar cadência e mixagem; os efeitos e a música finais precisarão de autoria ou licença comercial documentada aqui antes da Steam.
