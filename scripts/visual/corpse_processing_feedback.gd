@@ -16,7 +16,8 @@ func play(
 	target_position: Vector2,
 	bones_gained: int,
 	flesh_gained: int,
-	accent: Color
+	accent: Color,
+	gain_text: String = ""
 ) -> void:
 
 	global_position = start_position
@@ -24,6 +25,8 @@ func play(
 	z_index = 350
 	add_to_group("processing_feedback")
 	create_yield_label(bones_gained, flesh_gained)
+	if not gain_text.is_empty():
+		popup_label.text = gain_text
 	queue_redraw()
 	if reduced_motion:
 		global_position = target_position

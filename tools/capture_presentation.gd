@@ -56,6 +56,9 @@ func capture() -> void:
 		game.enqueue_corpse_for_soul_extraction(game.corpses[0])
 		var refinery: Node = game.get_node("RareRefineryVisual")
 		refinery.set_process(false)
+		game.soul_extractor_timer = game.get_soul_extractor_cycle_seconds() * 0.7
+		refinery.sync_state()
+		await save_frame("refinery_transport")
 		for locale: String in ["pt-BR", "en", "es"]:
 			LocalizationService.set_locale(locale)
 			game.hematic_press_timer = game.HEMATIC_PRESS_CYCLE_SECONDS * 0.25

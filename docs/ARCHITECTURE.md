@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Trajeto arcano e conclusão — 02/10/2026
+
+`RareRefineryVisual` resolve a cabeça da fila com validação de instância antes do cast. A posição da essência deriva exclusivamente do timer e da posição local do corpo; nenhuma escrita em visibilidade ou economia. O apresentador escuta os sinais já existentes de conclusão. `CorpseProcessingFeedback.play` aceita texto opcional, preservando chamadas de Ossos/Carne; o novo uso informa Sangue/Almas e mantém alvo e pausa herdada. Recriar o apresentador não repete sinais passados.
+
 ## Refinaria — 02/10/2026
 
 `RareRefineryVisual` observa desbloqueios, contagem, timers e pausa das rotas hemática/arcana. Não possui relógio próprio nem conexão que credite recursos. O desenho vetorial muda por snapshot; movimento reduzido remove a órbita, preservando a medida de progresso. Fim de run deixa apresentação inativa. Labels ignoram mouse. A posição fica acima das abas inferiores.

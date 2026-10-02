@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 02/10/2026 — Da essência ao estoque
+
+Conectei o corpo arcano ao extrator com um trajeto regido pelo processamento. A confirmação de Sangue e Almas agora chega ao painel de recursos apenas depois do crédito real. Mantive o corpo no campo até o consumo e removi viagens no movimento reduzido. O teste de cancelamento encontrou uma referência destruída; corrigi a validação antes de converter o objeto. Ainda falta acabamento ilustrado.
+
 ## 02/10/2026 — Sangue e Almas visíveis
 
 Liguei dois indicadores de refinaria às filas reais, sem mudar a economia. Eles aparecem ao desbloquear a máquina e distinguem preparação, trabalho e ociosidade. Corrigi o espaço das legendas após conferir a captura. O acabamento é procedural e provisório; ainda preciso integrar arte final e transporte arcano.

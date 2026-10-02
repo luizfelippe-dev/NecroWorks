@@ -8,6 +8,8 @@
 
 ## Revisão de experiência — 01/10/2026
 
+Avanço de 02/10 (trajeto): essência arcana e confirmação de saída de Sangue/Almas integradas ao ciclo real. Acabamento ilustrado e avaliação em movimento numa run humana continuam pendentes; os registros abaixo descrevem cortes anteriores.
+
 Avanço adicional de 02/10: Sangue/Almas possuem indicadores procedurais ligados ao progresso real. A expansão visual permanece aberta: acabamento ilustrado, transferência arcana e confirmação da saída ainda faltam. Não considerar esses medidores equivalentes à máquina final.
 
 Avanço de 02/10: montagem óssea (guerreiro/arqueiro) e cuba de zumbis representadas em cena com progresso real, acessibilidade e confirmação da produção. O item de expansão abaixo permanece aberto para Sangue e Almas; avaliação de legibilidade em movimento ainda necessária.

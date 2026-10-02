@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Transporte de essência e confirmação de recursos — 02/10
+
+Validação: 89/89 runners, exportação e smoke Windows aprovados; trajeto conferido em captura 1280×720. CI da entrega anterior (37013566291) confirmado como sucesso.
+
+- Essência parte somente do cadáver ativo e chega ao extrator dentro do ciclo real; o corpo permanece no chão até consumo.
+- Confirmação localizada de Sangue/Almas parte da máquina após crédito real, com destino no painel de recursos.
+- Movimento reduzido elimina viagens; preparação congela o trajeto. Apresentação reconstruída sem repetir conclusão.
+- Referências destruídas são descartadas antes da conversão de tipo; teste cobre invalidação e troca da cabeça da fila.
+
 ### Indicadores de refinaria — 02/10
 
 Validação: 89/89 runners, exportação e smoke Windows aprovados. Capturas PT-BR/EN/ES em 1280×720; margem inferior ajustada após inspeção.

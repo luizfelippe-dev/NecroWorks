@@ -6,6 +6,11 @@ var states: Array[Dictionary] = []
 var labels: Array[Label] = []
 var previous: Array = []
 var reduced_motion: bool = false
+var essence_source := Vector2.ZERO
+var source_valid: bool = false
+var completion_count: int = 0
+const SOUL_CENTER := Vector2(220, 44)
+const FEEDBACK := preload("res://scripts/visual/corpse_processing_feedback.gd")
 
 func bind(target: Node) -> void:
 	game = target
@@ -24,7 +29,33 @@ func bind(target: Node) -> void:
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(label)
 		labels.append(label)
+	game.soul_extractor_completed.connect(_on_souls_completed)
+	game.hematic_press_completed.connect(_on_blood_completed)
 	sync_state()
+
+func _on_souls_completed(amount: int, _remaining: int) -> void:
+	confirm_output(1, amount)
+
+func _on_blood_completed(_remaining: int) -> void:
+	confirm_output(0, 1)
+
+func confirm_output(index: int, amount: int) -> void:
+	if amount <= 0 or not is_instance_valid(game):
+		return
+	completion_count += 1
+	var effect := FEEDBACK.new()
+	game.add_child(effect)
+	effect.set_reduced_motion(game.reduced_motion_enabled)
+	var tint := Color("bb5650") if index == 0 else Color("b994e0")
+	effect.play(to_global(Vector2(70 + index * 150, 44)), game.RESOURCE_FEEDBACK_TARGET,
+		0, 0, tint, tr("REFINERY_GAIN_BLOOD" if index == 0 else "REFINERY_GAIN_SOUL") % amount)
+	game.pulse_resources_panel(tint)
+
+func essence_position() -> Vector2:
+	if reduced_motion or states.size() < 2:
+		return SOUL_CENTER
+	var t: float = smoothstep(0.0, 0.65, float(states[1].progress))
+	return essence_source.lerp(SOUL_CENTER, t) + Vector2(0, -sin(t * PI) * 32)
 
 func _process(_delta: float) -> void:
 	sync_state()
@@ -38,7 +69,14 @@ func sync_state() -> void:
 		build_state(game.hematic_press_unlocked, game.hematic_press_queue, game.hematic_press_timer, game.HEMATIC_PRESS_CYCLE_SECONDS, paused),
 		build_state(game.soul_extractor_unlocked, game.soul_extraction_queue.size(), game.soul_extractor_timer, game.get_soul_extractor_cycle_seconds(), paused),
 	]
-	var snapshot: Array = [states.duplicate(true), reduced_motion, TranslationServer.get_locale()]
+	source_valid = false
+	if states[1].active:
+		var candidate: Variant = game.soul_extraction_queue[0].get("corpse")
+		if is_instance_valid(candidate) and candidate is Button and not candidate.is_queued_for_deletion():
+			var corpse: Button = candidate
+			source_valid = true
+			essence_source = to_local(corpse.global_position + corpse.size * 0.5)
+	var snapshot: Array = [states.duplicate(true), reduced_motion, TranslationServer.get_locale(), source_valid, essence_source]
 	if snapshot == previous:
 		return
 	previous = snapshot
@@ -56,6 +94,15 @@ func build_state(unlocked: bool, count: int, timer: float, cycle: float, paused:
 	}
 
 func _draw() -> void:
+	# Only the head of the real queue emits essence; the corpse stays on the ground.
+	if source_valid:
+		var center: Vector2 = essence_position()
+		var tint := Color("b994e0")
+		if not reduced_motion and float(states[1].progress) < 0.65:
+			draw_arc(essence_source, 15, 0, TAU, 24, Color(tint, 0.45), 1.5)
+			draw_line(center, center.lerp(essence_source, 0.12), Color(tint, 0.35), 2)
+			draw_circle(center, 12, Color(tint, 0.18))
+			draw_circle(center, 4, tint)
 	for index: int in range(states.size()):
 		var state: Dictionary = states[index]
 		if not state.unlocked:

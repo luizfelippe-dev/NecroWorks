@@ -1,5 +1,9 @@
 # Direção de Arte
 
+## Essência arcana — 02/10/2026
+
+Anel discreto marca apenas a origem ativa; uma esfera violeta segue arco até o vaso durante os primeiros 65% do ciclo. O restante concentra energia. É extração de essência, não deslocamento do cadáver. Confirmação de saída reaproveita o efeito até recursos, com texto próprio. Movimento reduzido omite deslocamentos. Arte ilustrada permanece pendente.
+
 ## Refinaria procedural — 02/10/2026
 
 Vermelho diferencia o enchimento hemático; violeta, a concentração de almas. Dois vasos geométricos com tubos e medidor fornecem a leitura funcional. Não equivalem ao acabamento ilustrado da oficina e não encerram a arte da fábrica. A apresentação arcana ainda não transporta o corpo nem representa a saída até o HUD.

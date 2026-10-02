@@ -1,5 +1,7 @@
 # NecroWorks — Estado do Projeto
 
+**02/10 — transporte arcano:** essência da primeira reserva viaja até o extrator. Sangue/Almas geram confirmação visual após conclusão real. Arte permanece procedural; não é transporte físico do cadáver nem animação final das máquinas.
+
 **02/10 — refinaria funcional:** indicadores de Sangue/Almas em cena consultam o progresso real. Não acrescentam recursos, produção ou campos de save. Acabamento procedural inicial; arte ilustrada e transferência arcana seguem pendentes.
 
 **02/10 — oficina de tropas:** montagem óssea e cuba aparecem em cena, sincronizadas às filas existentes. Arqueiro usa sua própria pose. Custos, tempos e saves permanecem iguais. Sangue/Almas e animação autoral continuam pendentes.

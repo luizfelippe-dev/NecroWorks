@@ -10,6 +10,8 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
+02/10 — essência arcana: a cabeça da fila emite uma esfera até o extrator usando o timer existente (trajeto até 65%, concentração no restante). O corpo não é ocultado. Sinais de conclusão confirmam Sangue/Almas no painel de recursos, sem crédito adicional. Movimento reduzido dispensa viagens. Regressão cobre referência destruída, sucessão, preparação e reconstrução do apresentador. Arte final das máquinas e animação de personagens continuam abertas.
+
 02/10 — refinaria: `RareRefineryVisual` apresenta Sangue e Almas a partir dos timers reais. Indicadores procedurais só aparecem após desbloqueio, respeitam preparação e movimento reduzido, sem escrever em economia ou saves. Capturas `--refinery` usam perfil descartável com desbloqueios explícitos; gameplay normal conserva a progressão. CI 37010427159 do commit 615aaaf aprovado. Este corte é funcional, não arte final das máquinas; transporte arcano e confirmação de saída ainda pendentes.
 
 02/10 — oficina de tropas integrada por `UndeadWorkshopVisual`: lê filas, receitas e timers; anima montagem e cuba, confirma unidade criada sem alterar economia ou saves. Capturas 1280×720 verificadas e regressão dedicada. CI anterior 37009011996 confirmado como sucesso. Próximos cortes: Sangue/Almas, animação de personagem aprovada e setores distintos. Não declarar a revisão de experiência encerrada.

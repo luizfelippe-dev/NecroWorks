@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+Ampliação de 02/10: a refinaria testa exclusividade da origem, sucessão da fila, referência destruída, ausência de crédito adicional, confirmação no alvo correto, preparação estável e reconstrução sem replay. `--refinery` também captura o trajeto a 30% do ciclo. Os testes de feedback material preservam a compatibilidade do texto opcional.
+
 `rare_refinery_visual_runner.gd` cobre bloqueio/desbloqueio, timers reais, sincronização sem mutações, preparação, modo reduzido, localização, conclusão e fim da run. `capture_presentation.gd -- --refinery` usa desbloqueios explícitos apenas no perfil descartável e captura PT-BR/EN/ES. Conferir margem acima das abas.
 
 `undead_workshop_visual_runner.gd` verifica ausência de mudanças em recursos/filas/timers, preparação, modo reduzido, identidade do arqueiro e confirmação após criação real. `capture_presentation.gd -- --workshop` registra 15%, 50% e 90% das máquinas no jogo renderizado. Não substitui avaliação humana em movimento.
