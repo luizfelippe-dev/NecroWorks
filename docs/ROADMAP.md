@@ -8,6 +8,8 @@
 
 ## Revisão de experiência — 01/10/2026
 
+13/10 — segundo piloto: caminhada do zumbi com oito quadros integrada. Permanecem em aberto ataque por quadros do tanque, outras nove famílias, antecipação e aprovação humana de naturalidade. Não marcar animação do elenco concluída.
+
 13/10: cadência do piloto ligada à distância real e laboratório comparativo disponíveis. Aprovação em movimento por pessoas externas permanece aberta; não confundir suíte técnica com aceite artístico.
 
 Revisão visual de 02/10: máquinas frontalizadas passam ao monitor recolhível da HUD, não ao chão em perspectiva. Carcaça ilustrada da refinaria integrada. Piloto do esqueleto guerreiro: marcha com 8 quadros e impacto existente + 3 recuperações; não encerra o item de animação aprovada. Antecipação, revisão de naturalidade e migração das demais famílias permanecem pendentes.

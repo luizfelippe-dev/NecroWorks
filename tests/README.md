@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+`zombie_sequence_runner.gd` valida oito recortes, cadência por distância a 30/60/144 FPS, parada, retorno ao shader no ataque, hit sem cancelar golpe e modo reduzido. Laboratório: `Godot --path . --script tools/preview_skeleton_motion.gd -- --zombie`; opção adicional `--capture` salva `animation_lab_zombie.png`. Captura geral inclui `zombie_sequence_1280x720.png`.
+
 `animation_lab_runner.gd` verifica os controles de velocidade, pausa, parada, ataque e movimento reduzido do laboratório, usando os drivers reais e sem instanciar persistência.
 
 13/10: `skeleton_sequence_runner.gd` compara a fase por distância a 30/60/144 FPS, velocidades 45/90, parada e reposicionamento. Laboratório visual: `Godot --path . --script tools/preview_skeleton_motion.gd`; acrescentar `-- --capture` para screenshot em `artifacts/presentation/animation_lab.png`. Sem perfil, checkpoint ou gameplay carregado.

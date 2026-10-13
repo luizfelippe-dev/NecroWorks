@@ -120,7 +120,8 @@ func capture() -> void:
 	shell.queue_free()
 	await process_frame
 	await capture_motion()
-	await capture_skeleton_sequence()
+	await capture_unit_sequence("skeleton")
+	await capture_unit_sequence("zombie")
 	for suffix: String in ["profile.json", "settings.cfg", "run.json", "run.json.bak"]:
 		var path := TEST_PATH + suffix
 		if FileAccess.file_exists(path):
@@ -174,7 +175,7 @@ func capture_motion() -> void:
 		await process_frame
 
 
-func capture_skeleton_sequence() -> void:
+func capture_unit_sequence(visual_id: String) -> void:
 	var catalog := preload("res://scripts/visual/unit_sprite_catalog.gd")
 	var gallery := Node2D.new()
 	root.add_child(gallery)
@@ -182,25 +183,25 @@ func capture_skeleton_sequence() -> void:
 	background.size = Vector2(1920, 1080)
 	background.color = Color("121916")
 	gallery.add_child(background)
-	for index: int in range(12):
+	for index: int in range(12 if visual_id == "skeleton" else 8):
 		var host := Node2D.new()
 		host.position = Vector2(240 + (index % 4) * 460, 165 + (index / 4) * 345)
 		gallery.add_child(host)
 		var sprite := Sprite2D.new()
-		sprite.texture = catalog.get_texture("skeleton")
+		sprite.texture = catalog.get_texture(visual_id)
 		sprite.scale = Vector2.ONE * 260.0 / sprite.texture.get_height()
 		host.add_child(sprite)
 		var driver := preload("res://scripts/visual/unit_animation_driver.gd").new()
 		host.add_child(driver)
 		driver.bind(sprite)
-		driver.configure_state_textures(catalog.get_animation_textures("skeleton"))
-		driver.configure_frame_sequences(catalog.get_animation_sequences("skeleton"))
+		driver.configure_state_textures(catalog.get_animation_textures(visual_id))
+		driver.configure_frame_sequences(catalog.get_animation_sequences(visual_id))
 		driver.set_process(false)
 		driver.play("move" if index < 8 else "attack")
 		driver.gait_phase = TAU * (index + 0.1) / 8
 		driver.action_elapsed = (index - 8 + 0.1) / 4.0 * driver.ATTACK_DURATION if index >= 8 else 0
 		driver._render_pose()
-	await save_frame("skeleton_sequence")
+	await save_frame(visual_id + "_sequence")
 	gallery.queue_free()
 	await process_frame
 

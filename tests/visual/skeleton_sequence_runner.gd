@@ -7,7 +7,7 @@ func validate() -> void:
 	var catalog := preload("res://scripts/visual/unit_sprite_catalog.gd")
 	var sequences: Dictionary = catalog.get_animation_sequences("skeleton")
 	assert(sequences.move.size() == 8 and sequences.attack.size() == 4)
-	assert(catalog.get_animation_sequences("zombie").is_empty())
+	assert(catalog.get_animation_sequences("mage").is_empty())
 	for fps: int in [30, 60, 144]:
 		assert(is_equal_approx(distance_cycle(fps, 90.0), TAU / 0.56))
 		assert(is_equal_approx(distance_cycle(fps, 45.0), TAU / 0.56 / 2))

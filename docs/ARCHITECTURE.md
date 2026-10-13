@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Sequência do tanque — 13/10/2026
+
+Catálogo cacheia oito AtlasTexture da folha 4×2 do zumbi, sem gutter horizontal; o parâmetro opcional de recorte preserva a correção específica do esqueleto. Só MOVE possui sequência para o tanque. Attack/hit/death seguem state_textures, retomando ShaderMaterial. A fase por distância reutiliza walk_period 0,76 s. Laboratório seleciona `visual_id` pelo argumento `--zombie`.
+
 ## Cadência por distância — 13/10/2026
 
 Quando existe sequência MOVE, `gait_phase` avança por distância dividida por `walk_period × 90`, somente durante movimento observado no estado MOVE. Reposicionamentos ≥100 unidades por atualização permanecem excluídos. Animações procedurais legadas conservam a regra anterior. O laboratório alimenta posições virtuais no driver real, sem instanciar gameplay ou acessar persistência.

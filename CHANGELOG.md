@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Caminhada do zumbi por quadros — 13/10
+
+Validação: 93/93 runners, exportação e smoke Windows aprovados; comparação em 1100×700 e oito recortes em 1280×720 conferidos. Aceite artístico em run humana permanece pendente.
+
+- Oito poses novas de marcha do tanque, preservando cadência pesada e avanço por distância; shader de deformação desativado durante a sequência.
+- Ataque, dano e morte continuam nas poses V1; custos, atributos e combate não mudam.
+- Laboratório aceita `--zombie`; captura de oito quadros e regressão em 30/60/144 FPS, parada, ataque e movimento reduzido.
+- Arte gerada com transparência, referência interna e prompt registrados; aprovação artística em uma run permanece pendente.
+
 ### Cadência por distância e laboratório — 13/10
 
 Validação: gate com 91 runners aprovado, mais o novo `animation_lab_runner` executado separadamente; exportação e smoke Windows aprovados. Prévia renderizada em 1100×700. Aprovação artística em movimento permanece pendente.

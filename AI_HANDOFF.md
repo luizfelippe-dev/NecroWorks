@@ -4,11 +4,13 @@
 
 ## Estado atual
 
-A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial e monitor de produção recolhível. O esqueleto guerreiro tem um piloto de oito quadros novos de caminhada e três de recuperação; as outras dez famílias seguem com poses V1 e movimento procedural. O ataque não é cancelado pelo flash de dano. Naturalidade e antecipação ainda precisam de avaliação em run manual. Regras, economia e balanceamento permanecem intactos.
+A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial e monitor de produção recolhível. Guerreiro esqueleto e zumbi têm oito quadros de caminhada cada; o guerreiro tem também três poses de recuperação. As outras nove famílias seguem com poses V1 e movimento procedural, assim como o ataque do zumbi. O ataque não é cancelado pelo flash de dano. Naturalidade e antecipação ainda precisam de avaliação em run manual. Regras, economia e balanceamento permanecem intactos.
 
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+13/10 — caminhada do zumbi integrada: 8 quadros em `zombie_tank_v2/walk_sheet.png`, sem deslocamento de margem usado pelo esqueleto. Ataque/hit/death V1 preservados. `preview_skeleton_motion.gd -- --zombie` seleciona o tanque; `--capture` salva `animation_lab_zombie.png`. Captura geral também inclui `zombie_sequence`. CI 38461876028 (a12b980) aprovado. Nove famílias ainda sem caminhada por quadros e ataque do zumbi ainda não migrado.
 
 13/10 — cadência do piloto agora deriva da distância, sem avanço parado ou em teleportes. Regressão cobre 30/60/144 FPS e velocidades 45/90. `tools/preview_skeleton_motion.gd` compara V1/piloto sem saves, com controles de velocidade, pausa, parada, ataque e modo reduzido; `-- --capture` salva imagem de diagnóstico. CI 37046415805 (175187d) confirmado aprovado. Ainda não migrar as dez famílias como se o piloto tivesse aprovação humana.
 

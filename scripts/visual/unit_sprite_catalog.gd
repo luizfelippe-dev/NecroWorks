@@ -301,8 +301,17 @@ static func get_animation_textures(visual_id: String) -> Dictionary:
 
 
 static var skeleton_sequences: Dictionary = {}
+static var zombie_sequences: Dictionary = {}
 
 static func get_animation_sequences(visual_id: String) -> Dictionary:
+	if visual_id == "zombie":
+		if zombie_sequences.is_empty():
+			var sheet: Texture2D = load("res://assets/sprites/units/zombie_tank_v2/walk_sheet.png")
+			var frames: Array[Texture2D] = []
+			for index: int in range(8):
+				frames.append(sheet_frame(sheet, index, 0.0))
+			zombie_sequences = {"move": frames}
+		return zombie_sequences.duplicate(true)
 	if visual_id != "skeleton":
 		return {}
 	if skeleton_sequences.is_empty():
@@ -316,13 +325,13 @@ static func get_animation_sequences(visual_id: String) -> Dictionary:
 			sheet_frame(recovery, 5), sheet_frame(recovery, 6), sheet_frame(recovery, 7)]}
 	return skeleton_sequences.duplicate(true)
 
-static func sheet_frame(sheet: Texture2D, index: int) -> AtlasTexture:
+static func sheet_frame(sheet: Texture2D, index: int, gutter_pixels: float = 16.0) -> AtlasTexture:
 	var frame := AtlasTexture.new()
 	frame.atlas = sheet
 	var cell := sheet.get_size() / Vector2(4, 2)
 	var origin := Vector2(index % 4, index / 4) * cell
 	# Generated poses slightly cross nominal columns. Shift within transparent gutters.
-	var gutter: float = 16.0 * sheet.get_width() / 1776.0
+	var gutter: float = gutter_pixels * sheet.get_width() / 1776.0
 	origin.x += gutter
 	var width: float = minf(cell.x, sheet.get_width() - origin.x)
 	frame.region = Rect2(origin, Vector2(width, cell.y))

@@ -1,5 +1,9 @@
 # Direção de Arte
 
+## Tanque por quadros — 13/10/2026
+
+Zumbi recebe oito poses de marcha com barriga, armadura, tanque dorsal e olhos verdes preservados. Arte gerada a partir da referência interna, não desenhada manualmente. Sequência mantém a cadência pesada existente; não replica a frequência do guerreiro. Ataque, dano e morte continuam V1. Capturas dos oito recortes e da comparação renderizada verificadas; avaliação humana em movimento permanece aberta.
+
 ## HUD industrial e piloto por quadros — 02/10/2026
 
 A vista frontal das máquinas não corresponde à perspectiva do chão. A solução adotada é um monitor recolhível de operação, com fundo opaco e moldura, não sombras falsas tentando simular objetos no cenário. Carcaça ilustrada nova da refinaria mantém líquido e energia em runtime. Caminhada do guerreiro tem oito desenhos distintos. Ataque reaproveita impacto V1 e três recuperações isoladas; folhas com quadros sobrepostos foram rejeitadas parcial ou integralmente. Não declarar animação autoral manual nem pacote completo de personagens.

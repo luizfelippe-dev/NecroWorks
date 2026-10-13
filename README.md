@@ -7,6 +7,8 @@
 
 ## High concept
 
+O laboratório de animação também compara o zumbi: acrescente `-- --zombie` ao comando da prévia. O tanque recebeu oito quadros de marcha; seu ataque ainda usa a arte V1.
+
 A apresentação das máquinas fica num monitor recolhível da HUD. O guerreiro esqueleto é o primeiro piloto de animação por quadros. Para comparar com V1 sem carregar save, execute o Godot com `--path . --script tools/preview_skeleton_motion.gd`.
 
 O passe de fábrica de 01/10 liga os restos às poses de morte e mostra uma prensa de materiais sincronizada com a fila. O roadmap registra a próxima prioridade: melhorar animação, ambientes e variedade estratégica antes de ampliar conteúdo em massa.

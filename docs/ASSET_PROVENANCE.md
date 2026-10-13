@@ -1,5 +1,11 @@
 # Proveniência dos Assets
 
+## Caminhada do zumbi V2 — 13/10/2026
+
+Arquivo: `assets/sprites/units/zombie_tank_v2/walk_sheet.png`. Gerado com a ferramenta integrada de imagens da OpenAI usando `assets/sprites/units/zombie_tank_v1/idle.png` como referência de identidade. PNG original copiado com alpha preservado, sem edição de pixels; oito regiões 4×2 consultadas em runtime. Não é desenho manual. Capturas dos recortes e do laboratório verificadas; termos e declaração de conteúdo gerado seguem no gate comercial.
+
+Prompt: “Use case: stylized-concept. Reference image is identity reference for a 2D game animation. Generate a transparent sprite sheet exactly FOUR columns by TWO rows, eight frames of this same heavy zombie tank walking in place facing RIGHT. Preserve bulky belly, metal shoulder and collar armor, green glowing eyes, backpack tank, belt, loincloth, scars. Slow heavy grounded walk cycle: right contact, right down, passing, left lift, left contact, left down, passing, right lift, read row-major. Actual alternating legs, knees bent, subtle counter-swing of arms, no running or jumping. All frames same character size and same lighting, feet floor line at 90% of each cell, tank top at 12%; pelvis centered in each cell. At least 12% transparent margin each side of every cell, no overlap between cells. Compact entire silhouette within each equal square cell, consistent pixel-art-inspired painted rendering matching reference. No text, no grid, no ground, no backdrop, no drop shadows. Eight visibly distinct poses, not copies.”
+
 ## Refinaria e guerreiro V2 — 02/10/2026
 
 Gerados com a ferramenta integrada de imagens da OpenAI, alpha preservado e arquivos originais copiados sem edição de pixels. Referência de identidade do guerreiro: `assets/sprites/units/skeleton_warrior_v1/idle.png`. Não são desenhos manuais. Revisão comercial de termos e divulgação de conteúdo gerado continua obrigatória antes da Steam.

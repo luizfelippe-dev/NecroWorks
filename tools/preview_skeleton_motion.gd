@@ -10,11 +10,14 @@ var frozen := false
 var walking := true
 var reduced := false
 var caption: Label
+var visual_id := "skeleton"
 
 func _initialize() -> void:
 	call_deferred("build")
 
 func build() -> void:
+	if "--zombie" in OS.get_cmdline_user_args():
+		visual_id = "zombie"
 	root.size = Vector2i(1100, 700)
 	root.content_scale_size = Vector2i(1100, 700)
 	var background := ColorRect.new()
@@ -40,16 +43,16 @@ func build() -> void:
 		host.position = Vector2(280 + index * 530, 335)
 		root.add_child(host)
 		var sprite := Sprite2D.new()
-		sprite.texture = CATALOG.get_texture("skeleton")
+		sprite.texture = CATALOG.get_texture(visual_id)
 		sprite.scale = Vector2.ONE * 300.0 / sprite.texture.get_height()
 		host.add_child(sprite)
 		var driver: Node = DRIVER.new()
 		host.add_child(driver)
 		driver.bind(sprite)
-		driver.configure_state_textures(CATALOG.get_animation_textures("skeleton"))
-		driver.configure_motion(CATALOG.get_motion_profile("skeleton"))
+		driver.configure_state_textures(CATALOG.get_animation_textures(visual_id))
+		driver.configure_motion(CATALOG.get_motion_profile(visual_id))
 		if index == 1:
-			driver.configure_frame_sequences(CATALOG.get_animation_sequences("skeleton"))
+			driver.configure_frame_sequences(CATALOG.get_animation_sequences(visual_id))
 		driver.set_process(false)
 		driver.previous_world_position = Vector2.ZERO
 		drivers.append(driver)
@@ -63,7 +66,7 @@ func build() -> void:
 		await create_timer(0.5).timeout
 		await RenderingServer.frame_post_draw
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://artifacts/presentation"))
-		root.get_texture().get_image().save_png("res://artifacts/presentation/animation_lab.png")
+		root.get_texture().get_image().save_png("res://artifacts/presentation/animation_lab_" + visual_id + ".png")
 		quit()
 
 func activate(action: String) -> void:
@@ -83,7 +86,7 @@ func activate(action: String) -> void:
 	refresh_caption()
 
 func refresh_caption() -> void:
-	caption.text = "NECROWORKS — laboratório de animação\n%.1fx | %s | Sem acesso ao save" % [speed, "PAUSADO" if frozen else ("ANDANDO" if walking else "PARADO")]
+	caption.text = "NECROWORKS — laboratório de animação: %s\n%.1fx | %s | Sem acesso ao save" % [visual_id, speed, "PAUSADO" if frozen else ("ANDANDO" if walking else "PARADO")]
 
 func _process(delta: float) -> bool:
 	if not frozen:

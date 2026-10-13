@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 13/10/2026 — O tanque começa a marchar por quadros
+
+Criei e integrei oito poses de caminhada do zumbi usando sua arte atual como referência. Mantive a passada pesada e o ataque anterior para separar a revisão de marcha da revisão de golpe. Ampliei a prévia e as regressões, sem mudar a função de tanque ou o balanceamento. Ainda preciso avaliar naturalidade em run e produzir recuperação/antecipação próprias.
+
 ## 13/10/2026 — O passo acompanha o deslocamento
 
 Retomei pelo piloto e removi o avanço de quadros enquanto a unidade está parada. Agora o ciclo acompanha a distância percorrida, com regressão em três taxas de frames. Acrescentei uma comparação lado a lado com controles para observar marcha e recuperação sem iniciar uma run. Isso melhora a avaliação, mas não substitui animação de antecipação nem aprovação humana.
