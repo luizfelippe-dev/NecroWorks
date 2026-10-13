@@ -1,12 +1,14 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 02/10/2026
+**Atualizado:** 13/10/2026
 
 ---
 
 # Ordem imediata de execução
 
 ## Revisão de experiência — 01/10/2026
+
+13/10: cadência do piloto ligada à distância real e laboratório comparativo disponíveis. Aprovação em movimento por pessoas externas permanece aberta; não confundir suíte técnica com aceite artístico.
 
 Revisão visual de 02/10: máquinas frontalizadas passam ao monitor recolhível da HUD, não ao chão em perspectiva. Carcaça ilustrada da refinaria integrada. Piloto do esqueleto guerreiro: marcha com 8 quadros e impacto existente + 3 recuperações; não encerra o item de animação aprovada. Antecipação, revisão de naturalidade e migração das demais famílias permanecem pendentes.
 

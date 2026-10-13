@@ -141,7 +141,12 @@ func advance(delta: float, world_position: Vector2) -> void:
 	var target_weight := 1.0 if current_animation == MOVE and observed_motion_grace > 0.0 else 0.0
 	locomotion_weight = lerpf(locomotion_weight, target_weight, 1.0 - exp(-18.0 * delta))
 	var pace := clampf(distance / delta / 90.0, 0.65, 1.55) if moving else 1.0
-	gait_phase += delta * TAU / float(profile.get("walk_period", 0.56)) * pace
+	if frame_sequences.has(MOVE):
+		# A real walk cycle follows travelled distance, not time spent standing still.
+		if moving and current_animation == MOVE:
+			gait_phase += distance * TAU / maxf(float(profile.get("walk_period", 0.56)) * 90.0, 1.0)
+	else:
+		gait_phase += delta * TAU / float(profile.get("walk_period", 0.56)) * pace
 	idle_time += delta
 	action_elapsed += delta
 	hit_remaining = maxf(0.0, hit_remaining - delta)

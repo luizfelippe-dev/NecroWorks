@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Cadência por distância e laboratório — 13/10
+
+Validação: gate com 91 runners aprovado, mais o novo `animation_lab_runner` executado separadamente; exportação e smoke Windows aprovados. Prévia renderizada em 1100×700. Aprovação artística em movimento permanece pendente.
+
+- Ciclo por quadros do esqueleto acompanha distância percorrida, sem avançar parado ou em reposicionamento instantâneo.
+- Regressão compara 30/60/144 FPS e duas velocidades, preservando o fallback procedural das demais famílias.
+- Prévia comparativa V1/piloto com 0,5×/1×/2×, pausa, parada, ataque e movimento reduzido; não carrega perfil ou saves.
+- Nenhuma nova arte ou migração de família neste corte; aprovação artística e antecipação pré-impacto permanecem abertas.
+
 ### Monitor industrial e quadros de esqueleto — 02/10
 
 Validação: 91/91 runners, exportação e smoke Windows aprovados; monitor e galeria de quadros conferidos em 1280×720. Fluidez artística em vídeo e run humana ainda não aprovada.

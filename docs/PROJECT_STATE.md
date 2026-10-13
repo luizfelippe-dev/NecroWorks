@@ -1,5 +1,7 @@
 # NecroWorks — Estado do Projeto
 
+**13/10 — cadência:** ciclo por quadros ligado à distância percorrida; parado e reposicionamento não avançam marcha. Laboratório comparativo executável sem save permite revisão visual. Nenhum novo personagem recebeu quadros neste corte.
+
 **02/10 — monitor industrial:** apresentação das máquinas agora pertence explicitamente à HUD e fica recolhida por padrão. Refinaria ilustrada integrada. Primeiro piloto de animação por quadros no esqueleto guerreiro: caminhada 8, ataque impacto existente + 3 recuperações. As demais famílias ainda usam as poses V1/procedural; aprovação de fluidez em vídeo/run humana não concluída.
 
 **02/10 — transporte arcano:** essência da primeira reserva viaja até o extrator. Sangue/Almas geram confirmação visual após conclusão real. Arte permanece procedural; não é transporte físico do cadáver nem animação final das máquinas.

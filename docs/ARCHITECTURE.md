@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Cadência por distância — 13/10/2026
+
+Quando existe sequência MOVE, `gait_phase` avança por distância dividida por `walk_period × 90`, somente durante movimento observado no estado MOVE. Reposicionamentos ≥100 unidades por atualização permanecem excluídos. Animações procedurais legadas conservam a regra anterior. O laboratório alimenta posições virtuais no driver real, sem instanciar gameplay ou acessar persistência.
+
 ## Monitor e sequências — 02/10/2026
 
 `FactoryLiveDock` posiciona os três apresentadores dentro de um painel recolhível da HUD. Não altera filas nem persiste preferência; nasce fechado. Apresentadores continuam filhos do gameplay, usam coordenadas globais para efeitos e ficam abaixo dos modais. Prensa libera a visibilidade do corpo ao fechar. Efeitos partem do botão quando fechado. `UnitSpriteCatalog` cacheia AtlasTexture das folhas do guerreiro; `UnitAnimationDriver` desliga shader nos quadros reais e alinha o pé à pose-base sem redimensionar cada pose pelo conteúdo. Modo reduzido mantém imagens de estado. Impacto não é atrasado.

@@ -1,5 +1,9 @@
 # NecroWorks Test Harnesses
 
+`animation_lab_runner.gd` verifica os controles de velocidade, pausa, parada, ataque e movimento reduzido do laboratório, usando os drivers reais e sem instanciar persistência.
+
+13/10: `skeleton_sequence_runner.gd` compara a fase por distância a 30/60/144 FPS, velocidades 45/90, parada e reposicionamento. Laboratório visual: `Godot --path . --script tools/preview_skeleton_motion.gd`; acrescentar `-- --capture` para screenshot em `artifacts/presentation/animation_lab.png`. Sem perfil, checkpoint ou gameplay carregado.
+
 `factory_live_dock_runner.gd` cobre estado fechado inicial, abrir/fechar, restauração de corpo reservado, processamento com painel fechado e tradução. `skeleton_sequence_runner.gd` cobre 8 quadros de marcha, recuperação, shader desligado durante quadros, hit sem cancelar ataque e modo reduzido. `unit_sprite_runner.gd` distingue sequências reais do fallback V1; `capture_presentation.gd` inclui galeria dos 12 estados do piloto e monitor aberto.
 
 Ampliação de 02/10: a refinaria testa exclusividade da origem, sucessão da fila, referência destruída, ausência de crédito adicional, confirmação no alvo correto, preparação estável e reconstrução sem replay. `--refinery` também captura o trajeto a 30% do ciclo. Os testes de feedback material preservam a compatibilidade do texto opcional.

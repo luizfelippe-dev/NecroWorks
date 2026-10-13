@@ -1,6 +1,6 @@
 # NecroWorks — Continuidade do Desenvolvimento
 
-**Atualizado em:** 02/10/2026
+**Atualizado em:** 13/10/2026
 
 ## Estado atual
 
@@ -9,6 +9,8 @@ A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu il
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+13/10 — cadência do piloto agora deriva da distância, sem avanço parado ou em teleportes. Regressão cobre 30/60/144 FPS e velocidades 45/90. `tools/preview_skeleton_motion.gd` compara V1/piloto sem saves, com controles de velocidade, pausa, parada, ataque e modo reduzido; `-- --capture` salva imagem de diagnóstico. CI 37046415805 (175187d) confirmado aprovado. Ainda não migrar as dez famílias como se o piloto tivesse aprovação humana.
 
 02/10 — revisão de integração: máquinas saíram da composição do cenário e passaram ao `FactoryLiveDock`, monitor recolhível da HUD (fechado por padrão). Fechar restaura corpo transportado; efeitos continuam apontando ao painel de recursos. Refinaria recebeu carcaça ilustrada com câmaras transparentes. Esqueleto guerreiro ganhou 8 quadros de caminhada e 3 poses novas de recuperação após impacto V1, sem shader de deformação nos quadros. Demais dez famílias ainda não migradas; antecipação pré-impacto e aprovação humana continuam abertas. Proveniência e prompts em `docs/ASSET_PROVENANCE.md`.
 

@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 13/10/2026 — O passo acompanha o deslocamento
+
+Retomei pelo piloto e removi o avanço de quadros enquanto a unidade está parada. Agora o ciclo acompanha a distância percorrida, com regressão em três taxas de frames. Acrescentei uma comparação lado a lado com controles para observar marcha e recuperação sem iniciar uma run. Isso melhora a avaliação, mas não substitui animação de antecipação nem aprovação humana.
+
 ## 02/10/2026 — Máquinas como interface, não adereços soltos
 
 A perspectiva frontal das máquinas destoava do campo. Reuni a produção num monitor da HUD que abre e fecha, mantendo o combate livre por padrão. Substituí também os vasos simples por uma carcaça ilustrada. No guerreiro esqueleto integrei oito desenhos de marcha e três de recuperação; descartei recortes que cruzavam quadros vizinhos e mantive o impacto sincronizado ao dano. Ainda falta validar a naturalidade em movimento e migrar as demais famílias.
