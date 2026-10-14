@@ -1,8 +1,10 @@
 # NecroWorks — Índice da documentação
 
-## Como consulto o projeto
+## Por onde começar
 
-Começo pelo [estado atual](PROJECT_STATE.md), sigo para o [roadmap](ROADMAP.md) e consulto os [gates de release](RELEASE_GATES.md) para separar implementação de validação. Registro decisões em primeira pessoa; mantenho contratos técnicos objetivos e a narrativa ficcional com seu próprio narrador.
+- [Estado atual](PROJECT_STATE.md): funcionalidades implementadas e pendências.
+- [Roadmap](ROADMAP.md): próximas etapas e prioridades.
+- [Gates de release](RELEASE_GATES.md): testes e critérios de lançamento.
 
 ## Corte atual — 14/10/2026
 
@@ -37,7 +39,3 @@ Integro uma faixa industrial permanente com prensa, montagem/cuba e refinaria. R
 - [Continuidade](../AI_HANDOFF.md)
 - [Histórico de mudanças](../CHANGELOG.md)
 - [Testes](../tests/README.md)
-
-## Critério editorial
-
-Escrevo decisões e objetivos com “eu”, “mantenho”, “quero” ou verbos equivalentes, sem narrar pedidos de outra pessoa. Preservo a origem dos assets e os limites das validações. Trato entradas datadas como histórico; quando uma decisão muda, priorizo a seção de estado vigente. Não altero o sentido técnico da palavra “nós” quando ela designa objetos da árvore do Godot.

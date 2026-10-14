@@ -2,7 +2,7 @@
 
 Quero que o processamento e a criação de tropas sejam visíveis durante a batalha. Uso uma linha industrial permanente para apresentar as filas reais, sem criar esperas adicionais ou recompensas decorativas. Preservo os botões existentes nesta etapa; ainda preciso testar legibilidade e ritmo com o exército completo.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 ## Hipótese de experiência — 01/10/2026
 

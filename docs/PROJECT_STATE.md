@@ -4,7 +4,7 @@
 
 Mantenho a produção visível numa faixa industrial horizontal. Reaproveito prensa, montagem/cuba e refinaria; preservo filas, desbloqueios e tempos reais. Reservo espaço reduzindo a formação vertical, sem mudar capacidade. Ainda preciso refinar a arte e validar a composição numa run completa. Os registros abaixo descrevem os cortes anteriores.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 **14/10 — estabilidade:** alinhamento dos pés ignora resíduos de transparência, marcha lenta preservada em FPS alto e laboratório ampliado às onze famílias. 93 testes e build Windows aprovados. Sem novas artes; avaliação humana e antecipação permanecem abertas.
 

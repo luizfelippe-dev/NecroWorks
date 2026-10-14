@@ -1,8 +1,6 @@
 # NecroWorks — Lore
 
-Apresento abaixo a narrativa do mundo, mantendo o narrador ficcional em terceira pessoa. Não altero o cânone neste corte: a faixa industrial reforça a transformação de mortos em produção, mas não acrescenta eventos ou personagens.
-
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 ## Premissa
 

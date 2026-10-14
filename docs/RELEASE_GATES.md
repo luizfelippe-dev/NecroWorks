@@ -6,7 +6,7 @@ Validei 93/93 runners em 118,51 s, exportação Windows e inicialização do exe
 
 Mantenho como gate técnico a suíte completa, exportação Windows e inicialização do executável. Para esta faixa, acrescento verificação de formação fora da plataforma, pausa da esteira e captura renderizada. Não declaro o visual aprovado apenas por passar testes. Consulto o resultado reproduzível em `artifacts/validation/summary.json`; os números datados abaixo são históricos.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 **02/10 — transporte:** 87/87 runners em 122,71 s; exportação e smoke Windows aprovados. Build: 126.437.744 bytes, SHA-256 `89651C217017E5E7FEB30B5598F210C44403E53B65141F2D0E38AE4FB6A28FCC`. Capturas 1280×720 inspecionadas. O commit anterior 6e8d823 também passou remotamente na execução 36926406429. Dados abaixo são históricos.
 

@@ -2,9 +2,9 @@
 
 ## 14/10/2026 — A produção fica à vista
 
-Levo as máquinas para uma faixa horizontal permanente, com apoio e conexões compartilhadas. Reservo espaço abaixo da formação e mantenho a produção ligada às filas reais. Reorganizo a consulta dos documentos em um índice e escrevo minhas decisões em primeira pessoa. Ainda preciso refinar o conjunto visual; esta composição não equivale à arte final das referências.
+Levei as máquinas para uma faixa horizontal permanente, com apoio e conexões compartilhadas. Reservei espaço abaixo da formação e mantive a produção ligada às filas reais. Também organizei um índice para facilitar a consulta da documentação. Ainda preciso refinar o conjunto visual para aproximá-lo das referências.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 ## 14/10/2026 — Alinhamento antes de multiplicar as animações
 

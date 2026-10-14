@@ -2,7 +2,7 @@
 
 Preservo este aceite como registro técnico de setembro. Não o uso para aprovar automaticamente a nova linha industrial, a qualidade artística ou o lançamento. Para a situação atual, consulto `PROJECT_STATE.md`, `ROADMAP.md` e os gates de release.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 **Fechada em:** 08/09/2026
 

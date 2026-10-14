@@ -4,7 +4,7 @@
 
 Integro uma primeira faixa industrial permanente com os assets atuais. Minha próxima prioridade é validar a leitura com 36 tropas e refinar escala, integração visual e transições de processamento/montagem. Depois avanço na antecipação de ataques e nos setores distintos. Não marco a fábrica final nem as animações como concluídas. Uso os itens abaixo como histórico e critérios detalhados.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 **Atualizado:** 14/10/2026
 

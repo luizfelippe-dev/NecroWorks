@@ -2,7 +2,7 @@
 
 Registro a origem dos assets e preservo os prompts e referências utilizados. Neste corte, reaproveito as carcaças existentes; construo plataforma, trilhos e tubulação por desenho em código. Não incorporei as imagens de referência como assets distribuídos nem gerei novas imagens. Mantenho a identificação de conteúdo gerado e a revisão comercial antes do lançamento.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 ## Ataque do zumbi V2 — 14/10/2026
 

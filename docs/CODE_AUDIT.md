@@ -2,7 +2,7 @@
 
 Mantenho a mudança concentrada no apresentador da fábrica e na política de formação. Não retomo uma separação ampla do controlador neste corte. Preservo as alterações locais preexistentes em main.tscn e project.godot fora do commit.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 **Revisado:** 11/09/2026
 

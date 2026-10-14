@@ -2,7 +2,7 @@
 
 Organizo a apresentação industrial em `FactoryLiveDock`, agora uma faixa permanente em (20,640), com tamanho 1480×130. Reaproveito os três apresentadores existentes e conecto suas carcaças com plataforma, trilhos e tubulação. Reservo espaço com formação de seis linhas a 55 px, centro Y=450 e limite Y=600. Não altero recursos, filas, capacidade de 36 unidades ou dano; a nova geometria merece observação em run.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 ## Ataque do tanque — 14/10/2026
 

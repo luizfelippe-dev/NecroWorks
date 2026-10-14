@@ -2,7 +2,7 @@
 
 Uso o preset Windows Desktop e o gate de release para testar e exportar. A mudança da linha industrial não exige novo preset ou migração de save. Consulto o resultado atual em `artifacts/validation/summary.json`; mantenho os comandos de reprodução abaixo.
 
-[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+[Índice da documentação](INDEX.md)
 
 O preset `Windows Desktop` exporta para `builds/windows/NecroWorks.exe`. A pasta `builds` fica fora do Git.
 
