@@ -2,6 +2,8 @@
 
 ## Ataque do tanque — 14/10/2026
 
+`UnitAnimationDriver.visible_bounds()` mede alpha >= 33/255, com fallback de canvas quando não há silhueta. Cache por Texture2D evita varredura a cada frame; assets não são alterados. Limiar de movimento: 0,01 px/s; deslocamentos >= 100 px por amostra continuam tratados como teleportes. Laboratório reconstrói somente dois hosts ao trocar família, sem duplicar controles ou carregar perfil. Captura usa `attack_duration` do catálogo.
+
 Catálogo cacheia três AtlasTexture de `zombie_tank_v2/attack_sheet.png`, com regiões 450×410 e origens (150,130), (750,130), (750,720). PNG original preservado; região inferior esquerda não utilizada. ATTACK usa 0,38 s do perfil existente e começa no impacto, sem mudar combate. Modo reduzido usa a pose V1; IDLE/HIT/DEATH preservam fallback. Captura calcula quantidade de quadros a partir do catálogo.
 
 ## Sequência do tanque — 13/10/2026

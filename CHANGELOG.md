@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Alinhamento e revisão do elenco — 14/10
+
+- Ancoragem dos pés ignora resíduos quase transparentes; limites cacheados por textura.
+- Marcha lenta independente de FPS, com regressão de 1 px/s a 30/60/144 FPS.
+- Laboratório com seletor das onze famílias, `--unit=ID`, ataque repetido e dano durante a ação; preserva movimento reduzido ao trocar personagem.
+- Galeria usa duração real de ataque do perfil. Sem alteração de regras ou novos sprites.
+
+Validação: 93/93 runners, exportação e smoke Windows aprovados; prévia renderizada em 1100×700 e galeria em 1280×720. Aceite artístico continua aberto.
+
 ### Golpe do tanque — 14/10
 
 Validação: 93/93 runners, exportação e smoke Windows aprovados. Galeria de onze poses conferida em 1280×720. CI anterior 38465704354 (2ae1830) aprovado.

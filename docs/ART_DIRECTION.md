@@ -2,6 +2,8 @@
 
 ## Golpe do tanque — 14/10/2026
 
+Revisão técnica posterior: alinhamento considera alpha >= 33/255, descartando resíduos quase invisíveis. Assets e recortes permanecem intactos, sem esticar individualmente cada pose. Laboratório de todo o elenco permite comparar marcha, ataque repetido e hit; não substitui aprovação artística em movimento.
+
 Três poses selecionadas de uma folha 2×2: extensão, recolhimento e guarda. Quadro inferior esquerdo descartado por trocar o braço ativo; primeira tentativa descartada por anatomia e invasão de células. Recortes de 450×410 compartilham escala e linha dos pés. Arte gerada, não desenhada manualmente. Galeria de onze poses conferida em 1280×720. Sem antecipação pré-impacto neste corte; aprovação em movimento segue pendente.
 
 ## Tanque por quadros — 13/10/2026

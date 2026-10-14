@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 14/10/2026 — Alinhamento antes de multiplicar as animações
+
+Corrigi a medição da silhueta para que pixels quase invisíveis não definam a altura dos pés. Troquei o limite de movimento por quadro por um limite de velocidade, evitando parar a marcha lenta em FPS alto. Ampliei o laboratório às onze famílias, com ataque repetido, dano durante a ação e troca de personagem preservando acessibilidade. Validei 93 cenários e o executável Windows. Não adicionei novas artes ou atraso no dano; antecipação continua exigindo integração com combate.
+
 ## 14/10/2026 — O golpe ganha recuperação própria
 
 Integrei três poses do zumbi: punho estendido, recolhimento e guarda. Descartei a primeira folha por problemas de anatomia e um quadro da folha final por trocar o braço ativo. Mantive o dano no início e os 0,38 s existentes, sem criar atraso visual de impacto. Ampliei a regressão e a galeria de recortes. Ainda falta avaliar a fluidez em uma run e trabalhar a antecipação junto do combate, não como atraso isolado na imagem.

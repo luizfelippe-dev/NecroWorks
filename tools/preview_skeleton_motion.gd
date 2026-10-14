@@ -11,6 +11,10 @@ var walking := true
 var reduced := false
 var caption: Label
 var visual_id := "skeleton"
+const FAMILIES := ["skeleton", "zombie", "skeleton_archer", "ghost", "lich", "human_warrior", "mage", "elf", "grave_marshal", "arcane_auditor", "foreman"]
+var repeating_attack := false
+var attack_clock := 0.0
+var sample_hosts: Array[Node2D] = []
 
 func _initialize() -> void:
 	call_deferred("build")
@@ -18,6 +22,9 @@ func _initialize() -> void:
 func build() -> void:
 	if "--zombie" in OS.get_cmdline_user_args():
 		visual_id = "zombie"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--unit=") and argument.trim_prefix("--unit=") in FAMILIES:
+			visual_id = argument.trim_prefix("--unit=")
 	root.size = Vector2i(1100, 700)
 	root.content_scale_size = Vector2i(1100, 700)
 	var background := ColorRect.new()
@@ -38,10 +45,36 @@ func build() -> void:
 		button.custom_minimum_size = Vector2(80, 42)
 		button.pressed.connect(func(): activate(title))
 		controls.add_child(button)
+	var selector := OptionButton.new()
+	selector.position = Vector2(30, 95)
+	for family: String in FAMILIES:
+		selector.add_item(family)
+	selector.select(FAMILIES.find(visual_id))
+	selector.item_selected.connect(func(index: int): select_family(FAMILIES[index]))
+	root.add_child(selector)
+	var actions := HBoxContainer.new()
+	actions.position = Vector2(310, 95)
+	root.add_child(actions)
+	for title: String in ["Ataque repetido", "Receber dano"]:
+		var button := Button.new()
+		button.text = title
+		button.pressed.connect(func(): activate(title))
+		actions.add_child(button)
+	create_samples()
+	refresh_caption()
+	if "--capture" in OS.get_cmdline_user_args():
+		await create_timer(0.5).timeout
+		await RenderingServer.frame_post_draw
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://artifacts/presentation"))
+		root.get_texture().get_image().save_png("res://artifacts/presentation/animation_lab_" + visual_id + ".png")
+		quit()
+
+func create_samples() -> void:
 	for index: int in range(2):
 		var host := Node2D.new()
 		host.position = Vector2(280 + index * 530, 335)
 		root.add_child(host)
+		sample_hosts.append(host)
 		var sprite := Sprite2D.new()
 		sprite.texture = CATALOG.get_texture(visual_id)
 		sprite.scale = Vector2.ONE * 300.0 / sprite.texture.get_height()
@@ -58,16 +91,27 @@ func build() -> void:
 		drivers.append(driver)
 		var label := Label.new()
 		label.text = "V1 • deformação procedural" if index == 0 else "Piloto • quadros de animação"
+		if index == 1 and driver.frame_sequences.is_empty():
+			label.text = "Atual • ainda sem sequência por quadros"
 		label.position = Vector2(115 + index * 530, 525)
 		label.add_theme_font_size_override("font_size", 20)
-		root.add_child(label)
+		host.add_child(label)
+		label.position -= host.position
+
+func select_family(family: String) -> void:
+	if family not in FAMILIES:
+		return
+	for host: Node2D in sample_hosts:
+		host.free()
+	sample_hosts.clear()
+	drivers.clear()
+	sample_positions = [Vector2.ZERO, Vector2.ZERO]
+	visual_id = family
+	attack_clock = 0.0
+	create_samples()
+	for driver: Node in drivers:
+		driver.set_reduced_motion(reduced)
 	refresh_caption()
-	if "--capture" in OS.get_cmdline_user_args():
-		await create_timer(0.5).timeout
-		await RenderingServer.frame_post_draw
-		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://artifacts/presentation"))
-		root.get_texture().get_image().save_png("res://artifacts/presentation/animation_lab_" + visual_id + ".png")
-		quit()
 
 func activate(action: String) -> void:
 	match action:
@@ -79,6 +123,12 @@ func activate(action: String) -> void:
 		"Atacar":
 			for driver: Node in drivers:
 				driver.play("attack")
+		"Receber dano":
+			for driver: Node in drivers:
+				driver.play("hit")
+		"Ataque repetido":
+			repeating_attack = not repeating_attack
+			attack_clock = 0.0
 		"Movimento reduzido":
 			reduced = not reduced
 			for driver: Node in drivers:
@@ -87,9 +137,16 @@ func activate(action: String) -> void:
 
 func refresh_caption() -> void:
 	caption.text = "NECROWORKS — laboratório de animação: %s\n%.1fx | %s | Sem acesso ao save" % [visual_id, speed, "PAUSADO" if frozen else ("ANDANDO" if walking else "PARADO")]
+	if repeating_attack:
+		caption.text += " | ATAQUE REPETIDO"
 
 func _process(delta: float) -> bool:
 	if not frozen:
+		if repeating_attack:
+			attack_clock -= delta * speed
+			if attack_clock <= 0.0:
+				activate("Atacar")
+				attack_clock = 1.35
 		for index: int in range(drivers.size()):
 			if walking:
 				sample_positions[index].x += 90.0 * delta * speed

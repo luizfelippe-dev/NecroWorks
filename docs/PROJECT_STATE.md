@@ -1,5 +1,7 @@
 # NecroWorks — Estado do Projeto
 
+**14/10 — estabilidade:** alinhamento dos pés ignora resíduos de transparência, marcha lenta preservada em FPS alto e laboratório ampliado às onze famílias. 93 testes e build Windows aprovados. Sem novas artes; avaliação humana e antecipação permanecem abertas.
+
 **14/10 — golpe do tanque:** sequência de três poses integrada, com impacto visual no início e recuperação em 0,38 s. Sem alteração de dano, cooldown, economia ou saves. Nove famílias ainda sem sequências autorais; aprovação artística e antecipação permanecem abertas.
 
 **13/10 — zumbi:** segunda família com caminhada por quadros (oito poses). Mantém cadência de tanque, ataque V1, atributos e economia. Integração técnica e capturas não equivalem a aprovação artística da fluidez.

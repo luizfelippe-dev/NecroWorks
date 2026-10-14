@@ -8,6 +8,8 @@
 
 ## Revisão de experiência — 01/10/2026
 
+14/10 — estabilização: ancoragem por alpha visível, marcha lenta independente de FPS e laboratório de todo o elenco com ataque repetido/hit. Não encerra antecipação sincronizada, novas artes das nove famílias restantes ou avaliação externa.
+
 14/10 — segundo piloto: zumbi com oito quadros de caminhada e três poses de golpe/recuperação integrados. Permanecem em aberto outras nove famílias, antecipação sincronizada ao combate e aprovação humana de naturalidade. Não marcar animação do elenco concluída.
 
 13/10: cadência do piloto ligada à distância real e laboratório comparativo disponíveis. Aprovação em movimento por pessoas externas permanece aberta; não confundir suíte técnica com aceite artístico.

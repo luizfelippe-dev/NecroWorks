@@ -11,6 +11,7 @@ func validate() -> void:
 	for fps: int in [30, 60, 144]:
 		assert(is_equal_approx(distance_cycle(fps, 90.0), TAU / 0.56))
 		assert(is_equal_approx(distance_cycle(fps, 45.0), TAU / 0.56 / 2))
+		assert(is_equal_approx(distance_cycle(fps, 1.0), TAU / (0.56 * 90)))
 	var host := Node2D.new()
 	root.add_child(host)
 	var sprite := Sprite2D.new()

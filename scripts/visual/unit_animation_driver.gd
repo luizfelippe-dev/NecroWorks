@@ -37,6 +37,7 @@ var motion_material: ShaderMaterial
 var profile: Dictionary = {}
 var death_finished := false
 static var texture_bounds: Dictionary = {}
+const VISIBLE_ALPHA := 33
 
 
 func bind(target_sprite: Sprite2D) -> void:
@@ -127,7 +128,8 @@ func advance(delta: float, world_position: Vector2) -> void:
 		return
 	var distance := world_position.distance_to(previous_world_position)
 	previous_world_position = world_position
-	var moving := distance > 0.015 and distance < 100.0
+	# Threshold is a speed, not a per-frame distance: slow motion must work at high FPS.
+	var moving := distance > 0.01 * delta and distance < 100.0
 	if moving:
 		observed_motion_grace = 0.08
 		if current_animation == IDLE:
@@ -236,8 +238,33 @@ func _set_texture(texture: Texture2D) -> void:
 		if source != null:
 			if source.is_compressed():
 				source.decompress()
-			var used := source.get_used_rect()
+			var used := visible_bounds(source)
 			var dimensions := Vector2(source.get_size())
 			bounds = Vector4(used.position.x / dimensions.x, used.position.y / dimensions.y, used.size.x / dimensions.x, used.size.y / dimensions.y)
 		texture_bounds[texture] = bounds
 	motion_material.set_shader_parameter("body_bounds", texture_bounds[texture])
+
+
+static func visible_bounds(source: Image) -> Rect2i:
+	# Generated transparent sheets can contain almost invisible pixels at the edges.
+	# Only the visible silhouette anchors the feet. Cache the result per texture.
+	if source.get_format() != Image.FORMAT_RGBA8:
+		source = source.duplicate()
+		source.convert(Image.FORMAT_RGBA8)
+	var pixels := source.get_data()
+	var width := source.get_width()
+	var left := width
+	var top := source.get_height()
+	var right := -1
+	var bottom := -1
+	for y: int in range(source.get_height()):
+		for x: int in range(width):
+			if pixels[(y * width + x) * 4 + 3] < VISIBLE_ALPHA:
+				continue
+			left = mini(left, x)
+			right = maxi(right, x)
+			top = mini(top, y)
+			bottom = maxi(bottom, y)
+	if right < 0:
+		return Rect2i(Vector2i.ZERO, source.get_size())
+	return Rect2i(left, top, right - left + 1, bottom - top + 1)

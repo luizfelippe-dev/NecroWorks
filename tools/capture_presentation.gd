@@ -185,6 +185,7 @@ func capture_unit_sequence(visual_id: String) -> void:
 	gallery.add_child(background)
 	var sequences: Dictionary = catalog.get_animation_sequences(visual_id)
 	var attack_count: int = sequences.get("attack", []).size()
+	var motion_profile: Dictionary = catalog.get_motion_profile(visual_id)
 	for index: int in range(8 + attack_count):
 		var host := Node2D.new()
 		host.position = Vector2(240 + (index % 4) * 460, 165 + (index / 4) * 345)
@@ -198,10 +199,11 @@ func capture_unit_sequence(visual_id: String) -> void:
 		driver.bind(sprite)
 		driver.configure_state_textures(catalog.get_animation_textures(visual_id))
 		driver.configure_frame_sequences(catalog.get_animation_sequences(visual_id))
+		driver.configure_motion(motion_profile)
 		driver.set_process(false)
 		driver.play("move" if index < 8 else "attack")
 		driver.gait_phase = TAU * (index + 0.1) / 8
-		driver.action_elapsed = (index - 8 + 0.1) / attack_count * driver.ATTACK_DURATION if index >= 8 else 0
+		driver.action_elapsed = (index - 8 + 0.1) / attack_count * float(motion_profile.attack_duration) if index >= 8 else 0
 		driver._render_pose()
 	await save_frame(visual_id + "_sequence")
 	gallery.queue_free()

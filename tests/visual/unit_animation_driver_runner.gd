@@ -8,6 +8,15 @@ func _initialize() -> void:
 
 
 func run_validation() -> void:
+	var noisy := Image.create(10, 10, false, Image.FORMAT_RGBA8)
+	noisy.fill(Color(1, 1, 1, 0.01))
+	noisy.fill_rect(Rect2i(2, 3, 5, 4), Color.WHITE)
+	assert(DRIVER_SCRIPT.visible_bounds(noisy) == Rect2i(2, 3, 5, 4))
+	noisy.fill(Color.TRANSPARENT)
+	assert(DRIVER_SCRIPT.visible_bounds(noisy) == Rect2i(0, 0, 10, 10))
+	noisy.convert(Image.FORMAT_RGB8)
+	assert(DRIVER_SCRIPT.visible_bounds(noisy) == Rect2i(0, 0, 10, 10))
+	validate_ground_alignment()
 	var host := Node2D.new()
 	var sprite := Sprite2D.new()
 	var idle_texture := create_test_texture(Color.GREEN)
@@ -108,3 +117,34 @@ func create_test_texture(color: Color) -> ImageTexture:
 	var image := Image.create(2, 2, false, Image.FORMAT_RGBA8)
 	image.fill(color)
 	return ImageTexture.create_from_image(image)
+
+
+func validate_ground_alignment() -> void:
+	var host := Node2D.new()
+	root.add_child(host)
+	var sprite := Sprite2D.new()
+	sprite.texture = create_test_texture(Color.WHITE)
+	host.add_child(sprite)
+	var driver: Node = DRIVER_SCRIPT.new()
+	host.add_child(driver)
+	driver.bind(sprite)
+	driver.set_process(false)
+	driver.configure_state_textures({"idle": sprite.texture})
+	var frames: Array[Texture2D] = []
+	for floor_y: int in [6, 8]:
+		var source := Image.create(10, 10, false, Image.FORMAT_RGBA8)
+		source.fill(Color(1, 1, 1, 0.01))
+		source.fill_rect(Rect2i(2, 2, 5, floor_y - 2), Color.WHITE)
+		var frame := AtlasTexture.new()
+		frame.atlas = ImageTexture.create_from_image(source)
+		frame.region = Rect2(0, 0, 10, 10)
+		frames.append(frame)
+	driver.configure_frame_sequences({"attack": frames})
+	driver.play("attack")
+	for index: int in range(2):
+		driver.action_elapsed = (index + 0.1) / 2.0 * driver.ATTACK_DURATION
+		driver._render_pose()
+		var bounds: Vector4 = driver.texture_bounds[sprite.texture]
+		var visible_floor: float = sprite.position.y + (bounds.y + bounds.w - 0.5) * 10 * sprite.scale.y
+		assert(is_equal_approx(visible_floor, 1.0))
+	host.free()

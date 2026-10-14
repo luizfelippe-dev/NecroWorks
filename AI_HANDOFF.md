@@ -10,6 +10,8 @@ A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comerc
 
 ## Ordem de continuação
 
+14/10 — alinhamento e revisão: silhueta medida com alpha >= 33/255, cache por textura e limiar de movimento por velocidade. Laboratório com onze famílias, `--unit=ID`, ataque repetido e hit sobreposto; famílias sem quadros identificadas. 93 runners, exportação e smoke Windows aprovados. Sem nova arte ou antecipação neste corte; nove famílias e aprovação humana continuam pendentes.
+
 Validação de 14/10: 93/93 runners, exportação e smoke Windows aprovados; galeria de onze poses em 1280×720. CI anterior 38465704354 (2ae1830) aprovado. Alterações preexistentes em main.tscn e project.godot permanecem fora deste commit.
 
 14/10 — ataque do zumbi integrado: golpe estendido, recolhimento e guarda, com recortes compartilhando tamanho e linha dos pés. Duração de 0,38 s preservada; dano continua no início, sem antecipação artificial. Captura geral deriva quantidade de poses do catálogo. Próximos cortes: avaliação em movimento dos dois pilotos, antecipação sincronizada ao combate e demais nove famílias.

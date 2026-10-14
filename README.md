@@ -7,6 +7,8 @@
 
 ## High concept
 
+A prévia permite selecionar todas as onze famílias, repetir ataques e simular dano sem acessar saves. Aceita `-- --unit=human_warrior` (ou outro ID do catálogo). Famílias ainda sem quadros são identificadas explicitamente; o laboratório é uma ferramenta de revisão, não conteúdo de gameplay.
+
 O laboratório de animação também compara o zumbi: acrescente `-- --zombie` ao comando da prévia. O tanque recebeu oito quadros de marcha e três poses de golpe/recuperação. O botão Atacar permite comparar com V1; avaliação de naturalidade em movimento permanece aberta.
 
 A apresentação das máquinas fica num monitor recolhível da HUD. O guerreiro esqueleto é o primeiro piloto de animação por quadros. Para comparar com V1 sem carregar save, execute o Godot com `--path . --script tools/preview_skeleton_motion.gd`.

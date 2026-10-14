@@ -1,5 +1,7 @@
 # NecroWorks Test Harnesses
 
+14/10: regressões de silhueta com alpha residual, imagem vazia/RGB, linha dos pés constante entre recortes, marcha de 1 px/s a 30/60/144 FPS e troca das onze famílias no laboratório. Ataque repetido respeita pausa; hit não cancela golpe; troca mantém movimento reduzido. Prévia: `Godot --path . --script tools/preview_skeleton_motion.gd -- --unit=zombie`; seletor inclui todo o elenco. 93 runners, exportação e smoke Windows aprovados.
+
 `zombie_sequence_runner.gd` valida oito recortes de marcha, três de ataque, cadência por distância a 30/60/144 FPS, parada, retorno ao shader em repouso, hit sem cancelar golpe e modo reduzido. Verifica também ausência de pixels visíveis (alpha >= 0,13) nas bordas dos recortes de ataque. Laboratório: `Godot --path . --script tools/preview_skeleton_motion.gd -- --zombie`; opção adicional `--capture` salva `animation_lab_zombie.png`. Captura geral inclui as onze poses em `zombie_sequence_1280x720.png`.
 
 `animation_lab_runner.gd` verifica os controles de velocidade, pausa, parada, ataque e movimento reduzido do laboratório, usando os drivers reais e sem instanciar persistência.
