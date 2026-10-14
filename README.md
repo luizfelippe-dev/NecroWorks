@@ -1,5 +1,11 @@
 # NecroWorks
 
+Desenvolvo um roguelite de automação necromântica. Para consultar minhas decisões, o estado atual e os testes, começo pelo [índice da documentação](docs/INDEX.md).
+
+## Produção à vista — 14/10/2026
+
+Integro uma primeira faixa industrial permanente abaixo da batalha, reaproveitando as máquinas existentes. Mantenho os controles inferiores e as filas reais. Ainda preciso refinar o acabamento e observar a formação mais compacta numa run completa; não considero o visual finalizado.
+
 > **Industrial Reanimation Solutions**  
 > **Waste Nothing. Raise Everything.**
 
@@ -11,7 +17,7 @@ A prévia permite selecionar todas as onze famílias, repetir ataques e simular 
 
 O laboratório de animação também compara o zumbi: acrescente `-- --zombie` ao comando da prévia. O tanque recebeu oito quadros de marcha e três poses de golpe/recuperação. O botão Atacar permite comparar com V1; avaliação de naturalidade em movimento permanece aberta.
 
-A apresentação das máquinas fica num monitor recolhível da HUD. O guerreiro esqueleto é o primeiro piloto de animação por quadros. Para comparar com V1 sem carregar save, execute o Godot com `--path . --script tools/preview_skeleton_motion.gd`.
+Apresento as máquinas numa faixa horizontal permanente, em substituição ao monitor recolhível. Para comparar o piloto de animação com V1 sem carregar save, uso o Godot com `--path . --script tools/preview_skeleton_motion.gd`.
 
 O passe de fábrica de 01/10 liga os restos às poses de morte e mostra uma prensa de materiais sincronizada com a fila. O roadmap registra a próxima prioridade: melhorar animação, ambientes e variedade estratégica antes de ampliar conteúdo em massa.
 

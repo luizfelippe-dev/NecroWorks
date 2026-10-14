@@ -1,5 +1,9 @@
 # NecroWorks v0.6.0 — Aceite da Vertical Slice
 
+Preservo este aceite como registro técnico de setembro. Não o uso para aprovar automaticamente a nova linha industrial, a qualidade artística ou o lançamento. Para a situação atual, consulto `PROJECT_STATE.md`, `ROADMAP.md` e os gates de release.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 **Fechada em:** 08/09/2026
 
 **Revisão em 14/09/2026:** este documento registra o aceite técnico histórico, não uma autorização de lançamento. A nova auditoria reabriu pausa, persistência, qualidade de animação, profundidade e validação real. O estado vigente está em `AUDIT_STATUS.md` e no início de `ROADMAP.md`; concluir runners não encerra esses critérios comerciais.

@@ -1,5 +1,11 @@
 # NecroWorks v0.6.2 — Apresentação e continuidade de movimento
 
+## Estado vigente — 14/10/2026
+
+Substituo o monitor recolhível por uma linha horizontal permanente. Conecto as máquinas numa plataforma comum e reservo o espaço da fábrica abaixo da formação. Preservo a HUD de recursos e os controles. Mantenho o restante deste documento como registro da apresentação de setembro; não considero a qualidade artística encerrada.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 **Data:** 11/09/2026
 
 ## O que mudou

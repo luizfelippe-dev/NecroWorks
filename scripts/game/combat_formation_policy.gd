@@ -5,20 +5,20 @@ const FORMATION_COLUMNS: int = 6
 const FORMATION_ROWS: int = 6
 const MAX_UNDEAD: int = FORMATION_COLUMNS * FORMATION_ROWS
 
-const SPAWN_SPACING: Vector2 = Vector2(85.0, 85.0)
-const SPAWN_ORIGIN: Vector2 = Vector2(250.0, 350.0)
+const SPAWN_SPACING: Vector2 = Vector2(85.0, 55.0)
+const SPAWN_ORIGIN: Vector2 = Vector2(250.0, 310.0)
 
 const COMBAT_ROWS: int = 6
 const COMBAT_SPACING_X: float = 85.0
-const COMBAT_SPACING_Y: float = 85.0
+const COMBAT_SPACING_Y: float = 55.0
 const COMBAT_FRONT_DISTANCE: float = 110.0
 const COMBAT_ROW_ORDER: Array[int] = [2, 3, 1, 4, 0, 5]
 
-const ENEMY_LANE_Y: float = 555.0
+const ENEMY_LANE_Y: float = 450.0
 const COMBAT_MIN_X: float = 80.0
 const COMBAT_MAX_X: float = 1500.0
 const COMBAT_MIN_Y: float = 300.0
-const COMBAT_MAX_Y: float = 810.0
+const COMBAT_MAX_Y: float = 600.0
 
 
 static func get_spawn_position(slot: int) -> Vector2:

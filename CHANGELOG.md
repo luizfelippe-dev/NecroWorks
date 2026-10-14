@@ -2,6 +2,18 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Linha industrial permanente — 14/10
+
+Validei 93/93 runners, exportação e inicialização do executável Windows; executei também a regressão ampliada da faixa e conferi a composição renderizada em 1280×720.
+
+- Substituo o monitor recolhível por uma faixa horizontal com plataforma, trilhos e tubulação compartilhados.
+- Reaproveito os apresentadores de processamento, montagem/cuba e refinaria, mantendo filas e desbloqueios reais.
+- Reservo espaço sob o combate com formação vertical compacta; mantenho capacidade de 36 tropas e regras econômicas.
+- Interrompo a esteira sem trabalho, durante preparação e no modo de movimento reduzido.
+- Atualizo os documentos com orientação de leitura, decisões em primeira pessoa e índice. Preservo registros históricos, contratos técnicos e proveniência dos assets.
+
+Ainda preciso refinar o visual e validar a nova composição numa run humana.
+
 ### Alinhamento e revisão do elenco — 14/10
 
 - Ancoragem dos pés ignora resíduos quase transparentes; limites cacheados por textura.

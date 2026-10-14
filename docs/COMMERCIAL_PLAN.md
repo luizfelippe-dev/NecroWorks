@@ -1,5 +1,9 @@
 # NecroWorks — Commercial Plan
 
+Quero tornar o ciclo cadáver → recurso → tropa compreensível e interessante antes de ampliar a divulgação. A faixa industrial é um passo de apresentação, não uma prova de retenção ou garantia de vendas. Mantenho os critérios de playtest e validação comercial abaixo.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 **Revisado:** 01/09/2026
 
 ## Goal

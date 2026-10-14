@@ -1,5 +1,9 @@
 # Contrato de Animações
 
+Defino aqui os comandos de animação e os limites entre apresentação e combate. Mantenho as oito poses de marcha dos dois pilotos e suas recuperações; ainda preciso integrar antecipação ao momento real do ataque. A linha industrial usa os temporizadores da fábrica, não este contrato de personagens.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 **Atualizado em:** 11/09/2026 — v0.6.2
 
 O combate usa cinco comandos visuais comuns. Cada unidade pode trocar a implementação procedural por spritesheets ou animações desenhadas sem alterar a lógica da partida.

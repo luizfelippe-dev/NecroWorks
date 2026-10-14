@@ -4,11 +4,15 @@
 
 ## Estado atual
 
+Mantenho a produção numa faixa industrial permanente, substituindo o monitor recolhível. Preservo as filas e a HUD de controles; reservo a região inferior com formação compacta (55 px entre linhas, centro Y=450). Reaproveito os assets e ainda preciso refinar o conjunto. Consulto [o índice](docs/INDEX.md) para navegar nos documentos. Os registros abaixo contextualizam os cortes anteriores.
+
 A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial e monitor de produção recolhível. Guerreiro esqueleto e zumbi têm oito quadros de caminhada cada; ambos também têm sequência de ataque/recuperação. O tanque usa três poses selecionadas da nova folha 2×2, descartando a pose que troca o braço ativo. As outras nove famílias seguem com poses V1 e movimento procedural. O ataque não é cancelado pelo flash de dano. Naturalidade e antecipação ainda precisam de avaliação em run manual. Regras, economia e balanceamento permanecem intactos.
 
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+Minha próxima etapa é observar a nova faixa com exército completo e refinar sua composição, sem confundir a plataforma inicial com a arte das referências. Mantenho antecipação de ataques, outras nove famílias e setores distintos em aberto. Não incluo main.tscn e project.godot no commit: suas alterações já existiam antes deste corte.
 
 14/10 — alinhamento e revisão: silhueta medida com alpha >= 33/255, cache por textura e limiar de movimento por velocidade. Laboratório com onze famílias, `--unit=ID`, ataque repetido e hit sobreposto; famílias sem quadros identificadas. 93 runners, exportação e smoke Windows aprovados. Sem nova arte ou antecipação neste corte; nove famílias e aprovação humana continuam pendentes.
 

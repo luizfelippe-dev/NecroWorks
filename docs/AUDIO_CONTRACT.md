@@ -1,5 +1,9 @@
 # Contrato de Áudio
 
+Mantenho os IDs e prioridades descritos abaixo. Não adiciono áudio de esteira neste corte: primeiro preciso validar o ritmo e a legibilidade da linha industrial para evitar um loop sonoro cansativo.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 O áudio usa nove IDs estáveis e uma camada ambiente industrial. A implementação atual sintetiza sinais curtos e um loop de oito segundos para validar ritmo, prioridade e mixagem sem depender de arquivos provisórios.
 
 | ID | Uso | Prioridade |

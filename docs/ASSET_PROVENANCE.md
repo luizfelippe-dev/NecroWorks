@@ -1,5 +1,9 @@
 # Proveniência dos Assets
 
+Registro a origem dos assets e preservo os prompts e referências utilizados. Neste corte, reaproveito as carcaças existentes; construo plataforma, trilhos e tubulação por desenho em código. Não incorporei as imagens de referência como assets distribuídos nem gerei novas imagens. Mantenho a identificação de conteúdo gerado e a revisão comercial antes do lançamento.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 ## Ataque do zumbi V2 — 14/10/2026
 
 Arquivo: `assets/sprites/units/zombie_tank_v2/attack_sheet.png`. Ferramenta integrada de imagens da OpenAI, modo edição com referência local e transparência. Referência inicial: `zombie_tank_v1/idle.png`; segunda edição usa a folha gerada na primeira. Original final `exec-e78fd53c-218d-466a-8f27-1706421034e7.png` copiado sem edição de pixels. Três regiões selecionadas via AtlasTexture; inferior esquerda descartada por trocar braço ativo. Tentativa anterior com referência attack V1 rejeitada por anatomia. Não é desenho manual; revisão comercial e declaração de conteúdo gerado permanecem no gate Steam.

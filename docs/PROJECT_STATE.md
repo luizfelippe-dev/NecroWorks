@@ -1,5 +1,11 @@
 # NecroWorks — Estado do Projeto
 
+## Estado vigente — 14/10/2026
+
+Mantenho a produção visível numa faixa industrial horizontal. Reaproveito prensa, montagem/cuba e refinaria; preservo filas, desbloqueios e tempos reais. Reservo espaço reduzindo a formação vertical, sem mudar capacidade. Ainda preciso refinar a arte e validar a composição numa run completa. Os registros abaixo descrevem os cortes anteriores.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 **14/10 — estabilidade:** alinhamento dos pés ignora resíduos de transparência, marcha lenta preservada em FPS alto e laboratório ampliado às onze famílias. 93 testes e build Windows aprovados. Sem novas artes; avaliação humana e antecipação permanecem abertas.
 
 **14/10 — golpe do tanque:** sequência de três poses integrada, com impacto visual no início e recuperação em 0,38 s. Sem alteração de dano, cooldown, economia ou saves. Nove famílias ainda sem sequências autorais; aprovação artística e antecipação permanecem abertas.

@@ -1,5 +1,9 @@
 # Medição renderizada do gameplay
 
+Uso este roteiro para medir o jogo renderizado, especialmente com 36 tropas e produção simultânea. A plataforma reutiliza as texturas existentes; só redesenho a esteira quando trabalho visível avança. Ainda preciso medir a nova composição em hardware-alvo; não trato tempo dos runners como FPS.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 Atualizado em 14/09/2026.
 
 ## Cenário reproduzível

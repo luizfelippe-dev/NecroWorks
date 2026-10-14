@@ -1,5 +1,11 @@
 # NecroWorks — Decisions
 
+## 14/10/2026 — Linha industrial permanente
+
+Substituo o monitor recolhível por uma faixa horizontal sempre visível. Reaproveito a arte das máquinas e preservo os controles inferiores. Reduzo o espaçamento vertical da formação para reservar uma região sem unidades sob a fábrica. Mantenho Sangue/Almas condicionados aos desbloqueios reais e a esteira parada quando não há trabalho ou durante preparação e movimento reduzido.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 **Atualizado:** 11/09/2026
 
 ---

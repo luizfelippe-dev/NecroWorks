@@ -1,5 +1,9 @@
 # Direção de Arte
 
+Adoto a faixa industrial horizontal das referências, em vez de esconder as máquinas num monitor. Apoio prensa, montagem óssea/cuba e refinaria na mesma plataforma. Esta é uma primeira composição com os assets existentes: ainda preciso trabalhar escala, acabamento e transições para alcançar a riqueza das referências. Não considero a arte final aprovada.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 ## Golpe do tanque — 14/10/2026
 
 Revisão técnica posterior: alinhamento considera alpha >= 33/255, descartando resíduos quase invisíveis. Assets e recortes permanecem intactos, sem esticar individualmente cada pose. Laboratório de todo o elenco permite comparar marcha, ataque repetido e hit; não substitui aprovação artística em movimento.

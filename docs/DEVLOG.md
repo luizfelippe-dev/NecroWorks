@@ -1,5 +1,11 @@
 # NecroWorks — Devlog
 
+## 14/10/2026 — A produção fica à vista
+
+Levo as máquinas para uma faixa horizontal permanente, com apoio e conexões compartilhadas. Reservo espaço abaixo da formação e mantenho a produção ligada às filas reais. Reorganizo a consulta dos documentos em um índice e escrevo minhas decisões em primeira pessoa. Ainda preciso refinar o conjunto visual; esta composição não equivale à arte final das referências.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 ## 14/10/2026 — Alinhamento antes de multiplicar as animações
 
 Corrigi a medição da silhueta para que pixels quase invisíveis não definam a altura dos pés. Troquei o limite de movimento por quadro por um limite de velocidade, evitando parar a marcha lenta em FPS alto. Ampliei o laboratório às onze famílias, com ataque repetido, dano durante a ação e troca de personagem preservando acessibilidade. Validei 93 cenários e o executável Windows. Não adicionei novas artes ou atraso no dano; antecipação continua exigindo integração com combate.

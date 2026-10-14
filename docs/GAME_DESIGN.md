@@ -1,5 +1,9 @@
 # NecroWorks — Game Design Document
 
+Quero que o processamento e a criação de tropas sejam visíveis durante a batalha. Uso uma linha industrial permanente para apresentar as filas reais, sem criar esperas adicionais ou recompensas decorativas. Preservo os botões existentes nesta etapa; ainda preciso testar legibilidade e ritmo com o exército completo.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 ## Hipótese de experiência — 01/10/2026
 
 A produção deve ser visível e criar decisões sob pressão. O primeiro corte torna a conversão de materiais legível por entrada, prensagem e saída, sem alterar ciclos/recompensas. A revisão do roadmap propõe três setores e contratos opcionais para testar variedade; ainda não estão implementados. Repetição deve vir de composições e condições diferentes, não de alongar a mesma onda ou aumentar a quantidade de desbloqueios.

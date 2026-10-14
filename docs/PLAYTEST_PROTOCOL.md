@@ -1,5 +1,9 @@
 # NecroWorks — Protocolo de Playtest
 
+Neste corte, verifico a faixa industrial durante uma run: consigo distinguir processamento, montagem e cuba? Leio os estados a 1280×720? Com 36 tropas, alguma unidade invade a faixa? Durante pausa e preparação, a esteira para? Registro esses resultados antes de aprovar o visual ou o impacto da formação mais compacta.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 **Atualizado em:** 11/09/2026
 
 ## Objetivo

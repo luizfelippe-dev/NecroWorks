@@ -1,5 +1,9 @@
 # NecroWorks — Situação da Auditoria
 
+Avanço na apresentação com uma linha industrial permanente e espaço reservado abaixo do combate. Mantenho abertos o acabamento artístico, a antecipação de ataque, a variedade de cenários e a avaliação com jogadores. Não uso aprovação automatizada como aprovação comercial.
+
+[Índice da documentação](INDEX.md) · Revisão editorial: 14/10/2026.
+
 Em 23/09, escala de textos táticos, registro opcional de sessão e voz protegida de chefe passaram pela suíte integral (86 runners em 91,27 s), exportação e smoke test. O roadmap mantém abertos escala dos demais controles, ritmo inicial, teste observacional, animações autorais e demais frentes da v0.6.5. Esta entrega não fecha integralmente esses marcos.
 
 **Atualizado em:** 15/09/2026
