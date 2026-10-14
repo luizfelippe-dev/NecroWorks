@@ -1,5 +1,9 @@
 # Direção de Arte
 
+## Golpe do tanque — 14/10/2026
+
+Três poses selecionadas de uma folha 2×2: extensão, recolhimento e guarda. Quadro inferior esquerdo descartado por trocar o braço ativo; primeira tentativa descartada por anatomia e invasão de células. Recortes de 450×410 compartilham escala e linha dos pés. Arte gerada, não desenhada manualmente. Galeria de onze poses conferida em 1280×720. Sem antecipação pré-impacto neste corte; aprovação em movimento segue pendente.
+
 ## Tanque por quadros — 13/10/2026
 
 Zumbi recebe oito poses de marcha com barriga, armadura, tanque dorsal e olhos verdes preservados. Arte gerada a partir da referência interna, não desenhada manualmente. Sequência mantém a cadência pesada existente; não replica a frequência do guerreiro. Ataque, dano e morte continuam V1. Capturas dos oito recortes e da comparação renderizada verificadas; avaliação humana em movimento permanece aberta.

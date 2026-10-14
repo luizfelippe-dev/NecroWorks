@@ -310,7 +310,17 @@ static func get_animation_sequences(visual_id: String) -> Dictionary:
 			var frames: Array[Texture2D] = []
 			for index: int in range(8):
 				frames.append(sheet_frame(sheet, index, 0.0))
-			zombie_sequences = {"move": frames}
+			var attack: Texture2D = load("res://assets/sprites/units/zombie_tank_v2/attack_sheet.png")
+			var attack_frames: Array[Texture2D] = []
+			# Discard the lower-left pose: it changes the punching arm.
+			# Shared crop dimensions preserve scale; no per-pose stretching.
+			for origin: Vector2 in [Vector2(150, 130), Vector2(750, 130), Vector2(750, 720)]:
+				var frame := AtlasTexture.new()
+				frame.atlas = attack
+				frame.region = Rect2(origin, Vector2(450, 410))
+				frame.filter_clip = true
+				attack_frames.append(frame)
+			zombie_sequences = {"move": frames, "attack": attack_frames}
 		return zombie_sequences.duplicate(true)
 	if visual_id != "skeleton":
 		return {}

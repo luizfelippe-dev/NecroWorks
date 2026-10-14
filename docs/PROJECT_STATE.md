@@ -1,5 +1,7 @@
 # NecroWorks — Estado do Projeto
 
+**14/10 — golpe do tanque:** sequência de três poses integrada, com impacto visual no início e recuperação em 0,38 s. Sem alteração de dano, cooldown, economia ou saves. Nove famílias ainda sem sequências autorais; aprovação artística e antecipação permanecem abertas.
+
 **13/10 — zumbi:** segunda família com caminhada por quadros (oito poses). Mantém cadência de tanque, ataque V1, atributos e economia. Integração técnica e capturas não equivalem a aprovação artística da fluidez.
 
 **13/10 — cadência:** ciclo por quadros ligado à distância percorrida; parado e reposicionamento não avançam marcha. Laboratório comparativo executável sem save permite revisão visual. Nenhum novo personagem recebeu quadros neste corte.

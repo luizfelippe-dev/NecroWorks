@@ -1,6 +1,6 @@
 # NecroWorks — Roadmap
 
-**Atualizado:** 13/10/2026
+**Atualizado:** 14/10/2026
 
 ---
 
@@ -8,7 +8,7 @@
 
 ## Revisão de experiência — 01/10/2026
 
-13/10 — segundo piloto: caminhada do zumbi com oito quadros integrada. Permanecem em aberto ataque por quadros do tanque, outras nove famílias, antecipação e aprovação humana de naturalidade. Não marcar animação do elenco concluída.
+14/10 — segundo piloto: zumbi com oito quadros de caminhada e três poses de golpe/recuperação integrados. Permanecem em aberto outras nove famílias, antecipação sincronizada ao combate e aprovação humana de naturalidade. Não marcar animação do elenco concluída.
 
 13/10: cadência do piloto ligada à distância real e laboratório comparativo disponíveis. Aprovação em movimento por pessoas externas permanece aberta; não confundir suíte técnica com aceite artístico.
 

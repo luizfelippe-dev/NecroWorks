@@ -1,5 +1,9 @@
 # NecroWorks — Architecture
 
+## Ataque do tanque — 14/10/2026
+
+Catálogo cacheia três AtlasTexture de `zombie_tank_v2/attack_sheet.png`, com regiões 450×410 e origens (150,130), (750,130), (750,720). PNG original preservado; região inferior esquerda não utilizada. ATTACK usa 0,38 s do perfil existente e começa no impacto, sem mudar combate. Modo reduzido usa a pose V1; IDLE/HIT/DEATH preservam fallback. Captura calcula quantidade de quadros a partir do catálogo.
+
 ## Sequência do tanque — 13/10/2026
 
 Catálogo cacheia oito AtlasTexture da folha 4×2 do zumbi, sem gutter horizontal; o parâmetro opcional de recorte preserva a correção específica do esqueleto. Só MOVE possui sequência para o tanque. Attack/hit/death seguem state_textures, retomando ShaderMaterial. A fase por distância reutiliza walk_period 0,76 s. Laboratório seleciona `visual_id` pelo argumento `--zombie`.

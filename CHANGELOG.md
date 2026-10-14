@@ -2,6 +2,15 @@
 
 ## [Unreleased] — Consolidação pós-auditoria de 14/09/2026
 
+### Golpe do tanque — 14/10
+
+Validação: 93/93 runners, exportação e smoke Windows aprovados. Galeria de onze poses conferida em 1280×720. CI anterior 38465704354 (2ae1830) aprovado.
+
+- Três poses de ataque/recuperação do zumbi, sem deformação procedural durante a sequência. Duração e momento do dano preservados.
+- Recortes de tamanho comum; quadro com troca de braço descartado. Movimento reduzido conserva pose estática V1.
+- Regressões cobrem seleção dos três quadros, bordas sem anatomia cortada, hit independente e retorno ao shader em repouso.
+- Captura de apresentação inclui caminhada e ataque usando o número real de quadros. Aprovação artística em movimento continua pendente.
+
 ### Caminhada do zumbi por quadros — 13/10
 
 Validação: 93/93 runners, exportação e smoke Windows aprovados; comparação em 1100×700 e oito recortes em 1280×720 conferidos. Aceite artístico em run humana permanece pendente.

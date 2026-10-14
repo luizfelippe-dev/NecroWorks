@@ -1,5 +1,9 @@
 # NecroWorks — Devlog
 
+## 14/10/2026 — O golpe ganha recuperação própria
+
+Integrei três poses do zumbi: punho estendido, recolhimento e guarda. Descartei a primeira folha por problemas de anatomia e um quadro da folha final por trocar o braço ativo. Mantive o dano no início e os 0,38 s existentes, sem criar atraso visual de impacto. Ampliei a regressão e a galeria de recortes. Ainda falta avaliar a fluidez em uma run e trabalhar a antecipação junto do combate, não como atraso isolado na imagem.
+
 ## 13/10/2026 — O tanque começa a marchar por quadros
 
 Criei e integrei oito poses de caminhada do zumbi usando sua arte atual como referência. Mantive a passada pesada e o ataque anterior para separar a revisão de marcha da revisão de golpe. Ampliei a prévia e as regressões, sem mudar a função de tanque ou o balanceamento. Ainda preciso avaliar naturalidade em run e produzir recuperação/antecipação próprias.

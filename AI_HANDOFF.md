@@ -1,14 +1,18 @@
 # NecroWorks — Continuidade do Desenvolvimento
 
-**Atualizado em:** 13/10/2026
+**Atualizado em:** 14/10/2026
 
 ## Estado atual
 
-A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial e monitor de produção recolhível. Guerreiro esqueleto e zumbi têm oito quadros de caminhada cada; o guerreiro tem também três poses de recuperação. As outras nove famílias seguem com poses V1 e movimento procedural, assim como o ataque do zumbi. O ataque não é cancelado pelo flash de dano. Naturalidade e antecipação ainda precisam de avaliação em run manual. Regras, economia e balanceamento permanecem intactos.
+A v0.6.2 preserva a vertical slice técnica e revisa sua apresentação: menu ilustrado, HUD industrial e monitor de produção recolhível. Guerreiro esqueleto e zumbi têm oito quadros de caminhada cada; ambos também têm sequência de ataque/recuperação. O tanque usa três poses selecionadas da nova folha 2×2, descartando a pose que troca o braço ativo. As outras nove famílias seguem com poses V1 e movimento procedural. O ataque não é cancelado pelo flash de dano. Naturalidade e antecipação ainda precisam de avaliação em run manual. Regras, economia e balanceamento permanecem intactos.
 
 A auditoria de 14/09 reabriu confiabilidade, apresentação e validação comercial. O primeiro corte torna gameplay e temporizadores pausáveis, isola os checkpoints de testes e corrige o caminho consultado por Continuar. A auditoria anterior e seu gate técnico não comprovam prontidão comercial. Todos os novos itens e critérios estão na abertura de `docs/ROADMAP.md` (v0.6.3–v0.6.6).
 
 ## Ordem de continuação
+
+Validação de 14/10: 93/93 runners, exportação e smoke Windows aprovados; galeria de onze poses em 1280×720. CI anterior 38465704354 (2ae1830) aprovado. Alterações preexistentes em main.tscn e project.godot permanecem fora deste commit.
+
+14/10 — ataque do zumbi integrado: golpe estendido, recolhimento e guarda, com recortes compartilhando tamanho e linha dos pés. Duração de 0,38 s preservada; dano continua no início, sem antecipação artificial. Captura geral deriva quantidade de poses do catálogo. Próximos cortes: avaliação em movimento dos dois pilotos, antecipação sincronizada ao combate e demais nove famílias.
 
 13/10 — caminhada do zumbi integrada: 8 quadros em `zombie_tank_v2/walk_sheet.png`, sem deslocamento de margem usado pelo esqueleto. Ataque/hit/death V1 preservados. `preview_skeleton_motion.gd -- --zombie` seleciona o tanque; `--capture` salva `animation_lab_zombie.png`. Captura geral também inclui `zombie_sequence`. CI 38461876028 (a12b980) aprovado. Nove famílias ainda sem caminhada por quadros e ataque do zumbi ainda não migrado.
 

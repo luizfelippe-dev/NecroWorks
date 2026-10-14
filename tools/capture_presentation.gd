@@ -183,7 +183,9 @@ func capture_unit_sequence(visual_id: String) -> void:
 	background.size = Vector2(1920, 1080)
 	background.color = Color("121916")
 	gallery.add_child(background)
-	for index: int in range(12 if visual_id == "skeleton" else 8):
+	var sequences: Dictionary = catalog.get_animation_sequences(visual_id)
+	var attack_count: int = sequences.get("attack", []).size()
+	for index: int in range(8 + attack_count):
 		var host := Node2D.new()
 		host.position = Vector2(240 + (index % 4) * 460, 165 + (index / 4) * 345)
 		gallery.add_child(host)
@@ -199,7 +201,7 @@ func capture_unit_sequence(visual_id: String) -> void:
 		driver.set_process(false)
 		driver.play("move" if index < 8 else "attack")
 		driver.gait_phase = TAU * (index + 0.1) / 8
-		driver.action_elapsed = (index - 8 + 0.1) / 4.0 * driver.ATTACK_DURATION if index >= 8 else 0
+		driver.action_elapsed = (index - 8 + 0.1) / attack_count * driver.ATTACK_DURATION if index >= 8 else 0
 		driver._render_pose()
 	await save_frame(visual_id + "_sequence")
 	gallery.queue_free()
